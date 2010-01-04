@@ -1,0 +1,53 @@
+<script type='text/javascript'>
+    $$(function() {
+        $$(".tweet").tweet({
+            username: "jaspervdj",
+            avatar_size: null,
+            count: 3,
+            join_text: " - ",
+            loading_text: "Loading tweets..."
+        });
+    });
+</script>
+
+<div id="posts">
+    <h1>Recent posts</h1>
+    <ul>
+        $posts
+    </ul>
+    <a type="application/rss+xml" href="/rss.xml">
+        <img class="inline-image" style="vertical-align: middle" alt="rss feed" src="/images/rss.png" />
+    </a>
+    &nbsp;
+    <a href="/posts.html">All posts...</a>
+    <p>
+        Tags: $tagcloud
+    </p>
+</div>
+
+<div class="right-column">
+    <h1>Twitter</h1>
+    <div class="tweet"> </div>
+    <a href="http://twitter.com/jaspervdj">Follow me on twitter...</a>
+</div>
+
+<div class="left-column">
+    <h1>About</h1>
+    <img src="/images/avatar.png" alt="That's me!" class="pretty" />
+    <p>
+        My name is Jasper Van der Jeugt, and I study Computer
+        Science at Ghent University. I was born in 1990, and I'm currently
+        residing in Lokeren, Belgium.
+    </p>
+    <p>
+        This is mostly a technical blog on various topics including
+        (but certainly not limited too) web development, coding, unix,
+        haskell and other languages. Aside from that, the probability
+        that you will find other, more random posts here is very real.
+    </p>
+    <p>
+        Feel free to <a href="/contact.html">contact me</a> or view
+        <a href="/projects.html">the list of projects</a>
+        I work/have worked on.
+    </p>
+</div>

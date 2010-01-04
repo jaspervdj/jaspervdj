@@ -1,0 +1,129 @@
+html {
+    background-image: url("/images/header-background.png");
+    background-position: top;
+    background-repeat: repeat-x;
+    background-color: white;
+    color: black;
+    font-family: sans-serif;
+    text-align: left;
+}
+
+body {
+    padding-bottom: 50px;
+    margin: 0px;
+}
+
+div#main {
+    width: 700px;
+    margin: 0px auto 0px auto;
+}
+
+div#header {
+    padding-top: 5px;
+    height: 44px;
+}
+
+div#header a {
+    color: white;
+    font-size: 25px;
+    text-decoration: none;
+}
+
+div#footer {
+    clear: both;
+    text-align: center;
+    color: rgb(100, 100, 100);
+    font-size: 80%;
+    padding-top: 20px;
+}
+
+div.left-column {
+    width: 340px;
+    float: left;
+    padding-right: 10px;
+}
+
+div.right-column {
+    width: 340px;
+    float: right;
+    padding-left: 10px;
+}
+
+div.tags {
+    font-size: 110%;
+}
+
+div.tag-cloud {
+    clear: both;
+    text-align: center;
+}
+
+h1 {
+    font-weight: normal;
+    margin: 0px;
+    padding-top: 15px;
+}
+
+h2 {
+    font-weight: normal;
+}
+
+a {
+    color: black;
+}
+
+img {
+    border: none;
+    margin: 10px auto 10px auto;
+    display: block;
+}
+
+img.inline-image {
+    margin: 0px;
+    display: inline;
+}
+
+img.pretty {
+    margin: 10px;
+    display: inline;
+    float: left;
+}
+
+.soft {
+    color: rgb(100, 100, 100);
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+ul {
+    list-style-type: square;
+    padding-left: 1em;
+    margin-left: 1em;
+}
+
+pre code {
+    background-color: rgb(230, 230, 230);
+    display: block;
+    border-color: rgb(100, 100, 100);
+    border-style: solid;
+    border-width: 0px 0px 0px 3px;
+    padding: 10px;
+}
+
+blockquote {
+    background: rgb(230, 230, 230) url("/images/quote-background.png") no-repeat top left;
+    font-family: serif;
+    padding: 10px 10px 10px 50px;
+    font-size: 110%;
+    font-style: italic;
+}
+
+div.footnotes {
+    border-left: 1px dashed black;
+}
+
+div.footnotes hr {
+    display: none;
+}
