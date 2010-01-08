@@ -2,7 +2,7 @@ module Main where
 
 import Text.Hakyll (hakyll)
 import Text.Hakyll.Render
-import Text.Hakyll.Util (trim, split)
+import Text.Hakyll.Util (trim, split, link)
 import Text.Hakyll.File (getRecursiveContents, directory)
 import Text.Hakyll.Renderables (createPagePath, createCustomPage)
 import Text.Hakyll.Tags (readTagMap, renderTagCloud)
@@ -67,7 +67,7 @@ postManipulation = renderValue "tags" "taglinks" renderTags
                  . renderDate "prettydate" "%B %e, %Y" "Date unknown"
     where renderTags = B.pack . intercalate ", " . map renderTag
                      . map trim . split "," . B.unpack
-          renderTag tag = " <a href=\"/tags/" ++ tag ++ ".html\">" ++ tag ++ "</a>"
+          renderTag tag = link tag $ "/tags/" ++ tag ++ ".html"
 
 renderPostList url title posts = do
     putStrLn $ "Generating post list " ++ title ++ "..."
