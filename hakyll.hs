@@ -3,7 +3,7 @@ module Main where
 import Text.Hakyll (hakyll)
 import Text.Hakyll.Render
 import Text.Hakyll.Util (trim, split, link)
-import Text.Hakyll.File (getRecursiveContents, directory)
+import Text.Hakyll.File (getRecursiveContents, directory, removeSpaces)
 import Text.Hakyll.Renderables (createPagePath, createCustomPage)
 import Text.Hakyll.Tags (readTagMap, renderTagCloud, renderTagLinks)
 import Text.Hakyll.Context (renderDate, renderValue, ContextManipulation)
@@ -33,7 +33,7 @@ main = hakyll $ do
     renderChain ["index.html", "templates/default.html"] $
         createCustomPage "index.html" ("templates/postitem.html" : postPaths)
             [("title", Left "Home"), ("posts", Right recentPosts),
-             ("tagcloud", Left $ renderTagCloud tagMap (\t -> "/tags/" ++ t ++ ".html") 100 120)]
+             ("tagcloud", Left $ renderTagCloud tagMap tagToURL 100 120)]
 
     putStrLn "Generating rss feed..."
     let recentItems = renderAndConcatWith postManipulation
@@ -50,7 +50,7 @@ main = hakyll $ do
           renderablePosts
 
     putStrLn "Creating tag post lists..."
-    mapM_ (\(t, p) -> renderPostList ("tags/" ++ t ++ ".html")
+    mapM_ (\(t, p) -> renderPostList (tagToURL t)
                         ("Posts tagged " ++ t) (sort $ reverse p)) $ M.toList tagMap
 
     putStrLn "Generating simple pages..."
@@ -62,10 +62,12 @@ main = hakyll $ do
 
     putStrLn "Succes!"
 
+tagToURL :: String -> String
+tagToURL tag = "/tags/" ++ (removeSpaces tag) ++ ".html"
+
 postManipulation :: ContextManipulation
-postManipulation = renderTagLinks renderTag
+postManipulation = renderTagLinks tagToURL
                  . renderDate "prettydate" "%B %e, %Y" "Date unknown"
-    where renderTag tag = link tag $ "/tags/" ++ tag ++ ".html"
 
 renderPostList url title posts = do
     putStrLn $ "Generating post list " ++ title ++ "..."
