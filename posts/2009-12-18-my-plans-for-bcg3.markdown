@@ -4,7 +4,7 @@ about: What I'll be doing on my first barcamp.
 tags: bcg, barcamp
 ---
 
-![Logo of barcampghent3](/images/2009-12-18-my-plans-for-bcg3-bcg3.png)
+![Logo of barcampghent3]($root/images/2009-12-18-my-plans-for-bcg3-bcg3.png)
 
 Tomorrow I'll be going to
 [the third edition of BarcampGhent](http://twikilist.com/barcampghent).

@@ -2,13 +2,12 @@ module Main where
 
 import Text.Hakyll (hakyll)
 import Text.Hakyll.Render
-import Text.Hakyll.Util (trim, split, link)
+import Text.Hakyll.Util (trim, link)
 import Text.Hakyll.File (getRecursiveContents, directory, removeSpaces)
 import Text.Hakyll.Renderables (createPagePath, createCustomPage)
 import Text.Hakyll.Tags (readTagMap, renderTagCloud, renderTagLinks)
 import Text.Hakyll.Context (renderDate, renderValue, ContextManipulation)
 import qualified Data.Map as M
-import qualified Data.ByteString.Lazy.Char8 as B
 import Data.List (sort, intercalate)
 import Control.Monad (liftM, mapM_)
 import Data.Either (Either(..))
@@ -50,7 +49,7 @@ main = hakyll $ do
           renderablePosts
 
     putStrLn "Creating tag post lists..."
-    mapM_ (\(t, p) -> renderPostList (tagToURL t)
+    mapM_ (\(t, p) -> renderPostList ("/tags/" ++ (removeSpaces t) ++ ".html")
                         ("Posts tagged " ++ t) (sort $ reverse p)) $ M.toList tagMap
 
     putStrLn "Generating simple pages..."
@@ -63,7 +62,7 @@ main = hakyll $ do
     putStrLn "Succes!"
 
 tagToURL :: String -> String
-tagToURL tag = "/tags/" ++ (removeSpaces tag) ++ ".html"
+tagToURL tag = "$root/tags/" ++ (removeSpaces tag) ++ ".html"
 
 postManipulation :: ContextManipulation
 postManipulation = renderTagLinks tagToURL
