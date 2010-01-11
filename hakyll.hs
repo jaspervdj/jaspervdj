@@ -49,7 +49,7 @@ main = hakyll $ do
           renderablePosts
 
     putStrLn "Creating tag post lists..."
-    mapM_ (\(t, p) -> renderPostList ("/tags/" ++ (removeSpaces t) ++ ".html")
+    mapM_ (\(t, p) -> renderPostList (tagToURL t)
                         ("Posts tagged " ++ t) (sort $ reverse p)) $ M.toList tagMap
 
     putStrLn "Generating simple pages..."
