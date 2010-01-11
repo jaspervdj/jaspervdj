@@ -1,5 +1,5 @@
 html {
-    background-image: url("/images/header-background.png");
+    background-image: url("../images/header-background.png");
     background-position: top;
     background-repeat: repeat-x;
     background-color: white;
