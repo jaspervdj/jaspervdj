@@ -1,11 +1,8 @@
 html {
-    background-image: url("../images/header-background.png");
-    background-position: top;
-    background-repeat: repeat-x;
-    background-color: white;
     color: black;
     font-family: sans-serif;
     text-align: left;
+    background-color: rgb(102, 102, 102);
 }
 
 body {
@@ -13,28 +10,43 @@ body {
     margin: 0px;
 }
 
-div#main {
-    width: 700px;
-    margin: 0px auto 0px auto;
-}
-
 div#header {
-    padding-top: 5px;
-    height: 44px;
+    background: white url("../images/header-background.png") repeat-x top;
+    padding-top: 30px;
+    height: 40px;
 }
 
 div#header a {
     color: white;
     font-size: 25px;
     text-decoration: none;
+    display: block;
+    width: 700px;
+    margin: 0px auto 0px auto;
+}
+
+div#wide-content {
+    background-color: white;
+    padding-bottom: 20px;
+}
+
+div#content {
+    width: 700px;
+    margin: 0px auto 0px auto;
 }
 
 div#footer {
     clear: both;
     text-align: center;
-    color: rgb(100, 100, 100);
     font-size: 80%;
     padding-top: 20px;
+    background: rgb(102, 102, 102) url("../images/footer-background.png") repeat-x top;
+    height: 100px;
+    color: white;
+}
+
+div#footer a {
+    color: white;
 }
 
 div.left-column {
@@ -113,7 +125,7 @@ pre code {
 }
 
 blockquote {
-    background: rgb(230, 230, 230) url("/images/quote-background.png") no-repeat top left;
+    background: rgb(230, 230, 230) url("../images/quote-background.png") no-repeat top left;
     font-family: serif;
     padding: 10px 10px 10px 50px;
     font-size: 110%;
