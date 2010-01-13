@@ -17,6 +17,7 @@ main = hakyll $ do
     directory static "images"
     directory static "js"
     directory css "css"
+    static "favicon.ico"
 
     putStrLn "Finding posts..."
     postPaths <- liftM (reverse . sort) $ getRecursiveContents "posts"
