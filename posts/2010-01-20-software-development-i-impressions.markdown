@@ -6,9 +6,10 @@ tags: ugent, code, design
 
 ## Why this post
 
-This semester, we received a first course on Software Development. I had the
-feeling a lot of students didn't like this course, so I decided to my thoughts
-on the matter here.
+This semester at [UGent](http://www.ugent.be/), the university I attend, we 
+received a first course on Software Development. I had the feeling a lot of
+students didn't like this course, so I decided to my thoughts on the matter
+here.
 
 ## Software Development I
 
@@ -18,8 +19,8 @@ course included writing a non-trivial GUI application. I put
 [my solution](http://github.com/jaspervdj/Musique) solution on GitHub (after the
 course was over, of course).
 
-The thing is, these two courses are thought in Java, and Software Development I
-is tought in C/C++. And while you can translate most of these ideas from Java
+The thing is, these two courses are taught in Java, and Software Development I
+is taught in C/C++. And while you can translate most of these ideas from Java
 to all other programming languages[^1], going from Java to C is not easy.
 
 [^1]: All other programming languages, as long as they're object-oriented and
@@ -31,11 +32,11 @@ opposed to "Programming 3") turned out to be an introduction to C and C++.
 
 ## First Java, then C
 
-Altough I am not a big fan of Java, I have come to appreciate the language, and
-I think it is, in fact, a very good "first language". It is, however, to go from
-Java to something like C. It is always harder to go more low-level, and many
-students were confused by pointers, the fact that pointers can be arrays, and
-all those _typical C_ things.
+Although I am not a big fan of Java, I have come to appreciate the language, and
+I think it is, in fact, a very good "first language". It is, however, not easy
+to go from Java to something like C. It is always harder to go more low-level,
+and many students were confused by pointers, the fact that pointers can be
+arrays, and all those _typical C_ things.
 
 ![Pointers cartoon]($root/images/2010-01-20-xkcd-pointers.png)
 
@@ -57,7 +58,7 @@ C when we started on the C++ part of the course.
 I know there is a lot of [C++ bashing](http://yosefk.com/c++fqa/) on the
 internet, and when I read these things I sometimes think I must be one of the 5
 people on the world who appreciate C++. So my problem here is not with C++ - I
-just fail to see _why_ it is thought.
+just fail to see _why_ it is taught.
 
 Let me explain: I see C++ as an object-oriented superset of C. Students know the
 concept of object-orientation from Java, and they know about pointers and those
@@ -73,16 +74,16 @@ _could have_.
 We also had to write a project in C++. There has been a lot of bullshit talk
 and criticism. about this project. I'm not going to repeat that (also because
 I don't agree with most of it). You could work together with two people on the
-project - [here is the solution](http://github.com/jaspervdj/AstroBot) of me
+project - [here is the solution](http://github.com/jaspervdj/AstroBot) by me
 and [Javache](http://thinkjavache.be/blog/) (of course, this repository was
-not publically accessible during the project). In the end we had about 2500
+not publicly accessible during the project). In the end we had about 2500
 lines of code, including comments, which is not a lot - especially not when
 you're with two. I also really appreciate the fact the tutors tried to come up
 with a project that is not "boring" - hey, it even included robots.
 
 ## Constructive feedback
 
-Summary, I think C++ should not be tought, and more attention should be spent
+Summary, I think C++ should not be taught, and more attention should be spent
 on C, because:
 
 - C++ does not add any _general_ programming knowledge - ideas we can use when
