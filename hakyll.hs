@@ -1,6 +1,6 @@
 module Main where
 
-import Text.Hakyll (hakyll, defaultHakyllConfiguration)
+import Text.Hakyll (hakyll)
 import Text.Hakyll.Render
 import Text.Hakyll.Util (trim, link)
 import Text.Hakyll.File (getRecursiveContents, directory, removeSpaces)
@@ -13,7 +13,7 @@ import Control.Monad (liftM, mapM_)
 import Control.Monad.Reader (liftIO)
 import Data.Either (Either(..))
 
-main = hakyll defaultHakyllConfiguration $ do
+main = hakyll $ do
     liftIO $ putStrLn "Copying static directories and compressing css..."
     directory static "images"
     directory static "js"
