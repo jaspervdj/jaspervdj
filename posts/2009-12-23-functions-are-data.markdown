@@ -75,7 +75,7 @@ type[^1]. We're doing it wrong[^2].
 
 [^1]: Liam O'Connor pointed me to the fact that you _could_ use classes here by
      using the
-     [Existensial Quantification GHC extension](http://hackage.haskell.org/trac/haskell-prime/wiki/ExistentialQuantification).
+     [Existential Quantification GHC extension](http://hackage.haskell.org/trac/haskell-prime/wiki/ExistentialQuantification).
 
 [^2]: Another solution could be to use different data constructors for one data
      type called `Shape`, but then there wouldn't be the Haskell class - Java
