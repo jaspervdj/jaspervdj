@@ -16,7 +16,7 @@ here.
 This course follow our two Programming courses, so all students are already more
 than familiar with the basic concepts of programming - the second programming
 course included writing a non-trivial GUI application. I put
-[my solution](http://github.com/jaspervdj/Musique) solution on GitHub (after the
+[my solution](http://github.com/jaspervdj/Musique) on GitHub (after the
 course was over, of course).
 
 The thing is, these two courses are taught in Java, and Software Development I
