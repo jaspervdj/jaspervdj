@@ -41,27 +41,6 @@
           returning.push(this.replace(regexp, ' <a href="http://search.twitter.com/search?q=&tag=$1&lang=all&from='+s.username.join("%2BOR%2B")+'">#$1</a>'))
         });
         return $(returning);
-      },
-      capAwesome: function() {
-        var returning = [];
-        this.each(function() {
-          returning.push(this.replace(/(a|A)wesome/gi, 'AWESOME'))
-        });
-        return $(returning);
-      },
-      capEpic: function() {
-        var returning = [];
-        this.each(function() {
-          returning.push(this.replace(/(e|E)pic/gi, 'EPIC'))
-        });
-        return $(returning);
-      },
-      makeHeart: function() {
-        var returning = [];
-        this.each(function() {
-          returning.push(this.replace(/[&lt;]+[3]/gi, "<tt class='heart'>&#x2665;</tt>"))
-        });
-        return $(returning);
       }
     });
 
@@ -128,7 +107,7 @@
           var avatar_template = '<a class="tweet_avatar" href="http://twitter.com/'+ item.from_user+'"><img src="'+item.profile_image_url+'" height="'+s.avatar_size+'" width="'+s.avatar_size+'" alt="'+item.from_user+'\'s avatar" border="0"/></a>';
           var avatar = (s.avatar_size ? avatar_template : '')
           var date = '<a href="http://twitter.com/'+item.from_user+'/statuses/'+item.id+'" title="view tweet on twitter">'+relative_time(item.created_at)+'</a>';
-          var text = '<span class="tweet_text">' +$([item.text]).linkUrl().linkUser().linkHash().makeHeart().capAwesome().capEpic()[0]+ '</span>';
+          var text = '<span class="tweet_text">' +$([item.text]).linkUrl().linkUser().linkHash()[0]+ '</span>';
           
           // until we create a template option, arrange the items below to alter a tweet's display.
           list.append('<li>' + avatar + date + join + text + '</li>');
