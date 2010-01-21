@@ -17,7 +17,7 @@ This course follow our two Programming courses, so all students are already more
 than familiar with the basic concepts of programming - the second programming
 course included writing a non-trivial GUI application. I put
 [my solution](http://github.com/jaspervdj/Musique) on GitHub (after the
-course was over, of course).
+course was over).
 
 The thing is, these two courses are taught in Java, and Software Development I
 is taught in C/C++. And while you can translate most of these ideas from Java
@@ -72,7 +72,7 @@ _could have_.
 ## The Project
 
 We also had to write a project in C++. There has been a lot of bullshit talk
-and criticism. about this project. I'm not going to repeat that (also because
+and criticism about this project. I'm not going to repeat that (also because
 I don't agree with most of it). You could work together with two people on the
 project - [here is the solution](http://github.com/jaspervdj/AstroBot) by me
 and [Javache](http://thinkjavache.be/blog/) (of course, this repository was
