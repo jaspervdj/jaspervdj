@@ -76,14 +76,12 @@ simple markdown, with additional features like the cool syntax highlighting
 you can see in this blog post. Some metadata can also be added to the files.
 This post, for example, starts with
 
-~~~~{.markdown}
----
-title: A first post
-date: December 2, 2009
----
-
-# A first post
-~~~~
+    ---
+    title: A first post
+    date: December 2, 2009
+    ---
+    
+    # A first post
 
 Well, that's all for now, folks. Maybe I will elaborate on hakyll again later,
 for some reasons I cannot do that yet (I haven't tested it enough, and the code

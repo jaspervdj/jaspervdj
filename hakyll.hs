@@ -25,7 +25,7 @@ main = hakyll $ do
     let renderablePosts = map createPagePath postPaths
 
     liftIO $ putStrLn "Getting tags..."
-    tagMap <- readTagMap postPaths
+    tagMap <- readTagMap "postTagMap" postPaths
 
     liftIO $ putStrLn "Generating index..."
     let recentPosts = renderAndConcatWith postManipulation
