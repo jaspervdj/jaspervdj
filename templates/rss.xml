@@ -4,6 +4,6 @@
         <title>jaspervdj - a personal blog</title>
         <link>http://jaspervdj.be/</link>
         <description>Personal blog of jaspervdj</description>
-        $items
+        $body
     </channel> 
 </rss>

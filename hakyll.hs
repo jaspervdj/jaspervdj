@@ -4,7 +4,7 @@ import Text.Hakyll (hakyll)
 import Text.Hakyll.Render
 import Text.Hakyll.Util (trim, link)
 import Text.Hakyll.File (getRecursiveContents, directory, removeSpaces)
-import Text.Hakyll.Renderables (createPagePath, createCustomPage)
+import Text.Hakyll.Renderables (createPagePath, createCustomPage, createListingWith)
 import Text.Hakyll.Tags (readTagMap, renderTagCloud, renderTagLinks)
 import Text.Hakyll.Context (renderDate, renderValue, ContextManipulation)
 import qualified Data.Map as M
@@ -28,20 +28,20 @@ main = hakyll $ do
     tagMap <- readTagMap "postTagMap" postPaths
 
     liftIO $ putStrLn "Generating index..."
-    let recentPosts = renderAndConcatWith postManipulation
-                                          ["templates/postitem.html"]
-                                          (take 3 renderablePosts)
-    renderChain ["index.html", "templates/default.html"] $
-        createCustomPage "index.html" ("templates/postitem.html" : postPaths)
-            [("title", Left "Home"), ("posts", Right recentPosts),
-             ("tagcloud", Left $ renderTagCloud tagMap tagToURL 100 120)]
+    let tagCloud = renderTagCloud tagMap tagToURL 100 120
+        index = createListingWith postManipulation "index.html"
+                                  "templates/postitem.html"
+                                  (take 3 renderablePosts)
+                                  [ ("title", "Home")
+                                  , ("tagcloud", tagCloud)
+                                  ]
+    renderChain ["index.html", "templates/default.html"] index
 
     liftIO $ putStrLn "Generating rss feed..."
-    let recentItems = renderAndConcatWith postManipulation
-                                          ["templates/rssitem.xml"]
-                                          (take 5 renderablePosts)
-    renderChain ["templates/rss.xml"] $
-        createCustomPage "rss.xml" ("templates/rssitem.xml" : postPaths) [("items", Right recentItems)]
+    let feed = createListingWith postManipulation "rss.xml"
+                                 "templates/rssitem.xml"
+                                 (take 5 renderablePosts) []
+    renderChain ["templates/rss.xml"] feed
 
     liftIO $ putStrLn "Generating general post list..."
     renderPostList "posts.html" "All posts" postPaths
@@ -70,9 +70,9 @@ postManipulation :: ContextManipulation
 postManipulation = renderTagLinks tagToURL
                  . renderDate "prettydate" "%B %e, %Y" "Date unknown"
 
-renderPostList url title posts = do
+renderPostList url title postPaths = do
     liftIO $ putStrLn $ "Generating post list " ++ title ++ "..."
-    let postItems = renderAndConcatWith postManipulation ["templates/postitem.html"] $ map createPagePath posts
-    renderChain ["posts.html", "templates/default.html"] $
-        createCustomPage url ("templates/postitem.html" : posts)
-        [("title", Left title), ("posts", Right postItems)]
+    let posts = map createPagePath postPaths
+        page = createListingWith postManipulation url "templates/postitem.html"
+                                 posts [("title", title)]
+    renderChain ["posts.html", "templates/default.html"] page
