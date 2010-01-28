@@ -3,6 +3,7 @@ html {
     font-family: sans-serif;
     text-align: left;
     background-color: rgb(102, 102, 102);
+    line-height: 150%;
 }
 
 body {
@@ -109,7 +110,7 @@ li {
 }
 
 ul {
-    list-style-type: square;
+    list-style-image: url("../images/list-style-image.png");
     padding-left: 1em;
     margin-left: 1em;
 }
