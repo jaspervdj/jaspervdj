@@ -25,7 +25,7 @@ main = hakyll $ do
     let renderablePosts = map createPagePath postPaths
 
     liftIO $ putStrLn "Getting tags..."
-    tagMap <- readTagMap "postTagMap" postPaths
+    tagMap <- readTagMap "postTagMap" renderablePosts
 
     liftIO $ putStrLn "Generating index..."
     let tagCloud = renderTagCloud tagMap tagToURL 100 120
@@ -44,7 +44,7 @@ main = hakyll $ do
     renderChain ["templates/rss.xml"] feed
 
     liftIO $ putStrLn "Generating general post list..."
-    renderPostList "posts.html" "All posts" postPaths
+    renderPostList "posts.html" "All posts" renderablePosts
 
     liftIO $ putStrLn "Generating all posts..."
     mapM_ (renderChainWith postManipulation ["templates/post.html", "templates/default.html"])
@@ -70,9 +70,8 @@ postManipulation :: ContextManipulation
 postManipulation = renderTagLinks tagToURL
                  . renderDate "prettydate" "%B %e, %Y" "Date unknown"
 
-renderPostList url title postPaths = do
+renderPostList url title posts = do
     liftIO $ putStrLn $ "Generating post list " ++ title ++ "..."
-    let posts = map createPagePath postPaths
-        page = createListingWith postManipulation url "templates/postitem.html"
+    let page = createListingWith postManipulation url "templates/postitem.html"
                                  posts [("title", title)]
     renderChain ["posts.html", "templates/default.html"] page

@@ -23,6 +23,7 @@ compiler cannot.
 > import qualified Data.Array.Unboxed as UA
 > import Data.Array.Unboxed ((!))
 > import Data.List (transpose)
+> import System.IO (hSetBuffering, BufferMode(LineBuffering), stdin, stdout)
 
 We start by defining a `Tile` type. Tiles are our points on the 2D map, so we
 can easily represent them as tuples:
@@ -135,8 +136,13 @@ We call this `readBoard` function more or less in the following way:
 So we can make our main very short:
 
 > main :: IO ()
-> main = forever takeTurn
+> main = do hSetBuffering stdin LineBuffering
+>           hSetBuffering stdout LineBuffering
+>           forever takeTurn
 
 Note that the only reason our `main` function is so small is because I currently
-still have a "stateless" bot. I hope I can keep it that way, we'll see how the
-contest advances.
+still have a "stateless" bot. We also have to set line buffering[^2] for the
+contest. I hope I can keep it that way, we'll see how the contest advances.
+
+[^2]: I originally forgot this, kudos to Frank and w84 for noticing this and
+      letting me know.
