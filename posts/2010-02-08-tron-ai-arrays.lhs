@@ -14,7 +14,7 @@ requires you to do all your calculations in one second, this is quite a setback.
 This post is literate Haskell, so you should basically be able to paste it into
 a `.lhs` file and run it.
 
-> module MyTronBot where
+> module Main where
 
 First, we need some imports. You can safely ignore these, but unfortunately the
 compiler cannot.
