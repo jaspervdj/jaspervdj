@@ -17,6 +17,7 @@ main = hakyll $ do
     liftIO $ putStrLn "Copying static directories and compressing css..."
     directory static "images"
     directory static "js"
+    directory static "files"
     directory css "css"
     static "favicon.ico"
 
