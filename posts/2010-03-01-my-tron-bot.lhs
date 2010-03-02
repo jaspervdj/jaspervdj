@@ -313,7 +313,7 @@ the `Ord` class. A win is always the best, and a loss is always the worse.
 >     Loss <= _    = True
 
 We only see a draw as worse if our bot would have less space otherwise. This is
-a quite pessimistic view, but well, we can't risk to much.
+a quite pessimistic view, but well, we can't risk too much.
 
 >     Draw <= (Game botSpace enemySpace _ _ _) =
 >          botSpace >= enemySpace
