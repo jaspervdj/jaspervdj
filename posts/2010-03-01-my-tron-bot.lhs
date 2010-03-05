@@ -4,14 +4,14 @@ about: My bot turned out to be the top scoring Haskell bot, so here's the code.
 tags: haskell, code, ai
 ---
 This is the code for my entry in the
-[Google AI Challenge](http://csclub.uwaterloo.ca/contest/index.php). It turned
-out to be the best
+[Google AI Challenge](http://csclub.uwaterloo.ca/contest/index.php) 2010.
+It turned out to be the best
 [Belgian](http://csclub.uwaterloo.ca/contest/country_profile.php?country_id=32)
 and the best
 [Haskell](http://csclub.uwaterloo.ca/contest/language_profile.php?lang=Haskell)
-bot, so I thought some people might be interested in the code. Luckily, I have
-been writing this bot in Literate Haskell since the beginning, for a few
-reasons:
+bot ([screenshot]($root/images/2010-03-01-final-rankings.png)), so I thought
+some people might be interested in the code. Luckily, I have been writing this
+bot in Literate Haskell since the beginning, for a few reasons:
 
 - I always wanted to try Literate Haskell for something "more serious".
 - This will force me to keep the code more or less readable and clean.
