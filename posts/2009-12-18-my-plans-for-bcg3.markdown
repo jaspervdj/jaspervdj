@@ -1,6 +1,6 @@
 ---
 title: My plans for #bcg3
-about: What I'll be doing on my first barcamp.
+description: What I'll be doing on my first barcamp.
 tags: bcg, barcamp
 ---
 

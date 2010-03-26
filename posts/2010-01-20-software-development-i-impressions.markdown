@@ -1,6 +1,6 @@
 ---
 title: Software Development 1: My impressions
-about: My thoughts on our first software development course at uni.
+description: My thoughts on our first software development course at uni.
 tags: ugent, code, design
 ---
 

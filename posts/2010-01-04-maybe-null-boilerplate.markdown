@@ -1,6 +1,6 @@
 ---
 title: Maybe, null, and boilerplate code
-about: An ode to the Maybe type in Haskell, and a comparison with null.
+description: An ode to the Maybe type in Haskell, and a comparison with null.
 tags: haskell, code
 ---
 
