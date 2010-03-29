@@ -35,3 +35,12 @@ called "Learn You a Haskell in 20 minutes".
 
 I travelled to Zürich in March, 2010, to attend ZuriHac, which then was the
 largest Haskell Hackaton ever.
+
+## Other things
+
+### Google AI Challenge
+
+In the spring of 2010, I participated in the Google AI Challenge, where I
+finished on the [62th place], as the first belgian and the first Haskeller.
+
+[62th place]: $root/posts/2010-03-01-my-tron-bot.html
