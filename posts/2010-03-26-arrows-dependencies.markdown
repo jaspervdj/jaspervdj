@@ -14,9 +14,10 @@ unrelated quote from Jimi Hendrix.
 > Well my arrows are made of desire  
 > From far away as Jupiter's sulphur mines
 
-Arrows are used less often than Monads or Monoids, but they are certainly not
-harder. This blogpost aims to give a quick, informal introduction to Arrows. As
-concrete subject and example, we use dependency handling in Hakyll.
+Arrows are less common than Monads or Monoids (in Haskell code, that is), but
+they are certainly not harder to understand. This blogpost aims to give a quick,
+informal introduction to Arrows. As concrete subject and example, we use
+dependency handling in Hakyll.
 
 ## The problem
 
