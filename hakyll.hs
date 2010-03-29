@@ -51,7 +51,7 @@ main = hakyll "http://jaspervdj.be" $ do
     -- Some static pages.
     mapM_ (renderChain ["templates/default.html"] . createPage)
             [ "contact.markdown"
-            , "projects.markdown"
+            , "cv.markdown"
             , "404.html"
             ]
 
