@@ -1,6 +1,6 @@
 ---
 title: Once things have settled down
-description: Just trying to clear my mind here.
+description: Just trying to clear my mind here
 tags: poetry, random
 ---
 

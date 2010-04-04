@@ -1,6 +1,6 @@
 ---
 title: Google AI Challenge and Haskell list performance
-description: A post about a typical issue with Haskell lists.
+description: A post about a typical issue with Haskell lists
 tags: haskell, code, ai
 ---
 
