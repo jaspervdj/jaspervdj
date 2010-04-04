@@ -4,6 +4,15 @@ title: Curriculum Vitae
 
 # Curriculum Vitae
 
+This is a work in progress.
+
+## Education
+
+- Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte.
+- Secondary school: Sint-Lodewijkscollege Lokeren -- ASO, Latin & maths
+  specialization.
+- University Ghent: Bachelor Computer Science (in progress).
+
 ## Projects
 
 Here is a list of projects I have worked on in the past years.
@@ -24,23 +33,9 @@ site generator in [Haskell].
 [Hakyll]: http://jaspervdj.be/hakyll
 [Haskell]: http://haskell.org/
 
-## Conferences & Meeting attended
-
-### BarcampGhent (2009)
-
-In the autumn of 2009, I attended BarcampGhent, where I gave a presentation
-called "Learn You a Haskell in 20 minutes".
+## Conferences & Meetings attended
 
 ### ZuriHac (2010)
 
 I travelled to Zürich in March, 2010, to attend ZuriHac, which then was the
 largest Haskell Hackaton ever.
-
-## Other things
-
-### Google AI Challenge
-
-In the spring of 2010, I participated in the Google AI Challenge, where I
-finished on the [62th place], as the first belgian and the first Haskeller.
-
-[62th place]: $root/posts/2010-03-01-my-tron-bot.html
