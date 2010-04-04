@@ -72,19 +72,20 @@ div.tag-cloud {
 }
 
 h1 {
-    font-size: 25px;
+    font-size: 27px;
     font-weight: normal;
     margin: 0px;
     padding-top: 15px;
 }
 
 h2 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: normal;
 }
 
 h3 {
     font-size: 18px;
+    font-style: italic;
     font-weight: normal;
 }
 

@@ -63,7 +63,7 @@ We start, as always, by importing the needed modules.
 > import Control.Concurrent
 > import Data.Maybe (fromJust, isNothing, isJust, listToMaybe)
 
-To represent `Tile`s - positions on the 2D grid - we use a simple tuple.
+To represent `Tile`s -- positions on the 2D grid -- we use a simple tuple.
 
 > type Tile = (Int, Int)
 
@@ -139,7 +139,7 @@ AI will choose. This might give no result, so we wrap it in a `Maybe` type.
 > boardBotMove :: Board -> Maybe Tile
 > boardBotMove = listToMaybe . tail . reverse . boardBotPositionList
 
-Checking if a certain tile is a wall is quite simple - but we need to remember
+Checking if a certain tile is a wall is quite simple -- but we need to remember
 we also have to check the additional walls in the `Board`. We first check for
 boundaries to prevent errors, then we check in the `walls` first, because
 `Array` access is faster than `Set` access here. Also, we __really__ want to

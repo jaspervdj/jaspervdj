@@ -42,15 +42,15 @@ a very clear and concise way.
 
 But that is not what this article is about. The thing is that in the code they
 provided as a starter package, they stored the information about the map in a
-`[[Spot]]` type - a matrix of `Spot`s, where a `Spot` would be either a wall,
+`[[Spot]]` type -- a matrix of `Spot`s, where a `Spot` would be either a wall,
 an empty tile, the player...
 
 The problem with this is that Haskell's default lists are linked lists. Imagine
-we have a _m * n_ map - so _m_ tiles wide and _n_ tiles high. In most other
-languages, you would expect you can access the elements in constant time -
+we have a _m * n_ map -- so _m_ tiles wide and _n_ tiles high. In most other
+languages, you would expect you can access the elements in constant time --
 so _O(1)_. But because we're using linked lists, this is not the case. Worst
 case scenario, you would access the bottom right element. This would take
-_O(m + n)_ time - and that is not acceptable.
+_O(m + n)_ time -- and that is not acceptable.
 
 So I'll abuse this blogpost to ramble about Haskell arrays.
 
@@ -68,11 +68,11 @@ We use an _Unboxed Immutable Array_ to store or walls. A bit of context:
   While that can be very useful in certain situations, it is not here. By using
   an unboxed array, we force the contents to be fully evaluated. This means the
   array will not take up much more room than the corresponding array in C would.
-- __Immutable__: because we read the `Board` again every time - that's the way
-  the engine works - we don't have to change the board at all. This means we can
-  simply write nice, purely functional code here.
+- __Immutable__: because we read the `Board` again every time -- that's the way
+  the engine works -- we don't have to change the board at all. This means we
+  can simply write nice, purely functional code here.
 
-The code to load this `Board` follows later - let's first see how we lookup a
+The code to load this `Board` follows later -- let's first see how we lookup a
 certain `Tile` in the `Board`:
 
 > isWall :: Board -> (Int, Int) -> Bool
@@ -103,16 +103,17 @@ The real code happens in the `where` block:
 >     find c = head [ i | i <- UA.indices matrix, matrix ! i == c ]
 
 What might not be obvious to see, is why we use `transpose` here. `transpose`
-transposes a matrix - why would we want that?
+transposes a matrix -- why would we want that?
 
 The answer is that I find it easier (if you will, more _natural_) to use
 `(x, y)` notation instead of `(row, column)` notation. You can safely remove
 the `transpose` function and switch to `(row, column)` if you want, but I
 think the `(x, y)` notation is a little easier.
 
-We also consider everything that is not a space character a wall - that includes
-the player and the enemy. I do this because this makes my code easier (and it
-makes sense in a way, you don't want to steer through yourself or the enemy).
+We also consider everything that is not a space character a wall -- that
+includes the player and the enemy. I do this because this makes my code easier
+(and it makes sense in a way, you don't want to steer through yourself or the
+enemy).
 
 Then we use a small `find` function to locate the player and the enemy in the
 array. This find functions should run very fast, since looking up in arrays is,

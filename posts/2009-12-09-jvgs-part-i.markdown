@@ -1,5 +1,5 @@
 ---
-title: What the hell is jvgs - Part I
+title: What the hell is jvgs -- Part I
 description: Every project has a story: how and why jvgs originally started.
 tags: jvgs, gamedev
 ---

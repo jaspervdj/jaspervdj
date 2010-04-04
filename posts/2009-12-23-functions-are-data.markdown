@@ -78,7 +78,7 @@ type[^1]. We're doing it wrong[^2].
      [Existential Quantification GHC extension](http://hackage.haskell.org/trac/haskell-prime/wiki/ExistentialQuantification).
 
 [^2]: Another solution could be to use different data constructors for one data
-     type called `Shape`, but then there wouldn't be the Haskell class - Java
+     type called `Shape`, but then there wouldn't be the Haskell class -- Java
      interface connection.
 
 ## A more functional approach
@@ -108,7 +108,7 @@ rectangle (x0, y0) (x1, y1) (x, y) = x0 <= x && x <= x1 &&
                                      y0 <= y && y <= y1
 ~~~~~
 
-Note that we will use partial function application here - the `(x, y)`
+Note that we will use partial function application here -- the `(x, y)`
 argument will not be given if we create a rectangle. And our circle function:
 
 ~~~~~{.haskell}
