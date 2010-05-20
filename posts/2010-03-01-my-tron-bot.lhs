@@ -83,7 +83,7 @@ There's a simple formula for calculating the Pythagorean distance between
 tiles. We use this in combination with the "real" distance (the distance when
 taking walls etc. into account). We can leave this distance squared, not taking
 the `sqrt` is a little faster, and we only have to compare distances, and
-_x^2 < y^2_ implies _x < y_, because distances are always non-negative.
+`x^2 < y^2` implies `x < y`, because distances are always non-negative.
 
 > distanceSquared :: Tile -> Tile -> Int
 > distanceSquared (x1, y1) (x2, y2) = (x1 - x2) ^ 2 + (y1 - y2) ^ 2
@@ -290,8 +290,8 @@ assign a `Score` to a game - and we then make these `Score`s comparable.
 >            | Draw
 
 In theory, these are the only possible outcomes. In reality, these values are
-often situated at the bottom of our game tree - and we can't look down all the
-way. Therefore, we also have a `Game` score - describing a game in progress.
+often situated at the bottom of our game tree -- and we can't look down all the
+way. Therefore, we also have a `Game` score -- describing a game in progress.
 
 The `Game` constructor simply holds some fields so we can determine it's value:
 
@@ -469,7 +469,7 @@ simply returns the possible `Board` with the best `Score`.
 >                 else if value < u then enemySearch xs (l, value) board
 >                                   else enemySearch xs (l, u) current
 
-First, we want to make a quick (but stupid) decision, in case we're on a _very_
+First, we want to make a quick (but stupid) decision, in case we're on a very
 slow processor or if we don't get a lot of CPU ticks. The following function
 does that, providing a simple "Chaser" approach.
 

@@ -36,7 +36,7 @@ Although I am not a big fan of Java, I have come to appreciate the language, and
 I think it is, in fact, a very good "first language". It is, however, not easy
 to go from Java to something like C. It is always harder to go more low-level,
 and many students were confused by pointers, the fact that pointers can be
-arrays, and all those _typical C_ things.
+arrays, and all those typical C things.
 
 ![Pointers cartoon]($root/images/2010-01-20-xkcd-pointers.png)
 
@@ -44,7 +44,7 @@ I had already had a little bit of experience with C/C++ before starting the
 course (I wrote [jvgs](http://jvgs.sf.net/) this summer) -- which, once again,
 makes this post a little biased. But I thought the C part was pretty interesting
 (the exercises at least, the theory was rather boring, but well, you can't have
-everything, I suppose). I mean, C _is_ still used today, and to quote our Data
+everything, I suppose). I mean, C __is__ still used today, and to quote our Data
 Structures & Algorithms professor:
 
 > If you want, or need, something really fast -- when all the constant factors
@@ -58,16 +58,16 @@ C when we started on the C++ part of the course.
 I know there is a lot of [C++ bashing](http://yosefk.com/c++fqa/) on the
 internet, and when I read these things I sometimes think I must be one of the 5
 people on the world who appreciate C++. So my problem here is not with C++ -- I
-just fail to see _why_ it is taught.
+just fail to see why it is taught.
 
 Let me explain: I see C++ as an object-oriented superset of C. Students know the
 concept of object-orientation from Java, and they know about pointers and those
-things from the C lessons: I do not think C++ adds any more _ideas_.
+things from the C lessons: I do not think C++ adds any more ideas.
 
 As far as I can see, the only new thing we saw with C++ was templates, but we
 only used templates to write abstract data types -- the primary use for Java
 generics. Admittedly, we did not see generics in our Java courses, but we
-_could have_.
+could have.
 
 ## The Project
 
@@ -86,7 +86,7 @@ with a project that is not "boring" -- hey, it even included robots.
 Summary, I think C++ should not be taught, and more attention should be spent
 on C, because:
 
-- C++ does not add any _general_ programming knowledge -- ideas we can use when
+- C++ does not add any general programming knowledge -- ideas we can use when
   learning other languages.
 - A lot of students didn't know C well enough after the C part.
 - It would be interesting to see a larger C project (now, we only had some

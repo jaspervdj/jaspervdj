@@ -1,7 +1,7 @@
 html {
     color: black;
-    font-family: sans-serif;
-    font-size: 14px;
+    font-family: 'Droid Sans', sans-serif;
+    font-size: 15px;
     text-align: left;
     background-color: rgb(102, 102, 102);
     line-height: 160%;
@@ -19,7 +19,7 @@ div#header {
 
 div#header a {
     color: white;
-    font-size: 25px;
+    font-size: 30px;
     text-decoration: none;
     display: block;
     width: 700px;
@@ -123,6 +123,10 @@ ul {
     margin-left: 1em;
 }
 
+code {
+    font-size: 14px;
+}
+
 pre code {
     display: block;
     padding: 8px;
@@ -139,10 +143,10 @@ blockquote {
     font-style: italic;
 }
 
-/* A caption is the alt text of an image, produced by pandoc. We want to
- * disable it for now. */
 p.caption {
-    display: none;
+    font-size: 14px;
+    text-align: center;
+    color: rgb(100, 100, 100);
 }
 
 div.footnotes {

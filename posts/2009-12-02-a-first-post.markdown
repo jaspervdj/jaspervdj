@@ -86,7 +86,7 @@ This post, for example, starts with
 Well, that's all for now, folks. Maybe I will elaborate on hakyll again later,
 for some reasons I cannot do that yet (I haven't tested it enough, and the code
 is not the best you've ever seen). All comments and suggestions are of course
-welcome at jaspervdj _at_ gmail _dot_ com.
+welcome!
 
 Your most humble and obedient servant,
 Jasper Van der Jeugt

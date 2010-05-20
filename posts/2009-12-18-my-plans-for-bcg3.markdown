@@ -24,18 +24,18 @@ items I'd certainly like to see.
   know anything at all about NoSQL, and this seems like a good chance to learn.
 - Something about [RSI](http://en.wikipedia.org/wiki/Repetitive_strain_injury)
   by [Michaël Rosseel](http://www.retaggr.com/Card/michlr). Relevant for
-  someone like me who spends _a lot_ of time behind his computer.
+  someone like me who spends a lot of time behind his computer.
 - How to commit a crime and get away with it by
   [Koen Delvaux](http://delvauxkoen.blogspot.com/). Because the title sounds
   awesome.
 
 ## What I will be presenting
 
-I'm going to do a presentation called _learn you a haskell in 20 minutes_. It
+I'm going to do a presentation called "learn you a haskell in 20 minutes". It
 will be a basic introduction to the functional programming language
-[Haskell](http://haskell.org/). It won't be a _classic_ basic introduction, I'm
+[Haskell](http://haskell.org/). It won't be a classic basic introduction, I'm
 going to explain some none-trivial things. That's because all so called
-_"simple introductions"_ I've seen were pretty boring. So I'm going to try
+"simple introductions" I've seen were pretty boring. So I'm going to try
 something different: I'll introduce some more advanced concepts instead using a
 simple application I wrote.
 

@@ -20,11 +20,11 @@ from scratch (so after a `./hakyll clean`).
 
 I am far from an expert at Haskell profiling, and this graph is a heap profile
 and not really a benchmark, but I think you can nonetheless see that the
-functions from [Pandoc](http://johnmacfarlane.net/pandoc/) (seen here as the 
-top yellow and pink blocks) are the "more heavy" ones. This makes sense, 
+functions from [Pandoc](http://johnmacfarlane.net/pandoc/) (seen here as the
+top yellow and pink blocks) are the "more heavy" ones. This makes sense,
 because rendering Pandoc markdown[^1] to html is not easy. The total time is
 under 2 seconds, but there are only a few blogposts on this site now. I've taken
-it to the test, copying a blogpost a hundred times, and the result was that the 
+it to the test, copying a blogpost a hundred times, and the result was that the
 time taken rose linearly with the number of posts (hey, who would've expected
 that).
 
@@ -32,8 +32,8 @@ that).
       to all formats supported by Pandoc.
 
 The thing is that we can't simply "make pandoc faster". Pandoc is a marvelous
-piece of software, and probably quite optimized. What we _can do_ is try to
-call Pandoc less.
+piece of software, and probably quite optimized. What we can do is try to call
+Pandoc less.
 
 ## Simple timestamp checking
 
@@ -133,7 +133,7 @@ great [Data.Binary](http://code.haskell.org/binary/) library, so I thought I'd
 give it a try.
 
 [^3]: 60 seconds after a `./hakyll clean`. This seemed the most fair benchmark,
-      and caching _would_ play a role here, since many `Page`s were accessed
+      and caching would play a role here, since many `Page`s were accessed
       multiple times: for the tags, for the post list, for the posts
       themselves...
 

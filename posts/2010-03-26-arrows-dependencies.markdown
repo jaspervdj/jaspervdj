@@ -39,7 +39,7 @@ In Hakyll, the rendering algorithm is more or less like this:
 [pandoc]: http://johnmacfarlane.net/pandoc/
 
 The catch is, say `_site/contact.html` is "newer" than `contact.markdown` and
-the HTML templates. In this case, we do not want to do _anything_. Haskell
+the HTML templates. In this case, we do not want to do anything. Haskell
 lazyness will not help us a lot here, since we're dealing with a lot of `IO`
 code.
 

@@ -46,11 +46,11 @@ provided as a starter package, they stored the information about the map in a
 an empty tile, the player...
 
 The problem with this is that Haskell's default lists are linked lists. Imagine
-we have a _m * n_ map -- so _m_ tiles wide and _n_ tiles high. In most other
+we have a `m * n` map -- so `m` tiles wide and `n` tiles high. In most other
 languages, you would expect you can access the elements in constant time --
-so _O(1)_. But because we're using linked lists, this is not the case. Worst
+so `O(1)`. But because we're using linked lists, this is not the case. Worst
 case scenario, you would access the bottom right element. This would take
-_O(m + n)_ time -- and that is not acceptable.
+`O(m + n)` time -- and that is not acceptable.
 
 So I'll abuse this blogpost to ramble about Haskell arrays.
 
@@ -62,7 +62,7 @@ So I'll abuse this blogpost to ramble about Haskell arrays.
 >     , boardEnemyPosition :: (Int, Int)
 >     }
 
-We use an _Unboxed Immutable Array_ to store or walls. A bit of context:
+We use an "Unboxed Immutable Array" to store or walls. A bit of context:
 
 - __Unboxed__: this is basically a counter-measure against Haskell's laziness.
   While that can be very useful in certain situations, it is not here. By using
@@ -80,7 +80,7 @@ certain `Tile` in the `Board`:
 >                     || y < 0 || y >= boardHeight board
 >                     || boardWalls board ! (x, y)
 
-Yep, we now have a function that runs in _O(1)_ and that is quite efficient (of
+Yep, we now have a function that runs in `O(1)` and that is quite efficient (of
 course we have to do some basic boundary checks). The code to read the `Board`
 is a little more complicated (but also more interesting):
 
@@ -105,7 +105,7 @@ The real code happens in the `where` block:
 What might not be obvious to see, is why we use `transpose` here. `transpose`
 transposes a matrix -- why would we want that?
 
-The answer is that I find it easier (if you will, more _natural_) to use
+The answer is that I find it easier (if you will, more "natural") to use
 `(x, y)` notation instead of `(row, column)` notation. You can safely remove
 the `transpose` function and switch to `(row, column)` if you want, but I
 think the `(x, y)` notation is a little easier.

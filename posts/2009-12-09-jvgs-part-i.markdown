@@ -14,9 +14,9 @@ reading a lot about
 I became interested and tried to find a good concept to base a game on.
 
 I am a regular reader of [XKCD](http://xkcd.com) and I like the drawing style a
-lot. A _sketched_ is pretty cool for a game, so I started fooling around with
-[noise](http://en.wikipedia.org/wiki/Perlin_noise). I first wrote an initial
-test in Java using swing.
+lot. A "sketched" look is pretty cool for a game, so I started fooling around
+with [noise](http://en.wikipedia.org/wiki/Perlin_noise). I first wrote an 
+initial test in Java using swing.
 
 ![Screenshot of the Java test]($root/images/2009-12-09-jvgs-part-i-swing.png)
 
