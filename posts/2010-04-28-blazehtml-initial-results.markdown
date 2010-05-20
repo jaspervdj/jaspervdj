@@ -34,11 +34,33 @@ Jim Whitehead, Harald Holtmann, Oliver Mueller, Simon Meier and Tom Harper.
 
 ![Us hacking on ZuriHac]($root/images/2010-04-28-zurihac.jpg)
 
-Together, we produced an initial, prototype version of BlazeHtml. With pain in
-my heart, I have to say that I have had to throw all our code away and make a
-fresh start after ZuriHac. But this does not mean the code we wrote was not
-useful: I will reintegrate big parts of it later, and it was a very useful
+Together, we produced an initial, prototype version of BlazeHtml. We focused
+on abstraction as well as performance... and I'm afraid we wanted to do too much
+at once. With pain in my heart, I had to throw a lot of code away and make a 
+fresh start after ZuriHac. But this does not mean the code we wrote was not 
+useful: I will reintegrate big parts of it later, and it was a very useful 
 learning experience.
+
+## The actual problem
+
+Let's define the actual problem more precisely. We want to write abstract 
+descriptions of Html documents built from content and atttributes represented 
+both as `String` as well as `Data.Text` values, since both types are common 
+representations of sequences of Unicode characters in Haskell programs.
+
+We want to render these documents to a sequence of bytes represented as a lazy
+`ByteString`. The chunks of such a lazy `ByteString` should be "big enough" in
+order to be efficient in later progressing, like sending the render
+[over a socket] or [writing it to a file].
+
+[over a socket]: http://hackage.haskell.org/packages/archive/network-bytestring/0.1.2.1/doc/html/Network-Socket-ByteString-Lazy.html
+[writing it to a file]: http://hackage.haskell.org/packages/archive/bytestring/0.9.1.6/doc/html/Data-ByteString-Lazy.html#v%3AwriteFile
+
+For now, we fix the output encoding to UTF-8, for two reasons:
+
+- We first want to get a performance baseline. This way we can precisely
+  determine what later abstractions cost.
+- UTF-8 supports Unicode and is widely used and recommended for web pages.
 
 ## Current state
 
@@ -63,44 +85,62 @@ The different templating engines tested are:
 ![BigTable benchmarks]($root/images/2010-04-28-benchmarks.png)
 
 For the record, all benchmarks are run on a Intel CPU T2080 @ 1.73GHz. As you
-can see, BlazeHtml is quite fast. I also tried some other Haskell libraries,
-most of them achieved results a little slower than spitfire.
+can see, BlazeHtml is quite fast. I also tried some other Haskell libraries. I
+will perform a more extensive benchmarking of the Haskell libraries available
+from Hackage in the near feature. For now, you can see some initial results
+here:
+
+![BigTable benchmarks]($root/images/2010-04-28-haskell-benchmarks.png)
+
+Although I have to say that this comparison is not quite fair. BlazeHtml
+produces encoded strings, where the other packages produce just strings (which
+still need to be encoded before sending them over the network).
+
+The code used for these benchmarks can be found [in our repo]. Some benchmarks
+were implemented by the spitfire team, they can be found [in their repo]. I
+edited some of these benchmark so that all of them escape the table content,
+in order to make a more fair comparison.
+
+[in our repo]: http://github.com/jaspervdj/BlazeHtml/blob/develop/benchmarks/bigtable/
+[in their repo]: http://code.google.com/p/spitfire/source/browse/trunk/tests/perf/bigtable.py
 
 ## Why is BlazeHtml fast
 
-The approach we initially had was composed of a number of typeclasses. While
-typeclasses are good for abstraction and modularity reasons, they can also be a
-serious bottleneck. A first step to get some more speed was to remove a number
-of typeclasses.
+There are two design decisions underlying the speed that BlazeHtml features:
 
-Secondly, we were using the `Data.Binary.Builder` monoid to efficiently
-construct lazy `ByteString`'s. The `Builder` turned out to be very fast, but the
-problem was that we were introducing too much overhead. Every character was
-taken through an entire pipeline of functions that looked more or less like
+1. We avoid explicit intermediate data structures by using a
+   continuation-passing style; i.e. our only intermediate data structures are
+   closures, which are probably the best optimized data structures in a
+   functional programming language like Haskell.
+
+2. We copy each output byte at most once by using a mutable buffer encapsulated
+   in a `Builder` monoid.
+
+These two design decisions together with some well-chosen inlining resulted
+already in a quite nice speed. What was missing then was fast writing of
+individual bytes into a `Builder`: We were introducing too much overhead.
+Every character was taken through an entire pipeline of functions that looked
+more or less like
 
 ~~~~~{.haskell}
 append . encode .  escape
 ~~~~~
 
 What I wanted is to have these operations executed on some sort of stream rather
-than on every character.
-
-## Forking of Data.Binary.Builder
-
-Originally, we were using the following function (defined in
-`Data.Binary.Builder`) to create our `Builder` monoid:
+than on every character.  Originally, we were using the following function
+(defined in `Data.Binary.Builder`) to create our `Builder` monoid:
 
 ~~~~~{.haskell}
 singleton :: Word8 -> Builder
 ~~~~~
 
 This function was called for every byte, introducing a severe overhead. I was
-able to get significant speedups by defining the functions:
+able to get significant speedups by defining the (manually fused) functions:
 
 ~~~~~{.haskell}
 fromText :: Text -> Builder
 fromUnescapedText :: Text -> Builder
-fromShow :: Show a => a -> Builder
+fromString :: String -> Builder
 ~~~~~
 
 These functions were defined in `Text.Blaze.Internal.Utf8Builder`. They all rely
@@ -125,3 +165,9 @@ So, that's it for now. You can expect more updates from me in the feature,
 since I'll be working on this project with great enthusiasm now that it has been
 accepted to Google Summer of Code 2010. Thanks to all the people who made this
 possible!
+
+This blogpost was partly based on the notes I make while developing. These
+can be found [here]. I'd also like to thank Simon Meier for his continuous
+stream of feedback.
+
+[here]: http://github.com/jaspervdj/BlazeHtml/blob/develop/log/part01.markdown
