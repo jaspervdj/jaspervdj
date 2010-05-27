@@ -89,6 +89,11 @@ h3 {
     font-weight: normal;
 }
 
+em {
+    font-family: 'Droid Sans', sans-serif;
+    font-weight: bold;
+}
+
 a {
     color: black;
 }

@@ -21,10 +21,12 @@ well as current users of other HTML generation libraries.
 About this file
 ---------------
 
-This document is a literate Haskell file. It serves two purposes: (1) it
-explains our current ideas and (2) it asks you, as the reader, for feedback. If
-you want to run this file or experiment with the code, you need to check out the
-code from github:
+This document is a literate Haskell file. Here is a [plain version] of the
+document. It serves two purposes: (1) it explains our current ideas and (2) it
+asks you, as the reader, for feedback. If you want to run this file or
+experiment with the code, you need to check out the code from github:
+
+[plain version]: http://github.com/jaspervdj/BlazeHtml/raw/develop/doc/RFC.lhs
 
 ~~~~~
 git clone git://github.com/jaspervdj/BlazeHtml.git
@@ -328,8 +330,8 @@ In the `BlazeHtml` directory that you created in the beginning of this RFC.
 
 Note that these benchmarks also contain the "BigTable" benchmark that is
 implemented in many different templating engines. It measures the rendering time
-of a big <table> that has 1000 rows and 10 columns, and every row has the simple
-content 1, 2, 3, ... 10. Our prototype library is much faster than other
+of a big `<table>` that has 1000 rows and 10 columns, and every row has the
+simple content 1, 2, 3, ... 10. Our prototype library is much faster than other
 templating engines such as Spitfire, ClearSilver, ERB and Erubis. More
 information can be found in [this blogpost].
 
@@ -353,5 +355,11 @@ your favourite web-framework/server?
 
 Looking forward to your feedback
 --------------------------------
+
+The easiest way to send feedback is to reply by email to the
+[haskell-cafe thread]. Alternatively, drop a comment here or [at reddit].
+
+[haskell-cafe thread]: http://www.haskell.org/pipermail/haskell-cafe/2010-May/078217.html
+[at reddit]: http://www.reddit.com/r/haskell/comments/c8l68/google_summer_of_code_blazehtml_rfc/
 
 Jasper van der Jeugt and Simon Meier
