@@ -1,10 +1,10 @@
 html {
     color: black;
-    font-family: 'Droid Sans', sans-serif;
+    font-family: 'Lucida Sans', 'Helvetica', 'Arial', sans-serif;
     font-size: 15px;
     text-align: left;
     background-color: rgb(102, 102, 102);
-    line-height: 160%;
+    line-height: 22px;
 }
 
 body {
@@ -90,7 +90,6 @@ h3 {
 }
 
 em {
-    font-family: 'Droid Sans', sans-serif;
     font-weight: bold;
 }
 
