@@ -357,7 +357,7 @@ Looking forward to your feedback
 --------------------------------
 
 The easiest way to send feedback is to reply by email to the
-[haskell-cafe thread]. Alternatively, drop a [at reddit].
+[haskell-cafe thread]. Alternatively, drop a comment [at reddit].
 
 [haskell-cafe thread]: http://www.haskell.org/pipermail/haskell-cafe/2010-May/078217.html
 [at reddit]: http://www.reddit.com/r/haskell/comments/c8l68/google_summer_of_code_blazehtml_rfc/

@@ -53,6 +53,7 @@ main = hakyll "http://jaspervdj.be" $ do
             [ "contact.markdown"
             , "cv.markdown"
             , "404.html"
+            , "links.markdown"
             ]
 
 feedConfiguration :: FeedConfiguration
