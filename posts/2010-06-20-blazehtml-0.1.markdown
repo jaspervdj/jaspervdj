@@ -1,0 +1,58 @@
+---
+title: BlazeHtml 0.1
+description: A first release of the BlazeHtml project
+tags: haskell, gsoc
+---
+
+This is another blogpost about BlazeHtml -- the project I am working on for
+Google Summer of Code for [haskell.org]. Today, I am glad to announce we have a
+first version of BlazeHtml ready for use. Note that this is a 0.1 release --
+so beware of bugs. We have also created [a website for the project].
+
+[haskell.org]: http://haskell.org
+[a website for the project]: http://jaspervdj.be/blaze
+
+## Support for HTML 4 Strict and HTML 5
+
+We support HTML 5 as well as HTML 4 Strict. In the feature, we hope to expand
+this set to the other (X)HTML variants, and perhaps XML. There is no "default"
+HTML specified: it depends entirely on the modules you import. For example. if
+you want HTML 4, you import `Text.Blaze.Html4.Strict`, whereas if you want HTML
+5, you need to import `Text.Blaze.Html5`.
+
+## Pretty fast
+
+We think that BlazeHtml is pretty fast and have some benchmark supporting these
+claims. There's more information available on the [benchmarks page] about that.
+
+[benchmarks page]: http://jaspervdj.be/blaze/benchmarks.html
+
+## Documentation
+
+Documentation can never be underestimated: it is of vital importance if you want
+people to use your library. There is a preliminary [tutorial] available for now,
+and two [examples].
+
+[tutorial]: http://jaspervdj.be/blaze/tutorial.html
+[examples]: http://github.com/jaspervdj/BlazeHtml/tree/master/doc/examples/
+
+## Outlook
+
+So, after this first release, here is a list of things we will focus on next:
+
+- Expand the implementation so that we can support fast output of `String` and
+  `Text` as well as UTF-8 encoded `ByteString`.
+- Add more HTML/XHTML variants.
+- Examine the possibility to improve our changes to `Data.Binary.Builder` for
+  general use in a separate library (`Utf8Builder`, `TextBuilder`, ...).
+- Write a BlazeHtml generator translating a Html page to the corresponding
+  BlazeHtml haskell code. This greatly simplifies initial imports and importing
+  of new snippets.
+
+## Feedback
+
+As always, feedback is more than welcome! This is a community project, after
+all. If you're interested, also check out the [blogs] of the other Google Summer
+of Code participants for [haskell.org]!
+
+[blogs]: $root/links.html#google-summer-of-code-2010-students-for-haskell.org:

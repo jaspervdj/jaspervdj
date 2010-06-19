@@ -16,6 +16,7 @@ title: Links
 
 ## Cool kids from UGent:
 
+- [David Verhasselt](http://crowdway.com)
 - [Denis Defreyne](http://stoneship.org)
 - [Pieter De Baets](http://thinkjavache.be)
 - [Wim Vander Schelden](http://fixnum.org)
