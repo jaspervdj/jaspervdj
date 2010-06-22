@@ -22,7 +22,7 @@ you want HTML 4, you import `Text.Blaze.Html4.Strict`, whereas if you want HTML
 
 ## Pretty fast
 
-We think that BlazeHtml is pretty fast and have some benchmark supporting these
+We think that BlazeHtml is pretty fast and have some benchmarks supporting these
 claims. There's more information available on the [benchmarks page] about that.
 
 [benchmarks page]: http://jaspervdj.be/blaze/benchmarks.html
