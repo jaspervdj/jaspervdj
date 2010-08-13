@@ -1,0 +1,75 @@
+---
+title: BlazeHtml 0.2
+description: Second release of my GSoC project
+tags: haskell, gsoc
+---
+
+This is another blogpost about [BlazeHtml] -- the project I am working on for
+Google Summer of Code for [haskell.org]. We are ready for a 0.2 release, which
+should fix all the issues with the 0.1 release.
+
+[BlazeHtml]: http://jaspervdj.be/blaze
+[haskell.org]: http://haskell.org
+
+## Internal rewrite
+
+Internally, most of it has been rewritten. The big advantage of our new internal
+system is that we can now support different backends, without losing any speed.
+We support the following backends for now:
+
+- `Text.Blaze.Renderer.Utf8`: The default, fast UTF-8 renderer which produces a
+  lazy `ByteString`.
+- `Text.Blaze.Renderer.String`: A renderer which renders the page to a `String`.
+  This renderer is optimized as well, but of course, not as fast as the `Utf8`
+  renderer.
+- `Text.Blaze.Renderer.Pretty`: A variation of the `String` renderer which
+  produces a prettified, well-intended page. This is only meant for debugging
+  purposes.
+
+## Supported HTML versions
+
+We've expanded the set of supported HTML versions as well. Blaze now supports:
+
+- HTML 5
+- HTML 4 Strict
+- HTML 4 Transitional
+- HTML 4 Frameset
+
+## blaze-from-html
+
+Additionally, I've been working on a tool `blaze-from-html` (which needs to be
+separately installed using `cabal install blaze-from-html`) to convert HTML to
+blaze code.
+
+    [jasper@alice ~]$ curl -S http://haskell.org/ | blaze-from-html -e | head
+    docTypeHtml ! xmlns "http://www.w3.org/1999/xhtml" ! lang "en" $ do
+        H.head $ do
+            H.title "Haskell - HaskellWiki"
+            meta ! name "KEYWORDS" ! content "Haskell"
+            meta ! http_equiv "Content-type" ! content "text/html; charset=utf-8"
+            meta ! name "robots" ! content "index,follow"
+            link ! rel "shortcut icon" ! href "/favicon.ico"
+            link ! rel "copyright" ! href "/haskellwiki/HaskellWiki:Copyrights"
+            ...
+
+The `-e` flags ignores some errors, basically because the haskell homepage is
+XHTML, and `blaze-from-html` wants to read HTML.
+
+As you can see, the produced code is prettified and indented. If you use
+the `-s` (standalone) flag, you will also get all the necessary imports and
+definitions, so you can directly compile the produced file.
+
+## Html type
+
+Another big change is that we've changed the type for templates. From now on,
+all your templates will be of the type `Html` instead of `Html ()`. We felt this
+choice is more sensible -- we're very sorry if this temporarily breaks your
+application.
+
+## Feedback
+
+As always, feedback is more than welcome! This is a community project, after
+all. If you're interested, also check out the [blogs] of the other Google Summer
+of Code participants for [haskell.org]!
+
+[blogs]: $root/links.html#google-summer-of-code-2010-students-for-haskell.org:
