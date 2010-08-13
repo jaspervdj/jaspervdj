@@ -33,6 +33,18 @@ site generator in [Haskell].
 [Hakyll]: http://jaspervdj.be/hakyll
 [Haskell]: http://haskell.org/
 
+### BlazeHtml (2010 - now)
+
+[BlazeHtml] is a blazingly fast HTML combinator library for the [Haskell]
+programming language. I worked on this project for [Google Summer of Code] 2010.
+
+[BlazeHtml]: http://jaspervdj.be/blaze
+[Google Summer of Code]: http://code.google.com/soc/
+
+You can view more projects on my [GitHub page].
+
+[GitHub page]: http://github.com/jaspervdj
+
 ## Conferences & Meetings attended
 
 ### ZuriHac (2010)
