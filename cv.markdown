@@ -45,6 +45,21 @@ You can view more projects on my [GitHub page].
 
 [GitHub page]: http://github.com/jaspervdj
 
+## Talks
+
+I've given a number of talks, mostly centered around Haskell. Here is a list:
+
+- BarcampGhent, 29th of november 2009, Ghent, "Learn you a Haskell in 20 minutes"
+  ([slides]($root/files/barcampghent-2009.pdf))
+- ZuriHac, 21th of march 2010, Zürich, "BlazeHtml"
+  ([slides]($root/files/zurihac-2010.pdf))
+- GhentFPG, 1st of april 2010, Ghent, "BlazeHtml"
+  ([slides]($root/files/ghentfpg-2010.pdf))
+- DutchHUG, 24th of april 2010, Utrecht, "BlazeHtml"
+  ([slides]($root/files/dutchhug-2010.pdf))
+- American Express (tech department), 24th of august 2010, New York City,
+  "BlazeHtml" ([slides]($root/files/amex-2010.pdf))
+
 ## Conferences & Meetings attended
 
 ### ZuriHac (2010)
