@@ -22,7 +22,7 @@ Here is a list of projects I have worked on in the past years.
 [JVGS] is an arty platform game that is not like the others. I implemented a
 subset of the [SVG specification] to give the game it's original look.
 
-[jvgs]: http://jvgs.sf.net/
+[JVGS]: http://jvgs.sf.net/
 [SVG specification]: http://www.w3.org/Graphics/SVG/
 
 ### hakyll (2009 - now)
