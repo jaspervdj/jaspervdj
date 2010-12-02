@@ -58,19 +58,19 @@ You can view more projects on my [GitHub page].
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
 - BarcampGhent, 29th of november 2009, Ghent, "Learn you a Haskell in 20 minutes"
-  ([slides]($root/files/barcampghent-2009.pdf))
+  ([slides]($root/files/2009-barcampghent-haskell.pdf))
 - ZuriHac, 21th of march 2010, Zürich, "BlazeHtml: a blazingly fast HTML
   combinator library"
-  ([slides]($root/files/zurihac-2010.pdf))
+  ([slides]($root/files/2010-zurihac-blaze-html.pdf))
 - GhentFPG, 1st of april 2010, Ghent, "BlazeHtml: a blazingly fast HTML
   generator in Haskell"
-  ([slides]($root/files/ghentfpg-2010.pdf))
+  ([slides]($root/files/2010-ghentfpg-blaze-html.pdf))
 - DutchHUG, 24th of april 2010, Utrecht, "BlazeHtml: design of a blazingly fast
   HTML combinator library"
-  ([slides]($root/files/dutchhug-2010.pdf))
+  ([slides]($root/files/2010-dutchhug-blaze-html.pdf))
 - American Express (tech department), 24th of august 2010, New York City,
   "BlazeHtml: a DSL for HTML generation in Haskell"
-  ([slides]($root/files/amex-2010.pdf))
+  ([slides]($root/files/2010-amex-blaze-html.pdf))
 
 
 <!--
