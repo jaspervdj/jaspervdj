@@ -56,6 +56,9 @@ main = hakyll "http://jaspervdj.be" $ do
             , "links.markdown"
             ]
 
+    -- Some special pages
+    renderChain [] $ createPage "tmp/index.html"
+
 feedConfiguration :: FeedConfiguration
 feedConfiguration = FeedConfiguration
     { feedUrl         = "rss.xml"
