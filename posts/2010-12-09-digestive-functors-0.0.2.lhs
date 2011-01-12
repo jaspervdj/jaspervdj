@@ -216,3 +216,10 @@ is and how you use it. If you're interested, feel free to check out
 [digestive-functors](http://github.com/jaspervdj/digestive-functors) on GitHub.
 As always, feedback is welcome. Kudos to [Itkovian](http://www.itkovian.net/)
 for proofreading this post!
+
+Update
+------
+
+This code no longer works with the current version of the digestive
+functors library. Up-to-date examples can be found [here in the github
+repo](https://github.com/jaspervdj/digestive-functors/tree/master/examples).
