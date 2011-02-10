@@ -8,25 +8,7 @@ import Control.Arrow (arr, (>>>), (***))
 import Data.Monoid (mempty, mconcat)
 import qualified Data.Map as M
 
-import GHC.Exts (fromString)
-
-import Hakyll.Web
-import Hakyll.Web.CompressCss
-import Hakyll.Web.Page
-import Hakyll.Web.Page.Metadata
-import Hakyll.Web.RelativizeUrls
-import Hakyll.Web.Template
-import Hakyll.Web.Tags
-import Hakyll.Web.Feed
-import Hakyll.Core.Identifier
-import Hakyll.Core.Identifier.Pattern
-import Hakyll.Core.Routes
-import Hakyll.Core.Rules
-import Hakyll.Core.Compiler
-import Hakyll.Core.Run
-import Hakyll.Core.Writable
-import Hakyll.Core.Util.Arrow
-import Hakyll.Main
+import Hakyll
 
 -- | Entry point
 --
@@ -62,8 +44,8 @@ main = hakyll $ do
         defaultPageRead
             >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
             >>> renderTagsField "prettytags" (fromCaptureString "tags/*")
-            >>> require "templates/post.html" (flip applyTemplate)
-            >>> require "templates/default.html" (flip applyTemplate)
+            >>> defaultApplyTemplate "templates/post.html"
+            >>> defaultApplyTemplate "templates/default.html"
 
     -- Post list
     route  "posts.html" idRoute
@@ -71,8 +53,8 @@ main = hakyll $ do
         constA mempty
             >>> arr (setField "title" "Posts")
             >>> requireAllA "posts/*" addPostList
-            >>> require "templates/posts.html" (flip applyTemplate)
-            >>> require "templates/default.html" (flip applyTemplate)
+            >>> defaultApplyTemplate "templates/posts.html"
+            >>> defaultApplyTemplate "templates/default.html"
 
     -- Index
     route  "index.html" idRoute
@@ -80,10 +62,9 @@ main = hakyll $ do
         constA mempty
             >>> arr (setField "title" "Home")
             >>> requireA "tags" (setFieldA "tagcloud" (renderTagCloud'))
-            >>> requireAllA "posts/*" (id *** arr (take 3) >>> addPostList)
-            >>> require "templates/index.html" (flip applyTemplate)
-            >>> require "templates/default.html" (flip applyTemplate)
-            >>> defaultRelativizeUrls
+            >>> requireAllA "posts/*" (id *** arr (take 3 . sortByBaseName) >>> addPostList)
+            >>> defaultApplyTemplate "templates/index.html"
+            >>> defaultApplyTemplate "templates/default.html"
 
     -- Tags
     create "tags" $
@@ -103,7 +84,7 @@ main = hakyll $ do
         route   p $ setExtension ".html"
         compile p $
             defaultPageRead
-                >>> require "templates/default.html" (flip applyTemplate)
+                >>> defaultApplyTemplate "templates/default.html"
                 >>> defaultRelativizeUrls
 
     -- Render RSS feed
@@ -124,12 +105,7 @@ main = hakyll $ do
 -- add it to the current page under @$posts@
 --
 addPostList :: Compiler (Page String, [Page String]) (Page String)
-addPostList = setFieldA "posts" postList
-
--- | Auxiliary compiler: generate a post list from a list of given posts
---
-postList :: Compiler [Page String] String
-postList =
+addPostList = setFieldA "posts" $
     require "templates/postitem.html" (\ps t -> map (applyTemplate t) ps)
         >>> arr mconcat
         >>> arr pageBody
@@ -141,8 +117,8 @@ makeTagList tag posts =
     constA (mempty, posts)
         >>> addPostList
         >>> arr (setField "title" ("Posts tagged " ++ tag))
-        >>> require "templates/posts.html" (flip applyTemplate)
-        >>> require "templates/default.html" (flip applyTemplate)
+        >>> defaultApplyTemplate "templates/posts.html"
+        >>> defaultApplyTemplate "templates/default.html"
 
 feedConfiguration :: FeedConfiguration
 feedConfiguration = FeedConfiguration
