@@ -14,7 +14,7 @@ a good idea to write a bit on the side projects I've done after my
 
 ## Number Six
 
-<img src="$root/images/2010-09-27-number-six.jpg" alt="Number Six"
+<img src="/images/2010-09-27-number-six.jpg" alt="Number Six"
      style="float: right; margin: 10px" />
 
 [Number Six](http://github.com/jaspervdj/number-six) is a sexy IRC bot I've been

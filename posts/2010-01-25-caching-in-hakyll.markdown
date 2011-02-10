@@ -16,7 +16,7 @@ Before you implement any caching measures in any program, you try to estimate
 what the speed gain will be. This is a heap profile from me generating this site
 from scratch (so after a `./hakyll clean`).
 
-![A graph showing that pandoc takes most time]($root/images/2010-01-25-pandoc-takes-most-time.png)
+![A graph showing that pandoc takes most time](/images/2010-01-25-pandoc-takes-most-time.png)
 
 I am far from an expert at Haskell profiling, and this graph is a heap profile
 and not really a benchmark, but I think you can nonetheless see that the
@@ -38,7 +38,7 @@ Pandoc less.
 ## Simple timestamp checking
 
 One "caching" technique used in Hakyll is simple timestamp checking. For
-example, the [projects page]($root/projects.html) on my website is created from
+example, the [projects page](/projects.html) on my website is created from
 two files: a `projects.markdown` file containing the content, and a default
 template `templates/default.html` containing the header and footer of this
 site. Now, Hakyll generates all of it's files to the `_site` directory. So it

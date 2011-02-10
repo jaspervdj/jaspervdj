@@ -17,7 +17,7 @@ a handful of the supposedly 20,000 rooms making up the complex. Due to the
 massiveness of the complex, it was an impossible task for the dwarfs to search
 all rooms, so they sent out random expeditions.
 
-<img src="$root/images/2010-07-11-young-dwarf.png" alt="A young dwarf"
+<img src="/images/2010-07-11-young-dwarf.png" alt="A young dwarf"
      style="float: right" />
 
 ## A naive solution
@@ -61,7 +61,7 @@ public class Marker {
 
 ## Abusing malloc's complexity
 
-<img src="$root/images/2010-07-11-lord.png" alt="Wise dwarven lord"
+<img src="/images/2010-07-11-lord.png" alt="Wise dwarven lord"
      style="float: left" />
 
 One of the older dwarven lords then spoke, wise as he was: "This is inherent
@@ -107,7 +107,7 @@ to the element in `array`. This way, an element in `array` can, by chance, point
 to an element in `marks`, but this won't matter since the element in `marks`
 won't point back, and so we can determine it's fake.
 
-![An illustration]($root/images/2010-07-11-illustration.png)
+![An illustration](/images/2010-07-11-illustration.png)
 
 This figure illustrates the algorithm. Only one element is marked: the fourth
 element. Therefore, only one element from the `marks` structure is used (the

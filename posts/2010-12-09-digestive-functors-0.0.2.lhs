@@ -5,7 +5,7 @@ tags: haskell, code
 ---
 
 Today, I'm releasing something I've been working on a while. I planned to
-complete it on [BelHac]($root/posts/2010-11-09-belhac-summary.html), but it all
+complete it on [BelHac](/posts/2010-11-09-belhac-summary.html), but it all
 got delayed a little.
 
 When I was writing the [blaze-html](http://jaspervdj.be/blaze) backend for
@@ -43,7 +43,7 @@ functors:
 
 The digestive functors library is structured into three layers:
 
-![The layered design]($root/images/2010-12-09-digestive-functors-layers.png)
+![The layered design](/images/2010-12-09-digestive-functors-layers.png)
 
 For the actual web server responsible for I/O, we use
 [Snap](http://snapframework.com). A [Happstack](http://happstack.com) backend is

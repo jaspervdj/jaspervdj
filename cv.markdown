@@ -58,22 +58,22 @@ You can view more projects on my [GitHub page].
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
 - BarcampGhent, 29th of November 2009, Ghent, "Learn you a Haskell in 20 minutes"
-  ([slides]($root/files/2009-barcampghent-haskell.pdf))
+  ([slides](/files/2009-barcampghent-haskell.pdf))
 - ZuriHac, 21th of March 2010, Zürich, "BlazeHtml: a blazingly fast HTML
   combinator library"
-  ([slides]($root/files/2010-zurihac-blaze-html.pdf))
+  ([slides](/files/2010-zurihac-blaze-html.pdf))
 - GhentFPG, 1st of April 2010, Ghent, "BlazeHtml: a blazingly fast HTML
   generator in Haskell"
-  ([slides]($root/files/2010-ghentfpg-blaze-html.pdf))
+  ([slides](/files/2010-ghentfpg-blaze-html.pdf))
 - DutchHUG, 24th of April 2010, Utrecht, "BlazeHtml: design of a blazingly fast
   HTML combinator library"
-  ([slides]($root/files/2010-dutchhug-blaze-html.pdf))
+  ([slides](/files/2010-dutchhug-blaze-html.pdf))
 - American Express (tech department), 24th of August 2010, New York City,
   "BlazeHtml: a DSL for HTML generation in Haskell"
-  ([slides]($root/files/2010-amex-blaze-html.pdf))
+  ([slides](/files/2010-amex-blaze-html.pdf))
 - Zeus WPI, UGent, 2nd of December 2010, Ghent, "An interactive introduction to
   Git"
-  ([slides]($root/files/2010-zeus-git.pdf))
+  ([slides](/files/2010-zeus-git.pdf))
 
 
 <!--

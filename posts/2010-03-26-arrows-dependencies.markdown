@@ -117,7 +117,7 @@ To make our action a real `Arrow`, we need to implement two more functions:
   this better. You can see how `f :: a -> b` applies to an `(a, c)` tuple, where
   `f` is applied on the first value.
 
-![Illustration of arrow first]($root/images/2010-03-26-first.png)
+![Illustration of arrow first](/images/2010-03-26-first.png)
 
 ~~~~~{.haskell}
 instance Arrow HakyllAction where

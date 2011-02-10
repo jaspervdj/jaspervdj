@@ -72,4 +72,4 @@ As always, feedback is more than welcome! This is a community project, after
 all. If you're interested, also check out the [blogs] of the other Google Summer
 of Code participants for [haskell.org]!
 
-[blogs]: $root/links.html#google-summer-of-code-2010-students-for-haskell.org:
+[blogs]: /links.html#google-summer-of-code-2010-students-for-haskell.org:
