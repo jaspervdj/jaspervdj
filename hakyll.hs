@@ -16,36 +16,36 @@ main :: IO ()
 main = hakyll $ do
     -- Copy images
     route   "images/*" idRoute
-    compile "images/*" defaultCopyFile
+    compile "images/*" copyFileCompiler
 
     route   "favicon.ico" idRoute
-    compile "favicon.ico" defaultCopyFile
+    compile "favicon.ico" copyFileCompiler
 
     -- Copy JavaScript
     route   "js/*" idRoute
-    compile "js/*" defaultCopyFile
+    compile "js/*" copyFileCompiler
 
     -- Copy files (deep)
     route   "files/**" idRoute
-    compile "files/**" defaultCopyFile
+    compile "files/**" copyFileCompiler
 
     -- Compress CSS
     route   "css/*" idRoute
-    compile "css/*" defaultCompressCss
+    compile "css/*" compressCssCompiler
 
     -- Render the /tmp index page
     route   "tmp/index.html" idRoute
     compile "tmp/index.html" $
-        pageRead >>> defaultRelativizeUrls
+        readPageCompiler >>> relativizeUrlsCompiler
 
     -- Render each and every post
     route   "posts/*" $ setExtension ".html"
     compile "posts/*" $
-        defaultPageRead
+        pageCompiler
             >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
             >>> renderTagsField "prettytags" (fromCaptureString "tags/*")
-            >>> defaultApplyTemplate "templates/post.html"
-            >>> defaultApplyTemplate "templates/default.html"
+            >>> applyTemplateCompiler "templates/post.html"
+            >>> applyTemplateCompiler "templates/default.html"
 
     -- Post list
     route  "posts.html" idRoute
@@ -53,8 +53,8 @@ main = hakyll $ do
         constA mempty
             >>> arr (setField "title" "Posts")
             >>> requireAllA "posts/*" addPostList
-            >>> defaultApplyTemplate "templates/posts.html"
-            >>> defaultApplyTemplate "templates/default.html"
+            >>> applyTemplateCompiler "templates/posts.html"
+            >>> applyTemplateCompiler "templates/default.html"
 
     -- Index
     route  "index.html" idRoute
@@ -63,8 +63,8 @@ main = hakyll $ do
             >>> arr (setField "title" "Home")
             >>> requireA "tags" (setFieldA "tagcloud" (renderTagCloud'))
             >>> requireAllA "posts/*" (id *** arr (take 3 . sortByBaseName) >>> addPostList)
-            >>> defaultApplyTemplate "templates/index.html"
-            >>> defaultApplyTemplate "templates/default.html"
+            >>> applyTemplateCompiler "templates/index.html"
+            >>> applyTemplateCompiler "templates/default.html"
 
     -- Tags
     create "tags" $
@@ -77,15 +77,15 @@ main = hakyll $ do
         >>> arr (map (\(t, p) -> (tagIdentifier t, makeTagList t p)))
 
     -- Read templates
-    compile "templates/*" defaultTemplateRead
+    compile "templates/*" templateCompiler
 
     -- Render some static pages
     forM_ ["contact.markdown", "cv.markdown", "links.markdown"] $ \p -> do
         route   p $ setExtension ".html"
         compile p $
-            defaultPageRead
-                >>> defaultApplyTemplate "templates/default.html"
-                >>> defaultRelativizeUrls
+            pageCompiler
+                >>> applyTemplateCompiler "templates/default.html"
+                >>> relativizeUrlsCompiler
 
     -- Render RSS feed
     route  "rss.xml" idRoute
@@ -117,8 +117,8 @@ makeTagList tag posts =
     constA (mempty, posts)
         >>> addPostList
         >>> arr (setField "title" ("Posts tagged " ++ tag))
-        >>> defaultApplyTemplate "templates/posts.html"
-        >>> defaultApplyTemplate "templates/default.html"
+        >>> applyTemplateCompiler "templates/posts.html"
+        >>> applyTemplateCompiler "templates/default.html"
 
 feedConfiguration :: FeedConfiguration
 feedConfiguration = FeedConfiguration
