@@ -1,0 +1,66 @@
+---
+title: BlazeHtml 0.4
+description: An update for the BlazeHtml project, with some new features
+tags: haskell, code
+--
+
+I've just uploaded BlazeHtml 0.4 to Hackage. There's some new things in there,
+so I thought it would be a good idea to summarize it here.
+
+## Text renderer
+
+A Text renderer was added in the new Text.Blaze.Renderer.Text module. The
+interface should look quite familiar to everyone who looked at BlazeHtml before:
+
+~~~~~{.haskell}
+renderHtml :: Html -> Text
+~~~~~
+
+The produced Text is lazy, built by the Text builder that was recently added. It
+isn't as fast as the UTF8 ByteString renderer, but there is still room for some
+improvements here.
+
+## Removal of showHtml methods
+
+The showHtml functions were removed -- this breaks backwards compatibility, but:
+
+- these calls can be easily replaced by `string . show`, which is hardly longer;
+- the naming scheme for these functions was inconsistent with the other
+  functions in `Text.Blaze`;
+- we found a good replacement, which will be explained in the next section.
+
+## The ToHtml/ToValue typeclasses
+
+We've added two handy typeclasses at the top of BlazeHtml, in the `Text.Blaze`
+module.
+
+~~~~~{.haskell}
+class ToHtml a where
+    toHtml :: a -> Html
+~~~~~
+
+~~~~~{.haskell}
+class ToValue a where
+    toValue :: a -> AttributeValue
+~~~~~
+
+They have all the instances one would expect: the different string types such as
+`Text` and lazy `Text`, and some other common types such as numerical values
+(`Int`, `Float` ...).
+
+This means that in most cases, showHtml can also be replaced by toHtml. The
+advantage of using these functions is that they provide a more unified interface
+to the web developer.
+
+## Hexpat renderer
+
+I also added a Hexpat renderer some time ago. You can read more about that
+[here]. Like the other renderers, it provides a simple `renderHtml -> Forest`
+function (where `Forest` is a forest of Hexpat nodes). However, this package is
+maintained in a separate repository since I want a very small dependency set for
+the `blaze-html` package.
+
+[here]: http://softwaresimply.blogspot.com/2010/12/heist-gets-blaze-syntax.html
+
+That concludes the small BlazeHtml status update. Feedback is welcome, as
+always.
