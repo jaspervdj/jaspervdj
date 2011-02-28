@@ -4,7 +4,7 @@ module Main where
 import Prelude hiding (id)
 import Control.Category (id)
 import Control.Monad (forM_)
-import Control.Arrow (arr, (>>>), (***))
+import Control.Arrow (arr, (>>>), (***), second)
 import Data.Monoid (mempty, mconcat)
 import qualified Data.Map as M
 
@@ -62,7 +62,7 @@ main = hakyll $ do
         constA mempty
             >>> arr (setField "title" "Home")
             >>> requireA "tags" (setFieldA "tagcloud" (renderTagCloud'))
-            >>> requireAllA "posts/*" (id *** arr (take 3 . sortByBaseName) >>> addPostList)
+            >>> requireAllA "posts/*" (id *** arr (take 3 . reverse . sortByBaseName) >>> addPostList)
             >>> applyTemplateCompiler "templates/index.html"
             >>> applyTemplateCompiler "templates/default.html"
 
@@ -106,7 +106,8 @@ main = hakyll $ do
 --
 addPostList :: Compiler (Page String, [Page String]) (Page String)
 addPostList = setFieldA "posts" $
-    require "templates/postitem.html" (\ps t -> map (applyTemplate t) ps)
+    arr (reverse . sortByBaseName)
+        >>> require "templates/postitem.html" (\p t -> map (applyTemplate t) p)
         >>> arr mconcat
         >>> arr pageBody
 
