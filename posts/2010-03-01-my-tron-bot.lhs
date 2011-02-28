@@ -9,7 +9,7 @@ It turned out to be the best
 [Belgian](http://csclub.uwaterloo.ca/contest/country_profile.php?country_id=32)
 and the best
 [Haskell](http://csclub.uwaterloo.ca/contest/language_profile.php?lang=Haskell)
-bot ([screenshot]($root/images/2010-03-01-final-rankings.png)), so I thought
+bot ([screenshot](/images/2010-03-01-final-rankings.png)), so I thought
 some people might be interested in the code. Luckily, I have been writing this
 bot in Literate Haskell since the beginning, for a few reasons:
 
@@ -190,7 +190,7 @@ This determines the space left for each combatant. Also, when the two flood
 meet, we have found a path between them. This double flood fill is illustrated
 here in this animation:
 
-![Flood fill illustration]($root/images/2010-03-01-flood-fill.gif)
+![Flood fill illustration](/images/2010-03-01-flood-fill.gif)
 
 The function returns:
 

@@ -20,7 +20,7 @@ images (nothing fancy, just Google Image or Flickr search) relevant to the
 conversation subject and show these to the users. The user can then recommend
 images to the conversation partner.
 
-![Screenshot of the application]($root/images/2010-05-20-ch9k.png)
+![Screenshot of the application](/images/2010-05-20-ch9k.png)
 
 ## The problem
 
@@ -61,7 +61,7 @@ possibility to trace the path to the GC roots for an object.
 
 [memory analyzer tool]: http://www.eclipse.org/mat/
 
-![The path to the GC roots]($root/images/2010-05-20-gc-roots.png)
+![The path to the GC roots](/images/2010-05-20-gc-roots.png)
 
 Wait, the image is kept by the `ObjectOutputStream`? Our class looked a bit like:
 

@@ -10,7 +10,7 @@ hosted BelHac, the first Belgian Haskell Hackathon, kindly sponsored by
 [Incubaid](http://www.incubaid.com), [Well-Typed](http://www.well-typed.com),
 and [O'Reilly](http://www.oreilly.com).
 
-![Group picture]($root/images/2010-11-09-group-picture.jpg)
+![Group picture](/images/2010-11-09-group-picture.jpg)
 
 On Friday, we started with a great introduction to Haskell by Miran Lipovača,
 the author of [Learn You a Haskell](http://learnyouahaskell.com). A lot of
@@ -31,7 +31,7 @@ we had some shiny new Real World Haskell books to give away, we made a list of
 people who uploaded a package to Hackage during the hackathon. On Sunday, three
 lucky winners were chosen.
 
-![Kenneth Hoste, Don Stewart, Joachim Breitner and Tom Lokhorst]($root/images/2010-11-09-rwh-winners.jpg)
+![Kenneth Hoste, Don Stewart, Joachim Breitner and Tom Lokhorst](/images/2010-11-09-rwh-winners.jpg)
 
 I think this hackathon was a success. Patches were added to cabal, to
 the new Hackage, and, of course, a lot of packages were released. I

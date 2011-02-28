@@ -38,7 +38,7 @@ to go from Java to something like C. It is always harder to go more low-level,
 and many students were confused by pointers, the fact that pointers can be
 arrays, and all those typical C things.
 
-![Pointers cartoon]($root/images/2010-01-20-xkcd-pointers.png)
+![Pointers cartoon](/images/2010-01-20-xkcd-pointers.png)
 
 I had already had a little bit of experience with C/C++ before starting the
 course (I wrote [jvgs](http://jvgs.sf.net/) this summer) -- which, once again,

@@ -57,7 +57,7 @@ and when it is not found, we get `Nothing` -- comparable to a `null` pointer.
 `null` is very cool and all, but I think this cartoon from
 [Geek and Poke](http://geekandpoke.typepad.com/) illustrates its danger:
 
-![NullPointerException cartoon]($root/images/2010-01-04-null-pointer-exception.png)
+![NullPointerException cartoon](/images/2010-01-04-null-pointer-exception.png)
 
 So, while we can get a `null` *back* from a function, we should never give it
 *to* a function.

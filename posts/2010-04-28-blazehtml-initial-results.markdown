@@ -32,7 +32,7 @@ This project turned out to be more popular on ZuriHac than I had initially
 expected -- I got the help from 7 awesome Haskellers: Chris Done, Fred Ross,
 Jim Whitehead, Harald Holtmann, Oliver Mueller, Simon Meier and Tom Harper.
 
-![Us hacking on ZuriHac]($root/images/2010-04-28-zurihac.jpg)
+![Us hacking on ZuriHac](/images/2010-04-28-zurihac.jpg)
 
 Together, we produced an initial, prototype version of BlazeHtml. We focused
 on abstraction as well as performance... and I'm afraid we wanted to do too much
@@ -82,7 +82,7 @@ The different templating engines tested are:
 - [Erubis](http://www.kuwata-lab.com/erubis/)
 - Our own BlazeHtml.
 
-![BigTable benchmarks]($root/images/2010-04-28-benchmarks.png)
+![BigTable benchmarks](/images/2010-04-28-benchmarks.png)
 
 For the record, all benchmarks are run on a Intel CPU T2080 @ 1.73GHz. As you
 can see, BlazeHtml is quite fast. I also tried some other Haskell libraries. I
@@ -90,7 +90,7 @@ will perform a more extensive benchmarking of the Haskell libraries available
 from Hackage in the near feature. For now, you can see some initial results
 here:
 
-![BigTable benchmarks]($root/images/2010-04-28-haskell-benchmarks.png)
+![BigTable benchmarks](/images/2010-04-28-haskell-benchmarks.png)
 
 Although I have to say that this comparison is not quite fair. BlazeHtml
 produces encoded strings, where the other packages produce just strings (which
