@@ -2,7 +2,7 @@
 title: BlazeHtml 0.4
 description: An update for the BlazeHtml project, with some new features
 tags: haskell, code
---
+---
 
 I've just uploaded BlazeHtml 0.4 to Hackage. There's some new things in there,
 so I thought it would be a good idea to summarize it here.
