@@ -31,7 +31,7 @@ panel, and it will act as a small server, listening on a port you specified.
 Then, xmonad simply sets the applet text by creating a connection to the applet
 server and writing the desired text. In my case, the applet looks like this:
 
-![Screenshot of the applet]($root/images/2011-02-26-gnome-socket-applet.png)
+![Screenshot of the applet](/images/2011-02-26-gnome-socket-applet.png)
 
 The applet is written in C and should work together with most window managers
 that support adding custom hooks. Install instructions and example code for
