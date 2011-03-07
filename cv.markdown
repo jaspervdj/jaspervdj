@@ -17,35 +17,29 @@ This is a work in progress.
 
 Here is a list of projects I have worked on in the past years.
 
-### JVGS (2009)
-
-[JVGS] is an arty platform game that is not like the others. I implemented a
-subset of the [SVG specification] to give the game it's original look.
+- [JVGS] (2009) is an arty platform game that is not like the others. I
+  implemented a subset of the [SVG specification] to give the game it's original
+  look.
 
 [JVGS]: http://jvgs.sf.net/
 [SVG specification]: http://www.w3.org/Graphics/SVG/
 
-### hakyll (2009 - now)
-
-I wanted a custom system for my personal homepage, so I wrote [Hakyll], a static
-site generator in [Haskell]. 
+- [Hakyll] (2009 - now): I wanted a custom system for my personal homepage, so I
+  wrote [Hakyll], a static site generator in [Haskell]. 
 
 [Hakyll]: http://jaspervdj.be/hakyll
 [Haskell]: http://haskell.org/
 
-### BlazeHtml (2010 - now)
-
-[BlazeHtml] is a blazingly fast HTML combinator library for the [Haskell]
-programming language. I worked on this project for [Google Summer of Code] 2010.
+- [BlazeHtml] (2010 - now) is a blazingly fast HTML combinator library for the
+  [Haskell] programming language. I worked on this project for [Google Summer of
+  Code] 2010.
 
 [BlazeHtml]: http://jaspervdj.be/blaze
 [Google Summer of Code]: http://code.google.com/soc/
 
-### Digestive Functors (2010 - now)
-
-[Digestive functors] is a general way of consuming input in [Haskell]. It can be
-used to generate HTML forms and parse the form input, as well as command-line
-applications.
+- [Digestive functors] (2010 - now) is a general way of consuming input in
+  [Haskell]. It can be used to generate HTML forms and parse the form input, as
+  well as command-line applications.
 
 [Digestive functors]: http://github.com/jaspervdj/digestive-functors/
 
