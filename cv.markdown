@@ -51,13 +51,14 @@ You can view more projects on my [GitHub page].
 
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
-- BarcampGhent, 29th of November 2009, Ghent, "Learn you a Haskell in 20 minutes"
+- BarcampGhent, 29th of November 2009, Ghent, "Learn you a Haskell in 20
+  minutes"
   ([slides](/files/2009-barcampghent-haskell.pdf))
 
 - ZuriHac, 21th of March 2010, Zürich, "BlazeHtml: a blazingly fast HTML
   combinator library"
-
   ([slides](/files/2010-zurihac-blaze-html.pdf))
+
 - GhentFPG, 1st of April 2010, Ghent, "BlazeHtml: a blazingly fast HTML
   generator in Haskell"
   ([slides](/files/2010-ghentfpg-blaze-html.pdf))
