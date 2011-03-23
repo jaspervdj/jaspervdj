@@ -83,6 +83,14 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
 [Zeus WPI]: http://zeus.ugent.be/
 [Functional Programming Exchange 2011]: http://skillsmatter.com/event/scala/functionalpx-2011
 
+## Trivia
+
+- 2nd place (of 83) in [The Flemish Programming Contest] 2011, together with
+  [Pieter De Baets] and [Toon Willems]
+
+[The Flemish Programming Contest]: http://vlaamseprogrammeerwedstrijd.be/
+[Pieter De Baets]: http://thinkjavache.be/
+[Toon Willems]: http://twitter.com/nudded/
 
 <!--
 ## Conferences attended
