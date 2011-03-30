@@ -9,7 +9,7 @@ What is this
 
 I've recently [released] Hakyll 3, and it seems to have reached a certain form
 of stability now. The documentation is getting better, especially after
-[Benedict Eastough] ported the [examples] from Hakyll 2.x to 3.
+[Benedict Eastaugh] ported the [examples] from Hakyll 2.x to 3.
 
 However, recently it was brought to my attention that hacking on Hakyll is quite
 difficult -- all source code is relatively clean and well-commented but there is
