@@ -15,36 +15,36 @@ import Hakyll
 main :: IO ()
 main = hakyll $ do
     -- Copy images
-    matchPattern "images/*" $ do
+    match "images/*" $ do
         route idRoute
         compile copyFileCompiler
 
-    matchPattern "favicon.ico" $ do
+    match "favicon.ico" $ do
         route   idRoute
         compile copyFileCompiler
 
     -- Copy JavaScript
-    matchPattern "js/*" $ do
+    match "js/*" $ do
         route   idRoute
         compile copyFileCompiler
 
     -- Copy files (deep)
-    matchPattern "files/**" $ do
+    match "files/**" $ do
         route idRoute
         compile copyFileCompiler
 
     -- Compress CSS
-    matchPattern "css/*" $ do
+    match "css/*" $ do
         route idRoute
         compile compressCssCompiler
 
     -- Render the /tmp index page
-    matchPattern "tmp/index.html" $ do
+    match "tmp/index.html" $ do
         route idRoute
         compile $ readPageCompiler >>> relativizeUrlsCompiler
 
     -- Render each and every post
-    matchPattern "posts/*" $ do
+    match "posts/*" $ do
         route   $ setExtension ".html"
         compile $ pageCompiler
             >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
@@ -53,7 +53,7 @@ main = hakyll $ do
             >>> applyTemplateCompiler "templates/default.html"
 
     -- Post list
-    matchPattern "posts.html" $ route idRoute
+    match "posts.html" $ route idRoute
     create "posts.html" $ constA mempty
         >>> arr (setField "title" "Posts")
         >>> requireAllA "posts/*" addPostList
@@ -61,7 +61,7 @@ main = hakyll $ do
         >>> applyTemplateCompiler "templates/default.html"
 
     -- Index
-    matchPattern "index.html" $ route idRoute
+    match "index.html" $ route idRoute
     create "index.html" $ constA mempty
         >>> arr (setField "title" "Home")
         >>> requireA "tags" (setFieldA "tagcloud" (renderTagCloud'))
@@ -74,24 +74,24 @@ main = hakyll $ do
         requireAll "posts/*" (\_ ps -> readTags ps :: Tags String)
 
     -- Add a tag list compiler for every tag
-    matchPattern "tags/*" $ route $ setExtension ".html"
+    match "tags/*" $ route $ setExtension ".html"
     metaCompile $ require_ "tags"
         >>> arr (M.toList . tagsMap)
         >>> arr (map (\(t, p) -> (tagIdentifier t, makeTagList t p)))
 
     -- Read templates
-    matchPattern "templates/*" $ compile templateCompiler
+    match "templates/*" $ compile templateCompiler
 
     -- Render some static pages
     forM_ ["contact.markdown", "cv.markdown", "links.markdown"] $ \p ->
-        matchPattern p $ do
+        match p $ do
             route   $ setExtension ".html"
             compile $ pageCompiler
                 >>> applyTemplateCompiler "templates/default.html"
                 >>> relativizeUrlsCompiler
 
     -- Render RSS feed
-    matchPattern "rss.xml" $ route idRoute
+    match "rss.xml" $ route idRoute
     create "rss.xml" $ requireAll_ "posts/*" >>> renderRss feedConfiguration
 
     -- End
