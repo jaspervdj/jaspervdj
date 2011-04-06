@@ -18,7 +18,7 @@ blogpost: I will attempt to give a whirlwind tour of the Hakyll internals, and a
 high-level overview of how it all works together.
 
 [released]: http://www.haskell.org/pipermail/web-devel/2011/000980.html
-[Benedict Eastough]: http://extralogical.net/
+[Benedict Eastaugh]: http://extralogical.net/
 [examples]: https://github.com/jaspervdj/hakyll/tree/master/examples
 
 Core/Web
