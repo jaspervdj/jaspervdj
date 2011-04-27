@@ -1,0 +1,207 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="generator" content="pandoc" />
+  <style type="text/css">
+      html {
+          line-height: 140%;
+          font-family: 'Helvetica', sans-serif;
+          font-size: 16px;
+      }
+      body {
+          width: 500px;
+          margin: 0px auto 30px auto;
+      }
+      h1, h2, h3 {
+          line-height: 130%;
+      }
+      h2 {
+          border-bottom: 2px solid black; 
+      }
+      a {
+          vertical-align: super;
+          font-size: 80%;
+          text-decoration: none;
+          background: rgb(50, 50, 200);
+          color: white;
+          padding: 0px 2px 0px 2px;
+      }
+  </style>
+</head>
+<body>
+<h1 id="convert-the-text-package-to-use-utf--8-internally"
+>Convert the text package to use UTF–8 internally</h1
+>
+
+<p><em>Jasper Van der Jeugt, April 6 2011, as submitted to the Google Summer of Code
+2011 program</em></p>
+
+<h2 id="introduction"
+>Introduction</h2
+><p
+>The default <code
+  >String</code
+  > type is easy to use and can be used prototype applications, but it lacks the performance needed for real-world applications. <code
+  >ByteString</code
+  > <a href="http://www.cse.unsw.edu.au/~dons/fps.html"
+  >1</a
+  > types offer great performance, but because they work with raw bytes, they are often awkward to use when the user wants text processing.</p
+><p
+>This is where the excellent <code
+  >Text</code
+  > <a href="http://hackage.haskell.org/package/text"
+  >2</a
+  > type, which offers a combination of speed and simplicity-of-use, comes in. For these reasons (among others), many applications and libraries already use the Text library intensively. This means that performance improvements in the Text library can have a large impact on many Haskell projects.</p
+><p
+>Initially, the Text library was written as part of Tom Harper’s master dissertation at the University of Oxford <a href="http://portal.acm.org/citation.cfm?id=1929095"
+  >3</a
+  >. At this time, benchmarking seemed to indicate that UTF–16 would be a good choice for the internal encoding used in the library, because it provides a nice balance between UTF–8, which is compact but uses a more complicated encoding/decoding algorithm, and UTF–32, which uses a lot more memory but has a straightforward encoding/decoding algorithm.</p
+><p
+>Several benchmarks were published to support the Text library. However, they only timed the performance of the different encodings <em
+  >after</em
+  > the <code
+  >Text</code
+  > had been decoded and read from a socket/file/… Additionally, they failed to take the time used to encode and write the <code
+  >Text</code
+  > back into account.</p
+><p
+>If benchmarks would take this into account, the results might look different: since a lot of “Real World” is UTF–8 encoded, the initial conversion — read some bytes to a <code
+  >Text</code
+  > data structure — and the final conversion — write the <code
+  >Text</code
+  > back to a file — could be done very fast if <code
+  >Text</code
+  > would use UTF–8 internally as well.</p
+><h2 id="expected-advantages-and-disadvantages-of-using-utf--8"
+>Expected advantages and disadvantages of using UTF–8</h2
+><p
+>As is to be expected, there are both advantages and disadvantages to every representation, including UTF–8. A list of the most important ones:</p
+><p
+>Advantages:</p
+><ul
+><li
+  ><p
+    >Reduced memory usage (except for texts with, for example, many East Asian characters). Under UTF–8, ASCII characters only take up a single byte, which is a very good property because a lot of markup languages use such characters in their syntax (e.g., HTML uses ASCII tag names). This can be crucial for programs that need to hold a lot of text in memory (e.g., data mining applications).</p
+    ></li
+  ><li
+  ><p
+    >UTF–8 is widely used in “Real World” applications, such as the world wide web <a href="http://googleblog.blogspot.com/2008/05/moving-to-unicode-51.html"
+      >4</a
+      >. For these applications, using UTF–8 as the internal <code
+      >Text</code
+      > representation means that initial and final conversions can be done in <code
+      >O(1)</code
+      > time.</p
+    ></li
+  ></ul
+><p
+>Disadvantages:</p
+><ul
+><li
+  >As before mentioned in the introduction, UTF–8 uses a more complex encoding/decoding scheme. This is partially countered by Stream Fusion in the Text library, which ensures that no intermediate encode/decode calls are needed when composing fusible functions that work on <code
+    >Text</code
+    >.</li
+  ></ul
+><h2 id="tasks"
+>Tasks</h2
+><p
+>There are a number of different tasks in this project, with some dependencies between them. A brief overview of them:</p
+><h3 id="benchmarks"
+>1. Benchmarks</h3
+><p
+>I will collect and extend the benchmark suite for the Text library using two strategies:</p
+><ul
+><li
+  ><p
+    >Talk to the community using the Haskell-cafe mailing list, asking for open-source applications that make extensive use of the Text library. For this purpose, I can also use the reverse dependencies on Hackage (the Haskell package repository). Most of these benchmarks will require editing to allow easy interoperability with the different Text versions.</p
+    ></li
+  ><li
+  ><p
+    >I plan to implement several benchmarks myself, modeling behavior of real applications. This is important because artificial benchmarks do not reflect the ways in which the library code will be used in a real-world application and the ways in which the generated machine code interacts with other components of these applications.</p
+    ></li
+  ></ul
+><p
+>Following good evaluation practices, all benchmarks should uniformly use the Criterion <a href="http://hackage.haskell.org/package/criterion"
+  >5</a
+  > library.</p
+><p
+>An important goal is to have a good coverage of different languages in the various benchmarks. This requires including character sets such as Cyrillic and Arabic in addition to the classic western (i.e., Latin) character set.</p
+><h3 id="conversion"
+>2. Conversion</h3
+><p
+>The actual encoding/decoding functionality is located in the <code
+  >Data.Text.Fusion</code
+  > module. It can be converted to UTF–8 in a reasonably small amount of time. However, I anticipate the following possible problems (since needs to be done <em
+  >right</em
+  >):</p
+><ul
+><li
+  ><p
+    >Branching is much more complicated for UTF–8, compared to UTF–16. When Tom Harper initially wrote the Text library, this complexity was given as one of the primary reasons for choosing UTF–16.</p
+    ></li
+  ><li
+  ><p
+    >Micro-optimization is incredibly important in this module, because it is the very core of the Text library. To achieve a maximal optimization, I will have to look at the generated Haskell Core and figure out where further optimizations are possible.</p
+    ></li
+  ></ul
+><h3 id="evaluation"
+>3. Evaluation</h3
+><p
+>Once the benchmarks have been implemented to my satisfaction, they will be used to compare the UTF–8 and UTF–16 implementations of the Text library. Based on rigorous experiments, I will employ the different profiling tools/techniques available for Haskell (cost-center profiling, heap profiles, studying generated core…) to allow identifying potential bottlenecks and areas where further optimization is possible.</p
+><h2 id="schedule"
+>Schedule</h2
+><p
+>Note that the tasks as described above will not be completed following a sequential scheme, but in short iterative cycles. This means that, once enough benchmarks have been collected, my work-flow will consist of:</p
+><ul
+><li
+  >convert parts of the Text library to use UTF–8;</li
+  ><li
+  >evaluate the performance using the benchmarks;</li
+  ><li
+  >find the bottlenecks and areas where optimization is possible;</li
+  ><li
+  >implement optimizations there;</li
+  ><li
+  >add benchmarks if required;</li
+  ><li
+  >repeat.</li
+  ></ul
+><p
+>Because of this iterative schedule, the concrete planning is not very detailed, but I can give some deadlines:</p
+><ul
+><li
+  >benchmarks should be collected before July 1, 2011;</li
+  ><li
+  >improvements to the benchmarks can be made until the midterm evaluation — July 15, 2011;</li
+  ><li
+  >the library should be ported (with some optimizations) before August 1, 2011;</li
+  ><li
+  >all possible optimizations should be implemented August 10, 2011.</li
+  ></ul
+><p
+>I also plan to regularly publish posts on my blog <a href="http://jaspervdj.be/"
+  >6</a
+  > — say one post every 14 days — about my progress on the project, and discuss interesting problems/obstacles I come across.</p
+><h2 id="conclusion"
+>Conclusion</h2
+><p
+>I think I make an excellent candidate to implement the above proposal, because I have:</p
+><ul
+><li
+  >an excellent knowledge of Haskell in general;</li
+  ><li
+  >experience in writing/benchmarking/optimizing fast Haskell code (blaze-html <a href="http://jaspervdj.be/blaze"
+    >7</a
+    >);</li
+  ><li
+  >looked at the Text internals before, when we were looking to write a Text Builder Monoid;</li
+  ><li
+  >written a fast UTF–8 encoder before (blaze-builder <a href="http://github.com/meiersi/blaze-builder"
+    >8</a
+    >).</li
+  ></ul
+>
+</body>
+</html>
