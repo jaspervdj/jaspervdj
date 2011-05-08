@@ -48,7 +48,7 @@ main = hakyll $ do
         route   $ setExtension ".html"
         compile $ pageCompiler
             >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
-            >>> renderTagsField "prettytags" (fromCaptureString "tags/*")
+            >>> renderTagsField "prettytags" (fromCapture "tags/*")
             >>> applyTemplateCompiler "templates/post.html"
             >>> applyTemplateCompiler "templates/default.html"
 
@@ -101,7 +101,7 @@ main = hakyll $ do
     renderTagCloud' = renderTagCloud tagIdentifier 100 120
 
     tagIdentifier :: String -> Identifier
-    tagIdentifier = fromCaptureString "tags/*"
+    tagIdentifier = fromCapture "tags/*"
 
 -- | Auxiliary compiler: generate a post list from a list of given posts, and
 -- add it to the current page under @$posts@
