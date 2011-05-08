@@ -87,10 +87,10 @@ possible, but we would need *a lot* of cables).
 
 [Star network]: http://en.wikipedia.org/wiki/Star_network
 
-Instead, [Jens], [Pieter] and [Toon] created a nice ring-based network, in which
-each node also acted as a switch (using [bridging-utils]). Then, the
-[Spanning Tree Protocol] was used to determine an optimal network layout,
-closing one link in the circle to create a tree.
+Instead, [Jens], [Pieter] and [Toon] created an awesome ring-based network, in
+which each node also acts as a switch (using [bridging-utils]). Then, the
+[Spanning Tree Protocol] is used to determine an optimal network layout, closing
+one link in the circle to create a tree.
 
 [Jens]: http://twitter.com/jenstimmerman
 [Pieter]: http://thinkjavache.be/
@@ -107,7 +107,38 @@ TODO: silly drawing of a circle with some nodes
 
 ### count-von-count
 
-TODO
+Now, I will elaborate on the software which interpolates the data received from
+the gyrid nodes in order to count laps [^1]. `count-von-count` is a robust
+system written in the [Haskell] programming language.
+
+[Haskell]: http://haskell.org/
+
+[^1]: Because the author of this blogpost is also the author of
+      `count-von-count`, this component is explained in a little more detail.
+
+At this point, we have a central node which receives 4-tuples from the gyrid
+nodes:
+
+    (Timestamp, Mac receiver, Mac relay baton, RSSI value)
+
+After some initial tests, we concluded the [RSSI] value was not too useful for
+us. Later, we did use it to determine if a signal was strong enough (i.e. RSSI
+above a certain treshold), and then we discarded it. This leaves us with a
+triplet:
+
+[RSSI]: http://en.wikipedia.org/wiki/Received_signal_strength_indication
+
+    (Timestamp, Mac receiver, Mac relay baton)
+
+We do the calculations separately for each team -- only we work with relay
+batons instead of teams. This means that we get, for every team:
+
+    (Timestamp, Mac receiver)
+
+We also ([hopefully](http://bash.org/?5273)) know the location of our gyrid
+nodes, which means we can again map our data to something more simple:
+
+    (Timestamp, Position)
 
 TODO: drawing to illustrate the linear regression used
 
