@@ -123,8 +123,8 @@ nodes:
 
 After some initial tests, we concluded the [RSSI] value was not too useful for
 us. Later, we did use it to determine if a signal was strong enough (i.e. RSSI
-above a certain treshold), and then we discarded it. This leaves us with a
-triplet:
+above a certain treshold), and then we discarded the RSSI value. This leaves us
+with a triplet:
 
 [RSSI]: http://en.wikipedia.org/wiki/Received_signal_strength_indication
 
