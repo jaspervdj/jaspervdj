@@ -27,7 +27,7 @@ two people counting laps at the same time. Simple touchscreens were used, so
 they basically just sat next to the circuit, looked at the runners that passed
 and touched the corresponding buttons on the screen.
 
-Although pretty efficient, a completely automated system would be a nice-to-have
+Although pretty efficient, a completely automated system would be nice-to-have
 for several reasons:
 
 - less mistakes are possible (provided it's a *good* system);
@@ -66,7 +66,7 @@ The receivers run a custom build of [Voyage Linux] created to run the [Gyrid]
 service. What does this mean for us? We get simple, robust nodes we can use as:
 
 - linux node: we can simply SSH to them and set them up
-- router: to create a more complicated network setup (see later)
+- switch: to create a more complicated network setup (see later)
 - receiver: sending all received bluetooth data to a central computing node
 
 [Voyage Linux]: http://linux.voyage.hk/
@@ -80,7 +80,28 @@ TODO: picture of a node (preferably in action)
 
 ### Network setup
 
-TODO
+The problem here was that we only could put cables *around* the circuit, we
+couldn't cut right through to the other side of the circuit. This means the
+commonly used [Star network] was impossible (well, theoretically it was
+possible, but we would need *a lot* of cables).
+
+[Star network]: http://en.wikipedia.org/wiki/Star_network
+
+Instead, [Jens], [Pieter] and [Toon] created a nice ring-based network, in which
+each node also acted as a switch (using [bridging-utils]). Then, the
+[Spanning Tree Protocol] was used to determine an optimal network layout,
+closing one link in the circle to create a tree.
+
+[Jens]: http://twitter.com/jenstimmerman
+[Pieter]: http://thinkjavache.be/
+[Toon]: http://twitter.com/nudded
+[bridging-utils]: http://www.linuxfoundation.org/collaborate/workgroups/networking/bridge
+[Spanning Tree Protocol]: http://en.wikipedia.org/wiki/Spanning_Tree_Protocol
+
+This means we didn't have to use *too much* cables, and still had the property
+that one link could go down (physically) without bringing down any nodes: in
+this case, another tree would be chosen. And if two contiguous links went down,
+we would only lose one node (obviously, the one in between those two links)!
 
 TODO: silly drawing of a circle with some nodes
 
