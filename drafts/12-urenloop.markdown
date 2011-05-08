@@ -74,7 +74,15 @@ service. What does this mean for us? We get simple, robust nodes we can use as:
 
 ### Relay batons
 
-TODO
+We built the relay batons using a simple design: a battery pack consisting of 4
+standard AA batteries and connecting them to a bluetooth chip, put in a simple
+insulation pipe.
+
+Some extensive tests on battery duration were also done, and it turns out even
+the cheapest batteries are good enough to keep a bluetooth chip in an idle state
+for more than 50 hours. We never actually set up a bluetooth connection between
+the receivers and the relay batons -- we just detect them and use that as an
+approximate position.
 
 TODO: picture of a node (preferably in action)
 
@@ -108,7 +116,7 @@ TODO: silly drawing of a circle with some nodes
 ### count-von-count
 
 Now, I will elaborate on the software which interpolates the data received from
-the gyrid nodes in order to count laps [^1]. `count-von-count` is a robust
+the Gyrid nodes in order to count laps [^1]. `count-von-count` is a robust
 system written in the [Haskell] programming language.
 
 [Haskell]: http://haskell.org/
@@ -116,7 +124,7 @@ system written in the [Haskell] programming language.
 [^1]: Because the author of this blogpost is also the author of
       `count-von-count`, this component is explained in a little more detail.
 
-At this point, we have a central node which receives 4-tuples from the gyrid
+At this point, we have a central node which receives 4-tuples from the Gyrid
 nodes:
 
     (Timestamp, Mac receiver, Mac relay baton, RSSI value)
@@ -135,22 +143,54 @@ batons instead of teams. This means that we get, for every team:
 
     (Timestamp, Mac receiver)
 
-We also ([hopefully](http://bash.org/?5273)) know the location of our gyrid
+We also ([hopefully](http://bash.org/?5273)) know the location of our Gyrid
 nodes, which means we can again map our data to something more simple:
 
     (Timestamp, Position)
 
+This is something we can easily plot. Note that there are only a few possible
+positions, since we discarded the RSSI values because of reliability issues.
+
 TODO: drawing to illustrate the linear regression used
+
+I've illustrated the plot further with a linear regression, which is also what
+`count-von-count` does. Based on this line, it can figure out the average speed
+and other values which are then used to "judge" laps. When `count-von-count`
+decides a relay baton has made a lap, it will make a REST request to
+`dr.beaker`.
 
 ### dr.beaker
 
-TODO
+`dr.beaker` is the scoreboard application. It's implemented by [Thomas] as a
+[Java] service that runs on top of [GlassFish]. It provides features such as:
 
-TODO: nag about the incompetence of blackskad
+- registering & managing batons and teams
+- assigning batons to teams
+- a scoreboard
+- a history of the entire competition
+
+and more.
+
+[Thomas]: http://twitter.com/blackskad
+[Java]: http://en.wikipedia.org/wiki/Java_(programming_language)
+[GlassFish]: http://glassfish.java.net/
 
 Conclusion
 ==========
 
-TODO
+It's a hardware problem.
 
-It's a hardware problem, ideas for next year.
+When the contest started, both Gyrid, `count-von-count` and `dr.beaker` turned
+out to be quite reliable. However, our relay batons were breaking fast. This
+simply due to the simple, obvious fact that runners don't treat your precious
+hardware with love -- they need to be able to quickly pass them. Inevitably,
+batons will be thrown and dropped.
+
+Initially, we were able to swap the broken relay batons for the few spare ones
+we had, and then quickfix the broken ones using some duckt tape. After about
+five hours, however, they really started breaking -- at a rate that was hard to
+keep up with using quickfixing.
+
+Hence, this is the main goal for next year: build reliable, solid relay batons.
+We need to be able to throw them down from a four-story building. Beth Dido
+needs to be able to use them as a dildo, and they should come out unharmed.
