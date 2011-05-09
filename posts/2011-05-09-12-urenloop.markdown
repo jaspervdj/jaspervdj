@@ -115,7 +115,7 @@ that one link could go down (physically) without bringing down any nodes: in
 this case, another tree would be chosen. And if two contiguous links went down,
 we would only lose one node (obviously, the one in between those two links)!
 
-![Ring-based network](/images/2011-05-09-ring.png)
+![Ring-based network with spanning tree indicated](/images/2011-05-09-ring.png)
 
 ### count-von-count
 
@@ -193,9 +193,9 @@ batons will be thrown and dropped.
 ![Thomas & me monitoring the batons](/images/2011-05-09-monitoring.jpg)
 
 Initially, we were able to swap the broken relay batons for the few spare ones
-we had, and then quickfix the broken ones using some duckt tape. After about
-five hours, however, they really started breaking -- at a rate that was hard to
-keep up with using quickfixing.
+we had, and then quickfix the broken ones using some duct tape. After about five
+hours, however, they really started breaking -- at a rate that was hard to keep
+up with using quickfixing.
 
 Hence, this is the main goal for next year: build reliable, solid relay batons.
 We need to be able to throw them down from a four-story building. Beth Dido
