@@ -72,7 +72,7 @@ service. What does this mean for us? We get simple, robust nodes we can use as:
 [Voyage Linux]: http://linux.voyage.hk/
 [Gyrid]: http://github.com/Rulus/Gyrid
 
-Here is another picture of what's inside of a node:
+Here is another picture of what's inside a node:
 
 ![A Gyrid node (inside)](/images/2011-05-09-gyrid-node-inside.jpg)
 
