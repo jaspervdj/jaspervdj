@@ -115,7 +115,7 @@ that one link could go down (physically) without bringing down any nodes: in
 this case, another tree would be chosen. And if two contiguous links went down,
 we would only lose one node (obviously, the one in between those two links)!
 
-TODO: silly drawing of a circle with some nodes
+![Ring-based network](/images/2011-05-09-ring.png)
 
 ### count-von-count
 
@@ -155,7 +155,7 @@ nodes, which means we can again map our data to something more simple:
 This is something we can easily plot. Note that there are only a few possible
 positions, since we discarded the RSSI values because of reliability issues.
 
-TODO: drawing to illustrate the linear regression used
+![Linear regression used](/images/2011-05-09-plot.png)
 
 I've illustrated the plot further with a linear regression, which is also what
 `count-von-count` does. Based on this line, it can figure out the average speed
@@ -199,4 +199,7 @@ keep up with using quickfixing.
 
 Hence, this is the main goal for next year: build reliable, solid relay batons.
 We need to be able to throw them down from a four-story building. Beth Dido
-needs to be able to use them as a dildo, and they should come out unharmed.
+needs to be able to use them as a dildo, and they should come out unharmed. Feel
+free to [contact us] if you're interested in making this happen!
+
+[contact us]: http://zeus.ugent.be/contact/
