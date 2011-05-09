@@ -120,9 +120,10 @@ we would only lose one node (obviously, the one in between those two links)!
 ### count-von-count
 
 Now, I will elaborate on the software which interpolates the data received from
-the Gyrid nodes in order to count laps [^1]. `count-von-count` is a robust
+the Gyrid nodes in order to count laps [^1]. [count-von-count] is a robust
 system written in the [Haskell] programming language.
 
+[count-von-count]: http://github.com/ZeusWPI/12UrenLoop/tree/master/count-von-count
 [Haskell]: http://haskell.org/
 
 [^1]: Because the author of this blogpost is also the author of
@@ -165,7 +166,7 @@ decides a relay baton has made a lap, it will make a REST request to
 
 ### dr.beaker
 
-`dr.beaker` is the scoreboard application. It's implemented by [Thomas] as a
+[dr.beaker] is the scoreboard application. It's implemented by [Thomas] as a
 [Java] service that runs on top of [GlassFish]. It provides features such as:
 
 - registering & managing batons and teams
@@ -175,6 +176,7 @@ decides a relay baton has made a lap, it will make a REST request to
 
 and more.
 
+[dr.beaker]: http://github.com/ZeusWPI/12UrenLoop/tree/master/dr.beaker
 [Thomas]: http://twitter.com/blackskad
 [Java]: http://en.wikipedia.org/wiki/Java_(programming_language)
 [GlassFish]: http://glassfish.java.net/
