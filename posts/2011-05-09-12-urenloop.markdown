@@ -9,15 +9,15 @@ clubs compete in a 12-hour-long relay race to run as much laps as possible. Each
 of the 14 teams this year had a baton assigned, so they can only have one runner
 at any time.
 
+[12 urenloop]: http://www.12urenloop.be/
+[Ghent University]: http://www.ugent.be/
+
+![Just after the start](/images/2011-05-09-12-urenloop.jpg)
+
 This event is not all about the running -- it's become more of a festival, with
 lots of things to do and see (I hope I can convince you to check it out if
 you're based in Ghent) -- but I will focus on the running here, and
 more specifically: the system used to count the laps.
-
-[12 urenloop]: http://www.12urenloop.be/
-[Ghent University]: http://www.ugent.be/
-
-TODO: picture of 12 urenloop
 
 The manual way
 ==============
@@ -60,7 +60,7 @@ which (among other things) studies technology to track people on events
 
 [CartoGIS]: http://geoweb.ugent.be/cartogis/
 
-TODO: picture of a node (preferably in action)
+![A Gyrid node](/images/2011-05-09-gyrid-node.jpg)
 
 The receivers run a custom build of [Voyage Linux] created to run the [Gyrid]
 service. What does this mean for us? We get simple, robust nodes we can use as:
@@ -71,6 +71,10 @@ service. What does this mean for us? We get simple, robust nodes we can use as:
 
 [Voyage Linux]: http://linux.voyage.hk/
 [Gyrid]: http://github.com/Rulus/Gyrid
+
+Here is another picture of what's inside of a node:
+
+![A Gyrid node (inside)](/images/2011-05-09-gyrid-node-inside.jpg)
 
 ### Relay batons
 
@@ -84,7 +88,7 @@ for more than 50 hours. We never actually set up a bluetooth connection between
 the receivers and the relay batons -- we just detect them and use that as an
 approximate position.
 
-TODO: picture of a node (preferably in action)
+![Left: our sweatshop, right: a relay baton](/images/2011-05-09-relay-batons.jpg)
 
 ### Network setup
 
@@ -185,6 +189,8 @@ out to be quite reliable. However, our relay batons were breaking fast. This
 simply due to the simple, obvious fact that runners don't treat your precious
 hardware with love -- they need to be able to quickly pass them. Inevitably,
 batons will be thrown and dropped.
+
+![Thomas & me monitoring the batons](/images/2011-05-09-monitoring.jpg)
 
 Initially, we were able to swap the broken relay batons for the few spare ones
 we had, and then quickfix the broken ones using some duckt tape. After about
