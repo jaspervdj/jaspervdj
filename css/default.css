@@ -104,8 +104,8 @@ img.inline-image {
     display: inline;
 }
 
-img.pretty {
-    margin: 10px;
+img.avatar {
+    margin: 20px 20px 20px 0px;
     display: inline;
     float: left;
 }
