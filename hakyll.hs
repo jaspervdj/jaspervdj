@@ -65,7 +65,7 @@ main = hakyll $ do
     create "index.html" $ constA mempty
         >>> arr (setField "title" "Home")
         >>> requireA "tags" (setFieldA "tagcloud" (renderTagCloud'))
-        >>> requireAllA "posts/*" (id *** arr (take 3 . reverse . sortByBaseName) >>> addPostList)
+        >>> requireAllA "posts/*" (id *** arr (take 3 . reverse . chronological) >>> addPostList)
         >>> applyTemplateCompiler "templates/index.html"
         >>> applyTemplateCompiler "templates/default.html"
 
@@ -100,7 +100,7 @@ main = hakyll $ do
     renderTagCloud' :: Compiler (Tags String) String
     renderTagCloud' = renderTagCloud tagIdentifier 100 120
 
-    tagIdentifier :: String -> Identifier
+    tagIdentifier :: String -> Identifier (Page String)
     tagIdentifier = fromCapture "tags/*"
 
 -- | Auxiliary compiler: generate a post list from a list of given posts, and
@@ -108,7 +108,7 @@ main = hakyll $ do
 --
 addPostList :: Compiler (Page String, [Page String]) (Page String)
 addPostList = setFieldA "posts" $
-    arr (reverse . sortByBaseName)
+    arr (reverse . chronological)
         >>> require "templates/postitem.html" (\p t -> map (applyTemplate t) p)
         >>> arr mconcat
         >>> arr pageBody
