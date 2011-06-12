@@ -2,21 +2,27 @@
 title: Links
 ---
 
-# Blogroll!
+# A list of links
 
-## Google Summer of Code 2010 students for [haskell.org]:
+These lists are incomplete, and in no particular order.
 
-[haskell.org]: haskell.org
+## Some Haskell-related blogs
 
-- [Adolfo Builes](http://darcs-gsoc2010.blogspot.com/)
-- [Alp Mestanogullari](http://alpmestan.wordpress.com/)
-- [Marco Silva](http://marcotmarcot.wordpress.com/)
-- [Matt Gruen](http://cogracenotes.wordpress.com/)
-- [Thomas Tuegel](http://cabaltest.blogspot.com/)
+- [Bryan O'Sullivan](http://www.serpentine.com/blog/)
+- [Chris Done](http://chrisdone.com/)
+- [Gregory Collins](http://gregorycollins.net/)
+- [Johan Tibell](http://blog.johantibell.com/)
+- [Simon Meier](http://lambda-view.blogspot.com/)
 
-## Cool kids from UGent:
+## Some cool kids from UGent
 
-- [David Verhasselt](http://crowdway.com)
-- [Denis Defreyne](http://stoneship.org)
-- [Pieter De Baets](http://thinkjavache.be)
-- [Wim Vander Schelden](http://fixnum.org)
+- [David Verhasselt](http://crowdway.com/)
+- [Denis Defreyne](http://stoneship.org/)
+- [Pieter De Baets](http://thinkjavache.be/)
+- [Wim Vander Schelden](http://fixnum.org/)
+
+## Comics I approve
+
+- [Cyanide & Happiness](http://www.explosm.net/comics/2452/)
+- [Saturday Morning Breakfast Cereal](http://www.smbc-comics.com/)
+- [XKCD](http://xkcd.com/)
