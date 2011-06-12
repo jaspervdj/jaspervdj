@@ -56,7 +56,8 @@ main = hakyll $ do
     match "posts.html" $ route idRoute
     create "posts.html" $ constA mempty
         >>> arr (setField "title" "Posts")
-        >>> requireAllA "posts/*" addPostList
+        >>> setFieldPageList recentFirst
+                "templates/postitem.html" "posts" "posts/*"
         >>> applyTemplateCompiler "templates/posts.html"
         >>> applyTemplateCompiler "templates/default.html"
 
@@ -65,7 +66,8 @@ main = hakyll $ do
     create "index.html" $ constA mempty
         >>> arr (setField "title" "Home")
         >>> requireA "tags" (setFieldA "tagcloud" (renderTagCloud'))
-        >>> requireAllA "posts/*" (id *** arr (take 3 . reverse . chronological) >>> addPostList)
+        >>> setFieldPageList (take 3 . recentFirst)
+                "templates/postitem.html" "posts" "posts/*"
         >>> applyTemplateCompiler "templates/index.html"
         >>> applyTemplateCompiler "templates/default.html"
 
@@ -103,22 +105,13 @@ main = hakyll $ do
     tagIdentifier :: String -> Identifier (Page String)
     tagIdentifier = fromCapture "tags/*"
 
--- | Auxiliary compiler: generate a post list from a list of given posts, and
--- add it to the current page under @$posts@
---
-addPostList :: Compiler (Page String, [Page String]) (Page String)
-addPostList = setFieldA "posts" $
-    arr (reverse . chronological)
-        >>> require "templates/postitem.html" (\p t -> map (applyTemplate t) p)
-        >>> arr mconcat
-        >>> arr pageBody
-
 makeTagList :: String
             -> [Page String]
             -> Compiler () (Page String)
 makeTagList tag posts =
-    constA (mempty, posts)
-        >>> addPostList
+    constA posts
+        >>> pageListCompiler recentFirst "templates/postitem.html"
+        >>> arr (copyBodyToField "posts" . fromBody)
         >>> arr (setField "title" ("Posts tagged " ++ tag))
         >>> applyTemplateCompiler "templates/posts.html"
         >>> applyTemplateCompiler "templates/default.html"
