@@ -13,7 +13,7 @@ import Hakyll
 -- | Entry point
 --
 main :: IO ()
-main = hakyll $ do
+main = hakyllWith config $ do
     -- Copy images
     match "images/*" $ do
         route idRoute
@@ -115,6 +115,12 @@ makeTagList tag posts =
         >>> arr (setField "title" ("Posts tagged " ++ tag))
         >>> applyTemplateCompiler "templates/posts.html"
         >>> applyTemplateCompiler "templates/default.html"
+
+config :: HakyllConfiguration
+config = defaultHakyllConfiguration
+    { deployCommand = "rsync --checksum -ave 'ssh -p 2222' \
+                      \_site/* jaspervdj@jaspervdj.be:jaspervdj.be"
+    }
 
 feedConfiguration :: FeedConfiguration
 feedConfiguration = FeedConfiguration
