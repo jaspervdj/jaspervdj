@@ -97,7 +97,7 @@ at the example site for some example posts.
 
 Additionaly, there is the `templates/` folder. This folder holds the
 templates for your site. For a `small-blog` configuration, your site should
-have /exactly/ three templates:
+have *exactly* three templates:
 
 * `templates/default.html`: The main template. This should contain your
   HTML doctype, head, etc.
