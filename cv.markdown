@@ -79,6 +79,9 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
   blazingly fast HTML combinators"
   ([slides](/files/2011-functionalpx-blaze-html.pdf))
 
+- BarcampGhent, 25th of May, Ghent, "Laziness"
+  ([slides](/files/2011-barcampghent-laziness.pdf))
+
 [DutchHUG]: http://dutchhug.nl/
 [Zeus WPI]: http://zeus.ugent.be/
 [Functional Programming Exchange 2011]: http://skillsmatter.com/event/scala/functionalpx-2011
