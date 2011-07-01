@@ -75,12 +75,15 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
   to Git"
   ([slides](/files/2010-zeus-git.pdf))
 
-- [Functional Programming Exchange 2011], 18th of March, London, "BlazeHtml:
+- [Functional Programming Exchange], 18th of March 2011, London, "BlazeHtml:
   blazingly fast HTML combinators"
   ([slides](/files/2011-functionalpx-blaze-html.pdf))
 
-- BarcampGhent, 25th of May, Ghent, "Laziness"
+- BarcampGhent, 25th of May 2011, Ghent, "Laziness"
   ([slides](/files/2011-barcampghent-laziness.pdf))
+
+- GhentFPG, 30th of May 2011, Ghent, "Introduction to optimizing Haskell code"
+  ([slides](/files/2011-ghentfpg-introduction-optimizing.pdf))
 
 [DutchHUG]: http://dutchhug.nl/
 [Zeus WPI]: http://zeus.ugent.be/
