@@ -158,3 +158,12 @@ div.footnotes {
 div.footnotes hr {
     display: none;
 }
+
+table {
+    margin: 20px auto 20px auto;
+}
+
+td, th {
+    padding-left: 8px;
+    padding-right: 8px;
+}
