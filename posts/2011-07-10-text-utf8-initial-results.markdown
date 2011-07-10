@@ -111,4 +111,4 @@ real degradation here, so I can rejoice.
 ## What's next
 
 There's still lots of work to be done. In the next blogpost, I hope to talk
-about reduced memory usage and it's implications.
+about reduced memory usage and its implications.
