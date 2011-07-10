@@ -62,7 +62,7 @@ main = do
     B.putStr $ T.encodeUtf8 $ T.toUpper text
 ~~~~~
 
-![Results for the uppercase benchmark](/images/2011-07-10-upper.png)
+![Results for the uppercasing benchmark](/images/2011-07-10-upper.png)
 
 ### Word frequencies
 
@@ -106,7 +106,7 @@ extra function call. This `Ord` instance is heavily used in the above benchmark,
 because of the `Map` container -- But these results indicate that there is no
 real degradation here, so I can rejoice.
 
-![Results for the word frequency benchmark](/images/2011-07-10-word-freqs.png)
+![Results for the word frequencies benchmark](/images/2011-07-10-word-freqs.png)
 
 ## What's next
 
