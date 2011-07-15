@@ -4,6 +4,18 @@ description: An upgrade of formlets
 tags: haskell, code
 ---
 
+Update
+------
+
+This code no longer works with the current version of the digestive
+functors library. Up-to-date examples can be found [here in the github
+repo](https://github.com/jaspervdj/digestive-functors/tree/master/examples). The
+updated version of this blogpost is available
+[here](https://github.com/jaspervdj/digestive-functors/blob/master/examples/Snap.lhs).
+
+Intro
+-----
+
 Today, I'm releasing something I've been working on a while. I planned to
 complete it on [BelHac](/posts/2010-11-09-belhac-summary.html), but it all
 got delayed a little.
@@ -26,7 +38,7 @@ With the blessing of [Chris](http://eidhof.nl/), I decided to create a new
 version from scratch.
 
 Digestive functors 0.0.2
-========================
+------------------------
 
 This file is written in literate Haskell. You can find the source code
 [right here](http://github.com/jaspervdj/jaspervdj/blob/master/posts/2010-12-09-digestive-functors-0.0.2.lhs).
@@ -216,10 +228,3 @@ is and how you use it. If you're interested, feel free to check out
 [digestive-functors](http://github.com/jaspervdj/digestive-functors) on GitHub.
 As always, feedback is welcome. Kudos to [Itkovian](http://www.itkovian.net/)
 for proofreading this post!
-
-Update
-------
-
-This code no longer works with the current version of the digestive
-functors library. Up-to-date examples can be found [here in the github
-repo](https://github.com/jaspervdj/digestive-functors/tree/master/examples).
