@@ -90,7 +90,7 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
 
 [DutchHUG]: http://dutchhug.nl/
 [Zeus WPI]: http://zeus.ugent.be/
-[Functional Programming Exchange 2011]: http://skillsmatter.com/event/scala/functionalpx-2011
+[Functional Programming Exchange]: http://skillsmatter.com/event/scala/functionalpx-2011
 
 ## Trivia
 
