@@ -85,6 +85,9 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
 - GhentFPG, 30th of May 2011, Ghent, "Introduction to optimizing Haskell code"
   ([slides](/files/2011-ghentfpg-introduction-optimizing.pdf))
 
+- [DutchHUG], 14th of July 2011, Utrecht, "Porting Text to UTF-8"
+  ([slides](/files/2011-dutchhug-text-utf8.pdf))
+
 [DutchHUG]: http://dutchhug.nl/
 [Zeus WPI]: http://zeus.ugent.be/
 [Functional Programming Exchange 2011]: http://skillsmatter.com/event/scala/functionalpx-2011
