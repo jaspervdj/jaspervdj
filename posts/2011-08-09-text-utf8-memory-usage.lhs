@@ -92,7 +92,7 @@ the ID under each token in the `Map`.
 > addDocument :: Int -> Text -> Store -> Store
 > addDocument id' doc store = foldl' insert store $ tokenize doc
 >   where
->     insert s t = M.insertWith S.union t (S.singleton id') s
+>     insert s t = M.insertWith' S.union t (S.singleton id') s
 
 The web logic
 -------------
