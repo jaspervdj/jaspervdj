@@ -88,9 +88,13 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
 - [DutchHUG], 14th of July 2011, Utrecht, "Porting Text to UTF-8"
   ([slides](/files/2011-dutchhug-text-utf8.pdf))
 
+- [CamHac], 14th of August 2011, Cambridge, "GSoC: Text/UTF-8"
+  ([slides](/files/2011-camhac-text-utf8.pdf))
+
 [DutchHUG]: http://dutchhug.nl/
 [Zeus WPI]: http://zeus.ugent.be/
 [Functional Programming Exchange]: http://skillsmatter.com/event/scala/functionalpx-2011
+[CamHac]: http://www.haskell.org/haskellwiki/CamHac
 
 ## Trivia
 
@@ -100,16 +104,3 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
 [The Flemish Programming Contest]: http://vlaamseprogrammeerwedstrijd.be/
 [Pieter De Baets]: http://thinkjavache.be/
 [Toon Willems]: http://twitter.com/nudded/
-
-<!--
-## Conferences attended
-
-### ZuriHac (2010)
-
-I travelled to Zürich in March, 2010, to attend ZuriHac, which then was the
-largest Haskell Hackaton ever.
-
-### BelHac (2010)
-
-In november 2010, we organized BelHac, the 12th Haskell Hackathon in Ghent.
--->
