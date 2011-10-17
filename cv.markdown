@@ -8,10 +8,12 @@ This is a work in progress.
 
 ## Education
 
-- Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte.
+- Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte
 - Secondary school: Sint-Lodewijkscollege Lokeren -- ASO, Latin & maths
-  specialization.
-- University Ghent: Bachelor Computer Science (in progress).
+  specialization
+- University Ghent: Bachelor in Computer Science
+- University Ghent: Master in Computer Science: Software Engineering (in
+  progress)
 
 ## Projects
 
