@@ -1,7 +1,7 @@
 ---
 title: Text/UTF-8: Call for Benchmarks
 description: A search for libraries and applications extensively using text
-tags: gsoc, haskell
+tags: haskell
 ---
 
 I'm very glad that I have been accepted again this year for the [Google Summer

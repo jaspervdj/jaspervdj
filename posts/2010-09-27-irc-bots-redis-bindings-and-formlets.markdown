@@ -1,7 +1,7 @@
 ---
 title: IRC Bots, Redis bindings and Formlets
 description: Stuff I've been working on the last month
-tags: code, haskell
+tags: haskell
 ---
 
 It's been a bit quiet on this blog -- my last post dates from the 9th of August.

@@ -1,7 +1,7 @@
 ---
 title: Once things have settled down
 description: Just trying to clear my mind here
-tags: poetry, random
+tags: random
 ---
 
 > We will leave this city  

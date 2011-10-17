@@ -1,7 +1,7 @@
 ---
 title: BlazeHtml: Initial results
 description: BlazeHtml was accepted as GSoC project, I present the project here
-tags: haskell, blazehtml, gsoc
+tags: haskell
 ---
 
 ## What is this

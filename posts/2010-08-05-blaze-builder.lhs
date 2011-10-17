@@ -1,7 +1,7 @@
 ---
 title: The Blaze Builder
 description: A fast builder monoid for string concatenation
-tags: gsoc, haskell
+tags: haskell
 ---
 
 What is blaze-builder?

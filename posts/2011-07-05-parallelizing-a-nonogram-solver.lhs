@@ -1,7 +1,7 @@
 ---
 title: Parallelizing a nonogram solver
 description: Results from the UGent course on programming languages
-tags: haskell, ugent
+tags: haskell
 ---
 
 What is this?

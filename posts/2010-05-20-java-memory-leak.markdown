@@ -1,7 +1,7 @@
 ---
 title: Memory leak hunting in Java
 description: A bit about a recent memory leak hunt in a university project
-tags: java, code, ugent
+tags: ugent
 ---
 
 ## What is this

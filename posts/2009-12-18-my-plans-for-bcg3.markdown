@@ -1,7 +1,7 @@
 ---
 title: My plans for #bcg3
 description: What I'll be doing on my first barcamp
-tags: barcamp
+tags: ghent
 ---
 
 ![Logo of barcampghent3](/images/2009-12-18-my-plans-for-bcg3-bcg3.png)

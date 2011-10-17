@@ -1,7 +1,7 @@
 ---
 title: Functions are data (and very cool data, too)
 description: A short rant about how cool it is to use functions as data in Haskell
-tags: haskell, design
+tags: haskell
 ---
 
 This blog post is a short rant about how people who come from an Object-Oriented

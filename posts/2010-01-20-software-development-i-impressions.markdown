@@ -1,7 +1,7 @@
 ---
 title: Software Development 1: My impressions
 description: My thoughts on our first software development course at uni
-tags: ugent, code, design
+tags: ugent
 ---
 
 ## Why this post

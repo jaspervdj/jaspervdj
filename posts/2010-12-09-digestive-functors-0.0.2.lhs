@@ -1,7 +1,7 @@
 ---
 title: Digestive functors 0.0.2
 description: An upgrade of formlets
-tags: haskell, code
+tags: haskell
 ---
 
 Update

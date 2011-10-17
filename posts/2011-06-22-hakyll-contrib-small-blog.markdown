@@ -1,7 +1,7 @@
 ---
 title: Create a small blog using hakyll-contrib
 description: Create your blog software in 15 minutes with Hakyll
-tags: hakyll, code
+tags: haskell
 ---
 
 ## What?

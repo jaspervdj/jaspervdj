@@ -1,7 +1,7 @@
 ---
 title: BlazeHtml 0.1
 description: A first release of the BlazeHtml project
-tags: haskell, gsoc
+tags: haskell
 ---
 
 This is another blogpost about BlazeHtml -- the project I am working on for

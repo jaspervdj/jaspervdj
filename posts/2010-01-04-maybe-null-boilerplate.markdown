@@ -1,7 +1,7 @@
 ---
 title: Maybe, null, and boilerplate code
 description: An ode to the Maybe type in Haskell, and a comparison with null
-tags: haskell, code
+tags: haskell
 ---
 
 A Haskell novice is usually quickly introduced to the `Maybe` type. I think

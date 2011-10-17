@@ -1,7 +1,7 @@
 ---
 title: The Dwarfs and The Fast Marking Algorithm
 description: How to abuse malloc for fast marking
-tags: code
+tags: algorithms
 ---
 
 ## The problem

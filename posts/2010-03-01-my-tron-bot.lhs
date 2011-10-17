@@ -1,7 +1,7 @@
 ---
 title: My Haskell TronBot for the Google AI Challenge
 description: My bot turned out to be the top scoring Haskell bot, so here's the code
-tags: haskell, code, ai
+tags: haskell
 ---
 This is the code for my entry in the
 [Google AI Challenge](http://csclub.uwaterloo.ca/contest/index.php) 2010.

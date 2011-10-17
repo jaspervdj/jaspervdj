@@ -1,7 +1,7 @@
 ---
 title: What the hell is jvgs -- Part I
 description: Every project has a story: how and why jvgs originally started
-tags: jvgs, gamedev
+tags: gamedev
 ---
 
 This post is about [jvgs](http://jvgs.sf.net/), a game I wrote.

@@ -1,7 +1,7 @@
 ---
 title: Hacking Hakyll
 description: A bit on Hakyll internals for interested hackers
-tags: haskell, hakyll
+tags: haskell
 ---
 
 What is this

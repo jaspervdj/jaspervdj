@@ -1,7 +1,7 @@
 ---
 title: Type-safe events
 description: Type-safe event-based programming in Haskell
-tags: haskell, code
+tags: haskell
 ---
 
 This is some code I wrote a while ago. It is (mostly) based upon [Data Types a

@@ -1,7 +1,7 @@
 ---
 title: Queueing IO actions
 description: Creating a simple queue system for retryable IO actions
-tags: haskell, code
+tags: haskell
 ---
 
 Lately, I've been working a bit on an automated system to count laps for a

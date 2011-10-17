@@ -1,7 +1,7 @@
 ---
 title: A Gnome Socket Applet
 description: Making Gnome play nicely with xmonad and friends
-tags: haskell, xmonad, code
+tags: haskell
 ---
 
 I'm an enthusiastic user of the [xmonad] window manager. It allows me to be more

@@ -1,7 +1,7 @@
 ---
 title: A first post
 description: A post describing the why and the how of the technical setup of this blog
-tags: hakyll, haskell
+tags: haskell
 ---
 
 A first post describing the technical setup of this blog, for that is

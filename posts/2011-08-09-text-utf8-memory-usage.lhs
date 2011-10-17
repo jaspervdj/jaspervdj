@@ -1,7 +1,7 @@
 ---
 title: Text/UTF-8: Studying memory usage
 description: Benchmarking the memory usage of an example server
-tags: haskell, code, gsoc
+tags: haskell
 ---
 
 What is this?

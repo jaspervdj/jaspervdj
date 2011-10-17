@@ -1,7 +1,7 @@
 ---
 title: Using Arrows for Dependency Handling
 description: I recently found a very good use case for Arrows, so I thought I'd share it here
-tags: haskell, code, arrows
+tags: haskell
 ---
 
 ## What is this about

@@ -1,7 +1,7 @@
 ---
 title: BlazeHtml RFC
 description: RFC for the BlazeHtml project
-tags: haskell, blazehtml, gsoc
+tags: haskell
 ---
 
 Introduction

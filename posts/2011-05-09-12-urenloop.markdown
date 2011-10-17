@@ -1,7 +1,7 @@
 ---
 title: Counting laps using bluetooth dongle detection on the 12 urenloop
 description: It's a hardware problem
-tags: code, ugent
+tags: ugent
 ---
 
 The [12 urenloop] is a yearly contest held at [Ghent University]. The student
