@@ -92,6 +92,12 @@ main = hakyllWith config $ do
                 >>> applyTemplateCompiler "templates/default.html"
                 >>> relativizeUrlsCompiler
 
+    -- Render the 404 page, we don't relativize URL's here.
+    match "404.html" $ do
+        route idRoute
+        compile $ pageCompiler
+            >>> applyTemplateCompiler "templates/default.html"
+
     -- Render RSS feed
     match "rss.xml" $ route idRoute
     create "rss.xml" $ requireAll_ "posts/*" >>> renderRss feedConfiguration
