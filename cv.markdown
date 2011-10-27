@@ -36,6 +36,12 @@ Here is a list of projects I have worked on in the past years.
 [Text]: https://github.com/bos/text
 [Google Summer of Code]: http://code.google.com/soc/
 
+- [blaze-builder] (2010): Simon Meier and I developed an initial version of a
+  fast builder monoid for the [BlazeHtml] project. This library is now used in
+  many [Haskell] projects. Simon is the current maintainer.
+
+[blaze-builder]: http://github.com/meiersi/blaze-builder/
+
 - [BlazeHtml] (2010 - present) is a blazingly fast HTML combinator library for the
   [Haskell] programming language. I worked on this project for [Google Summer of
   Code] 2010.
