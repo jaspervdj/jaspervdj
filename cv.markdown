@@ -22,7 +22,7 @@ Here is a list of projects I have worked on in the past years.
 - [websockets] (2011): I created a library for easily writing robust
   WebSocket-capable servers in [Haskell].
 
-[websockets]: http://github.com/jaspervdj/websockets
+[websockets]: http://jaspervdj.be/websockets/
 
 - [Snap Framework] (2011): I am an occasional contributor to this [Haskell] web
   framework.
