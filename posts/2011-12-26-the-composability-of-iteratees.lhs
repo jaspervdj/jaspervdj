@@ -18,14 +18,14 @@ This blogpost is based upon the [enumerator] library by John Millikin. Multiple
 implementations of the Iteratee concept exist, I chose this one because it's
 currently the most popular implementation for the packages I work on (mostly
 web-related). Additionally, alternatives to iteratees are [being developed] and
-I am certainly very curious how this will turn out.
+I am certainly very curious as to how this will turn out.
 
 [enumerator]: http://hackage.haskell.org/package/enumerator
 [being developed]: https://github.com/snoyberg/conduit
 
 Iteratees are often lauded because they offer great performance characteristics
 in comparison to lazy I/O. Another key feature provided by iteratees is
-composability (even for pure operations!) -- to which I will focus this
+composability (even for pure operations!) -- on which I will focus this
 blogpost. An understanding of Iteratees is not required for this blogpost, and
 be aware that my goal is to merely spark your interest, not to fully explain
 them.
