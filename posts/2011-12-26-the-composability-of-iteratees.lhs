@@ -1,5 +1,6 @@
 ---
 title: The composability of Iteratees
+description: An entry-level article about Iteratees
 tags: haskell
 ---
 
