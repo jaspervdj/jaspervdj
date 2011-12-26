@@ -70,11 +70,11 @@ format. A parser could be implemented easily:
 However -- this is not the case for later versions of the protocol (refered to
 as Hybi10). These later versions introduced *frames*. This allows an web
 application to multiplex different messages onto the socket -- more
-specifically, it can insert (control messages* (e.g. ping) in between messages
+specifically, it can insert *control messages* (e.g. ping) in between messages
 with huge payloads. This increases the complexity of our server, since we have
 to demultiplex these frames again.
 
-We have two types of frames in the simplification of the protocol:
+We have three types of frames in the simplification of the protocol:
 
 > data FrameType = TextFrame | PingFrame | CloseFrame
 >     deriving (Show)
@@ -169,8 +169,8 @@ As the title and introduction of this blogpost suggested, there is a better way
 to solve this problem using Iteratees. I'm not going to go through all Iteratee
 concepts here, but you should be able to follow with a basic Haskell knowledge.
 
-An `Enumeratee ao ai m b` is a stream transformer which turns values of the type
-`ao` to values of the type `ai`. We'll agree on such an interface (feel free to
+An `Enumeratee x y m b` is a stream transformer which turns values of the type
+`x` to values of the type `y`. We'll agree on such an interface (feel free to
 safely ignore the `m` and `b` parameters if you're unfamiliar with Iteratees):
 
 > type Interface3 m b = E.Enumeratee B.ByteString Message m b
