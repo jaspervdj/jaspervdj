@@ -47,7 +47,7 @@ The problem
 
 Different versions of the WebSockets protocol exist. We obviously want to share
 as much code as possible in between these versions, to avoid duplication. We can
-define common `Message` datatype which can be used for all versions:
+define a common `Message` datatype which can be used for all versions:
 
 > data Message
 >     = TextMessage BL.ByteString
