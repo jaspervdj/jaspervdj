@@ -168,7 +168,8 @@ Enter Iteratee
 
 As the title and introduction of this blogpost suggested, there is a better way
 to solve this problem using Iteratees. I'm not going to go through all Iteratee
-concepts here, but you should be able to follow with a basic Haskell knowledge.
+concepts here, but you should be able to follow with a basic Haskell knowledge:
+let the types guide you.
 
 An `Enumeratee x y m b` is a stream transformer which turns values of the type
 `x` to values of the type `y`. We'll agree on such an interface (feel free to
@@ -207,7 +208,8 @@ And compose these stream transformers to obtain our implementation:
 > implHybi10 :: Monad m => Interface3 m b
 > implHybi10 = (implFramesHybi00 =$) . framesToMessages
 
-Mission completed!
+Mission completed -- and we've successfully hidden our state management from the
+users of this interface.
 
 Conclusion
 ----------
