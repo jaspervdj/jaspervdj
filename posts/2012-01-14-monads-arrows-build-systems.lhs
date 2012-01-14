@@ -283,6 +283,7 @@ involved.
 <div></div></div>
 
 I hope this blogpost made some of the advantages and disadvantages between Monad
-and Arrow clear. All comments and feedback are welcome, as always.
+and Arrow clear. All comments and feedback are welcome, as always. Thanks to
+[nudded] for proofreading.
 
-TODO
+[nudded]: http://twitter.com/nudded

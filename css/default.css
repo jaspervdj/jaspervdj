@@ -157,7 +157,8 @@ p.caption {
 }
 
 div.footnotes {
-    border-left: 1px dashed black;
+    color: #444;
+    border-left: 1px dashed #444;
 }
 
 div.footnotes hr {
