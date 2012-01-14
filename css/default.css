@@ -111,7 +111,7 @@ img.avatar {
 }
 
 .soft {
-    color: rgb(100, 100, 100);
+    color: #555;
 }
 
 li {
@@ -153,12 +153,20 @@ blockquote {
 p.caption {
     font-size: 14px;
     text-align: center;
-    color: rgb(100, 100, 100);
+    color: #555;
 }
 
 div.footnotes {
-    color: #444;
-    border-left: 1px dashed #444;
+    color: #555;
+    border-left: 1px dashed #555;
+}
+
+a.footnoteRef {
+    text-decoration: none;
+}
+
+a.footnoteBackLink {
+    text-decoration: none;
 }
 
 div.footnotes hr {

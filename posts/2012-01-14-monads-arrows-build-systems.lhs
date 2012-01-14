@@ -130,7 +130,7 @@ Other datatypes are possible, e.g. one could also try something like:
 
 This kind of definition leads to another problem: the `mx` in `mx >>= f` will
 always be executed, even if everything is up-to-date. This behaviour is
-inherently coupled to the use Monads, consider code like this:
+inherently coupled to the use of Monads, consider code like this:
 
 > testBuildM' :: IO ()
 > testBuildM' = runBuildM "test-m.txt" $ do
@@ -197,7 +197,7 @@ Arrow. For our example, this yields the type signature
 
 In order to allow the programmer to build computations using Arrows, a mechanism
 to pass variables through computations is needed. In our example, we have
-`first :: BuildA a b -> BuildA (a, c) (b, c)`: it transforms as simple Arrow
+`first :: BuildA a b -> BuildA (a, c) (b, c)`: it transforms a simple Arrow
 into an Arrow which carries an additional variable through the computation.
 
 > instance Arrow BuildA where
