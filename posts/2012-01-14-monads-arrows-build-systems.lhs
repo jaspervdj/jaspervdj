@@ -17,6 +17,9 @@ Arrows is not necessary. This blogpost:
 
 [older blogpost]: /posts/2010-03-26-arrows-dependencies.html
 
+Setup
+=====
+
 > {-# LANGUAGE Arrows #-}
 > import Prelude hiding (id, (.))
 
@@ -45,7 +48,7 @@ functionality, but it's just an example.
 
 > runBuild :: FilePath    -- ^ Destination
 >          -> [FilePath]  -- ^ Dependencies
->          -> IO String   -- ^ Workhorse
+>          -> IO String   -- ^ Workhorse which produces output
 >          -> IO ()       -- ^ May or may not run the workhorse
 > runBuild dest deps f = do
 >     exists       <- doesFileExist dest
@@ -144,25 +147,25 @@ Arrows
 ======
 
 Two other possibilities will work well here: Arrows and Applicative. I'll
-demonstrate the Arrow solution first, because it is a bit more generic [^1].
+demonstrate the Arrow solution first, because it is a bit more generic [^kind].
 
-[^1]: More generic in kind: Arrow has a `* -> * -> *` kind, and Applicative has
-      a `* -> *` kind. This is important later on, because it means we can
-      reuse our Arrow datatype for the Applicative solution.
+[^kind]: More generic in kind: Arrow has a `* -> * -> *` kind, and Applicative
+    has a `* -> *` kind. This is important later on, because it means we can
+    reuse our Arrow datatype for the Applicative solution.
 
-The datatype looks a lot like the one used for the Monad instance [^2]:
+The datatype looks a lot like the one used for the Monad instance [^kleisli]:
 
-[^2]: The second field is in fact a [Kleisli] arrow, almost a direct translation
-      of the IO monad to the Arrow structure.
+[^kleisli]: The second field is in fact a [Kleisli] arrow, almost a direct
+    translation of the IO monad to the Arrow structure.
 
 [Kleisli]: http://en.wikipedia.org/wiki/Arrow_%28computer_science%29#Kleisli_arrows
 
 > data BuildA a b = BuildA [FilePath] (a -> IO b)
 
-Running this build datatype is also straightforward [^3].
+Running this build datatype is also straightforward [^alternate].
 
-[^3]: Note that another option is:
-      `runBuildA :: FilePath -> BuildA a String -> a -> IO ()`.
+[^alternate]: Note that another option is:
+    `runBuildA :: FilePath -> BuildA a String -> a -> IO ()`.
 
 > runBuildA :: FilePath -> BuildA () String -> IO ()
 > runBuildA dest (BuildA deps f) = runBuild dest deps $ f ()
@@ -174,7 +177,12 @@ function composition.
 
 The `BuildA a a` identity operation is straightforward to implement: it
 obviously has no dependencies, it is a build step which does absolutely nothing.
-A composition of two build steps takes the sum of dependencies:
+A composition of two build steps takes the sum of dependencies and composes the
+workhorses using `<=<` [^spaceship]:
+
+[^spaceship]: `<=< :: Monad m => (b -> m c) -> (a -> m b) -> (a -> m c)`, the
+    spaceship operator from `Control.Monad`, right-to-left composition of
+    monadic functions.
 
 > instance Category BuildA where
 >     id                        = BuildA [] return
@@ -190,7 +198,7 @@ Arrow. For our example, this yields the type signature
 In order to allow the programmer to build computations using Arrows, a mechanism
 to pass variables through computations is needed. In our example, we have
 `first :: BuildA a b -> BuildA (a, c) (b, c)`: it transforms as simple Arrow
-into an Arrow which carries an additonal variable through the computation.
+into an Arrow which carries an additional variable through the computation.
 
 > instance Arrow BuildA where
 >     arr f                 = BuildA [] (return . f)
@@ -267,7 +275,14 @@ datatype.
 > testBuildApp = runBuildA "test-app.txt" $
 >     paste <$> readFileA "rainbows.txt" <*> readFileA "unicorns.txt"
 
+Hey, you could even argue that this solution is more beatiful than our
+Arrow-based `testBuildA'`. However, this is due to the fact that our example is
+very simple -- Applicative solutions tend to get quite complicated when more is
+involved.
+
 <div></div></div>
 
 I hope this blogpost made some of the advantages and disadvantages between Monad
 and Arrow clear. All comments and feedback are welcome, as always.
+
+TODO
