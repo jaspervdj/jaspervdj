@@ -5,11 +5,11 @@ tags: haskell
 ---
 
 This is a recap of an [older blogpost] of me. I decided to rewrite it after I
-wanted to link a friend to it, and I saw the blogpost clearly failed to get the
-point across in a more-or-less clear way. So, this blogpost is about a situation
-in which Monads fall short, and Arrows (and Applicative) prove to be very
-powerful. It assumes some basic familiarity with Monads, familiarity with Arrows
-is not necessary. This blogpost:
+wanted to link a friend to it, and I saw the blogpost clearly failed a bit in
+getting the point across. In this blogpost, I hope to correct that. It's about a
+situation in which Monads fall short, but Arrows (and Applicative) prove to be
+very powerful. It assumes some basic familiarity with Monads, familiarity with
+Arrows is not necessary. This blogpost:
 
 1. Proposes a simplistic build system model
 2. Gives an implementation using Monads, and fails
@@ -37,7 +37,7 @@ projects.
 [ant]: http://ant.apache.org/
 [Hakyll]: http://jaspervdj.be/hakyll
 
-Let's use a bottom-up approach and first write a simple function to do only
+Let's use a bottom-up approach and first write a simple function to only do
 out-of-date builds. The `runBuild` function checks the modification times of the
 dependencies and the destination file, and based on that information, calls or
 doesn't call the `IO String` workhorse. This is obviously very limited
@@ -72,21 +72,22 @@ Let's implement the Unix [paste] command. We first have a pure version:
 And now we can apply our `runBuild` function:
 
 > testBuild :: IO ()
-> testBuild = runBuild "test-io.txt" ["foo.txt", "bar.txt"] $ do
->     x <- readFile "foo.txt"
->     y <- readFile "bar.txt"
+> testBuild = runBuild "test-io.txt" ["rainbows.txt", "unicorns.txt"] $ do
+>     x <- readFile "rainbows.txt"
+>     y <- readFile "unicorns.txt"
 >     return $ paste x y
 
 This works fine, but the annoyance is that we manually have to specify our
-dependencies: this quickly becomes very tedious. Haskell allows for further
-abstraction in many ways, so let's have a look.
+dependencies: this quickly becomes very tedious. Instead, our goal is to
+automate the dependency tracking. Haskell allows for many abstractions, so let's
+have a look at how we can accomplish this.
 
 Monads
 ======
 
 Let's see if we can capture this behaviour in a Monad. If we declare our Monad
 as a simple datatype which holds the dependencies and the actual workhorse. we
-get:
+get something like:
 
 > data BuildM a = BuildM [FilePath] (IO a)
 
@@ -112,12 +113,12 @@ datatype.
 
 Clearly, this datatype doesn't allow us to get `f`s dependencies in `mx >>= f`.
 We can write the following piece of code, but it won't be correct, as it ignores
-the `"bar.txt"` dependency.
+the `"unicorns.txt"` dependency.
 
 > testBuildM :: IO ()
 > testBuildM = runBuildM "test-m.txt" $ do
->     x <- readFileM "foo.txt"
->     y <- readFileM "bar.txt"
+>     x <- readFileM "rainbows.txt"
+>     y <- readFileM "unicorns.txt"
 >     return $ paste x y
 
 Other datatypes are possible, e.g. one could also try something like:
@@ -125,24 +126,25 @@ Other datatypes are possible, e.g. one could also try something like:
 > type BuildM' = StateT [FilePath] IO
 
 This kind of definition leads to another problem: the `mx` in `mx >>= f` will
-always be executed, even if everything is up-to-date! And this behaviour is
-inherently coupled to the use Monads: consider code like this:
+always be executed, even if everything is up-to-date. This behaviour is
+inherently coupled to the use Monads, consider code like this:
 
 > testBuildM' :: IO ()
 > testBuildM' = runBuildM "test-m.txt" $ do
->     x <- readFileM "foo.txt"
->     y <- readFileM $ if length x > 200 then "bar.txt" else "qux"
+>     x <- readFileM "rainbows.txt"
+>     y <- if length x > 200 then readFileM "unicorns.txt" else return ""
 >     return $ paste x y
 
 We *need* to evaluate x in order to determine the dependencies! This is not how
-a build system should work: and it makes it clear that Monads are not a good
-choice here.
+a build system should work: the system should *not* inspect `x` and just add
+`"unicorns.txt"` as a dependency, regardless of the value of `x`. The fact that
+we can't get around this makes it clear that Monads are not a good choice here.
 
 Arrows
 ======
 
-Two possibilities will work well here: Arrows and Applicative. I'll demonstrate
-the Arrow solution first, because it is more generic [^1].
+Two other possibilities will work well here: Arrows and Applicative. I'll
+demonstrate the Arrow solution first, because it is a bit more generic [^1].
 
 [^1]: More generic in kind: Arrow has a `* -> * -> *` kind, and Applicative has
       a `* -> *` kind. This is important later on, because it means we can
@@ -167,11 +169,11 @@ Running this build datatype is also straightforward [^3].
 
 Arrows are a generalized version of functions, and can be used in a similar way.
 Each Arrow is also a Category, so we first need to declare a Category instance.
-In order to make our `BuildA` an Category, need an identity operation, and
+In order to make our `BuildA` an Category, we need an identity operation, and
 function composition.
 
 The `BuildA a a` identity operation is straightforward to implement: it
-obviously has no dependencies: it is a build step which does absolutely nothing.
+obviously has no dependencies, it is a build step which does absolutely nothing.
 A composition of two build steps takes the sum of dependencies:
 
 > instance Category BuildA where
@@ -210,8 +212,8 @@ version actually works with proper dependency management:
 
 > testBuildA :: IO ()
 > testBuildA = runBuildA "test-a.txt" $ proc () -> do
->     x <- readFileA "foo.txt" -< ()
->     y <- readFileA "bar.txt" -< ()
+>     x <- readFileA "rainbows.txt" -< ()
+>     y <- readFileA "unicorns.txt" -< ()
 >     returnA -< paste x y
 
 However, writing ugly code like this obviously isn't the way we want to go.
@@ -229,8 +231,8 @@ clearly demonstrates the processing approach:
 
 > testBuildA' :: IO ()
 > testBuildA' = runBuildA "test-a.txt" $
->     readFileA "foo.txt"  >>>
->     pasteFileA "bar.txt"
+>     readFileA "rainbows.txt" >>>
+>     pasteFileA "unicorns.txt"
 
 Epilogue: Applicative functors
 ==============================
@@ -263,6 +265,9 @@ datatype.
 >
 > testBuildApp :: IO ()
 > testBuildApp = runBuildA "test-app.txt" $
->     paste <$> readFileA "foo.txt" <*> readFileA "bar.txt"
+>     paste <$> readFileA "rainbows.txt" <*> readFileA "unicorns.txt"
 
 <div></div></div>
+
+I hope this blogpost made some of the advantages and disadvantages between Monad
+and Arrow clear. All comments and feedback are welcome, as always.
