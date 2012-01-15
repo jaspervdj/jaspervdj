@@ -235,7 +235,8 @@ variant of `paste` which processes a file by pasting another file next to it:
 >     returnA -< paste x y
 
 With utilities like this, we can write a much prettier `testBuildA` which
-clearly demonstrates the processing approach:
+clearly demonstrates the processing approach. `>>>` is left-to-right composition
+of Arrows, much like a flipped version of `.`:
 
 > testBuildA' :: IO ()
 > testBuildA' = runBuildA "test-a.txt" $
