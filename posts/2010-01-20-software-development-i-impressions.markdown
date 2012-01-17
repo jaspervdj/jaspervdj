@@ -13,9 +13,9 @@ here.
 
 ## Software Development I
 
-This course follow our two Programming courses, so all students are already more
-than familiar with the basic concepts of programming -- the second programming
-course included writing a non-trivial GUI application. I put
+This course follows our two Programming courses, so all students are already
+more than familiar with the basic concepts of programming -- the second
+programming course included writing a non-trivial GUI application. I put
 [my solution](http://github.com/jaspervdj/Musique) on GitHub (after the
 course was over).
 
