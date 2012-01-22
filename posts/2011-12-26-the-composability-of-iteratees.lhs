@@ -62,13 +62,13 @@ that:
 2. we implement this interface for each version;
 3. we choose the right implementation at runtime.
 
-The first WebSockets drafts (refered to Hybi00) offered a very simple message
+The first WebSockets drafts (referred to Hybi00) offered a very simple message
 format. A parser could be implemented easily:
 
 > parseMessageHybi00 :: A.Parser Message
 > parseMessageHybi00 = error "Omitted for brevity"
 
-However -- this is not the case for later versions of the protocol (refered to
+However -- this is not the case for later versions of the protocol (referred to
 as Hybi10). These later versions introduced *frames*. This allows an web
 application to multiplex different messages onto the socket -- more
 specifically, it can insert *control messages* (e.g. ping) in between messages

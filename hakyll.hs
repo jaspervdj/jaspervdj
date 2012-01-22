@@ -70,6 +70,7 @@ main = hakyllWith config $ do
                 "templates/postitem.html" "posts" "posts/*"
         >>> applyTemplateCompiler "templates/index.html"
         >>> applyTemplateCompiler "templates/default.html"
+        >>> relativizeUrlsCompiler
 
     -- Tags
     create "tags" $
