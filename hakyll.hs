@@ -124,6 +124,7 @@ makeTagList tag posts =
         >>> arr (setField "title" ("Posts tagged " ++ tag))
         >>> applyTemplateCompiler "templates/posts.html"
         >>> applyTemplateCompiler "templates/default.html"
+        >>> relativizeUrlsCompiler
 
 config :: HakyllConfiguration
 config = defaultHakyllConfiguration
