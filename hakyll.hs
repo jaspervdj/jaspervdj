@@ -51,6 +51,7 @@ main = hakyllWith config $ do
             >>> renderTagsField "prettytags" (fromCapture "tags/*")
             >>> applyTemplateCompiler "templates/post.html"
             >>> applyTemplateCompiler "templates/default.html"
+            >>> relativizeUrlsCompiler
 
     -- Post list
     match "posts.html" $ route idRoute
@@ -60,6 +61,7 @@ main = hakyllWith config $ do
                 "templates/postitem.html" "posts" "posts/*"
         >>> applyTemplateCompiler "templates/posts.html"
         >>> applyTemplateCompiler "templates/default.html"
+        >>> relativizeUrlsCompiler
 
     -- Index
     match "index.html" $ route idRoute
