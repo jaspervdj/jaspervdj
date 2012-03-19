@@ -124,5 +124,38 @@ benefits:
 
 However, it does seem to come with a serious disadvantage as well:
 
-- It seems impossible to have a type-safe coupling between validation rules and
-  HTML layout without losing flexibility or ease-of-use.
+- It seems impossible [^impossible] to have a type-safe coupling between
+  validation rules and HTML layout without losing flexibility or ease-of-use.
+
+[^impossible]: I've thought about this for some time, and haven't found a way
+    to do it, and discovered many problems with the different approaches one
+    could take. The reasoning behind these is outside of the scope of this
+    blogpost, but I'd be happy to elaborate if anyone is interested.
+
+In order to make the coupling between the validation rules and the HTML layout,
+digestive-functors-0.3 uses simple `Text` values. An example of some validation
+rules:
+
+~~~~~{.haskell}
+dateForm = check "This is not a valid date" validDate $ Date
+    <$> "month" .: stringRead "Could not parse month"
+    <*> "day"   .: stringRead "Could not parse day"
+~~~~~
+
+And we can write an HTML layout for it using e.g. blaze-html. The code for this
+is a bit verbose (HTML always is), but clear, and it's possible to add some
+utility combinators for it:
+
+~~~~~{.haskell}
+userView :: View Html -> Html
+userView view = do
+    errorList "month" view
+    label     "month" view "Name: "
+    inputText "month" view
+    H.br
+
+    errorList "day" view
+    label     "day" view "Email address: "
+    inputText "day" view
+    H.br
+~~~~~
