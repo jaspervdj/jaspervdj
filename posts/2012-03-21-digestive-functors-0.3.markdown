@@ -100,3 +100,29 @@ like:
 
 Along with some other things, these were the practical improvements the
 digestive-functors library made in comparison to formlets.
+
+## digestive-functors 0.3
+
+However, one serious issue remained. When you write down a form in a formlets
+library, you specify the *HTML layout* as well as *the validation rules*. This
+is really a bad thing: sepataration of model and view is a well known goal in
+programming.
+
+Separating the HTML layout and the validation rules would lead to a number of
+benefits:
+
+- It would be possible to create multiple representations for a single form (a
+  good example is a login form in the site header, and a login form in the page
+  body, which you see find on many websites).
+
+- The code to specify the validation rules becomes smaller and easier to read.
+
+- It becomes easier to insert custom HTML code in between your form HTML.
+
+- You can rewrite the form using another HTML templating engine, e.g.
+  blaze-html, Hamlet or Heist, without touching the validation rules.
+
+However, it does seem to come with a serious disadvantage as well:
+
+- It seems impossible to have a type-safe coupling between validation rules and
+  HTML layout without losing flexibility or ease-of-use.
