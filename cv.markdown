@@ -8,18 +8,18 @@ This is a work in progress.
 
 ## Education
 
-- Ghent University: Master in Computer Science: Software Engineering (in
+- 2011 - ...: Ghent University: Master in Computer Science: Software Engineering (in
   progress)
-- Ghent University: Bachelor in Computer Science
-- Secondary school: Sint-Lodewijkscollege Lokeren -- ASO, Latin & maths
+- 2008 - 2011: Ghent University: Bachelor in Computer Science
+- 2002 - 2008: Secondary school: Sint-Lodewijkscollege Lokeren -- ASO, Latin & maths
   specialization
-- Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte
+- 1996 - 2002: Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte
 
 ## Open source projects
 
 Here is a list of projects I have worked on in the past years.
 
-- [websockets] (2011): I created a library for easily writing robust
+- [websockets] (2011 - present): I created a library for easily writing robust
   WebSocket-capable servers in [Haskell].
 
 [websockets]: http://jaspervdj.be/websockets/
