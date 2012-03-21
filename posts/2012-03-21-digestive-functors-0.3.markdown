@@ -22,8 +22,9 @@ have clean way of creating HTML forms, which are *inherently composable*.
 ["The Essence of Form Abstraction"]: http://groups.inf.ed.ac.uk/links/formlets/
 
 Let's have a quick look at how this typically works. The following code is based
-on [Chris Eidhof]'s [initial Haskell implementation] of formlets. We usually have
-a data structure we want to create a type for:
+on the [initial Haskell implementation] of formlets by the paper authors, later
+maintained by [Chris Eidhof] and others. We usually have a data structure we
+want to create a type for:
 
 [Chris Eidhof]: http://eidhof.nl/
 [initial Haskell implementation]: http://hackage.haskell.org/cgi-bin/hackage-scripts/package/formlets
