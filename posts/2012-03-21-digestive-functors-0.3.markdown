@@ -8,6 +8,11 @@ I've just released digestive-functors 0.3, which is a major rehaul of my
 formlets library. It has a number of great features which (as far as I know)
 have never been implemented for any formlets library.
 
+This blogpost is very general, so some users might want to jump directly to the
+[tutorial]. Installation is through cabal: `cabal install digestive-functors`.
+
+[tutorial]: http://github.com/jaspervdj/digestive-functors/blob/master/examples/tutorial.lhs
+
 ## What are formlets?
 
 In 2008, a paper was published, called ["The Essence of Form Abstraction"]. The
@@ -230,5 +235,3 @@ for writing these view libraries: you can basically query the previous input,
 errors, etc. for each field. This makes it very easy to add libraries for e.g.
 Hamlet or Heist (but I haven't done so yet, if anyone is interested, contact
 me!).
-
-[tutorial]: http://github.com/jaspervdj/digestive-functors/blob/master/examples/tutorial.lhs
