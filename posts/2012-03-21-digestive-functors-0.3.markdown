@@ -142,20 +142,93 @@ dateForm = check "This is not a valid date" validDate $ Date
     <*> "day"   .: stringRead "Could not parse day"
 ~~~~~
 
-And we can write an HTML layout for it using e.g. blaze-html. The code for this
-is a bit verbose (HTML always is), but clear, and it's possible to add some
-utility combinators for it:
+A major difference you can immediately notice is that we use `Text` labels
+(`"month"`, `"day"`) and use the custom `.:` operator to assign these to parts
+of our form. We will use these labels to refer to fields in the HTML layout.
+
+Form composition is obviously still very important. Let's give an example by
+implemening `userForm` using `dateForm`:
+ 
+~~~~~{.haskell}
+userForm = User
+    <$> "name"      .: string Nothing
+    <*> "password"  .: string Nothing
+    <*> "birthdate" .: dateForm
+~~~~~
+
+One important difference between `userFull` and `userForm` is that we used
+`string` twice here -- where the original one used `inputF` and `passwordF`.
+This is a result of the separation of concerns. After all, a password is just a
+string: it is up to the view to represent it as a password box.
+
+Let's look at the views now and write an HTML layout using e.g. blaze-html. The
+code for this is a bit verbose (HTML always is), but clear, and it's possible to
+add some utility combinators for it:
 
 ~~~~~{.haskell}
-userView :: View Html -> Html
-userView view = do
+dateView view = do
     errorList "month" view
-    label     "month" view "Name: "
+    label     "month" view "Month: "
     inputText "month" view
     H.br
 
     errorList "day" view
-    label     "day" view "Email address: "
+    label     "day" view "Day: "
     inputText "day" view
     H.br
 ~~~~~
+
+Views are composable as well, which is very important. A developer might want to
+inline a view, e.g.:
+
+~~~~~{.haskell}
+userView view = do
+    errorList "name" view
+    label     "name" view "Name: "
+    inputText "name" view
+    H.br
+
+    errorList     "password" view
+    label         "password" view "Password: "
+    inputPassword "password" view
+    H.br
+
+    errorList "birthdate.month" view
+    label     "birthdate.month" view "Month: "
+    inputText "birthdate.month" view
+    H.br
+
+    errorList "birthdate.day" view
+    label     "birthdate.day" view "Day: "
+    inputText "birthdate.day" view
+    H.br
+~~~~~
+
+A few things to note. While `"name"` and `"password"` are both of the same type
+(`String`) we chose to use a textbox for the former and a password box for the
+latter: this is a possibility we gain because of the separation we made. A
+(probably more useful) example is when the user has to choose between a number
+of options (e.g. Apples, Oranges or Bananas), we can decide in the view code
+whether we want to use a combobox or a set of radio buttons.
+
+We use a `"foo.bar"` notation to refer to fields of "subforms". This is useful
+when a designer wants a custom form layout, but it leads to duplication of code.
+To counter this, views are composable, just like forms!
+
+~~~~~{.haskell}
+userView view = do
+    -- Name, password...
+
+    dateView $ subView "birthdate" view
+~~~~~
+
+This concludes this blogpost about the digestive-functors 0.3 release.
+
+Note that I have omitted types and other details -- you can find everything in
+this [tutorial]. The digestive-functors library provides a very easy interface
+for writing these view libraries: you can basically query the previous input,
+errors, etc. for each field. This makes it very easy to add libraries for e.g.
+Hamlet or Heist (but I haven't done so yet, if anyone is interested, contact
+me!).
+
+[tutorial]: http://github.com/jaspervdj/digestive-functors/blob/master/examples/tutorial.lhs
