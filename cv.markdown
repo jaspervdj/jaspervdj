@@ -84,6 +84,9 @@ You can view more projects on my [GitHub page].
 
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
+- GhentFPG, 20th of March 2012, Ghent, "digestive-functors 0.3"
+  ([slides](/files/2012-ghentfpg-digestive-functors.pdf))
+
 - [CamHac], 14th of August 2011, Cambridge, "GSoC: Text/UTF-8"
   ([slides](/files/2011-camhac-text-utf8.pdf))
 
