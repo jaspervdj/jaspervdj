@@ -30,8 +30,8 @@ which had all the nice properties I desired.
 ## The core of the problem: load and store
 
 When designing a system, it's often a good idea to start from a minimal but
-functional core and work your way up from there -- this is also the approach
-I've taken here.
+functional core and work your way up from there -- this is also the approach I
+have taken here.
 
 I decided to represent the state of an emulator as a `Memory` datatype. It's a
 tiny wrapper around a mutable array, and has a few basic operations:
@@ -56,7 +56,7 @@ Using the above `Address` datatype, we're able to access and modify all of the
 values the emulator needs using two simple operations: `load` and `store`.
 
 This all runs in the [ST] monad. This monad allows destructive updates (so we
-can e.g. update words in the RAM of the CPU really fast), but the *result
+can e.g., update words in the RAM of the CPU really fast), but the *result
 remains pure*: unlike the IO monad, code written in the ST monad can only modify
 internal state.
 
@@ -243,8 +243,12 @@ it to `IO`, which allows us to simply pick one of the two using an abstraction
 layer: we can have deterministic results for tests, proper keyboard/video
 support, and the entire implementation of the actual CPU is shared code.
 
+[^representations]: Altough other, purely representations are possible as well,
+    of course. These are however unlikely to match the speed of this solution.
+
 The full implementation of this design can be found
 [here](https://github.com/jaspervdj/dcpu16-hs).
 
-[^representations]: Altough other, purely representations are possible as well,
-    of course. These are however unlikely to match the speed of this solution.
+My thanks to [Andy Georges] for proofreading and some corrections.
+
+[Andy Georges]: http://www.itkovian.net/
