@@ -1,0 +1,250 @@
+---
+title: A bit of ST and a bit of IO: Designing a DCPU-16 emulator
+description: On monadic typeclasses, pure and impure state monads
+tags: haskell
+---
+
+When [Notch] announched that his upcoming game [0x10c] would feature an in-game
+[16 bit CPU], the internet [went nuts] about it.
+
+[Notch]: http://www.mojang.com/notch/
+[0x10c]: http://0x10c.com/
+[16 bit CPU]: http://0x10c.com/doc/dcpu-16.txt
+[went nuts]: https://github.com/blog/1098-take-over-the-galaxy-with-github
+
+At this point, it seems that every self-respecting hacker has at least already
+implemented an optimizing assembler, a dissassembler, an emulator, a debugger,
+or even an [operating system] or an [LLVM backend].
+
+[operating system]: https://github.com/jdiez17/0x42c/
+[LLVM backend]: https://github.com/krasin/llvm-dcpu16/
+
+I obviously couldn't lag behind and took the opportunity to think about the
+design of such an [emulator] in [Haskell]. This blogpost is the result of my
+search and my experiments with different designs until I arrived at something
+which had all the nice properties I desired.
+
+[emulator]: https://github.com/jaspervdj/dcpu16-hs
+[Haskell]: http://www.haskell.org/
+
+## The core of the problem: load and store
+
+When designing a system, it's often a good idea to start from a minimal but
+functional core and work your way up from there -- this is also the approach
+I've taken here.
+
+I decided to represent the state of an emulator as a `Memory` datatype. It's a
+tiny wrapper around a mutable array, and has a few basic operations:
+
+~~~~~{.haskell}
+module Memory where
+
+data Address
+    = Pc
+    | Sp
+    | Ram Word16
+    -- And more...
+
+data Memory s = Memory  -- Exact definition omitted
+
+new   :: ST s (Memory s)
+load  :: Memory s -> Address -> ST s Word16
+store :: Memory s -> Address -> Word16 -> ST s ()
+~~~~~
+
+Using the above `Address` datatype, we're able to access and modify all of the
+values the emulator needs using two simple operations: `load` and `store`.
+
+This all runs in the [ST] monad. This monad allows destructive updates (so we
+can e.g. update words in the RAM of the CPU really fast), but the *result
+remains pure*: unlike the IO monad, code written in the ST monad can only modify
+internal state.
+
+[ST]: http://www.haskell.org/ghc/docs/latest/html/libraries/base/Control-Monad-ST.html
+
+This is great because it allows us to have a really fast emulator, of which we
+can trivially say it is *deterministic*.
+
+## A necessary abstraction
+
+However, while the current specification does not include keyboard input and
+video output, this will certainly be added in the future. If we want to support
+that in our emulator, does it mean that we will be forced to run our code in the
+`IO` monad, and that our brave efforts to build a deterministic emulator have
+been in vain?
+
+Not exactly. Using a typeclass, it is possible to build an extremely useful
+abstraction layer which helps us with this problem.
+
+~~~~~{.haskell}
+module Emulator.Monad where
+
+class Monad m => MonadEmulator m where
+    load  :: Address -> m Word16
+    store :: Address -> Word16 -> m ()
+~~~~~
+
+We can now implement most of the emulator with just the type
+`MonadEmulator m => m ()`, since we really only need `load` and `store`.
+
+The following (overly simplified and incorrect) snippet illustrates that fact.
+
+~~~~~{.haskell}
+module Emulator where
+
+import Emulator.Monad
+
+step :: MonadEmulator m => m ()
+step = do
+    -- Load the next instruction (at PC) and execute it
+    pc    <- load Pc 
+    instr <- load (Ram pc)
+    store Pc (pc + 1)
+    execute instr
+~~~~~
+
+## A deterministic implementation
+
+We can write a simple, nice and pure implementation of this typeclass by using
+`ST`, as we previously discussed. We need access to the `Memory`, and for this
+purpose we can simply wrap a `ReaderT` around `ST`:
+
+~~~~~{.haskell}
+module Emulator.Monad.ST where
+
+import Emulator.Monad
+import Memory (Memory)
+import qualified Memory as Memory
+
+newtype STEmulator s a = STEmulator (ReaderT (Memory s) (ST s) a)
+    deriving (Monad)
+
+instance MonadEmulator (STEmulator s) where
+    load address = STEmulator $ do
+        mem <- ask
+        lift $ Memory.load mem address
+    store address word = STEmulator $ do
+        mem <- ask
+        lift $ Memory.store mem address word
+
+runSTEmulator :: (forall s. STEmulator s a) -> a
+-- Implementation uses runST to produce a pure result:
+-- runST :: (forall s. ST s a) -> a
+~~~~~
+
+## And a bit of IO
+
+As briefly discussed before, we want to be able to add keyboard input and video
+output. I'll focus on video output for this blogpost, since it's a little easier
+to explain. The specification for video output is not yet released, but it was
+possible to deduce a lot from some [screenshots].
+
+[screenshots]: http://i.imgur.com/XIXc4.jpg
+
+The video memory starts at `0x8000`, and when we store characters at these
+addresses, they are displayed on the video terminal. Note that we don't need to
+extend the `MonadEmulator` typeclass for this purpose: we already support
+writing values to `0x8000 + i`, that happens through the regular `store`
+operation!
+
+But actually displaying the video terminal is something we can't do with our
+`STEmulator` -- let's add an `IOEmulator` as well.
+
+The `stToIO` function from `Control.Monad.ST` allows us to reuse everything in
+the `Memory` module.
+
+~~~~~{.haskell}
+stToIO :: ST RealWorld a -> IO a
+~~~~~
+
+Note that this is *not* an unsafe function: converting `ST` to `IO` is always
+safe this way (converting `IO` to `ST`, however, is tricky bussiness, but this
+is not needed for our emulator).
+
+Almost exactly like our `STEmulator` is a `ReaderT` wrapper around `ST`, our
+`IOEmulator` begins like a `ReaderT` wrapper around `IO`.
+
+~~~~~{.haskell}
+module Emulator.Monad.IO where
+
+import Emulator.Monad
+import Memory (Memory)
+import qualified Memory as Memory
+
+newtype IOEmulator a = IOEmulator (ReaderT (Memory RealWorld) IO a)
+    deriving (Monad, MonadIO)
+
+instance MonadEmulator IOEmulator where
+    load address = IOEmulator $ do
+        mem <- ask
+        lift $ stToIO $ Memory.load mem address
+    store address word = IOEmulator $ do
+        mem <- ask
+        lift $ stToIO $ Memory.store mem address word
+
+runIOEmulator :: IOEmulator a -> IO a
+-- Implementation trivial, omitted
+~~~~~
+
+If we now have some code for an emulator, we can run it in two ways:
+
+~~~~~{.haskell}
+-- Load a program, execute 1000 instructions, return the value in the RAM at
+-- position 0x1000.
+test :: MonadEmulator m => m Word16
+test = do
+    loadProgram [0xa461, 0x7001, 0x8403 {-# and more... #-}]
+    replicateM_ 1000 step
+    load (Ram 0x1000)
+
+t1 :: Word16
+t1 = runSTEmulator test
+
+t2 :: IO Word16
+t2 = runIOEmulator test
+~~~~~
+
+Let's not stop here yet, because with our current version of `IOEmulator`, all
+we've done is create an *impure* version of `STEmulator`, without any extra
+features!
+
+But adding the desired features is relatively easy at this point: suppose we
+want to add support for the video terminal. We just modify the `store`
+implementation of `IOEmulator` a little:
+
+~~~~~{.haskell}
+store address word = IOEmulator $ do
+    mem <- ask
+    lift $ stToIO $ Memory.store mem address word
+    lift $ video address word  -- New line added here
+~~~~~
+
+And a video terminal implementation!
+
+~~~~~{.haskell}
+video :: Address -> Word16 -> IO ()
+video (Ram address) word
+    | address < videoStart = return ()
+    | address >= videoEnd  = return ()
+    | otherwise            = do
+        -- Calculate row, column, character code and draw!
+        return ()
+  where
+    videoStart = 0x8000
+    videoEnd   = videoStart + rows * columns  -- Unknown yet?
+video _ _ = return ()
+~~~~~
+
+## Conclusion
+
+`ST` is a wonderful tool for problems that require (local) destructive updates
+for performance reasons [^representations]. Additionally, we can easily convert
+it to `IO`, which allows us to simply pick one of the two using an abstraction
+layer: we can have deterministic results for tests, proper keyboard/video
+support, and the entire implementation of the actual CPU is shared code.
+
+The full implementation of this design can be found
+[here](https://github.com/jaspervdj/dcpu16-hs).
+
+[^representations]: Altough other, purely representations are possible as well,
+    of course. These are however unlikely to match the speed of this solution.
