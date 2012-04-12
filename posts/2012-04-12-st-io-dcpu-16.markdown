@@ -158,8 +158,8 @@ stToIO :: ST RealWorld a -> IO a
 ~~~~~
 
 Note that this is *not* an unsafe function: converting `ST` to `IO` is always
-safe this way (converting `IO` to `ST`, however, is tricky bussiness, but this
-is not needed for our emulator).
+safe this way (converting `IO` to `ST`, however, is tricky business, but this is
+not needed for our emulator).
 
 Almost exactly like our `STEmulator` is a `ReaderT` wrapper around `ST`, our
 `IOEmulator` begins like a `ReaderT` wrapper around `IO`.
