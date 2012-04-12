@@ -21,7 +21,7 @@ or even an [operating system] or an [LLVM backend].
 
 I obviously couldn't lag behind and took the opportunity to think about the
 design of such an [emulator] in [Haskell]. This blogpost is the result of my
-search and my experiments with different designs until I arrived at something
+search, and my experiments with different designs until I arrived at something
 which had all the nice properties I desired.
 
 [emulator]: https://github.com/jaspervdj/dcpu16-hs
@@ -33,8 +33,10 @@ When designing a system, it's often a good idea to start from a minimal but
 functional core and work your way up from there -- this is also the approach I
 have taken here.
 
-I decided to represent the state of an emulator as a `Memory` datatype. It's a
-tiny wrapper around a mutable array, and has a few basic operations:
+We can create such a core system by defining the state of the emulator as a
+datatype with a few primitive operations on it. The state of the emulator can be
+represented as a `Memory` datatype. It's a tiny wrapper around a mutable array,
+and has three basic operations:
 
 ~~~~~{.haskell}
 module Memory where
@@ -53,12 +55,21 @@ store :: Memory s -> Address -> Word16 -> ST s ()
 ~~~~~
 
 Using the above `Address` datatype, we're able to access and modify all of the
-values the emulator needs using two simple operations: `load` and `store`.
+values the emulator needs using two simple operations: `load` and `store`. The
+fact that we can access and modify, for example, the stack pointer (`Sp`) in the
+same way as we would modify a value in the RAM (`Ram 0x1000`) simplifies the
+implementation of the actual emulator. As an example, think of code like this:
 
-This all runs in the [ST] monad. This monad allows destructive updates (so we
-can e.g., update words in the RAM of the CPU really fast), but the *result
-remains pure*: unlike the IO monad, code written in the ST monad can only modify
-internal state.
+~~~~~{.nasm}
+SET SP, I
+SET [0x1000], SP
+~~~~~
+
+This all runs in the [ST] monad. This monad is perhaps a bit of a strange beast,
+since it allows destructive updates. This means we e.g., update words in the RAM
+of the CPU really fast). However, the *result remains pure* nonetheless: unlike
+the IO monad, code written in the ST monad can only modify state internal to the
+monad. This is guaranteed by the type system using the `Rank2Types` extension.
 
 [ST]: http://www.haskell.org/ghc/docs/latest/html/libraries/base/Control-Monad-ST.html
 
@@ -69,9 +80,9 @@ can trivially say it is *deterministic*.
 
 However, while the current specification does not include keyboard input and
 video output, this will certainly be added in the future. If we want to support
-that in our emulator, does it mean that we will be forced to run our code in the
-`IO` monad, and that our brave efforts to build a deterministic emulator have
-been in vain?
+that in our emulator, does it mean that we will eventually be forced to run our
+code in the `IO` monad, and that our brave efforts to build a deterministic
+emulator have been in vain?
 
 Not exactly. Using a typeclass, it is possible to build an extremely useful
 abstraction layer which helps us with this problem.
@@ -144,8 +155,8 @@ possible to deduce a lot from some [screenshots].
 The video memory starts at `0x8000`, and when we store characters at these
 addresses, they are displayed on the video terminal. Note that we don't need to
 extend the `MonadEmulator` typeclass for this purpose: we already support
-writing values to `0x8000 + i`, that happens through the regular `store`
-operation!
+writing values to `0x8000 + i`, because we can reach those addresses through the
+regular `store` operation, discussed above!
 
 But actually displaying the video terminal is something we can't do with our
 `STEmulator` -- let's add an `IOEmulator` as well.
@@ -162,7 +173,7 @@ safe this way (converting `IO` to `ST`, however, is tricky business, but this is
 not needed for our emulator).
 
 Almost exactly like our `STEmulator` is a `ReaderT` wrapper around `ST`, our
-`IOEmulator` begins like a `ReaderT` wrapper around `IO`.
+`IOEmulator` starts out like a `ReaderT` wrapper around `IO`.
 
 ~~~~~{.haskell}
 module Emulator.Monad.IO where
@@ -208,9 +219,9 @@ Let's not stop here yet, because with our current version of `IOEmulator`, all
 we've done is create an *impure* version of `STEmulator`, without any extra
 features!
 
-But adding the desired features is relatively easy at this point: suppose we
-want to add support for the video terminal. We just modify the `store`
-implementation of `IOEmulator` a little:
+Adding the desired features is relatively easy at this point: suppose we want to
+add support for the video terminal. We just modify the `store` implementation of
+`IOEmulator` a little:
 
 ~~~~~{.haskell}
 store address word = IOEmulator $ do
