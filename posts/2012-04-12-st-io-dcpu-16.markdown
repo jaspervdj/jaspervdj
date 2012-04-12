@@ -27,6 +27,10 @@ which had all the nice properties I desired.
 [emulator]: https://github.com/jaspervdj/dcpu16-hs
 [Haskell]: http://www.haskell.org/
 
+The full implementation of this design can be found
+[here](https://github.com/jaspervdj/dcpu16-hs).
+
+
 ## The core of the problem: load and store
 
 When designing a system, it's often a good idea to start from a minimal but
@@ -257,9 +261,6 @@ support, and the entire implementation of the actual CPU is shared code.
 [^representations]: Although other, purely functional representations are
     possible as well, of course. These are however unlikely to match the speed
     of this solution.
-
-The full implementation of this design can be found
-[here](https://github.com/jaspervdj/dcpu16-hs).
 
 My thanks to [Andy Georges] and [Toon Willems] for proofreading and some
 corrections.
