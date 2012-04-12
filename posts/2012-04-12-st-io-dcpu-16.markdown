@@ -66,15 +66,15 @@ SET [0x1000], SP
 ~~~~~
 
 This all runs in the [ST] monad. This monad is perhaps a bit of a strange beast,
-since it allows destructive updates. This means we e.g., update words in the RAM
-of the CPU really fast). However, the *result remains pure* nonetheless: unlike
+since it allows destructive updates: this means we can update words in the RAM
+of the CPU really fast. However, the *result remains pure* nonetheless: unlike
 the IO monad, code written in the ST monad can only modify state internal to the
 monad. This is guaranteed by the type system using the `Rank2Types` extension.
 
 [ST]: http://www.haskell.org/ghc/docs/latest/html/libraries/base/Control-Monad-ST.html
 
 This is great because it allows us to have a really fast emulator, of which we
-can trivially say it is *deterministic*.
+can trivially say it is deterministic.
 
 ## A necessary abstraction
 
@@ -254,12 +254,15 @@ it to `IO`, which allows us to simply pick one of the two using an abstraction
 layer: we can have deterministic results for tests, proper keyboard/video
 support, and the entire implementation of the actual CPU is shared code.
 
-[^representations]: Altough other, purely representations are possible as well,
-    of course. These are however unlikely to match the speed of this solution.
+[^representations]: Although other, purely functional representations are
+    possible as well, of course. These are however unlikely to match the speed
+    of this solution.
 
 The full implementation of this design can be found
 [here](https://github.com/jaspervdj/dcpu16-hs).
 
-My thanks to [Andy Georges] for proofreading and some corrections.
+My thanks to [Andy Georges] and [Toon Willems] for proofreading and some
+corrections.
 
 [Andy Georges]: http://www.itkovian.net/
+[Toon Willems]: http://twitter.com/nudded
