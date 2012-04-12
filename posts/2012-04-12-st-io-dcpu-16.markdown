@@ -4,7 +4,7 @@ description: On monadic typeclasses, pure and impure state monads
 tags: haskell
 ---
 
-When [Notch] announched that his upcoming game [0x10c] would feature an in-game
+When [Notch] announced that his upcoming game [0x10c] would feature an in-game
 [16 bit CPU], the internet [went nuts] about it.
 
 [Notch]: http://www.mojang.com/notch/
