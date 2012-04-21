@@ -1,0 +1,113 @@
+---
+title: blaze-html 0.5
+description: A bunch of changes to the blaze-html library
+tags: haskell
+---
+
+After some work here at [UHac], I'm releasing a new version of the [blaze-html]
+library. It has a number of changes, some of which slightly break compatibility
+with older versions of the library.
+
+[UHac]: http://www.haskell.org/haskellwiki/DHD_UHac
+[blaze-html]: http://jaspervdj.be/blaze
+
+## blaze-markup and blaze-svg
+
+A few weeks ago, [Deepak Jois] emailed me that he would like to create a
+`blaze-html` package for [SVG]. He started doing so by first simply copying the
+`blaze-html` code and creating [blaze-svg] from there.
+
+[Deepak Jois]: http://www.deepak.jois.name/
+[SVG]: http://nl.wikipedia.org/wiki/Scalable_Vector_Graphics
+[blaze-svg]: https://github.com/deepakjois/blaze-svg
+
+Obviously, `blaze-html` and `blaze-svg` contained *a lot* of common code, so we
+(mostly Deepak, he really deserves all credit for this) extracted the shared
+code into a new [blaze-markup] package, upon which both packages now depend.
+
+[blaze-markup]: https://github.com/jaspervdj/blaze-markup
+
+## Backwards-incompatible changes
+
+This move introduced some backwards-incompatible changes, which we catch with
+deprecation warnings in a few places, but there have also been some module
+changes, which might break your code when you upgrade.
+
+The `Text.Blaze` module no longer contains an `Html` type. Instead, it has a
+`Markup` type. However, in `Text.Blaze.Html`, we have
+
+~~~~~{.haskell}
+type Html = Markup
+~~~~~
+
+so the best way to upgrade is to change every `Text.Blaze` import into a
+`Text.Blaze.Html` import.
+
+Additionally, the `renderHtml` methods have been renamed to `renderMarkup`. When
+you use a `renderHtml` method, you will see a deprecation warning. The best way
+to resolve this warning is to import e.g., `Text.Blaze.Html.Renderer.Utf8`
+instead of `Text.Blaze.Renderer.Utf8`.
+
+## Easier creation of custom nodes
+
+`blaze-html` 0.5 introduces easy creation of custom nodes. In the following
+snippet, `test1` and `test2` generate the same HTML:
+
+~~~~~{.haskell}
+{-# LANGUAGE OverloadedStrings #-}
+import Text.Blaze.Html (Html)
+import Text.Blaze.Html5 (p)
+import Text.Blaze.Internal
+
+test1 :: Html
+test1 = p "Hello world"
+
+test2 :: Html
+test2 = customParent "p" "Hello world"
+~~~~~
+
+However, you should void usage of `customParent` (and `customLeaf`,
+`customAttribute`) whenever possible, which is why they are placed in the
+`Text.Blaze.Internal` module. They are *much* slower than their regular
+counterparts, and also less safe since they're vulnerable to typos.
+
+## Simple manipulations of the HTML tree
+
+I've also decided I will add some very simple manipulations of the HTML tree
+when needed. For now, a single manipulation `contents` is included, since
+another package (to be released in the future) depends on it.
+
+This very fast function takes the text content of the HTML tree, so it is
+available for rendering. Let's look at a simple example:
+
+~~~~~{.haskell}
+{-# LANGUAGE OverloadedStrings #-}
+import Text.Blaze.Html (Html, contents, (!))
+import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+import qualified Text.Blaze.Html5 as H
+import qualified Text.Blaze.Html5.Attributes as A
+
+test :: Html
+test = do
+    H.p "Hello "
+    H.img ! A.src "foo.png"
+    H.p "World!"
+
+-- Renders: <p>Hello </p><img src=\"foo.png\"><p>World!</p>
+test1 = renderHtml test
+
+-- Renders "Hello World!"
+test2 = renderHtml $ contents test
+~~~~~
+
+## Installation
+
+You can install the new version just by running
+
+~~~~~
+cabal update && cabal install blaze-html
+~~~~~
+
+You should definitely contact me if you run into any trouble, I'll try to get
+back to you as fast as possible. In the meanwhile, I'm going to enjoy the rest
+of the Utrecht Hackathon!
