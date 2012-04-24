@@ -84,6 +84,10 @@ You can view more projects on my [GitHub page].
 
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
+- [DHD 2012], 20th of April 2012, Utrecht, "Supporting Different Versions of the
+  WebSockets Protocol"
+  ([slides](/files/2012-dutchhug-websockets.pdf))
+
 - GhentFPG, 20th of March 2012, Ghent, "digestive-functors 0.3"
   ([slides](/files/2012-ghentfpg-digestive-functors.pdf))
 
@@ -111,8 +115,8 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
   "BlazeHtml: a DSL for HTML generation in Haskell"
   ([slides](/files/2010-amex-blaze-html.pdf))
 
-- [DutchHUG], 24th of April 2010, Utrecht, "BlazeHtml: design of a blazingly fast
-  HTML combinator library"
+- [DutchHUG], 24th of April 2010, Utrecht, "BlazeHtml: design of a blazingly
+  fast HTML combinator library"
   ([slides](/files/2010-dutchhug-blaze-html.pdf))
 
 - GhentFPG, 1st of April 2010, Ghent, "BlazeHtml: a blazingly fast HTML
@@ -131,6 +135,7 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
 [Zeus WPI]: http://zeus.ugent.be/
 [Functional Programming Exchange]: http://skillsmatter.com/event/scala/functionalpx-2011
 [CamHac]: http://www.haskell.org/haskellwiki/CamHac
+[DHD 2012]: http://www.haskell.org/haskellwiki/DHD_UHac
 
 ## Trivia
 
