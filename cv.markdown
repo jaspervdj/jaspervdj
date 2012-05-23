@@ -23,14 +23,6 @@ involved in the community.
 
 Here is a list of some projects I have worked on in the past years.
 
-- [12Urenloop] (2011 - present): With [Zeus WPI], we created software to count
-  laps for this yearly [student event](http://12urenloop.be) (Dutch). I
-  specifically focused on `count-von-count`, a central component used to process
-  raw bluetooth events into useful lap data.
-
-[12Urenloop]: https://github.com/ZeusWPI/12Urenloop
-[Zeus WPI]: http://zeus.ugent.be/
-
 - [websockets] (2011 - present): I created a library for easily writing robust
   WebSocket-capable servers in [Haskell].
 
@@ -71,6 +63,19 @@ Here is a list of some projects I have worked on in the past years.
   well as command-line applications.
 
 [Digestive functors]: http://github.com/jaspervdj/digestive-functors/
+
+- [geohub.github.com]: This is a small tool to geolocate your github
+  collaborators.
+
+[geohub.github.com]: http://geohub.github.com/
+
+- [12Urenloop] (2011 - present): With [Zeus WPI], we created software to count
+  laps for this yearly [student event](http://12urenloop.be) (Dutch). I
+  specifically focused on `count-von-count`, a central component used to process
+  raw bluetooth events into useful lap data.
+
+[12Urenloop]: https://github.com/ZeusWPI/12Urenloop
+[Zeus WPI]: http://zeus.ugent.be/
 
 - [JVGS] (2009) is an "artsy" platform game that is not like the others. I
   implemented a subset of the [SVG specification] to give the game it's original
