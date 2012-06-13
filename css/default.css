@@ -49,13 +49,14 @@ div#content {
 }
 
 div#footer {
-    clear: both;
-    text-align: center;
-    font-size: 12px;
-    padding-top: 20px;
-    height: 100px;
-    color: #222;
     background: transparent url("../images/footer.png") no-repeat center top;
+    color: #222;
+    font-size: 12px;
+    height: 100px;
+    margin: 0px auto 0px auto;
+    padding: 20px 40px 20px 40px;
+    text-align: center;
+    width: 660px;
 }
 
 div#footer a {
