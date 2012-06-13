@@ -59,15 +59,15 @@ main = hakyllWith config $ do
         >>> relativizeUrlsCompiler
 
     -- Index
-    match "index.html" $ route idRoute
-    create "index.html" $ constA mempty
-        >>> arr (setField "title" "Home")
-        >>> requireA "tags" (setFieldA "tags" (renderTagList'))
-        >>> setFieldPageList (take 3 . recentFirst)
-                "templates/postitem.html" "posts" "posts/*"
-        >>> applyTemplateCompiler "templates/index.html"
-        >>> applyTemplateCompiler "templates/default.html"
-        >>> relativizeUrlsCompiler
+    match "index.html" $ do
+        route idRoute
+        compile $ readPageCompiler
+            >>> requireA "tags" (setFieldA "tags" (renderTagList'))
+            >>> setFieldPageList (take 3 . recentFirst)
+                    "templates/postitem.html" "posts" "posts/*"
+            >>> arr applySelf
+            >>> applyTemplateCompiler "templates/default.html"
+            >>> relativizeUrlsCompiler
 
     -- Tags
     create "tags" $
