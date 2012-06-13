@@ -23,11 +23,6 @@ main = hakyllWith config $ do
         route   idRoute
         compile copyFileCompiler
 
-    -- Copy JavaScript
-    match "js/*" $ do
-        route   idRoute
-        compile copyFileCompiler
-
     -- Copy files (deep)
     match "files/**" $ do
         route idRoute

@@ -3,37 +3,49 @@ html {
     font-family: 'Lucida Sans', 'Helvetica', 'Arial', sans-serif;
     font-size: 14px;
     text-align: left;
-    background-color: rgb(102, 102, 102);
     line-height: 22px;
 }
 
 body {
+    background-color: #e9e9e9;
     margin: 0px;
 }
 
-div#header {
-    background: white url("../images/header-background.png") repeat-x top;
-    padding-top: 30px;
-    height: 40px;
+div#navigation {
+    float: right;
+    left: 120px;
+    margin-left: -120px;
+    position: relative;
+    width: 120px;
 }
 
-div#header a {
-    color: white;
-    font-size: 30px;
-    text-decoration: none;
+div#navigation h1 {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 40px 6px 40px;
+    margin: 0px;
+}
+
+div#navigation a {
+    color: #555;
     display: block;
-    width: 700px;
-    margin: 0px auto 0px auto;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 40px 4px 40px;
+    text-decoration: none;
+    width: 120px;
 }
 
-div#wide-content {
-    background-color: white;
-    padding-bottom: 20px;
+div#navigation a:hover {
+    background-color: #fff;
 }
 
 div#content {
-    width: 700px;
+    width: 660px;
     margin: 0px auto 0px auto;
+    padding: 0px 40px 20px 40px;
+    background: transparent url("../images/content.png") repeat-y center top;
 }
 
 div#footer {
@@ -41,25 +53,13 @@ div#footer {
     text-align: center;
     font-size: 12px;
     padding-top: 20px;
-    background: rgb(102, 102, 102) url("../images/footer-background.png") repeat-x top;
     height: 100px;
-    color: white;
+    color: #222;
+    background: transparent url("../images/footer.png") no-repeat center top;
 }
 
 div#footer a {
-    color: white;
-}
-
-div.left-column {
-    width: 340px;
-    float: left;
-    padding-right: 10px;
-}
-
-div.right-column {
-    width: 340px;
-    float: right;
-    padding-left: 10px;
+    color: #444;
 }
 
 div.tags {
