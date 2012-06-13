@@ -1,5 +1,5 @@
 html {
-    color: black;
+    color: #333;
     font-family: 'Lucida Sans', 'Helvetica', 'Arial', sans-serif;
     font-size: 14px;
     text-align: left;
@@ -23,7 +23,7 @@ div#navigation h1 {
     color: #333;
     font-size: 18px;
     font-weight: bold;
-    padding: 12px 40px 6px 40px;
+    padding: 12px 20px 6px 40px;
     margin: 0px;
 }
 
@@ -32,7 +32,7 @@ div#navigation a {
     display: block;
     font-size: 14px;
     font-weight: bold;
-    padding: 4px 40px 4px 40px;
+    padding: 4px 20px 4px 40px;
     text-decoration: none;
     width: 120px;
 }
