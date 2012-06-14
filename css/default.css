@@ -23,8 +23,8 @@ div#navigation h1 {
     color: #333;
     font-size: 18px;
     font-weight: bold;
-    padding: 12px 20px 6px 40px;
-    margin: 0px;
+    margin: 0px 0px 0px 20px;
+    padding: 12px 20px 6px 20px;
 }
 
 div#navigation a {
@@ -32,7 +32,8 @@ div#navigation a {
     display: block;
     font-size: 14px;
     font-weight: bold;
-    padding: 4px 20px 4px 40px;
+    margin-left: 20px;
+    padding: 4px 20px 4px 20px;
     text-decoration: none;
     width: 120px;
 }
