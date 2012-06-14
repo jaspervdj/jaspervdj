@@ -4,13 +4,13 @@ title: Music &amp; Movies
 
 # Recommendations
 
-This is a fairly loose list of stuff I thoroughly enjoy. I generally try to
-recommend less well-known stuff, as far as that's possible in today's
-information society.
+This is a fairly loose and very limited list of stuff I thoroughly enjoy.
 
 ## Music
 
-I've opted to only recommend albums or EPs instead of songs.
+I generally try to recommend less well-known artists, as far as that's possible
+in today's information society. I've opted to only recommend albums or EPs
+instead of songs.
 
 - A Lesson In Crime by Tokyo Police Club (Garage rock)
 - Beach House by Beach House (Dream pop)
@@ -20,6 +20,7 @@ I've opted to only recommend albums or EPs instead of songs.
 - Gas by Gas 0095 (Ambient)
 - Guide To An Escape by Rue Royale (Folk)
 - High Times by Washed Out (Downtempo)
+- Loveless by My Bloody Valentine (Shoegaze)
 - Neveroddoreven by I Monster (Electronic)
 - No Way Down by Air France (Dream pop?)
 - Ravedeath, 1972 by Tim Hecker (Ambient)
@@ -34,4 +35,15 @@ I've opted to only recommend albums or EPs instead of songs.
 
 ## Movies
 
-I still need to write this up.
+Again, I try to recommend some movies which I think should be more well-known.
+
+- [A Scanner Darkly](http://www.imdb.com/title/tt0405296/)
+- [Boy A](http://www.imdb.com/title/tt1078188/)
+- [Control](http://www.imdb.com/title/tt0421082/)
+- [Gomorra](http://www.imdb.com/title/tt0929425/)
+- [Into the Wild](http://www.imdb.com/title/tt0758758/)
+- [Paprika](http://www.imdb.com/title/tt0851578/)
+- [Primer](http://www.imdb.com/title/tt0390384/)
+- [The Intouchables](http://www.imdb.com/title/tt1675434/)
+- [The Road](http://www.imdb.com/title/tt0898367/)
+- [Tropa de Elite](http://www.imdb.com/title/tt0861739/)
