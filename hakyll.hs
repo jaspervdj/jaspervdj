@@ -83,7 +83,7 @@ main = hakyllWith config $ do
     match "templates/*" $ compile templateCompiler
 
     -- Render some static pages
-    forM_ ["contact.markdown", "cv.markdown", "links.markdown"] $ \p ->
+    forM_ pages $ \p ->
         match p $ do
             route   $ setExtension ".html"
             compile $ pageCompiler
@@ -108,6 +108,13 @@ main = hakyllWith config $ do
 
     tagIdentifier :: String -> Identifier (Page String)
     tagIdentifier = fromCapture "tags/*"
+
+    pages = 
+        [ "contact.markdown"
+        , "cv.markdown"
+        , "links.markdown"
+        , "recommendations.markdown"
+        ]
 
 makeTagList :: String
             -> [Page String]
