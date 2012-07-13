@@ -139,5 +139,6 @@ feedConfiguration = FeedConfiguration
     { feedTitle       = "jaspervdj - a personal blog"
     , feedDescription = "Personal blog of jaspervdj"
     , feedAuthorName  = "Jasper Van der Jeugt"
+    , feedAuthorEmail = "jaspervdj@gmail.com"
     , feedRoot        = "http://jaspervdj.be"
     }
