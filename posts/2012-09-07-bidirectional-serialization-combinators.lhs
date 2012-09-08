@@ -133,7 +133,7 @@ Haskell 98 datatypes -- the wiki page has more information.
 >     Map  :: (a -> b) -> Table t a -> Table t b
 >     Pure :: a -> Table t a
 >     App  :: Table t (a -> b) -> Table t a -> Table t b
-
+>
 >     -- Primitives
 >     Column :: Field a => FieldInfo t a -> Table t a
 
