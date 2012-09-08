@@ -34,9 +34,9 @@ it in `GHCi` and play around with it, should you feel like doing this.
 > import Control.Monad
 > import Data.Aeson
 
-A lot of serialization libraries use a technique employing two typeclasses in
-order to convert data from and to some format. An example is the excellent
-[aeson] library:
+A lot of serialization libraries use a technique employing two typeclasses (or
+one typeclass with two methods) in order to convert data from and to some
+format. An example is the excellent [aeson] library:
 
 [aeson]: http://hackage.haskell.org/package/aeson
 
@@ -57,10 +57,12 @@ order to convert data from and to some format. An example is the excellent
 >         <*> obj .: "cost"
 >     parseJSON _ = mzero
 
-Some other libraries using this technique are [cassava] and [postgresql-simple].
+Some other libraries using this technique are [cassava], [postgresql-simple],
+and [binary].
 
 [cassava]: http://hackage.haskell.org/package/cassava
 [postgresql-simple]: http://hackage.haskell.org/package/postgresql-simple
+[binary]: http://hackage.haskell.org/package/binary
 
 While working on some new internal [SQLite] bindings and utilities at Tsuru, I
 discovered another technique which is more concise, but keeps the nice
@@ -153,13 +155,13 @@ This GADT allows us to model actual tables:
 
 Let's make some nicer syntax and write `foodTable` again:
 
-> field :: Field a => String -> (t -> a) -> Table t a
-> field name extract = Column (FieldInfo name extract)
+> column :: Field a => String -> (t -> a) -> Table t a
+> column name extract = Column (FieldInfo name extract)
 
 > foodTable' :: Table Food Food
 > foodTable' = Food
->     <$> field "name" foodName
->     <*> field "cost" foodCost
+>     <$> column "name" foodName
+>     <*> column "cost" foodCost
 
 Lookin' good!
 
@@ -172,9 +174,9 @@ write some actual implementation.
 These implementations work by evaluating the trees we created with the different
 constructors for the GADT.
 
-Our first method crawls the tree and returns the name and type of each column:
+Our first method crawls the table tree and returns the name and type of each
+column:
 
-> -- Works with undefined
 > metaRecord :: Table t t -> [(String, String)]
 > metaRecord = go
 >   where
@@ -235,8 +237,8 @@ Now let's implement food serialization for real: we only need to implement a
 
 > instance HasTable Food where
 >     table = Food
->         <$> field "name" foodName
->         <*> field "cost" foodCost
+>         <$> column "name" foodName
+>         <*> column "cost" foodCost
 
 Some concrete deliciousness:
 
