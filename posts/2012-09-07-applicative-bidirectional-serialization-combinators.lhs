@@ -1,5 +1,5 @@
 ---
-title: Bidirectional serialization combinators
+title: Applicative, bidirectional serialization combinators
 description: A neat GADT/Applicative trick
 tags: haskell
 ---
@@ -22,8 +22,11 @@ we have a nice view from the office.
 Prologue
 --------
 
-This blogpost is written in literate Haskell, so you can drop it in a file, load
-it in `GHCi` and play around with it, should you feel like doing this.
+This blogpost is written in literate Haskell ([source here]), so you can drop it
+in a file, load it in `GHCi` and play around with it, should you feel like doing
+this.
+
+[source here]: https://github.com/jaspervdj/jaspervdj/blob/master/posts/2012-09-07-applicative-bidirectional-serialization-combinators.lhs
 
 > {-# LANGUAGE FlexibleInstances #-}
 > {-# LANGUAGE GADTs #-}
