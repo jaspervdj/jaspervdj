@@ -87,7 +87,7 @@ The solution
 Is it possible? Can you come up with a nicer solution than we have?
 
 <input type="button" value="Click to reveal the solution"
-    onclick="document.getElementById('solution').style.display='block';">
+    onclick="document.getElementById('solution').style.display='block';" />
 
 <div id="solution" style="display: none">
 
