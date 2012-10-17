@@ -137,7 +137,7 @@ code {
 }
 
 pre code {
-    clear: both;
+    clear: left;
     display: block;
     padding: 8px;
     margin-bottom: 2em;
