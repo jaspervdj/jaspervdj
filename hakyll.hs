@@ -1,14 +1,20 @@
-{-# LANGUAGE OverloadedStrings, Arrows #-}
+{-# LANGUAGE Arrows            #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Prelude hiding (id)
-import Control.Category (id)
-import Control.Monad (forM_)
-import Control.Arrow (arr, (>>>), (***), second)
-import Data.Monoid (mempty, mconcat)
-import qualified Data.Map as M
+import           Control.Arrow    (arr, second, (***), (>>>))
+import           Control.Category (id)
+import           Control.Monad    (forM_)
+import qualified Data.ByteString  as B
+import qualified Data.Map         as M
+import           Data.Monoid      (mconcat, mempty)
+import           Prelude          hiding (id)
+import           System.Cmd       (system)
+import           System.Directory (getTemporaryDirectory)
+import           System.FilePath  ((<.>), (</>))
+import qualified Text.Pandoc      as Pandoc
 
-import Hakyll
+import           Hakyll
 
 -- | Entry point
 --
@@ -100,8 +106,16 @@ main = hakyllWith config $ do
     match "rss.xml" $ route idRoute
     create "rss.xml" $ requireAll_ "posts/*" >>> renderRss feedConfiguration
 
-    -- End
-    return ()
+    -- CV as PDF
+    group "pdf-cv" $
+        match "cv.markdown" $ do
+            route   $ setExtension ".pdf"
+            compile $ readPageCompiler
+                >>> pageReadPandoc
+                >>> arr (fmap $ Pandoc.writeLaTeX Pandoc.defaultWriterOptions)
+                >>> applyTemplateCompiler "templates/cv.tex"
+                >>> arr pageBody
+                >>> pdflatex "cv"
   where
     renderTagList' :: Compiler (Tags String) String
     renderTagList' = renderTagList tagIdentifier
@@ -109,7 +123,7 @@ main = hakyllWith config $ do
     tagIdentifier :: String -> Identifier (Page String)
     tagIdentifier = fromCapture "tags/*"
 
-    pages = 
+    pages =
         [ "contact.markdown"
         , "cv.markdown"
         , "links.markdown"
@@ -142,3 +156,15 @@ feedConfiguration = FeedConfiguration
     , feedAuthorEmail = "jaspervdj@gmail.com"
     , feedRoot        = "http://jaspervdj.be"
     }
+
+-- | Hacky.
+pdflatex :: String -> Compiler String B.ByteString
+pdflatex name = unsafeCompiler $ \string -> do
+    tmpDir <- getTemporaryDirectory
+    let tex = tmpDir </> name <.> "tex"
+        pdf = tmpDir </> name <.> "pdf"
+
+    writeFile tex string
+    system $ unwords ["pdflatex",
+        "-output-directory", tmpDir, tex, ">/dev/null", "2>&1"]
+    B.readFile pdf
