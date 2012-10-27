@@ -2,18 +2,37 @@
 title: Curriculum Vitae
 ---
 
-# Curriculum Vitae
+# Jasper Van der Jeugt
 
-This is a work in progress.
+<http://jaspervdj.be/>  
+<jaspervdj@gmail.com>
 
-## Education
+## Summary
 
-- 2011 - ...: Ghent University: Master in Computer Science: Software
-  Engineering (in progress)
-- 2008 - 2011: Ghent University: Bachelor in Computer Science
-- 2002 - 2008: Secondary school: Sint-Lodewijkscollege Lokeren -- ASO,
-  Latin & maths specialization
-- 1996 - 2002: Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte
+I have a strong interest for and bunch of experience with functional programming
+languages, mainly Haskell and OCaml. I am also well-versed in more traditional
+programming languages and I have a strong Linux background.
+
+## Work experience
+
+I'll list only relevant jobs here.
+
+- In 2012, I did a 3-month long full-time internship at [Tsuru Capital LLC], a
+  proprietary trading fund based in Tokyo and Singapore.
+
+[Tsuru Capital LLC]: http://tsurucapital.com/
+
+- I participated in [Google Summer of Code] twice, in 2010 and 2011. In both
+  cases, I worked for a Haskell project and was positively evaluated.
+
+[Google Summer of Code]: http://code.google.com/soc/
+
+- In the summer of 2011, I worked as a Software Engineer at [Amplidata]. The job
+  involved extending their proprietary Distributed Storage System, which is
+  written in [OCaml].
+
+[Amplidata]: http://www.amplidata.com/
+[OCaml]: http://caml.inria.fr/
 
 ## Open source projects
 
@@ -38,7 +57,6 @@ Here is a list of some projects I have worked on in the past years.
   benchmarking to discover the tradeoffs between the different encodings.
 
 [Text]: https://github.com/bos/text
-[Google Summer of Code]: http://code.google.com/soc/
 
 - [blaze-builder] (2010): Simon Meier and I developed an initial version of a
   fast builder monoid for the [BlazeHtml] project. This library is now used in
@@ -88,66 +106,67 @@ This list is not complete: you can view more projects on my [GitHub page].
 
 [GitHub page]: http://github.com/jaspervdj
 
-## Work experience
+## Education
 
-I'll list only relevant jobs here.
-
-- In the summer of 2011, I worked as a Software Engineer at [Amplidata]. The job
-  involved extending their proprietary Distributed Storage System, which is
-  written in [OCaml].
-
-[Amplidata]: http://www.amplidata.com/
-[OCaml]: http://caml.inria.fr/
+- 2011 - ...: Ghent University: Master in Computer Science: Software
+  Engineering (in progress)
+- 2008 - 2011: Ghent University: Bachelor in Computer Science
+- 2002 - 2008: Secondary school: Sint-Lodewijkscollege Lokeren -- ASO,
+  Latin & maths specialization
+- 1996 - 2002: Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte
 
 ## Talks
+
+<!-- We link directly to the slide files because it also needs to work in the
+PDF version -->
 
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
 - [DHD 2012], Utrecht, 20th of April 2012, "Supporting Different Versions of the
   WebSockets Protocol"
-  ([slides](/files/2012-dutchhug-websockets.pdf))
+  ([slides](http://jaspervdj.be/files/2012-dutchhug-websockets.pdf))
 
 - GhentFPG, Ghent, 20th of March 2012, "digestive-functors 0.3"
-  ([slides](/files/2012-ghentfpg-digestive-functors.pdf))
+  ([slides](http://jaspervdj.be/files/2012-ghentfpg-digestive-functors.pdf))
 
 - [CamHac], Cambridge, 14th of August 2011, "GSoC: Text/UTF-8"
-  ([slides](/files/2011-camhac-text-utf8.pdf))
+  ([slides](http://jaspervdj.be/files/2011-camhac-text-utf8.pdf))
 
 - [DutchHUG], Utrecht, 14th of July 2011, "Porting Text to UTF-8"
-  ([slides](/files/2011-dutchhug-text-utf8.pdf))
+  ([slides](http://jaspervdj.be/files/2011-dutchhug-text-utf8.pdf))
 
 - GhentFPG, Ghent, 30th of May 2011, "Introduction to optimizing Haskell code"
-  ([slides](/files/2011-ghentfpg-introduction-optimizing.pdf))
+  ([slides](http://jaspervdj.be/files/2011-ghentfpg-introduction-optimizing.pdf))
 
 - BarcampGhent, Ghent, 25th of May 2011, "Laziness"
-  ([slides](/files/2011-barcampghent-laziness.pdf))
+  ([slides](http://jaspervdj.be/files/2011-barcampghent-laziness.pdf))
 
 - [Functional Programming Exchange], London, 18th of March 2011, "BlazeHtml:
   blazingly fast HTML combinators"
-  ([slides](/files/2011-functionalpx-blaze-html.pdf))
+  ([slides](http://jaspervdj.be/files/2011-functionalpx-blaze-html.pdf))
 
 - [Zeus WPI], Ghent, 2nd of December 2010, "An interactive introduction to Git"
-  ([slides](/files/2010-zeus-git.pdf))
+  ([slides](http://jaspervdj.be/files/2010-zeus-git.pdf))
 
 - American Express (tech department), New York City, 24th of August 2010,
   "BlazeHtml: a DSL for HTML generation in Haskell"
-  ([slides](/files/2010-amex-blaze-html.pdf))
+  ([slides](http://jaspervdj.be/files/2010-amex-blaze-html.pdf))
 
 - [DutchHUG], Utrecht, 24th of April 2010, "BlazeHtml: design of a blazingly
   fast HTML combinator library"
-  ([slides](/files/2010-dutchhug-blaze-html.pdf))
+  ([slides](http://jaspervdj.be/files/2010-dutchhug-blaze-html.pdf))
 
 - GhentFPG, Ghent, 1st of April 2010, "BlazeHtml: a blazingly fast HTML
   generator in Haskell"
-  ([slides](/files/2010-ghentfpg-blaze-html.pdf))
+  ([slides](http://jaspervdj.be/files/2010-ghentfpg-blaze-html.pdf))
 
 - ZuriHac, Zürich, 21th of March 2010, "BlazeHtml: a blazingly fast HTML
   combinator library"
-  ([slides](/files/2010-zurihac-blaze-html.pdf))
+  ([slides](http://jaspervdj.be/files/2010-zurihac-blaze-html.pdf))
 
 - BarcampGhent, Ghent, 29th of November 2009, "Learn you a Haskell in 20
   minutes"
-  ([slides](/files/2009-barcampghent-haskell.pdf))
+  ([slides](http://jaspervdj.be/files/2009-barcampghent-haskell.pdf))
 
 [DutchHUG]: http://dutchhug.nl/
 [Functional Programming Exchange]: http://skillsmatter.com/event/scala/functionalpx-2011

@@ -106,6 +106,14 @@ main = hakyllWith config $ do
     match "rss.xml" $ route idRoute
     create "rss.xml" $ requireAll_ "posts/*" >>> renderRss feedConfiguration
 
+    -- CV as HTML
+    match "cv.markdown" $ do
+        route   $ setExtension ".html"
+        compile $ pageCompiler
+            >>> applyTemplateCompiler "templates/cv.html"
+            >>> applyTemplateCompiler "templates/default.html"
+            >>> relativizeUrlsCompiler
+
     -- CV as PDF
     group "pdf-cv" $
         match "cv.markdown" $ do
@@ -125,7 +133,6 @@ main = hakyllWith config $ do
 
     pages =
         [ "contact.markdown"
-        , "cv.markdown"
         , "links.markdown"
         , "recommendations.markdown"
         ]

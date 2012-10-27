@@ -1,7 +1,14 @@
 \documentclass[a4paper, 11pt]{article}
 
-\usepackage[colorlinks=false, pdfborder={0 0 0}]{hyperref}
+\usepackage{color}
+\definecolor{darkblue}{RGB}{0,0,100}
 
+\usepackage[colorlinks=true, allcolors=darkblue, pdfborder={0 0 0}]{hyperref}
+
+\usepackage{titlesec}
+\titleformat{\subsection}{\large\bfseries}{\thesection}{1em}{\hrule\vspace{1em}}
+
+\setlength{\parindent}{0em}
 \setcounter{secnumdepth}{-1}
 \renewcommand{\labelitemi}{$\circ$}
 \renewcommand{\familydefault}{\sfdefault}
