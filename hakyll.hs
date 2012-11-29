@@ -1,23 +1,30 @@
+--------------------------------------------------------------------------------
 {-# LANGUAGE Arrows            #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
+
+--------------------------------------------------------------------------------
 import           Control.Arrow    (arr, second, (***), (>>>))
 import           Control.Category (id)
 import           Control.Monad    (forM_)
 import qualified Data.ByteString  as B
 import qualified Data.Map         as M
+import           Data.Monoid      (mappend)
 import           Data.Monoid      (mconcat, mempty)
 import           Prelude          hiding (id)
 import           System.Cmd       (system)
 import           System.Directory (getTemporaryDirectory)
-import           System.FilePath  ((<.>), (</>))
+import           System.FilePath  (takeFileName, (<.>), (</>))
 import qualified Text.Pandoc      as Pandoc
 
+
+--------------------------------------------------------------------------------
 import           Hakyll
 
+
+--------------------------------------------------------------------------------
 -- | Entry point
---
 main :: IO ()
 main = hakyllWith config $ do
     -- Copy images
@@ -42,39 +49,79 @@ main = hakyllWith config $ do
     -- Render the /tmp index page
     match "tmp/index.html" $ do
         route idRoute
-        compile $ readPageCompiler >>> relativizeUrlsCompiler
+        compile $ getResourceBody >>= relativizeUrls
 
     -- Render each and every post
     match "posts/*" $ do
         route   $ setExtension ".html"
-        compile $ pageCompiler
-            >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
-            >>> renderTagsField "prettytags" (fromCapture "tags/*")
-            >>> applyTemplateCompiler "templates/post.html"
-            >>> applyTemplateCompiler "templates/default.html"
-            >>> relativizeUrlsCompiler
+        compile $ do
+            pageCompiler
+            -- >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
+            -- >>> renderTagsField "prettytags" (fromCapture "tags/*")
+                >>= requireApplyTemplate "templates/post.html" postContext
+                >>= requireApplyTemplate "templates/default.html" defaultContext
+                >>= relativizeUrls
 
     -- Post list
-    match "posts.html" $ route idRoute
-    create "posts.html" $ constA mempty
-        >>> arr (setField "title" "Posts")
-        >>> setFieldPageList recentFirst
-                "templates/postitem.html" "posts" "posts/*"
-        >>> applyTemplateCompiler "templates/posts.html"
-        >>> applyTemplateCompiler "templates/default.html"
-        >>> relativizeUrlsCompiler
+    match "posts.html" $ do
+        route idRoute
+        compile $ do
+            postItemTpl <- requireBody "templates/postitem.html"
+            postsTpl    <- requireBody "templates/posts.html"
+            defaultTpl  <- requireBody "templates/default.html"
+
+            posts <- requireAll "posts/*"
+            list  <- applyTemplateList postItemTpl postContext $
+                recentFirst posts
+
+            makeItem ""
+                >>= applyTemplate postsTpl
+                        (constField "title" "Posts" `mappend`
+                            constField "posts" list `mappend`
+                            defaultContext)
+                >>= applyTemplate defaultTpl defaultContext
+                >>= relativizeUrls
+
+    -- Post tags
+    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
+    tagsRules tags $ \tag pattern -> do
+        -- Copied from posts, need to refactor
+        route idRoute
+        compile $ do
+            postItemTpl <- requireBody "templates/postitem.html"
+            postsTpl    <- requireBody "templates/posts.html"
+            defaultTpl  <- requireBody "templates/default.html"
+
+            posts <- requireAll pattern
+            list  <- applyTemplateList postItemTpl postContext $
+                recentFirst posts
+
+            makeItem ""
+                >>= applyTemplate postsTpl
+                        (constField "title" ("Posts tagged " ++ tag) `mappend`
+                            constField "posts" list `mappend`
+                            defaultContext)
+                >>= applyTemplate defaultTpl defaultContext
+                >>= relativizeUrls
 
     -- Index
     match "index.html" $ do
         route idRoute
-        compile $ readPageCompiler
-            >>> requireA "tags" (setFieldA "tags" (renderTagList'))
-            >>> setFieldPageList (take 3 . recentFirst)
-                    "templates/postitem.html" "posts" "posts/*"
-            >>> arr applySelf
-            >>> applyTemplateCompiler "templates/default.html"
-            >>> relativizeUrlsCompiler
+        compile $ do
+            postItemTpl <- requireBody "templates/postitem.html"
+            posts       <- requireAll "posts/*"
+            list        <- applyTemplateList postItemTpl postContext $
+                take 3 $ recentFirst posts
 
+            let indexContext = constField "posts" list `mappend`
+                    field "tags" (\_ -> renderTagList tags) `mappend`
+                    defaultContext
+
+            getResourceBody
+                >>= applySelf indexContext
+                >>= requireApplyTemplate "templates/default.html" indexContext
+                >>= relativizeUrls
+    {-
     -- Tags
     create "tags" $
         requireAll "posts/*" (\_ ps -> readTags ps :: Tags String)
@@ -84,52 +131,63 @@ main = hakyllWith config $ do
     metaCompile $ require_ "tags"
         >>> arr tagsMap
         >>> arr (map (\(t, p) -> (tagIdentifier t, makeTagList t p)))
+    -}
 
     -- Read templates
-    match "templates/*" $ compile templateCompiler
+    match "templates/*" $ compile $ templateCompiler
 
     -- Render some static pages
+    {-
     forM_ pages $ \p ->
         match p $ do
             route   $ setExtension ".html"
             compile $ pageCompiler
-                >>> applyTemplateCompiler "templates/default.html"
+                >>> applyTemplateCompiler "templates/default.html" defaultContext
                 >>> relativizeUrlsCompiler
+    -}
 
     -- Render the 404 page, we don't relativize URL's here.
+    {-
     match "404.html" $ do
         route idRoute
         compile $ pageCompiler
-            >>> applyTemplateCompiler "templates/default.html"
+            >>> applyTemplateCompiler "templates/default.html" defaultContext
+    -}
 
     -- Render RSS feed
-    match "rss.xml" $ route idRoute
-    create "rss.xml" $ requireAll_ "posts/*" >>> renderRss feedConfiguration
+    match "rss.xml" $ do
+        route idRoute
+        compile $ do
+            requireAll "posts/*"
+                >>= renderAtom feedConfiguration defaultContext
 
     -- CV as HTML
     match "cv.markdown" $ do
         route   $ setExtension ".html"
-        compile $ pageCompiler
-            >>> applyTemplateCompiler "templates/cv.html"
-            >>> applyTemplateCompiler "templates/default.html"
-            >>> relativizeUrlsCompiler
+        compile $ do
+            cvTpl      <- requireBody "templates/cv.html"
+            defaultTpl <- requireBody "templates/default.html"
+            pageCompiler
+                >>= applyTemplate cvTpl defaultContext
+                >>= applyTemplate defaultTpl defaultContext
+                >>= relativizeUrls
 
     -- CV as PDF
-    group "pdf-cv" $
-        match "cv.markdown" $ do
-            route   $ setExtension ".pdf"
-            compile $ readPageCompiler
-                >>> pageReadPandoc
-                >>> arr (fmap $ Pandoc.writeLaTeX Pandoc.defaultWriterOptions)
-                >>> applyTemplateCompiler "templates/cv.tex"
-                >>> arr pageBody
-                >>> pdflatex "cv"
+    match "cv.markdown" $ version "pdf" $ do
+        route   $ setExtension ".pdf"
+        compile $ do
+            cvTpl <- requireBody "templates/cv.tex"
+            getResourceBody
+                >>= (return . readPandoc)
+                >>= (return .
+                     fmap (Pandoc.writeLaTeX Pandoc.defaultWriterOptions))
+                >>= applyTemplate cvTpl defaultContext
+                >>= pdflatex
   where
+    {-
     renderTagList' :: Compiler (Tags String) String
     renderTagList' = renderTagList tagIdentifier
-
-    tagIdentifier :: String -> Identifier (Page String)
-    tagIdentifier = fromCapture "tags/*"
+    -}
 
     pages =
         [ "contact.markdown"
@@ -137,6 +195,7 @@ main = hakyllWith config $ do
         , "recommendations.markdown"
         ]
 
+{-
 makeTagList :: String
             -> [Page String]
             -> Compiler () (Page String)
@@ -148,11 +207,20 @@ makeTagList tag posts =
         >>> applyTemplateCompiler "templates/posts.html"
         >>> applyTemplateCompiler "templates/default.html"
         >>> relativizeUrlsCompiler
+-}
 
-config :: HakyllConfiguration
-config = defaultHakyllConfiguration
+postContext :: Context String
+postContext = mconcat
+    [ modificationTimeField "mtime" "%U"
+    , dateField "date" "%B %e, %Y"
+    , defaultContext
+    ]
+
+config :: Configuration
+config = defaultConfiguration
     { deployCommand = "rsync --checksum -ave 'ssh -p 2222' \
                       \_site/* jaspervdj@jaspervdj.be:jaspervdj.be"
+    , verbosity = Debug
     }
 
 feedConfiguration :: FeedConfiguration
@@ -165,13 +233,15 @@ feedConfiguration = FeedConfiguration
     }
 
 -- | Hacky.
-pdflatex :: String -> Compiler String B.ByteString
-pdflatex name = unsafeCompiler $ \string -> do
+pdflatex :: Item String -> Compiler (Item B.ByteString)
+pdflatex item = unsafeCompiler $ do
     tmpDir <- getTemporaryDirectory
-    let tex = tmpDir </> name <.> "tex"
-        pdf = tmpDir </> name <.> "pdf"
+    let name = takeFileName $ toFilePath $ itemIdentifier item
+        tex  = tmpDir </> name <.> "tex"
+        pdf  = tmpDir </> name <.> "pdf"
 
-    writeFile tex string
+    writeFile tex $ itemBody item
     system $ unwords ["pdflatex",
         "-output-directory", tmpDir, tex, ">/dev/null", "2>&1"]
-    B.readFile pdf
+    body <- B.readFile pdf
+    return $ itemSetBody body item
