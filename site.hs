@@ -54,8 +54,6 @@ main = hakyllWith config $ do
         route   $ setExtension ".html"
         compile $ do
             pageCompiler
-            -- >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
-            -- >>> renderTagsField "prettytags" (fromCapture "tags/*")
                 >>= requireApplyTemplate "templates/post.html" (postCtx tags)
                 >>= requireApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
@@ -65,19 +63,16 @@ main = hakyllWith config $ do
         route idRoute
         compile $ do
             postItemTpl <- requireBody "templates/postitem.html"
-            postsTpl    <- requireBody "templates/posts.html"
-            defaultTpl  <- requireBody "templates/default.html"
-
-            posts <- requireAll "posts/*"
-            list  <- applyTemplateList postItemTpl (postCtx tags) $
+            posts       <- requireAll "posts/*"
+            list        <- applyTemplateList postItemTpl (postCtx tags) $
                 recentFirst posts
 
             makeItem ""
-                >>= applyTemplate postsTpl
+                >>= requireApplyTemplate "templates/posts.html"
                         (constField "title" "Posts" `mappend`
                             constField "posts" list `mappend`
                             defaultContext)
-                >>= applyTemplate defaultTpl defaultContext
+                >>= requireApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
     -- Post tags
@@ -86,19 +81,16 @@ main = hakyllWith config $ do
         route idRoute
         compile $ do
             postItemTpl <- requireBody "templates/postitem.html"
-            postsTpl    <- requireBody "templates/posts.html"
-            defaultTpl  <- requireBody "templates/default.html"
-
-            posts <- requireAll pattern
-            list  <- applyTemplateList postItemTpl (postCtx tags) $
+            posts       <- requireAll pattern
+            list        <- applyTemplateList postItemTpl (postCtx tags) $
                 recentFirst posts
 
             makeItem ""
-                >>= applyTemplate postsTpl
+                >>= requireApplyTemplate "templates/posts.html"
                         (constField "title" ("Posts tagged " ++ tag) `mappend`
                             constField "posts" list `mappend`
                             defaultContext)
-                >>= applyTemplate defaultTpl defaultContext
+                >>= requireApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
     -- Index
@@ -171,6 +163,8 @@ main = hakyllWith config $ do
         , "recommendations.markdown"
         ]
 
+
+--------------------------------------------------------------------------------
 postCtx :: Tags -> Context String
 postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
@@ -179,6 +173,8 @@ postCtx tags = mconcat
     , defaultContext
     ]
 
+
+--------------------------------------------------------------------------------
 config :: Configuration
 config = defaultConfiguration
     { deployCommand = "rsync --checksum -ave 'ssh -p 2222' \
@@ -186,6 +182,8 @@ config = defaultConfiguration
     , verbosity = Debug
     }
 
+
+--------------------------------------------------------------------------------
 feedConfiguration :: FeedConfiguration
 feedConfiguration = FeedConfiguration
     { feedTitle       = "jaspervdj - a personal blog"
@@ -195,6 +193,8 @@ feedConfiguration = FeedConfiguration
     , feedRoot        = "http://jaspervdj.be"
     }
 
+
+--------------------------------------------------------------------------------
 -- | Hacky.
 pdflatex :: Item String -> Compiler (Item B.ByteString)
 pdflatex item = unsafeCompiler $ do
