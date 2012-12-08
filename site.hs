@@ -5,13 +5,8 @@ module Main where
 
 
 --------------------------------------------------------------------------------
-import           Control.Arrow    (arr, second, (***), (>>>))
-import           Control.Category (id)
-import           Control.Monad    (forM_)
 import qualified Data.ByteString  as B
-import qualified Data.Map         as M
-import           Data.Monoid      (mappend)
-import           Data.Monoid      (mconcat, mempty)
+import           Data.Monoid      (mappend, mconcat)
 import           Prelude          hiding (id)
 import           System.Cmd       (system)
 import           System.Directory (getTemporaryDirectory)
@@ -51,6 +46,9 @@ main = hakyllWith config $ do
         route idRoute
         compile $ getResourceBody >>= relativizeUrls
 
+    -- Build tags
+    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
+
     -- Render each and every post
     match "posts/*" $ do
         route   $ setExtension ".html"
@@ -58,7 +56,7 @@ main = hakyllWith config $ do
             pageCompiler
             -- >>> arr (renderDateField "date" "%B %e, %Y" "Date unknown")
             -- >>> renderTagsField "prettytags" (fromCapture "tags/*")
-                >>= requireApplyTemplate "templates/post.html" postContext
+                >>= requireApplyTemplate "templates/post.html" (postCtx tags)
                 >>= requireApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
@@ -71,7 +69,7 @@ main = hakyllWith config $ do
             defaultTpl  <- requireBody "templates/default.html"
 
             posts <- requireAll "posts/*"
-            list  <- applyTemplateList postItemTpl postContext $
+            list  <- applyTemplateList postItemTpl (postCtx tags) $
                 recentFirst posts
 
             makeItem ""
@@ -83,7 +81,6 @@ main = hakyllWith config $ do
                 >>= relativizeUrls
 
     -- Post tags
-    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
     tagsRules tags $ \tag pattern -> do
         -- Copied from posts, need to refactor
         route idRoute
@@ -93,7 +90,7 @@ main = hakyllWith config $ do
             defaultTpl  <- requireBody "templates/default.html"
 
             posts <- requireAll pattern
-            list  <- applyTemplateList postItemTpl postContext $
+            list  <- applyTemplateList postItemTpl (postCtx tags) $
                 recentFirst posts
 
             makeItem ""
@@ -110,7 +107,7 @@ main = hakyllWith config $ do
         compile $ do
             postItemTpl <- requireBody "templates/postitem.html"
             posts       <- requireAll "posts/*"
-            list        <- applyTemplateList postItemTpl postContext $
+            list        <- applyTemplateList postItemTpl (postCtx tags) $
                 take 3 $ recentFirst posts
 
             let indexContext = constField "posts" list `mappend`
@@ -121,38 +118,22 @@ main = hakyllWith config $ do
                 >>= applySelf indexContext
                 >>= requireApplyTemplate "templates/default.html" indexContext
                 >>= relativizeUrls
-    {-
-    -- Tags
-    create "tags" $
-        requireAll "posts/*" (\_ ps -> readTags ps :: Tags String)
-
-    -- Add a tag list compiler for every tag
-    match "tags/*" $ route $ setExtension ".html"
-    metaCompile $ require_ "tags"
-        >>> arr tagsMap
-        >>> arr (map (\(t, p) -> (tagIdentifier t, makeTagList t p)))
-    -}
 
     -- Read templates
     match "templates/*" $ compile $ templateCompiler
 
     -- Render some static pages
-    {-
-    forM_ pages $ \p ->
-        match p $ do
-            route   $ setExtension ".html"
-            compile $ pageCompiler
-                >>> applyTemplateCompiler "templates/default.html" defaultContext
-                >>> relativizeUrlsCompiler
-    -}
+    match (fromList pages) $ do
+        route   $ setExtension ".html"
+        compile $ pageCompiler
+            >>= requireApplyTemplate "templates/default.html" defaultContext
+            >>= relativizeUrls
 
     -- Render the 404 page, we don't relativize URL's here.
-    {-
     match "404.html" $ do
         route idRoute
         compile $ pageCompiler
-            >>> applyTemplateCompiler "templates/default.html" defaultContext
-    -}
+            >>= requireApplyTemplate "templates/default.html" defaultContext
 
     -- Render RSS feed
     match "rss.xml" $ do
@@ -184,35 +165,17 @@ main = hakyllWith config $ do
                 >>= applyTemplate cvTpl defaultContext
                 >>= pdflatex
   where
-    {-
-    renderTagList' :: Compiler (Tags String) String
-    renderTagList' = renderTagList tagIdentifier
-    -}
-
     pages =
         [ "contact.markdown"
         , "links.markdown"
         , "recommendations.markdown"
         ]
 
-{-
-makeTagList :: String
-            -> [Page String]
-            -> Compiler () (Page String)
-makeTagList tag posts =
-    constA posts
-        >>> pageListCompiler recentFirst "templates/postitem.html"
-        >>> arr (copyBodyToField "posts" . fromBody)
-        >>> arr (setField "title" ("Posts tagged " ++ tag))
-        >>> applyTemplateCompiler "templates/posts.html"
-        >>> applyTemplateCompiler "templates/default.html"
-        >>> relativizeUrlsCompiler
--}
-
-postContext :: Context String
-postContext = mconcat
+postCtx :: Tags -> Context String
+postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
     , dateField "date" "%B %e, %Y"
+    , tagsField "tags" tags
     , defaultContext
     ]
 
@@ -241,7 +204,7 @@ pdflatex item = unsafeCompiler $ do
         pdf  = tmpDir </> name <.> "pdf"
 
     writeFile tex $ itemBody item
-    system $ unwords ["pdflatex",
+    _ <- system $ unwords ["pdflatex",
         "-output-directory", tmpDir, tex, ">/dev/null", "2>&1"]
     body <- B.readFile pdf
     return $ itemSetBody body item
