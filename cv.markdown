@@ -122,6 +122,9 @@ PDF version -->
 
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
+- Small guest lecture for "Functional and Logic Programming" at Ghent
+  University, Ghent, 12th of December 2012, "Haskell at Tsuru Capital"
+
 - [DHD 2012], Utrecht, 20th of April 2012, "Supporting Different Versions of the
   WebSockets Protocol"
   ([slides](http://jaspervdj.be/files/2012-dutchhug-websockets.pdf))
