@@ -54,25 +54,25 @@ main = hakyllWith config $ do
         route   $ setExtension ".html"
         compile $ do
             pageCompiler
-                >>= requireApplyTemplate "templates/post.html" (postCtx tags)
-                >>= requireApplyTemplate "templates/default.html" defaultContext
+                >>= loadAndApplyTemplate "templates/post.html" (postCtx tags)
+                >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
     -- Post list
     match "posts.html" $ do
         route idRoute
         compile $ do
-            postItemTpl <- requireBody "templates/postitem.html"
-            posts       <- requireAll "posts/*"
+            postItemTpl <- loadBody "templates/postitem.html"
+            posts       <- loadAll "posts/*"
             list        <- applyTemplateList postItemTpl (postCtx tags) $
                 recentFirst posts
 
             makeItem ""
-                >>= requireApplyTemplate "templates/posts.html"
+                >>= loadAndApplyTemplate "templates/posts.html"
                         (constField "title" "Posts" `mappend`
                             constField "posts" list `mappend`
                             defaultContext)
-                >>= requireApplyTemplate "templates/default.html" defaultContext
+                >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
     -- Post tags
@@ -80,25 +80,25 @@ main = hakyllWith config $ do
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
-            postItemTpl <- requireBody "templates/postitem.html"
-            posts       <- requireAll pattern
+            postItemTpl <- loadBody "templates/postitem.html"
+            posts       <- loadAll pattern
             list        <- applyTemplateList postItemTpl (postCtx tags) $
                 recentFirst posts
 
             makeItem ""
-                >>= requireApplyTemplate "templates/posts.html"
+                >>= loadAndApplyTemplate "templates/posts.html"
                         (constField "title" ("Posts tagged " ++ tag) `mappend`
                             constField "posts" list `mappend`
                             defaultContext)
-                >>= requireApplyTemplate "templates/default.html" defaultContext
+                >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
     -- Index
     match "index.html" $ do
         route idRoute
         compile $ do
-            postItemTpl <- requireBody "templates/postitem.html"
-            posts       <- requireAll "posts/*"
+            postItemTpl <- loadBody "templates/postitem.html"
+            posts       <- loadAll "posts/*"
             list        <- applyTemplateList postItemTpl (postCtx tags) $
                 take 3 $ recentFirst posts
 
@@ -107,8 +107,8 @@ main = hakyllWith config $ do
                     defaultContext
 
             getResourceBody
-                >>= applySelf indexContext
-                >>= requireApplyTemplate "templates/default.html" indexContext
+                >>= applyAsTemplate indexContext
+                >>= loadAndApplyTemplate "templates/default.html" indexContext
                 >>= relativizeUrls
 
     -- Read templates
@@ -118,28 +118,28 @@ main = hakyllWith config $ do
     match (fromList pages) $ do
         route   $ setExtension ".html"
         compile $ pageCompiler
-            >>= requireApplyTemplate "templates/default.html" defaultContext
+            >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
     -- Render the 404 page, we don't relativize URL's here.
     match "404.html" $ do
         route idRoute
         compile $ pageCompiler
-            >>= requireApplyTemplate "templates/default.html" defaultContext
+            >>= loadAndApplyTemplate "templates/default.html" defaultContext
 
     -- Render RSS feed
     match "rss.xml" $ do
         route idRoute
         compile $ do
-            requireAll "posts/*"
+            loadAll "posts/*"
                 >>= renderAtom feedConfiguration defaultContext
 
     -- CV as HTML
     match "cv.markdown" $ do
         route   $ setExtension ".html"
         compile $ do
-            cvTpl      <- requireBody "templates/cv.html"
-            defaultTpl <- requireBody "templates/default.html"
+            cvTpl      <- loadBody "templates/cv.html"
+            defaultTpl <- loadBody "templates/default.html"
             pageCompiler
                 >>= applyTemplate cvTpl defaultContext
                 >>= applyTemplate defaultTpl defaultContext
@@ -149,7 +149,7 @@ main = hakyllWith config $ do
     match "cv.markdown" $ version "pdf" $ do
         route   $ setExtension ".pdf"
         compile $ do
-            cvTpl <- requireBody "templates/cv.tex"
+            cvTpl <- loadBody "templates/cv.tex"
             getResourceBody
                 >>= (return . readPandoc)
                 >>= (return .
