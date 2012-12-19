@@ -45,9 +45,9 @@ this law. He continued to say that given this fact, I must surely know that he
 could subject me to a drug and alcohol test as well. I was obviously not under
 the influence of any drugs and said that I would take such tests if required.
 
-I was a bit annoyed that the fact he asked this since there was no reason
-whatsoever to suspect I would be under the influence of any drugs. Hence, it
-felt more like some kind of personal revenge.
+I was a bit annoyed that he asked this since there was no reason whatsoever to
+suspect I would be under the influence of any drugs: hence, it felt more like
+some kind of personal revenge.
 
 Continuing in this mindset, he claimed that we seriously risked damaging the
 parked cars in that street. I won't go into waste-of-time what-if scenarios in
@@ -57,9 +57,10 @@ were to happen we would simply bear the consequences and pay for the damages,
 either through insurance or by ourselves, just like anyone else.
 
 However, he didn't really seem satisfied with that answer, wrote down my name
-and ensured us that if any damages were to occur, he would find me. At that
-point, it almost seemed like he first found *people* to blame, and only then an
-*offense* they were guilty of -- instead of the other way around.
+and ensured us that if any damages were to occur, he would find me (maybe since
+he has proof enough, right?). At that point, it almost seemed like he first
+found *people* to blame, and only then an *offense* they were guilty of --
+instead of the other way around.
 
 After we said our goodbyes and he left, we continued skating for a bit. We went
 home shortly afterwards, with slightly less confidence in the competence of the
