@@ -66,7 +66,7 @@ newtypes [^sum-product]:
 
 The same applies to structures such as lists. We can wiggle all elements of a
 list, or just a single one (if the list is non-empty). Both instances are
-reasonable straightforward to write.
+reasonably straightforward to write.
 
 The interesting question is if and how we can do it for a more general family of
 structures than lists? `Foldable`? `Traversable`?
