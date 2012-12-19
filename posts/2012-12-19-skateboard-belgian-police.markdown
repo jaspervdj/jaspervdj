@@ -38,7 +38,7 @@ Let's not elaborate about the mind-boggling fact that the police officer was not
 familiar with the law he is paid to enforce, and continue with the actually
 interesting part of the story.
 
-![Gear](/images/2012-12-19-maintenance.jpg)
+![Changing trucks](/images/2012-12-19-maintenance.jpg)
 
 After my explanation, the officer said he was surprised that I knew so much about
 this law. He continued to say that given this fact, I must surely know that he
