@@ -98,7 +98,7 @@ a {
 
 img {
     border: none;
-    margin: 10px auto 10px auto;
+    margin: 20px auto 10px auto; /* higher on top because caption... */
     display: block;
 }
 
