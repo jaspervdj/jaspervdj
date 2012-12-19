@@ -8,6 +8,8 @@ One of my favorite hobbies is skateboarding, and I especially enjoy doing
 freeride. We have some reasonably nice spots to practice this great sport here
 in Ghent: steep streets with little traffic.
 
+![Gear](/images/2012-12-19-gear.jpg)
+
 So earlier tonight, I was practicing some slides with a friend. As we were
 walking up the hill again at some point, a police officer, who had seen us going
 down and parked his car, called us. The conversation went more or less like this
@@ -32,9 +34,11 @@ speed on a sidewalk is dangerous for skaters as well as pedestrians. It also
 implies you should wear lights at night, stay in your lane, know how to
 brake...: these are all good measures, meant to protect you.
 
-But let's not elaborate about the mind-boggling fact that the police officer was
-not familiar with the law he is paid to enforce, and continue with the actually
+Let's not elaborate about the mind-boggling fact that the police officer was not
+familiar with the law he is paid to enforce, and continue with the actually
 interesting part of the story.
+
+![Gear](/images/2012-12-19-maintenance.jpg)
 
 After my explanation, the officer said he was surprised that I knew so much about
 this law. He continued to say that given this fact, I must surely know that he
@@ -43,22 +47,22 @@ the influence of any drugs and said that I would take such tests if required.
 
 I was a bit annoyed that the fact he asked this since there was no reason
 whatsoever to suspect I would be under the influence of any drugs. Hence, it
-felt more like some personal revenge.
+felt more like some kind of personal revenge.
 
 Continuing in this mindset, he claimed that we seriously risked damaging the
 parked cars in that street. I won't go into waste-of-time what-if scenarios in
-this blogpost: I won't deny there indeed is *some* risk. I politely explained
-that if anything were to happen we would simply bear the consequences and pay
-for the damages, either through insurance or by ourselves, just like anyone
-else.
+this blogpost: I won't deny there indeed is *some* risk... just as there is some
+risk when you're riding a bike or a car. I politely explained that if anything
+were to happen we would simply bear the consequences and pay for the damages,
+either through insurance or by ourselves, just like anyone else.
 
 However, he didn't really seem satisfied with that answer, wrote down my name
-and left, after ensuring us that if any damages were to occur, he would find me.
-At that point, it almost seemed like he first found *people* to blame, and only
-then an *offense* they were guilty of -- instead of the other way around.
+and ensured us that if any damages were to occur, he would find me. At that
+point, it almost seemed like he first found *people* to blame, and only then an
+*offense* they were guilty of -- instead of the other way around.
 
-After we said our goodbyes and he left, we continued skating for a bit, and left
-shortly afterwards, with slightly less confidence in the competence of the
+After we said our goodbyes and he left, we continued skating for a bit. We went
+home shortly afterwards, with slightly less confidence in the competence of the
 police force.
 
 **TL;DR:**
