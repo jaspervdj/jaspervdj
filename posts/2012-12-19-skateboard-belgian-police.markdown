@@ -68,6 +68,6 @@ police force.
 
 **TL;DR:**
 
-- Wear lights, stay in your line, know how to break
+- Wear lights, stay in your line, know how to brake
 - Know your rights
 - Skate safe, skate hard!
