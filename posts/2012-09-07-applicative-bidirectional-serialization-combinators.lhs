@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 Unrelated
----------
+=========
 
 *If you are only interested in the neat Haskell trick, skip this section.* It
 has been a while since I updated my personal blog here. There has been a lot
@@ -20,7 +20,7 @@ we have a nice view from the office.
 ![View from the Tsuru Capital office](/images/2012-09-07-view-from-tsuru.jpg)
 
 Prologue
---------
+========
 
 This blogpost is written in literate Haskell ([source here]), so you can drop it
 in a file, load it in `GHCi` and play around with it, should you feel like doing
@@ -75,7 +75,7 @@ only supports the most basic of features in order to be easier to understand.
 [SQLite]: http://www.sqlite.org/
 
 Primitive types
----------------
+===============
 
 We start out by defining a typeclass for primitive serializable types, such as
 `Int` and `String`. We disregard performance, as said before, and we are also
@@ -114,7 +114,7 @@ Let's give an example, we would map the cost of food as:
 *This `costFieldInfo` is not used in the code below, it is just an example.*
 
 GADTs
------
+=====
 
 In the case of an SQLite database, such a `FieldInfo` actually represent a
 column in our table. We will be building our table using `Applicative`,
@@ -169,7 +169,7 @@ Let's make some nicer syntax and write `foodTable` again:
 Lookin' good!
 
 The real work
--------------
+=============
 
 While procrastrinating by creating GADT wrappers is fun, at one point we should
 write some actual implementation.
@@ -219,7 +219,7 @@ tree we built. Because of our GADT use, we can do this in a type-safe way.
 >         Just str -> fieldRead str
 
 Utilities
----------
+=========
 
 We add a small utility function to pretty-print our records:
 
@@ -233,7 +233,7 @@ datatype:
 >     table :: Table t t
 
 Demo
-----
+====
 
 Now let's implement food serialization for real: we only need to implement a
 *single* typeclass with a *single* method!
@@ -262,7 +262,7 @@ And a trivial demo:
 >     print (fromRecord table [("name", "刺身"), ("cost", "1200")] :: Food)
 
 Conclusion
-----------
+==========
 
 I think this is a nice use case of GADTs, and although it has a performance
 impact, it looks like it is worth it (for now). If it turns out that we can

@@ -12,7 +12,7 @@ productive while coding, and to focus on what I'm doing.
 When I got my new laptop (about 3 months ago), I decided to give [Gnome] another
 try. Together with xmonad, it makes a nice combination, since you get the
 excellent integration of the different gnome components, and the simplicity of
-xmonad.  
+xmonad.
 
 [Gnome]: http://www.gnome.org/
 
@@ -26,7 +26,7 @@ So, I wrote a small applet called [gnome-socket-applet] which allows simple
 communication from xmonad to the gnome panel. You simply add the applet to your
 panel, and it will act as a small server, listening on a port you specified.
 
-[gnome-socket-applet]: http://github.com/jaspervdj/gnome-socket-applet 
+[gnome-socket-applet]: http://github.com/jaspervdj/gnome-socket-applet
 
 Then, xmonad simply sets the applet text by creating a connection to the applet
 server and writing the desired text. In my case, the applet looks like this:

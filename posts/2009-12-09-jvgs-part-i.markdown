@@ -6,7 +6,7 @@ tags: gamedev
 
 This post is about [jvgs](http://jvgs.sf.net/), a game I wrote.
 
-## Java and Swing
+# Java and Swing
 
 Back in June, I was searching for a project to work on. At that time, I was
 reading a lot about
@@ -20,7 +20,7 @@ initial test in Java using swing.
 
 ![Screenshot of the Java test](/images/2009-12-09-jvgs-part-i-swing.png)
 
-## C++ and OpenGL
+# C++ and OpenGL
 
 Obviously, swing is __not__ very well suited for games that require some
 graphical performance. So I ported it to C++/OpenGL/SDL (a combo I am very
@@ -36,7 +36,7 @@ needed some kind of image format that would allow me to still have a
 sketchy look and feel, so I implemented a subset of
 [svg](http://www.w3.org/Graphics/SVG/).
 
-## A concept please
+# A concept please
 
 After that, I still needed a game concept. That's when I found my way to
 [this beauty](http://giantsparrow.com/games/swan/). This game had some

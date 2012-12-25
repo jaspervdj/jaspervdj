@@ -4,7 +4,7 @@ description: The final results, and what's next?
 tags: haskell
 ---
 
-## What is this?
+# What is this?
 
 The [Google Summer of Code][gsoc] deadline ends about now, so it is time to
 reflect on the progress I've made. Yesterday, we had a conference call with
@@ -16,12 +16,12 @@ discuss what we should do with my results and patches.
 [Johan Tibell]: http://blog.johantibell.com/
 [Edward Kmett]: http://comonad.com/
 
-## TL;DR
+# TL;DR
 
 The patches will *not* be merged into the trunk for now. However, we do consider
 this project succesful. Read on...
 
-## The general idea
+# The general idea
 
 By converting from UTF-16 to UTF-8, I slowed down a lot of functions. This is
 inevitable, because most functions in the `Data.Text` library are implemented as
@@ -74,7 +74,7 @@ p = encodeUtf8 . h . decodeUtf8
 and when the internal encoding is UTF-8 as well, we can optimize both
 `decodeUtf8` and `encodeUtf8`.
 
-## The results
+# The results
 
 This was an experimental project from the start, since we did not actually know
 whether or not these changes would make the text library faster -- which is why
@@ -98,7 +98,7 @@ So, because there was not really a very compelling reason for Bryan to choose
 for either of the two, he chose to keep the UTF-16 version for now, because this
 [requires less work](http://en.wikipedia.org/wiki/Path_of_least_resistance).
 
-## More about memory usage
+# More about memory usage
 
 One of the reasons to switch to UTF-8 was the face that memory usage could be
 reduced for ASCII text, which is very common in markup languages. However, a
@@ -114,7 +114,7 @@ That being said, UTF-8 still has some advantages here: for example, when
 checking two `Text` values for equality, the less bytes you need to check, the
 better.
 
-## Was all my work in vain?
+# Was all my work in vain?
 
 Certainly not! What future is there for all the patches I've written?
 

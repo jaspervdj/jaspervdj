@@ -11,7 +11,7 @@ with older versions of the library.
 [UHac]: http://www.haskell.org/haskellwiki/DHD_UHac
 [blaze-html]: http://jaspervdj.be/blaze
 
-## blaze-markup and blaze-svg
+# blaze-markup and blaze-svg
 
 A few weeks ago, [Deepak Jois] emailed me that he would like to create a
 `blaze-html` package for [SVG]. He started doing so by first simply copying the
@@ -27,7 +27,7 @@ code into a new [blaze-markup] package, upon which both packages now depend.
 
 [blaze-markup]: https://github.com/jaspervdj/blaze-markup
 
-## Backwards-incompatible changes
+# Backwards-incompatible changes
 
 This move introduced some backwards-incompatible changes, which we catch with
 deprecation warnings in a few places, but there have also been some module
@@ -48,7 +48,7 @@ you use a `renderHtml` method, you will see a deprecation warning. The best way
 to resolve this warning is to import e.g., `Text.Blaze.Html.Renderer.Utf8`
 instead of `Text.Blaze.Renderer.Utf8`.
 
-## Easier creation of custom nodes
+# Easier creation of custom nodes
 
 `blaze-html` 0.5 introduces easy creation of custom nodes. In the following
 snippet, `test1` and `test2` generate the same HTML:
@@ -71,7 +71,7 @@ However, you should void usage of `customParent` (and `customLeaf`,
 `Text.Blaze.Internal` module. They are *much* slower than their regular
 counterparts, and also less safe since they're vulnerable to typos.
 
-## Simple manipulations of the HTML tree
+# Simple manipulations of the HTML tree
 
 I've also decided I will add some very simple manipulations of the HTML tree
 when needed. For now, a single manipulation `contents` is included, since
@@ -100,7 +100,7 @@ test1 = renderHtml test
 test2 = renderHtml $ contents test
 ~~~~~
 
-## Installation
+# Installation
 
 You can install the new version just by running
 

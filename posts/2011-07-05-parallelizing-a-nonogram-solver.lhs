@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 What is this?
--------------
+=============
 
 I took a course on programming languages at [Ghent University] this year, and a
 part of our assignment focused on creating and parallelizing a nonogram solver
@@ -28,7 +28,7 @@ version of my report (raw version [here]).
 [here]: http://github.com/jaspervdj/programming-languages-assignment/blob/master/assignment-2/Nonogram.lhs
 
 Choice of programming language
-------------------------------
+==============================
 
 I chose to implement the nonogram solver in the [Haskell programming language].
 Haskell was chosen for a number of reasons:
@@ -43,7 +43,7 @@ Haskell was chosen for a number of reasons:
 [GHC]: <http://www.haskell.org/ghc/>
 
 Implementation
---------------
+==============
 
 The sequential and parallel nonogram solvers are implemented in the
 `Nonogram.lhs` file. This is a [literate Haskell file] containing the report as
@@ -93,13 +93,11 @@ Parallelism* [paper] and gives us a high-level interface to add parallelism to
 our program.
 
 [parallel]: http://hackage.haskell.org/package/parallel
-
 [cabal-install]: http://hackage.haskell.org/trac/hackage/wiki/CabalInstall
-
 [paper]: http://www.macs.hw.ac.uk/~dsg/gph/papers/abstracts/strategies.html
 
 Parallelization conclusions
----------------------------
+===========================
 
 We can now compare the performance of the sequential program to the performance
 of the parallel program. We use the excellent [criterion] library, aimed at
@@ -138,7 +136,7 @@ in parallel: e.g. joining the results of two branches happens on one core.
 ![Performance comparison of the nonogram solver (log scale on y axis)](/images/2011-07-05-sequential-vs-parallel.png)
 
 Literate source code
---------------------
+====================
 
 Here, we give the full source code to the programs, annotated in Literate
 Programming style.

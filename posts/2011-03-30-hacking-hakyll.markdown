@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 What is this
-------------
+============
 
 I've recently [released] Hakyll 3, and it seems to have reached a certain form
 of stability now. The documentation is getting better, especially after
@@ -22,7 +22,7 @@ high-level overview of how it all works together.
 [examples]: https://github.com/jaspervdj/hakyll/tree/master/examples
 
 Core/Web
---------
+========
 
 The Hakyll module namespace is divided into two large groups: `Hakyll.Core` and
 `Hakyll.Web`.
@@ -46,7 +46,7 @@ arrows represent "using" relations):
 ![Hakyll.Core](/images/2011-03-30-core.png)
 
 Hakyll.Core.Compiler
---------------------
+====================
 
 Apart from having the coolest name, this module is probably also the central
 module in Hakyll (for future reference, when I say `Module`, I usually mean
@@ -62,7 +62,7 @@ composed out of two things:
   the arrow mentioned above.
 
 Hakyll.Core.Run
----------------
+===============
 
 This module can be called "the runtime system" of Hakyll. It is the module which
 actually runs a `Compiler`. Running happens in two phases:
@@ -73,7 +73,7 @@ actually runs a `Compiler`. Running happens in two phases:
   items which are out-of-date).
 
 Other modules in Hakyll.Core
-----------------------------
+============================
 
 Those are not the only modules in `Hakyll.Core`. A quick listing of some other
 interesting modules:
@@ -105,7 +105,7 @@ interesting modules:
   save types instantiating `Binary` in the `_cache` directory.
 
 Hakyll.Web
-----------
+==========
 
 The `Hakyll.Web` modules are more loosely coupeled, they all provide some
 specific feature which helps the user in creating static websites. For example,
@@ -118,7 +118,7 @@ I think most hacking opportunities lay in `Hakyll.Web`: there's probably a whole
 range of filter-like compilers I haven't thought of yet.
 
 The life of page
-----------------
+================
 
 I want to finish this blogpost by shedding some more light on the process of
 rendering a page (it's probably the most commonly used feature of Hakyll).

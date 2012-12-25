@@ -4,14 +4,14 @@ description: My thoughts on our first software development course at uni
 tags: ugent
 ---
 
-## Why this post
+# Why this post
 
 This semester at [UGent](http://www.ugent.be/), the university I attend, we 
 received a first course on Software Development. I had the feeling a lot of
 students didn't like this course, so I decided to my thoughts on the matter
 here.
 
-## Software Development I
+# Software Development I
 
 This course follows our two Programming courses, so all students are already
 more than familiar with the basic concepts of programming -- the second
@@ -30,7 +30,7 @@ So, what I first thought would be a course on design patterns and best
 practices (I had this idea because of the name "Software Development 1" as
 opposed to "Programming 3") turned out to be an introduction to C and C++.
 
-## First Java, then C
+# First Java, then C
 
 Although I am not a big fan of Java, I have come to appreciate the language, and
 I think it is, in fact, a very good "first language". It is, however, not easy
@@ -53,7 +53,7 @@ Structures & Algorithms professor:
 This aside, I had the feeling a lot of people still weren't very familiar with
 C when we started on the C++ part of the course.
 
-## Java and C, then C++
+# Java and C, then C++
 
 I know there is a lot of [C++ bashing](http://yosefk.com/c++fqa/) on the
 internet, and when I read these things I sometimes think I must be one of the 5
@@ -69,7 +69,7 @@ only used templates to write abstract data types -- the primary use for Java
 generics. Admittedly, we did not see generics in our Java courses, but we
 could have.
 
-## The Project
+# The Project
 
 We also had to write a project in C++. There has been a lot of bullshit talk
 and criticism about this project. I'm not going to repeat that (also because
@@ -81,7 +81,7 @@ lines of code, including comments, which is not a lot -- especially not when
 you're with two. I also really appreciate the fact the tutors tried to come up
 with a project that is not "boring" -- hey, it even included robots.
 
-## Constructive feedback
+# Constructive feedback
 
 Summary, I think C++ should not be taught, and more attention should be spent
 on C, because:

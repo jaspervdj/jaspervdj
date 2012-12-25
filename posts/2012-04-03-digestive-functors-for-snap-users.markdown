@@ -123,7 +123,7 @@ There's a bit more in `snaplets/heist/user-form.tpl`.
     Birthday:
     <dfSubView ref="birthdate">
         <apply template="date-form" />
-    </dfSubView> 
+    </dfSubView>
     <br>
 
     <dfInputSubmit value="Enter" />

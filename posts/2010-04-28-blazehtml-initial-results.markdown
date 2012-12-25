@@ -4,7 +4,7 @@ description: BlazeHtml was accepted as GSoC project, I present the project here
 tags: haskell
 ---
 
-## What is this
+# What is this
 
 This is a blogpost version of a talk I recently gave at the [DutchHUG], about
 BlazeHtml, a "blazingly fast HTML combinator library". This project was
@@ -12,7 +12,7 @@ accepted for Google Summer of Code, so I thought I'd blog it, too.
 
 [DutchHUG]: http://dutchhug.nl
 
-## What is BlazeHtml
+# What is BlazeHtml
 
 About one month ago, [a discussion] took place on the Haskell web-devel mailing
 list. In the mail I link too, Chris Eidhof describes what he wants to see in the
@@ -41,7 +41,7 @@ fresh start after ZuriHac. But this does not mean the code we wrote was not
 useful: I will reintegrate big parts of it later, and it was a very useful 
 learning experience.
 
-## The actual problem
+# The actual problem
 
 Let's define the actual problem more precisely. We want to write abstract 
 descriptions of Html documents built from content and atttributes represented 
@@ -62,7 +62,7 @@ For now, we fix the output encoding to UTF-8, for two reasons:
   determine what later abstractions cost.
 - UTF-8 supports Unicode and is widely used and recommended for web pages.
 
-## Current state
+# Current state
 
 So, what is the current state of our library? After having tried different
 design paths, we now have an implementation that is fast. With this baseline
@@ -104,7 +104,7 @@ in order to make a more fair comparison.
 [in our repo]: http://github.com/jaspervdj/BlazeHtml/blob/develop/benchmarks/bigtable/
 [in their repo]: http://code.google.com/p/spitfire/source/browse/trunk/tests/perf/bigtable.py
 
-## Why is BlazeHtml fast
+# Why is BlazeHtml fast
 
 There are two design decisions underlying the speed that BlazeHtml features:
 
@@ -159,7 +159,7 @@ would consider "not elegant". Those people include me. However, we must not
 forget that efficiency is our main goal. Besides, these functions are not
 exported to the end user.
 
-## The Future
+# The Future
 
 So, that's it for now. You can expect more updates from me in the feature,
 since I'll be working on this project with great enthusiasm now that it has been

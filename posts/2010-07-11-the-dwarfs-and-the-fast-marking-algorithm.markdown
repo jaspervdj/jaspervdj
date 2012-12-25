@@ -4,7 +4,7 @@ description: How to abuse malloc for fast marking
 tags: algorithms
 ---
 
-## The problem
+# The problem
 
 In a far away mountain, there was a large dwarven colony. At the time when this
 story took place, not a lot of dwarfs still lived there, though. The dwarven
@@ -20,7 +20,7 @@ all rooms, so they sent out random expeditions.
 <img src="/images/2010-07-11-young-dwarf.png" alt="A young dwarf"
      style="float: right" />
 
-## A naive solution
+# A naive solution
 
 Being with so few, the dwarfs did not want to visit a room twice, for their time
 was too valuable. So, they wanted a computer program with which they could mark
@@ -59,7 +59,7 @@ public class Marker {
 }
 ~~~~~
 
-## Abusing malloc's complexity
+# Abusing malloc's complexity
 
 <img src="/images/2010-07-11-lord.png" alt="Wise dwarven lord"
      style="float: left" />
@@ -79,7 +79,7 @@ very hard, and it will be a good exercise."
 
 <div style="clear: both"></div>
 
-## The solution
+# The solution
 
 <div onclick="document.getElementById('solution').style.display='block';">
 
@@ -123,13 +123,13 @@ Here is [an implementation in C](http://gist.github.com/471529).
 
 </div>
 
-## Trivia
+# Trivia
 
 Thanks to [Denis Defreyne](http://stoneship.org) for proofreading this blogpost,
 and Gunnar Brinkmann for the problem suggestion. The dwarf images were taken
 from [The Battle for Wesnoth](http://wesnoth.org/).
 
-## Update
+# Update
 
 Since there's been a lot of comments, here is a small update.
 

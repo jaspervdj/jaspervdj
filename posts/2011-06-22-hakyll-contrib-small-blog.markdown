@@ -4,7 +4,7 @@ description: Create your blog software in 15 minutes with Hakyll
 tags: haskell
 ---
 
-## What?
+# What?
 
 One of my side projects is [Hakyll], a static site generator written in Haskell.
 Altough the name is a play on [Jekyll], Hakyll bears more resemblance to
@@ -32,7 +32,7 @@ documentation.
 
 [hakyll-contrib]: http://hackage.haskell.org/package/hakyll-contrib
 
-## Installation
+# Installation
 
 The idea is that you don't have to write your configuration yourself: you
 just follow some conventions, and Hakyll does the rest. Start by installing the

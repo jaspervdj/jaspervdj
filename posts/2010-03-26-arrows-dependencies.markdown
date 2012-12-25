@@ -4,7 +4,7 @@ description: I recently found a very good use case for Arrows, so I thought I'd 
 tags: haskell
 ---
 
-## What is this about
+# What is this about
 
 Arrows are, like Monads or Monoids, a mathematical concept that can be used in
 the Haskell programming language. This post analyzes and explains a certain use
@@ -19,7 +19,7 @@ they are certainly not harder to understand. This blogpost aims to give a quick,
 informal introduction to Arrows. As concrete subject and example, we use
 dependency handling in Hakyll.
 
-## The problem
+# The problem
 
 [Hakyll] is a static site generator I use to run this blog. The principles
 behind it are pretty simple: you write your pages in markdown or something
@@ -49,7 +49,7 @@ files on which the final result depends, we don't know if we can skip this read
 or not. This means dependency handling should happen on a higher level, above
 these specific functions -- so we need to abstract dependency handling.
 
-## A general notion of computation
+# A general notion of computation
 
 So let's create a wrapper for functions dealing with dependencies.
 
@@ -68,7 +68,7 @@ known. And finally, the `actionFunction` contains the actual action.
 
 The `Hakyll` is a usual monad stack with `IO` at the bottom.
 
-## Categories
+# Categories
 
 To qualify as an `Arrow`, a datatype needs to be a `Category`. So lets create
 an `instance Category HakyllAction` first. There are two functions we need to
@@ -105,7 +105,7 @@ The `<=<` operator is [right-to-left monad composition].
 
 [right-to-left monad composition]: http://www.haskell.org/ghc/docs/latest/html/libraries/base/Control-Monad.html#v%3A%3C%3D%3C
 
-## Arrows
+# Arrows
 
 To make our action a real `Arrow`, we need to implement two more functions:
 
@@ -129,7 +129,7 @@ instance Arrow HakyllAction where
         }
 ~~~~~
 
-## Actually using it
+# Actually using it
 
 Now that we've put all this trouble into creating an Arrow, we might as well use
 it. Let's examine some functions from Hakyll and see how they fit.
@@ -173,7 +173,7 @@ runHakyllActionIfNeeded action = do
 The `isFileMoreRecent` function checks if the first file is more recent than all
 of the other files.
 
-## Profit!
+# Profit!
 
 We have now developped a more robust and better dependency checking system, and
 learned something about Arrows. If you are interested, the complete code that

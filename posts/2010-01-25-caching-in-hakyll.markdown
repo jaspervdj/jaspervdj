@@ -4,13 +4,13 @@ description: Some thoughts and findings on implementing caching in Hakyll
 tags: haskell
 ---
 
-## What is this about
+# What is this about
 
 Some experiences from trying to make [Hakyll](http://jaspervdj.be/hakyll) run
 faster. I explain some of the things I have tried, and some of the things that
 have failed, in the hope this could one day be helpful to other projects.
 
-## How much does speed matter in Hakyll
+# How much does speed matter in Hakyll
 
 Before you implement any caching measures in any program, you try to estimate
 what the speed gain will be. This is a heap profile from me generating this site
@@ -35,7 +35,7 @@ The thing is that we can't simply "make pandoc faster". Pandoc is a marvelous
 piece of software, and probably quite optimized. What we can do is try to call
 Pandoc less.
 
-## Simple timestamp checking
+# Simple timestamp checking
 
 One "caching" technique used in Hakyll is simple timestamp checking. For
 example, the [projects page](/projects.html) on my website is created from
@@ -110,7 +110,7 @@ be fair, I didn't even finish implementing this (I implemented a part of it,
 but it was still buggy). So, in short, this was a pretty bad idea: not easy to
 implement, and it was slow.
 
-## deriving (Show, Read)
+# deriving (Show, Read)
 
 Haskell provides automatic serialization using the `Show` and `Read`
 typeclasses. This seemed like an appealing option to me, also because of the
@@ -139,7 +139,7 @@ give it a try.
 
       Without a `./hakyll clean`, well, it's very fast.
 
-## Data.Binary
+# Data.Binary
 
 It turned out adding an instance for `Binary Page` was nearly as easy as adding
 the `Show` and `Read` instances. Since `Data.Binary` provides instances for
@@ -156,7 +156,7 @@ instance Binary Page where
 I eagerly ran the test with a hundred blogposts again, waited and... profit!
 From previously taking 60 seconds, it now took only 15 seconds!
 
-## Conclusions
+# Conclusions
 
 `Data.Binary` rocks. I am now using it for a lot more than `Page`s: I also use
 it to cache tags and templates. But this shows the initial idea and how I got

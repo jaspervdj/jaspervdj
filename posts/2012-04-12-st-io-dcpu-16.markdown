@@ -31,7 +31,7 @@ The full implementation of this design can be found
 [here](https://github.com/jaspervdj/dcpu16-hs).
 
 
-## The core of the problem: load and store
+# The core of the problem: load and store
 
 When designing a system, it's often a good idea to start from a minimal but
 functional core and work your way up from there -- this is also the approach I
@@ -80,7 +80,7 @@ monad. This is guaranteed by the type system using the `Rank2Types` extension.
 This is great because it allows us to have a really fast emulator, of which we
 can trivially say it is deterministic.
 
-## A necessary abstraction
+# A necessary abstraction
 
 However, while the current specification does not include keyboard input and
 video output, this will certainly be added in the future. If we want to support
@@ -118,7 +118,7 @@ step = do
     execute instr
 ~~~~~
 
-## A deterministic implementation
+# A deterministic implementation
 
 We can write a simple, nice and pure implementation of this typeclass by using
 `ST`, as we previously discussed. We need access to the `Memory`, and for this
@@ -147,7 +147,7 @@ runSTEmulator :: (forall s. STEmulator s a) -> a
 -- runST :: (forall s. ST s a) -> a
 ~~~~~
 
-## And a bit of IO
+# And a bit of IO
 
 As briefly discussed before, we want to be able to add keyboard input and video
 output. I'll focus on video output for this blogpost, since it's a little easier
@@ -250,7 +250,7 @@ video (Ram address) word
 video _ _ = return ()
 ~~~~~
 
-## Conclusion
+# Conclusion
 
 `ST` is a wonderful tool for problems that require (local) destructive updates
 for performance reasons [^representations]. Additionally, we can easily convert

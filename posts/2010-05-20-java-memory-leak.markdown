@@ -4,7 +4,7 @@ description: A bit about a recent memory leak hunt in a university project
 tags: ugent
 ---
 
-## What is this
+# What is this
 
 This semester at [UGent], we're following a course "Software-Development II".
 It's a Java-based course, were we learned a bit about design patterns, nothing
@@ -22,7 +22,7 @@ images to the conversation partner.
 
 ![Screenshot of the application](/images/2010-05-20-ch9k.png)
 
-## The problem
+# The problem
 
 Two weeks or so ago, the project was getting close to completion, and we were
 quite excited about this. However, at a certain point, we were testing the
@@ -49,7 +49,7 @@ I was the author of it, and I thought the possibility of a memory leak was real:
 the images were kept in different lists and sets, for convenience and
 performance reasons.
 
-## The solution
+# The solution
 
 However, after a lot of frustrations, it turned out to be something completely
 different. We were using Java serialization for our communication, and we were

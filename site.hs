@@ -53,7 +53,8 @@ main = hakyllWith config $ do
     match "posts/*" $ do
         route   $ setExtension ".html"
         compile $ do
-            pageCompiler
+            pandocCompiler
+                >>= return . fmap demoteHeaders
                 >>= loadAndApplyTemplate "templates/post.html" (postCtx tags)
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
@@ -117,14 +118,14 @@ main = hakyllWith config $ do
     -- Render some static pages
     match (fromList pages) $ do
         route   $ setExtension ".html"
-        compile $ pageCompiler
+        compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
     -- Render the 404 page, we don't relativize URL's here.
     match "404.html" $ do
         route idRoute
-        compile $ pageCompiler
+        compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
 
     -- Render RSS feed
@@ -140,7 +141,7 @@ main = hakyllWith config $ do
         compile $ do
             cvTpl      <- loadBody "templates/cv.html"
             defaultTpl <- loadBody "templates/default.html"
-            pageCompiler
+            pandocCompiler
                 >>= applyTemplate cvTpl defaultContext
                 >>= applyTemplate defaultTpl defaultContext
                 >>= relativizeUrls

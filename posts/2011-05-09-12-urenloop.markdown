@@ -42,7 +42,8 @@ take on this challenge.
 The hardware
 ============
 
-### Bluetooth
+Bluetooth
+---------
 
 We decided to attach bluetooth dongles to the relay batons. I'm now pretty
 confident this was a good choice. The other option was the more obvious [RFID],
@@ -52,7 +53,8 @@ bluetooth receivers.
 
 [RFID]: http://en.wikipedia.org/wiki/Radio-frequency_identification
 
-### Gyrid
+Gyrid
+-----
 
 These bluetooth receivers were borrowed from the [CartoGIS], a research group
 which (among other things) studies technology to track people on events
@@ -76,7 +78,8 @@ Here is another picture of what's inside a node:
 
 ![A Gyrid node (inside)](/images/2011-05-09-gyrid-node-inside.jpg)
 
-### Relay batons
+Relay batons
+------------
 
 We built the relay batons using a simple design: a battery pack consisting of 4
 standard AA batteries and connecting them to a bluetooth chip, put in a simple
@@ -90,7 +93,8 @@ approximate position.
 
 ![Left: our sweatshop, right: a relay baton](/images/2011-05-09-relay-batons.jpg)
 
-### Network setup
+Network setup
+-------------
 
 The problem here was that we only could put cables *around* the circuit, we
 couldn't cut right through to the other side of the circuit. This means the
@@ -117,7 +121,11 @@ we would only lose one node (obviously, the one in between those two links)!
 
 ![Ring-based network with spanning tree indicated](/images/2011-05-09-ring.png)
 
-### count-von-count
+The software
+============
+
+count-von-count
+---------------
 
 Now, I will elaborate on the software which interpolates the data received from
 the Gyrid nodes in order to count laps [^1]. [count-von-count] is a robust
@@ -164,7 +172,8 @@ and other values which are then used to "judge" laps. When `count-von-count`
 decides a relay baton has made a lap, it will make a REST request to
 `dr.beaker`.
 
-### dr.beaker
+dr.beaker
+---------
 
 [dr.beaker] is the scoreboard application. It's implemented by [Thomas] as a
 [Java] service that runs on top of [GlassFish]. It provides features such as:

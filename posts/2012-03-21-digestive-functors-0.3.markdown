@@ -13,7 +13,7 @@ This blogpost is very general, so some users might want to jump directly to the
 
 [tutorial]: http://github.com/jaspervdj/digestive-functors/blob/master/examples/tutorial.lhs
 
-## What are formlets?
+# What are formlets?
 
 In 2008, a paper was published, called ["The Essence of Form Abstraction"]. The
 paper applied a well-known functional design pattern (Applicative Functors) to
@@ -52,12 +52,12 @@ see how you can easily reuse the `dateFull` form anywhere:
 ~~~~~{.haskell}
 data User = User {name :: String, password :: String, birthdate :: Date}
     deriving (Show)
- 
+
 userFull :: FailingForm User
 userFull = User <$> inputF Nothing <*> passwordF Nothing <*> dateFull
 ~~~~~
 
-## digestive-functors
+# digestive-functors
 
 While I was working on a few patches for the formlets library back in 2010, I
 noticed a few things were impossible to do using this library.
@@ -107,7 +107,7 @@ like:
 Along with some other things, these were the practical improvements the
 digestive-functors library made in comparison to formlets.
 
-## digestive-functors 0.3
+# digestive-functors 0.3
 
 However, one serious issue remained. When you write down a form in a formlets
 library, you specify the *HTML layout* as well as *the validation rules*. This

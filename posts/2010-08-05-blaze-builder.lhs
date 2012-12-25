@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 What is blaze-builder?
-----------------------
+======================
 
 For our work on [BlazeHtml], we were looking at string concatenation in Haskell
 from quite a low level. After some time, we decided we needed a Builder
@@ -32,7 +32,7 @@ the `blaze-builder` package (which only depends on `base`, `text`, and
 example.
 
 An example
-----------
+==========
 
 We're not going to use the HTML-related functions in our example, so we do not
 need to import it.
@@ -74,7 +74,7 @@ have a nice length of about 32kb (bigger chunks means less overhead when, for
 example, you are sending this string over the network).
 
 Differences with Data.Binary.Builder
-------------------------------------
+====================================
 
 As some of you might know, the idea of having a "Builder" was stolen from the
 [binary](http://code.haskell.org/binary/) library. Initially, we used that

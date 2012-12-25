@@ -12,7 +12,7 @@ The new academic term has now started at Ghent University, and I thought it'd be
 a good idea to write a bit on the side projects I've done after my
 [Google Summer of Code project](http://jaspervdj.be/blaze) ended.
 
-## Number Six
+# Number Six
 
 <img src="/images/2010-09-27-number-six.jpg" alt="Number Six"
      style="float: right; margin: 10px" />
@@ -59,7 +59,7 @@ bots.
 [Here](http://github.com/jaspervdj/number-six/blob/master/NumberSix/Handlers/Seen.hs)
 is an example.
 
-## Redis bindings
+# Redis bindings
 
 That leads us to the next subject. I've written a small wrapper around the
 [Haskell Redis bindings] which provide a somewhat simpler interface. It only
@@ -79,7 +79,7 @@ My package can be found [here](http://hackage.haskell.org/package/redis-simple).
 As you can see, I've made the bindings as simple as I could. However, if you
 need full redis functionality, I still recommend the original package.
 
-## Formlets
+# Formlets
 
 A week or so ago, I read
 [this discussion](http://permalink.gmane.org/gmane.comp.lang.haskell.web/425)

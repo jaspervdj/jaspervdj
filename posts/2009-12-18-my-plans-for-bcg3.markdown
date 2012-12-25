@@ -12,7 +12,7 @@ It's the first barcamp I'm going to, and I'm rather looking forward to it.
 After reading through the list of presentations a few times, I picked a few
 items I'd certainly like to see.
 
-## Presentations I want to see
+# Presentations I want to see
 
 - Old Media vs. New Media by [Bart De Waele](http://www.netlash.com/). 
   The subject he picked seems very interesting and I'd like to know what
@@ -29,7 +29,7 @@ items I'd certainly like to see.
   [Koen Delvaux](http://delvauxkoen.blogspot.com/). Because the title sounds
   awesome.
 
-## What I will be presenting
+# What I will be presenting
 
 I'm going to do a presentation called "learn you a haskell in 20 minutes". It
 will be a basic introduction to the functional programming language

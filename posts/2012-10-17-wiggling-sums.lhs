@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 The problem
------------
+===========
 
 The context of this problem is related to optimization problems: given some
 value, we want to produce a bunch of related values.
@@ -82,7 +82,7 @@ But how about the instance:
 >     wiggle = wiggleSum
 
 The solution
-------------
+============
 
 Is it possible? Can you come up with a nicer solution than we have?
 

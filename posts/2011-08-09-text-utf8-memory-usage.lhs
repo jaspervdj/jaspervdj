@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 What is this?
--------------
+=============
 
 This blogpost continues where [the previous one] left off. Again, I study the
 performance of an application using the [Data.Text] library intensively. The
@@ -66,7 +66,7 @@ We'll use [BlazeHTML] for some simple HTML rendering...
 > import Snap.Http.Server (httpServe, defaultConfig)
 
 The pure logic
---------------
+==============
 
 Let's first write down the pure logic of our web application. When we receive a
 document from a client, we want to extract the terms (i.e, words) used in the
@@ -95,7 +95,7 @@ the ID under each token in the `Map`.
 >     insert s t = M.insertWith' S.union t (S.singleton id') s
 
 The web logic
--------------
+=============
 
 Next up is some logic code for the web application layer. We first define the
 type of our application:
@@ -139,7 +139,7 @@ the client.
 >     writeLBS $ renderHtml html
 
 The web views
--------------
+=============
 
 We also define some "templates" in order to show the different values to the
 client. They are given here mostly for completeness.
@@ -151,7 +151,7 @@ client. They are given here mostly for completeness.
 > resultsView = H.ul . mconcat . map (H.li . toHtml) . S.toList
 
 Glueing it all together
------------------------
+=======================
 
 What remains is some routing and a main function to glue it all together.
 
@@ -167,7 +167,7 @@ What remains is some routing and a main function to glue it all together.
 >     httpServe defaultConfig (runReaderT app mvar)
 
 Results
--------
+=======
 
 Next up is running it! I ran the application twice, once using the current
 version of Text, and once using my UTF-8 based port. A client was simulated
@@ -177,7 +177,7 @@ server. The following graph represents memory usage over time:
 ![Memory usage results](/images/2011-08-09-memory-usage.png)
 
 Conclusions
------------
+===========
 
 While there is a very clear difference, it isn't as large as I first suspected.
 This is caused by a number of reasons:

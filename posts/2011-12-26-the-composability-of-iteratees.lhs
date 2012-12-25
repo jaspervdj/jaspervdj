@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 A bit of context
-----------------
+================
 
 I've been working on a [websockets library] lately, and this blogpost is mostly
 based upon work on that library. The code given in this blogpost is *not* the
@@ -43,7 +43,7 @@ them.
 > import qualified Data.Enumerator.List as EL
 
 The problem
------------
+===========
 
 Different versions of the WebSockets protocol exist. We obviously want to share
 as much code as possible in between these versions, to avoid duplication. We can
@@ -102,7 +102,7 @@ do with leftover input which belongs to some next message? We clearly need a
 stateful demultiplexer.
 
 A stateful demultiplexer
-------------------------
+========================
 
 Most demultiplexers are obviously stateful -- the reason why I mentioned this
 here is because our demultiplexer will be *explicitly* stateful. Explicit state
@@ -136,7 +136,7 @@ understand, but having to manually keep track of the state is surely a
 disadvantage... or not?
 
 A common interface
-------------------
+==================
 
 At a first sight, a disadvantage of such a stateful demultiplexer is that we
 clearly cannot use a simple interface such as:
@@ -164,7 +164,7 @@ Then, we would have to adapt our `Interface2` too also incorporate this state:
 it seems we're going down a very dangerous road here.
 
 Enter Iteratee
---------------
+==============
 
 As the title and introduction of this blogpost suggested, there is a better way
 to solve this problem using Iteratees. I'm not going to go through all Iteratee
@@ -212,7 +212,7 @@ Mission completed -- and we've successfully hidden our state management from the
 users of this interface.
 
 Conclusion
-----------
+==========
 
 I've demonstrated that Iteratees allow you to write clear, concise and
 explicitly stateful Haskell code, which is still composable without having to

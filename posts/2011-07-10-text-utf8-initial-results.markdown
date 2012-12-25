@@ -4,7 +4,7 @@ description: A status report on my google summer of code project
 tags: haskell
 ---
 
-## What is this?
+# What is this?
 
 I've been working on the [Data.Text] library for my [Google Summer of
 Code][gsoc] project under the wise supervision of [Edward Kmett] (but to be
@@ -16,7 +16,7 @@ grateful as well).
 [Edward Kmett]: http://comonad.com/
 [Johan Tibell]: http://blog.johantibell.com/
 
-## Some more context
+# Some more context
 
 Porting the Text library to use UTF-8 as internal encoding (instead of the
 currently used UTF-16) is a rather tricky task because there isn't "one"
@@ -32,14 +32,14 @@ Tihs means that when a change is made, not all benchmark results change in the
 same direction. Hence, we aim for either making them faster, or keeping them as
 fast as they currently are, and have them use less memory.
 
-## On to the results!
+# On to the results!
 
 For the record, the test files used are an ASCII text file of 58M and a russian
 file of 62M. Note that while they are of (more or less) the same size, the ASCII
 text is a lot longer when counting characters instead of bytes (about twice as
 long).
 
-### Uppercasing
+## Uppercasing
 
 The first program I benchmarked for this blogpost is a simple one which converts
 a file to uppercase. Note the fact that the input and output needs to happen in
@@ -64,7 +64,7 @@ main = do
 
 ![Results for the uppercasing benchmark](/images/2011-07-10-upper.png)
 
-### Word frequencies
+## Word frequencies
 
 Because Stream Fusion plays such an important role in the first benchmark, Johan
 suggested I used another benchmark in which the `Text` values are used as keys
@@ -108,7 +108,7 @@ real degradation here, so I can rejoice.
 
 ![Results for the word frequencies benchmark](/images/2011-07-10-word-freqs.png)
 
-## What's next
+# What's next
 
 There's still lots of work to be done. In the next blogpost, I hope to talk
 about reduced memory usage and its implications.

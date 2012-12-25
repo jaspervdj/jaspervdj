@@ -16,7 +16,7 @@ here either, there already are a lot of tutorials about them (hint: google for
 I have chosen to compare `null` pointers from Java -- I could have chosen `nil`
 from Ruby, or `None` from Python -- this does not really matter here.
 
-## Why null?
+# Why null?
 
 Why are `null` pointers present in almost every object-oriented language? A
 first goal they serve is as "unassigned variables". I will not cover that here,
@@ -32,7 +32,7 @@ From the Java HashMap documentation:
 So, `null` is some sort of "Not found" error here. But wait -- they could
 have used an Exception here!
 
-## Why not exceptions?
+# Why not exceptions?
 
 Well, I see a few reasons why didn't use exceptions here:
 
@@ -52,7 +52,7 @@ lookup :: (Ord k) => k -> Map k a -> Maybe a
 We see a similar behavior here: when the object is found, we get a `Just a`,
 and when it is not found, we get `Nothing` -- comparable to a `null` pointer.
 
-## The danger of null
+# The danger of null
 
 `null` is very cool and all, but I think this cartoon from
 [Geek and Poke](http://geekandpoke.typepad.com/) illustrates its danger:
@@ -62,7 +62,7 @@ and when it is not found, we get `Nothing` -- comparable to a `null` pointer.
 So, while we can get a `null` *back* from a function, we should never give it
 *to* a function.
 
-## A simple scenario
+# A simple scenario
 
 On to a simple scenario, based on a problem I recently encountered. Given a
 `Map`, we want to check for a `"path"` key, which contains a filename in the
@@ -112,7 +112,7 @@ public Month getPathMonth(Map<String, String> m)
 
 As you can see, the two fragments are very similar.
 
-## The superiority of Maybe
+# The superiority of Maybe
 
 Now, if you have written a lot of Java code, you know that checking for `null`
 is a vital part of the job, and fragments like the one above are pretty common.

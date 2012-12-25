@@ -4,7 +4,7 @@ description: A post about a typical issue with Haskell lists
 tags: haskell
 ---
 
-<h2>What is this about</h2>
+<h1>What is this about</h1>
 
 This blogpost is about the
 [Google AI Challenge](http://csclub.uwaterloo.ca/contest/index.php), which

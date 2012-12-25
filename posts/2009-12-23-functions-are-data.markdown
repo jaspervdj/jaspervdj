@@ -7,7 +7,7 @@ tags: haskell
 This blog post is a short rant about how people who come from an Object-Oriented
 programming language (like me) are often using Haskell classes in a bad way.
 
-## The problem
+# The problem
 
 As a simple problem, suppose that we have a number of arbitrary shapes, and we
 want to find out if a certain point lies in any of those shapes. First, let us
@@ -25,7 +25,7 @@ any (\a -> inShape a (4, 3)) ls
 -- Get back if (4, 3) is situated in any of the given shapes.
 ~~~~~
 
-## An Object-Oriented approach
+# An Object-Oriented approach
 
 When coming from an Object-Oriented background, you would associate a shape with
 an interface (in Java terminology). Haskell has a construct that looks a lot
@@ -81,7 +81,7 @@ type[^1]. We're doing it wrong[^2].
       type called `Shape`, but then there wouldn't be the Haskell class -- Java
       interface connection.
 
-## A more functional approach
+# A more functional approach
 
 We need to stop thinking of classes here. Because a `Shape` is a collection of
 arbitrary points, we could consider a `Shape` as a function. This function

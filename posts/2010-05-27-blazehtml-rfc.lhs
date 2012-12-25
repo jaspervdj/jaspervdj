@@ -5,7 +5,7 @@ tags: haskell
 ---
 
 Introduction
-------------
+============
 
 BlazeHtml started out on ZuriHac 2010. Now, Jasper Van der Jeugt is working on
 it as a student to Google Summer of Code for haskell.org. His mentors are Simon
@@ -19,7 +19,7 @@ well as current users of other HTML generation libraries.
 
 
 About this file
----------------
+===============
 
 This document is a literate Haskell file. Here is a [plain version] of the
 document. It serves two purposes: (1) it explains our current ideas and (2) it
@@ -49,7 +49,7 @@ correct include directories for ghci.
 
 
 Notational preliminaries
-------------------------
+========================
 
 A "string" is a sequence of Unicode codepoints. A value of type `String` is a
 concrete representation of a string; i.e. a Haskell list of Unicode
@@ -65,14 +65,14 @@ a HTML parser.
 
 
 Problem definition
-------------------
+==================
 
 The goal of the BlazeHtml project is to create a light-weight Haskell combinator
 language for HTML documents that can be rendered as efficiently as possible.
 
 
 Supported string representations
---------------------------------
+================================
 
 Obviously, we need to fix the concrete string representations to be used for
 describing attributes and leaves of HTML documents. We have chosen to support
@@ -89,7 +89,7 @@ string literals of type `Text`.
 
 
 Modules
--------
+=======
 
 We import the Prelude hiding some functions, to avoid clashes: `head`, `id` and
 `div` are all HTML elements. Since we do not use the corresponding Prelude
@@ -172,7 +172,7 @@ ByteStrings. For displaying these, we also need `putStrLn` from
 
 
 Syntax
-------
+======
 
 We will demonstrate our combinator langugage by example. This is the
 (simple) HTML document we want to produce:
@@ -271,7 +271,7 @@ more complicated type errors, and a performance overhead in some cases.
 
 
 Rendering & encoding
---------------------
+====================
 
 As said before, BlazeHtml supports strings represented either as `String` or
 `Data.Text` values. These two types support all Unicode codepoints, so the
@@ -300,7 +300,7 @@ re-encode the rendered and UTF-8 encoded HTML document.
 
 
 Speed
------
+=====
 
 Possibly, you think that the best representation for a rendered HTML document
 is a `Text` value. Then, one could use the functions from `Data.Text` to encode
@@ -341,7 +341,7 @@ information can be found in [this blogpost].
 
 
 Epilogue
---------
+========
 
 Most modern web applications embrace the MVC design pattern. In this pattern,
 BlazeHtml is part of the "View". Two other components are needed -- the "Model"
@@ -354,7 +354,7 @@ your favourite web-framework/server?
 
 
 Looking forward to your feedback
---------------------------------
+================================
 
 The easiest way to send feedback is to reply by email to the
 [haskell-cafe thread]. Alternatively, drop a comment [at reddit].

@@ -7,7 +7,7 @@ tags: haskell
 I've just uploaded BlazeHtml 0.4 to Hackage. There's some new things in there,
 so I thought it would be a good idea to summarize it here.
 
-## Text renderer
+# Text renderer
 
 A Text renderer was added in the new Text.Blaze.Renderer.Text module. The
 interface should look quite familiar to everyone who looked at BlazeHtml before:
@@ -20,7 +20,7 @@ The produced Text is lazy, built by the Text builder that was recently added. It
 isn't as fast as the UTF8 ByteString renderer, but there is still room for some
 improvements here.
 
-## Removal of showHtml methods
+# Removal of showHtml methods
 
 The showHtml functions were removed -- this breaks backwards compatibility, but:
 
@@ -29,7 +29,7 @@ The showHtml functions were removed -- this breaks backwards compatibility, but:
   functions in `Text.Blaze`;
 - we found a good replacement, which will be explained in the next section.
 
-## The ToHtml/ToValue typeclasses
+# The ToHtml/ToValue typeclasses
 
 We've added two handy typeclasses at the top of BlazeHtml, in the `Text.Blaze`
 module.
@@ -52,7 +52,7 @@ This means that in most cases, showHtml can also be replaced by toHtml. The
 advantage of using these functions is that they provide a more unified interface
 to the web developer.
 
-## Hexpat renderer
+# Hexpat renderer
 
 I also added a Hexpat renderer some time ago. You can read more about that
 [here]. Like the other renderers, it provides a simple `renderHtml -> Forest`
