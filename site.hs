@@ -54,6 +54,7 @@ main = hakyllWith config $ do
         route   $ setExtension ".html"
         compile $ do
             pandocCompiler
+                >>= saveSnapshot "content"
                 >>= return . fmap demoteHeaders
                 >>= loadAndApplyTemplate "templates/post.html" (postCtx tags)
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
@@ -78,6 +79,8 @@ main = hakyllWith config $ do
 
     -- Post tags
     tagsRules tags $ \tag pattern -> do
+        let title = "Posts tagged " ++ tag
+
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
@@ -88,11 +91,18 @@ main = hakyllWith config $ do
 
             makeItem ""
                 >>= loadAndApplyTemplate "templates/posts.html"
-                        (constField "title" ("Posts tagged " ++ tag) `mappend`
+                        (constField "title" title `mappend`
                             constField "posts" list `mappend`
                             defaultContext)
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
+
+        -- Create RSS feed as well
+        version "rss" $ do
+            route   $ setExtension "xml"
+            compile $ loadAllSnapshots pattern "content"
+                >>= return . take 10 . recentFirst
+                >>= renderAtom (feedConfiguration title) feedCtx
 
     -- Index
     match "index.html" $ do
@@ -132,8 +142,9 @@ main = hakyllWith config $ do
     match "rss.xml" $ do
         route idRoute
         compile $ do
-            loadAll "posts/*"
-                >>= renderAtom feedConfiguration defaultContext
+            loadAllSnapshots "posts/*" "content"
+                >>= return . take 10 . recentFirst
+                >>= renderAtom (feedConfiguration "All posts") feedCtx
 
     -- CV as HTML
     match "cv.markdown" $ do
@@ -176,6 +187,14 @@ postCtx tags = mconcat
 
 
 --------------------------------------------------------------------------------
+feedCtx :: Context String
+feedCtx = mconcat
+    [ bodyField "description"
+    , defaultContext
+    ]
+
+
+--------------------------------------------------------------------------------
 config :: Configuration
 config = defaultConfiguration
     { deployCommand = "rsync --checksum -ave 'ssh -p 2222' \
@@ -185,9 +204,9 @@ config = defaultConfiguration
 
 
 --------------------------------------------------------------------------------
-feedConfiguration :: FeedConfiguration
-feedConfiguration = FeedConfiguration
-    { feedTitle       = "jaspervdj - a personal blog"
+feedConfiguration :: String -> FeedConfiguration
+feedConfiguration title = FeedConfiguration
+    { feedTitle       = "jaspervdj - " ++ title
     , feedDescription = "Personal blog of jaspervdj"
     , feedAuthorName  = "Jasper Van der Jeugt"
     , feedAuthorEmail = "jaspervdj@gmail.com"
