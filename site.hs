@@ -5,13 +5,14 @@ module Main where
 
 
 --------------------------------------------------------------------------------
-import qualified Data.ByteString  as B
-import           Data.Monoid      (mappend, mconcat)
-import           Prelude          hiding (id)
-import           System.Cmd       (system)
-import           System.Directory (getTemporaryDirectory)
-import           System.FilePath  (takeFileName, (<.>), (</>))
-import qualified Text.Pandoc      as Pandoc
+import           Control.Applicative ((<$>))
+import qualified Data.ByteString     as B
+import           Data.Monoid         (mappend, mconcat)
+import           Prelude             hiding (id)
+import           System.Cmd          (system)
+import           System.Directory    (getTemporaryDirectory)
+import           System.FilePath     (takeFileName, (<.>), (</>))
+import qualified Text.Pandoc         as Pandoc
 
 
 --------------------------------------------------------------------------------
@@ -64,11 +65,7 @@ main = hakyllWith config $ do
     match "posts.html" $ do
         route idRoute
         compile $ do
-            postItemTpl <- loadBody "templates/postitem.html"
-            posts       <- loadAll "posts/*"
-            list        <- applyTemplateList postItemTpl (postCtx tags) $
-                recentFirst posts
-
+            list <- postList tags "posts/*" recentFirst
             makeItem ""
                 >>= loadAndApplyTemplate "templates/posts.html"
                         (constField "title" "Posts" `mappend`
@@ -84,11 +81,7 @@ main = hakyllWith config $ do
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
-            postItemTpl <- loadBody "templates/postitem.html"
-            posts       <- loadAll pattern
-            list        <- applyTemplateList postItemTpl (postCtx tags) $
-                recentFirst posts
-
+            list <- postList tags pattern recentFirst
             makeItem ""
                 >>= loadAndApplyTemplate "templates/posts.html"
                         (constField "title" title `mappend`
@@ -108,11 +101,7 @@ main = hakyllWith config $ do
     match "index.html" $ do
         route idRoute
         compile $ do
-            postItemTpl <- loadBody "templates/postitem.html"
-            posts       <- loadAll "posts/*"
-            list        <- applyTemplateList postItemTpl (postCtx tags) $
-                take 3 $ recentFirst posts
-
+            list <- postList tags "posts/*" $ take 3 . recentFirst
             let indexContext = constField "posts" list `mappend`
                     field "tags" (\_ -> renderTagList tags) `mappend`
                     defaultContext
@@ -212,6 +201,15 @@ feedConfiguration title = FeedConfiguration
     , feedAuthorEmail = "jaspervdj@gmail.com"
     , feedRoot        = "http://jaspervdj.be"
     }
+
+
+--------------------------------------------------------------------------------
+postList :: Tags -> Pattern -> ([Item String] -> [Item String])
+         -> Compiler String
+postList tags pattern preprocess = do
+    postItemTpl <- loadBody "templates/postitem.html"
+    posts       <- preprocess <$> loadAll pattern
+    applyTemplateList postItemTpl (postCtx tags) posts
 
 
 --------------------------------------------------------------------------------
