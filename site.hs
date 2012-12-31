@@ -188,7 +188,6 @@ config :: Configuration
 config = defaultConfiguration
     { deployCommand = "rsync --checksum -ave 'ssh -p 2222' \
                       \_site/* jaspervdj@jaspervdj.be:jaspervdj.be"
-    , verbosity = Debug
     }
 
 
