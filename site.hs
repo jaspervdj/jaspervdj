@@ -6,12 +6,10 @@ module Main where
 
 --------------------------------------------------------------------------------
 import           Control.Applicative ((<$>))
-import qualified Data.ByteString     as B
 import           Data.Monoid         (mappend, mconcat)
 import           Prelude             hiding (id)
 import           System.Cmd          (system)
-import           System.Directory    (getTemporaryDirectory)
-import           System.FilePath     (takeFileName, (<.>), (</>))
+import           System.FilePath     (replaceExtension, takeDirectory)
 import qualified Text.Pandoc         as Pandoc
 
 
@@ -62,7 +60,7 @@ main = hakyllWith config $ do
                 >>= relativizeUrls
 
     -- Post list
-    match "posts.html" $ do
+    create ["posts.html"] $ do
         route idRoute
         compile $ do
             list <- postList tags "posts/*" recentFirst
@@ -128,7 +126,7 @@ main = hakyllWith config $ do
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
 
     -- Render RSS feed
-    match "rss.xml" $ do
+    create ["rss.xml"] $ do
         route idRoute
         compile $ do
             loadAllSnapshots "posts/*" "content"
@@ -205,23 +203,24 @@ feedConfiguration title = FeedConfiguration
 --------------------------------------------------------------------------------
 postList :: Tags -> Pattern -> ([Item String] -> [Item String])
          -> Compiler String
-postList tags pattern preprocess = do
+postList tags pattern preprocess' = do
     postItemTpl <- loadBody "templates/postitem.html"
-    posts       <- preprocess <$> loadAll pattern
+    posts       <- preprocess' <$> loadAll pattern
     applyTemplateList postItemTpl (postCtx tags) posts
 
 
 --------------------------------------------------------------------------------
 -- | Hacky.
-pdflatex :: Item String -> Compiler (Item B.ByteString)
-pdflatex item = unsafeCompiler $ do
-    tmpDir <- getTemporaryDirectory
-    let name = takeFileName $ toFilePath $ itemIdentifier item
-        tex  = tmpDir </> name <.> "tex"
-        pdf  = tmpDir </> name <.> "pdf"
+pdflatex :: Item String -> Compiler (Item TmpFile)
+pdflatex item = do
+    TmpFile texPath <- newTmpFile "pdflatex.tex"
+    let tmpDir  = takeDirectory texPath
+        pdfPath = replaceExtension texPath "pdf"
 
-    writeFile tex $ itemBody item
-    _ <- system $ unwords ["pdflatex",
-        "-output-directory", tmpDir, tex, ">/dev/null", "2>&1"]
-    body <- B.readFile pdf
-    return $ itemSetBody body item
+    unsafeCompiler $ do
+        writeFile texPath $ itemBody item
+        _ <- system $ unwords ["pdflatex",
+            "-output-directory", tmpDir, texPath, ">/dev/null", "2>&1"]
+        return ()
+
+    makeItem $ TmpFile pdfPath
