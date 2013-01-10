@@ -9,9 +9,9 @@ title: Curriculum Vitae
 
 ## Summary
 
-I have a strong interest for and bunch of experience with functional programming
-languages, mainly Haskell and OCaml. I am also well-versed in more traditional
-programming languages and I have a strong Linux background.
+I have a strong interest for and a bunch of experience with functional
+programming languages, mainly Haskell and OCaml. I am also well-versed in more
+traditional programming languages and I have a strong Linux background.
 
 ## Work experience
 
