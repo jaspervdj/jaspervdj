@@ -1,0 +1,47 @@
+---
+title: Hakyll 4.0
+description: New major release of the Haskell static site generator
+tags: haskell
+---
+
+After a few weeks of [beta status], I've now released version 4.0 of the
+[Hakyll] static site generator library. I'm really glad with this release, as
+from what I've found and heard, it makes many things a lot easier.
+
+[beta status]: https://groups.google.com/d/topic/hakyll/eRKWz8bVB0w/discussion
+[Hakyll]: http://jaspervdj.be/hakyll
+
+# Main changes
+
+- The important `Compiler` type has been changed from `Arrow` to `Monad`: this
+  makes it much easier to write custom compilers, as most Haskellers are more
+  familiar with monads.
+
+- The template stays superficially the same, but it has grown much more powerful
+  and flexible underneath.
+
+- Early and fast access to metadata makes things such as tags and pagination
+  much easier.
+
+- All items (images, css...) can now have metadata associated. Metadata can no
+  longer be manipulated, and this immutability should reduce the number of
+  encountered bugs.
+
+- A `check` command has been added. This allows you to check that all internal
+  (or external) links are still alive.
+
+# Installation, migration
+
+In order to install Hakyll 4, grab it from Hackage:
+
+    cabal update
+    cabal install hakyll
+
+Here are some useful links:
+
+- Website: <http://jaspervdj.be/hakyll/>
+- Tutorial index: <http://jaspervdj.be/hakyll/tutorials.html>
+- Migration guide:
+  <http://jaspervdj.be/hakyll/tutorials/hakyll-3-to-hakyll4-migration-guide.html>
+
+All feedback is welcome as always.
