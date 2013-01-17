@@ -14,7 +14,7 @@ body {
 
 div#navigation {
     margin: 0px 0px 0px 18px;
-    position: absolute;
+    position: fixed;
     top: 0px;
     width: 102px;
 }

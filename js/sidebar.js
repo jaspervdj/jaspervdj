@@ -1,3 +1,4 @@
 $(document).scroll(function() {
-    $('#navigation').css('top', $(document).scrollTop() + 'px');
+    var left = $(document).scrollLeft();
+    $('#navigation').css('left', left > 0 ? -left + 'px' : '0px');
 });
