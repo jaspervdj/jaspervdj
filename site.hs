@@ -21,10 +21,7 @@ import           Hakyll
 -- | Entry point
 main :: IO ()
 main = hakyllWith config $ do
-    match "js/*" $ do
-        route idRoute
-        compile copyFileCompiler
-
+    -- Copy images
     match "images/*" $ do
         route idRoute
         compile copyFileCompiler
@@ -33,10 +30,12 @@ main = hakyllWith config $ do
         route   idRoute
         compile copyFileCompiler
 
+    -- Copy files (deep)
     match "files/**" $ do
         route idRoute
         compile copyFileCompiler
 
+    -- Compress CSS
     match "css/*" $ do
         route idRoute
         compile compressCssCompiler

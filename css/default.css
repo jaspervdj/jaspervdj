@@ -13,8 +13,10 @@ body {
 }
 
 div#navigation {
+    float: left;
+    left: 0px;
     margin: 0px 0px 0px 18px;
-    position: absolute;
+    position: fixed;
     top: 0px;
     width: 102px;
 }
@@ -29,10 +31,8 @@ div#navigation a {
 }
 
 div#content {
-    left: 156px;
-    margin: 0px;
+    margin: 0px 0px 0px 156px;
     padding: 0px 36px 0px 36px;
-    position: absolute;
     width: 648px;
 }
 
@@ -65,7 +65,7 @@ html {
     background-color: #fff;
     background: transparent url("../images/sidebar.png") repeat-y left top;
     font-size: 16px;
-    font-family: sans-serif;
+    font: sans-serif;
     line-height: 24px;
 }
 
