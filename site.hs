@@ -21,18 +21,9 @@ import           Hakyll
 -- | Entry point
 main :: IO ()
 main = hakyllWith config $ do
-    -- Copy images
-    match "images/*" $ do
-        route idRoute
-        compile copyFileCompiler
-
-    match "favicon.ico" $ do
+    -- Static files
+    match ("images/*" .||. "favicon.ico" .||. "files/**") $ do
         route   idRoute
-        compile copyFileCompiler
-
-    -- Copy files (deep)
-    match "files/**" $ do
-        route idRoute
         compile copyFileCompiler
 
     -- Compress CSS
