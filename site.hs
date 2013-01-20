@@ -142,8 +142,7 @@ main = hakyllWith config $ do
             cvTpl <- loadBody "templates/cv.tex"
             getResourceBody
                 >>= (return . readPandoc)
-                >>= (return .
-                     fmap (Pandoc.writeLaTeX Pandoc.defaultWriterOptions))
+                >>= (return . fmap (Pandoc.writeLaTeX Pandoc.def))
                 >>= applyTemplate cvTpl defaultContext
                 >>= pdflatex
   where
