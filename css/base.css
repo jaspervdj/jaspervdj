@@ -9,6 +9,7 @@ p, ul {
 
 img {
     margin: 12px 0px 12px 0px;
+    max-width: 90%;
 }
 
 ul {
@@ -43,6 +44,7 @@ a img {
 pre {
     font-size: 14px;
     margin-left: 18px;
+    overflow: auto;
 }
 
 h1, h2, h3 {
