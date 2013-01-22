@@ -1,6 +1,6 @@
 ---
 title: Skateboarding and the Belgian police
-description: A minor run-in with the a police officer in Ghent while skating
+description: A minor run-in with a police officer in Ghent while skating
 tags: ghent
 ---
 
