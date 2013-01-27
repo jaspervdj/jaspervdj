@@ -82,10 +82,8 @@ Here is a list of some projects I have worked on in the past years.
 
 [Digestive functors]: http://github.com/jaspervdj/digestive-functors/
 
-- [geohub.github.com]: This is a small tool to geolocate your github
-  collaborators.
-
-[geohub.github.com]: http://geohub.github.com/
+- [geohub.github.com](http://geohub.github.com/) (2012): This is a small tool to
+  geolocate your github collaborators.
 
 - [12Urenloop] (2011 - present): With [Zeus WPI], we created software to count
   laps for this yearly [student event](http://12urenloop.be) (Dutch). I
