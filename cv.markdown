@@ -9,16 +9,18 @@ title: Curriculum Vitae
 
 ## Summary
 
-I have a strong interest for and a bunch of experience with functional
-programming languages, mainly Haskell and OCaml. I am also well-versed in more
-traditional programming languages and I have a strong Linux background.
+I have a strong interest for and a lot of experience with functional programming
+languages, mainly Haskell and OCaml. I am also well-versed in more traditional
+programming languages and I have a strong Linux background. I am fluent in Dutch
+and English, both orally and in writing. I have volunteered in different
+nonprofits, so I am confident in my teamwork and organizational skills.
 
 ## Work experience
 
 I'll list only relevant jobs here.
 
-- In 2012, I did a 3-month long full-time internship at [Tsuru Capital LLC], a
-  proprietary trading fund based in Tokyo and Singapore.
+- In 2012, I did a 3-month long full-time programming internship at
+  [Tsuru Capital LLC], a proprietary trading fund based in Tokyo and Singapore.
 
 [Tsuru Capital LLC]: http://tsurucapital.com/
 
@@ -28,8 +30,8 @@ I'll list only relevant jobs here.
 [Google Summer of Code]: http://code.google.com/soc/
 
 - In the summer of 2011, I worked as a Software Engineer at [Amplidata]. The job
-  involved extending their proprietary Distributed Storage System, which is
-  written in [OCaml].
+  involved extending their proprietary Distributed Storage System with an NFS
+  frontend, written in [OCaml].
 
 [Amplidata]: http://www.amplidata.com/
 [OCaml]: http://caml.inria.fr/
@@ -54,7 +56,7 @@ Here is a list of some projects I have worked on in the past years.
 
 - [Text] (2011): I worked on the text library as a [Google Summer of Code]
   student, creating a port which uses UTF-8 internally, and doing extensive
-  benchmarking to discover the tradeoffs between the different encodings.
+  benchmarking to discover the trade-offs between the different encodings.
 
 [Text]: https://github.com/bos/text
 
