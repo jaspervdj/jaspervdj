@@ -4,7 +4,9 @@ title: Music &amp; Movies
 
 # Recommendations
 
-This is a fairly loose and very limited list of stuff I thoroughly enjoy.
+This is a fairly loose and very limited list of stuff I thoroughly enjoy. If you
+think you know some stuff I would like, [I love receiving
+recommendations](/contact.html)!
 
 ## Music
 
@@ -34,6 +36,7 @@ instead of songs.
 - Soon It Will Be Cold Enough by Emancipator (Downtempo)
 - Soosh by Soosh (Electronic?)
 - Swim by Caribou (Electronic?)
+- The Barr Brothers by The Barr Brothers (Folk)
 - The Campfire Headphase by Boards of Canada (Ambient?)
 - The Last Resort by Trentemøller (Electronic)
 - The Years by Memoryhouse (Dream pop)
