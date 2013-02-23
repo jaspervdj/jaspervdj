@@ -18,7 +18,7 @@ instead of songs.
 - Beach House by Beach House (Dream pop)
 - Bee Thousand by Guided By Voices (Indie rock)
 - Blouse by Blouse (Dream pop?)
-- Blue Scholars by Blue Scholars (Hip-hop)
+- Blue Scholars by Blue Scholars (Hiphop)
 - Eyelid Movies by Phantogram (Pop)
 - Gas by Gas 0095 (Ambient)
 - Guide To An Escape by Rue Royale (Folk)
@@ -43,6 +43,7 @@ instead of songs.
 - This Bliss by Pantha du Prince (Minimal)
 - Together/apart by Grieves (Hiphop)
 - Violent Femmes by Violent Femmes (Folk rock)
+- Who Will Cut Our Hair When We're Gone? by The Unicorns (Garage rock)
 
 ## Movies
 
