@@ -53,6 +53,7 @@ Again, I try to recommend some movies which I think should be more well-known.
 - [Boy A](http://www.imdb.com/title/tt1078188/)
 - [Chinatown](http://www.imdb.com/title/tt0071315/)
 - [Control](http://www.imdb.com/title/tt0421082/)
+- [Dogville](http://www.imdb.com/title/tt0276919/)
 - [Gomorra](http://www.imdb.com/title/tt0929425/)
 - [Into the Wild](http://www.imdb.com/title/tt0758758/)
 - [Paprika](http://www.imdb.com/title/tt0851578/)
