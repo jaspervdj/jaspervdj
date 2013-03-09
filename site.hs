@@ -5,12 +5,11 @@ module Main where
 
 
 --------------------------------------------------------------------------------
-import           Control.Applicative ((<$>))
-import           Data.Monoid         (mappend, mconcat)
-import           Prelude             hiding (id)
-import           System.Cmd          (system)
-import           System.FilePath     (replaceExtension, takeDirectory)
-import qualified Text.Pandoc         as Pandoc
+import           Data.Monoid     (mappend, mconcat)
+import           Prelude         hiding (id)
+import           System.Cmd      (system)
+import           System.FilePath (replaceExtension, takeDirectory)
+import qualified Text.Pandoc     as Pandoc
 
 
 --------------------------------------------------------------------------------
@@ -83,14 +82,14 @@ main = hakyllWith config $ do
         version "rss" $ do
             route   $ setExtension "xml"
             compile $ loadAllSnapshots pattern "content"
-                >>= return . take 10 . recentFirst
+                >>= fmap (take 10) . recentFirst
                 >>= renderAtom (feedConfiguration title) feedCtx
 
     -- Index
     match "index.html" $ do
         route idRoute
         compile $ do
-            list <- postList tags "posts/*" $ take 3 . recentFirst
+            list <- postList tags "posts/*" $ fmap (take 3) . recentFirst
             let indexContext = constField "posts" list `mappend`
                     field "tags" (\_ -> renderTagList tags) `mappend`
                     defaultContext
@@ -121,7 +120,7 @@ main = hakyllWith config $ do
         route idRoute
         compile $ do
             loadAllSnapshots "posts/*" "content"
-                >>= return . take 10 . recentFirst
+                >>= fmap (take 10) . recentFirst
                 >>= renderAtom (feedConfiguration "All posts") feedCtx
 
     -- CV as HTML
@@ -191,11 +190,11 @@ feedConfiguration title = FeedConfiguration
 
 
 --------------------------------------------------------------------------------
-postList :: Tags -> Pattern -> ([Item String] -> [Item String])
+postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
          -> Compiler String
 postList tags pattern preprocess' = do
     postItemTpl <- loadBody "templates/postitem.html"
-    posts       <- preprocess' <$> loadAll pattern
+    posts       <- preprocess' =<< loadAll pattern
     applyTemplateList postItemTpl (postCtx tags) posts
 
 
