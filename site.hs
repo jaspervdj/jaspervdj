@@ -5,7 +5,7 @@ module Main where
 
 
 --------------------------------------------------------------------------------
-import           Data.Monoid     (mappend, mconcat)
+import           Data.Monoid     ((<>), mconcat)
 import           Prelude         hiding (id)
 import           System.Cmd      (system)
 import           System.FilePath (replaceExtension, takeDirectory)
@@ -53,11 +53,11 @@ main = hakyllWith config $ do
     create ["posts.html"] $ do
         route idRoute
         compile $ do
-            list <- postList tags "posts/*" recentFirst
+            posts <- recentFirst =<< loadAll "posts/*"
             makeItem ""
                 >>= loadAndApplyTemplate "templates/posts.html"
-                        (constField "title" "Posts" `mappend`
-                            constField "posts" list `mappend`
+                        (constField "title" "Posts" <>
+                            listField "posts" (postCtx tags) (return posts) <>
                             defaultContext)
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
@@ -69,11 +69,11 @@ main = hakyllWith config $ do
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
-            list <- postList tags pattern recentFirst
+            posts <- recentFirst =<< loadAll pattern
             makeItem ""
                 >>= loadAndApplyTemplate "templates/posts.html"
-                        (constField "title" title `mappend`
-                            constField "posts" list `mappend`
+                        (constField "title" title <>
+                            listField "posts" (postCtx tags) (return posts) <>
                             defaultContext)
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
@@ -89,9 +89,10 @@ main = hakyllWith config $ do
     match "index.html" $ do
         route idRoute
         compile $ do
-            list <- postList tags "posts/*" $ fmap (take 3) . recentFirst
-            let indexContext = constField "posts" list `mappend`
-                    field "tags" (\_ -> renderTagList tags) `mappend`
+            posts <- fmap (take 3) . recentFirst =<< loadAll "posts/*"
+            let indexContext =
+                    listField "posts" (postCtx tags) (return posts) <>
+                    field "tags" (\_ -> renderTagList tags) <>
                     defaultContext
 
             getResourceBody
@@ -187,15 +188,6 @@ feedConfiguration title = FeedConfiguration
     , feedAuthorEmail = "jaspervdj@gmail.com"
     , feedRoot        = "http://jaspervdj.be"
     }
-
-
---------------------------------------------------------------------------------
-postList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String])
-         -> Compiler String
-postList tags pattern preprocess' = do
-    postItemTpl <- loadBody "templates/postitem.html"
-    posts       <- preprocess' =<< loadAll pattern
-    applyTemplateList postItemTpl (postCtx tags) posts
 
 
 --------------------------------------------------------------------------------
