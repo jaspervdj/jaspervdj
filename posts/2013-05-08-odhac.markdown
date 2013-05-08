@@ -17,23 +17,28 @@ attend [OdHac], a Haskell Hackathon organised there by [Roman] and hosted by
 
 Odessa is a really sweet city. One thing I noticed is that while some of the
 buildings seem to be in a deplorable condition from the outside, they actually
-turn out to be very nice once you're indoors! Consider for example the youth
-hostel I'm staying in:
+turn out to be very nice once you're indoors! This was for example the case for
+the hostel I was staying in. The contrast is also seen elsewhere in the city,
+with brand new appartements next to ramshackle, desolated houses.
 
-TODO: picture
+![Picture by Simon Meier](/images/2013-05-08-odessa.jpg)
 
-I still have some time to explore the city tomorrow (I'm leaving on tuesday),
-and I'm really looking forward to that.
+This is, however, not the case for the very centre of the city -- around the
+famous [Potemkin Stairs]. This neighbourhood is absolutely amazing.
+
+[Potemkin Stairs]: http://en.wikipedia.org/wiki/Potemkin_Stairs
+
+![Picture by some random Ukranian guy](/images/2013-05-08-potemkin-stairs.jpg)
 
 # Hakyll at OdHac
 
-I did a small presentation about [Hakyll] on friday, and some awesome people
-decided to help me improve Hakyll a bit this weekend. We were able to implement
-quite a few features.
+At the Hackathon, I did a small presentation about [Hakyll] on friday, and some
+awesome people decided to help me improve Hakyll a bit this weekend. We were
+able to implement some exciting features.
 
 [Hakyll]: http://jaspervdj.be/hakyll/
 
-TODO: picture
+![Working on Hakyll, picture by Roman Cheplyaka](/images/2013-05-08-hakyll-team.jpg)
 
 ## If-else conditionals in templates
 
@@ -48,7 +53,8 @@ to further ease integration:
         <em>by $author$</em>
     $endif$
 
-We also support if-else-endif.
+We also support if-else-endif. On the plane back, I also took the time to
+implement `$foreach$` and `$partial$`.
 
 ## Teasers
 
@@ -69,7 +75,7 @@ your teasers using the following simple format:
 
 ## Pagination
 
-We also started to work on a generic Pagination module. This is not finished yet
+We also started to work on a generic Pagination module. It's not finished yet
 but it should be possible to clean this up and package it by the end of the
 week. I'm quite excited about this feature because lots of people have requested
 it in the past.
@@ -78,5 +84,6 @@ Additionally, we did some performance improvements and fixed a bug or two. All
 in all, a very productive and fun Hackathon! I hope to package up all these
 changes and push them to Hackage soon.
 
-Thanks for contributing, Alexey Smirnov, Anton Dubovik, Dmitriy Shamatrin, Ivan
-Veselov and Pavel Poukh!
+Thanks for contributing to Hakyll, Alexey Smirnov, Anton Dubovik, Dmitriy
+Shamatrin, Ivan Veselov and Pavel Poukh! And, of course, thanks for organizing,
+Roman!
