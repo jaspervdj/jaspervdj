@@ -54,12 +54,12 @@ main = hakyllWith config $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
+            let ctx = constField "title" "Posts" <>
+                        listField "posts" (postCtx tags) (return posts) <>
+                        defaultContext
             makeItem ""
-                >>= loadAndApplyTemplate "templates/posts.html"
-                        (constField "title" "Posts" <>
-                            listField "posts" (postCtx tags) (return posts) <>
-                            defaultContext)
-                >>= loadAndApplyTemplate "templates/default.html" defaultContext
+                >>= loadAndApplyTemplate "templates/posts.html" ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
     -- Post tags
@@ -70,12 +70,12 @@ main = hakyllWith config $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll pattern
+            let ctx = constField "title" title <>
+                        listField "posts" (postCtx tags) (return posts) <>
+                        defaultContext
             makeItem ""
-                >>= loadAndApplyTemplate "templates/posts.html"
-                        (constField "title" title <>
-                            listField "posts" (postCtx tags) (return posts) <>
-                            defaultContext)
-                >>= loadAndApplyTemplate "templates/default.html" defaultContext
+                >>= loadAndApplyTemplate "templates/posts.html" ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
         -- Create RSS feed as well
