@@ -6,10 +6,9 @@ tags: ugent
 
 # Introduction
 
-Last month, I graduated (TODO: met grote onderscheiding) from [Ghent
-University]. This seems like an excellent time to review all the courses I took,
-and I hope this might be useful to future or current UGent Computer Science
-students.
+Last month, I graduated from [Ghent University]. This seems like an excellent
+time to review all the courses I took, and I hope this might be useful to future
+or current UGent Computer Science students.
 
 [Ghent University]: http://ugent.be/
 
@@ -130,27 +129,58 @@ biology.
 
 ## Mandatory courses
 
-**Communication Networks** (*Communicatienetwerken*): TODO
+**Communication Networks** (*Communicatienetwerken*): This was a pretty useful
+one. Some stuff on networks, and commonly used protocols on different layers
+such as IP, TCP/UDP, HTTP. The more advanced topics included IPv6, IPSEC and
+VPN. The lab sessions were very well set-up and intriguing.
 
-**Data Communication** (*Datacommunicatie*): TODO
+**Data Communication** (*Datacommunicatie*): Definitely deserves a nomination
+for all-round worst course in the program. The subjects are dull and they are
+taught in a deadening way. Attending the exercise sessions is an utter waste
+of time. The exam included solving an massively huge but simple exercise: I
+can't remember exactly what it was but I guess it compares to multiplying a
+few 10x10 matrices with pen and paper: clearly the best way to check that
+one understands matrix multiplication.
 
 **Introduction to Electrical Engineering** (*Introductie tot elektrotechniek*):
-TODO
+This course was pretty hard and I am still undecided on whether this should or
+should not be a mandatory course -- most of it seems only related in a very
+indirect way. Nonetheless, I kind of enjoyed knowing a bit more about this
+stuff, although I forgot most of it soon afterwards.
 
-**Cross-Course Project** (*Vakoverschijdend project*): TODO
+**Cross-Course Project** (*Vakoverschijdend project*): Build a simple webapp. A
+pretty nice experience, altough building a such a project over 12 weeks makes
+you focus on *Get Stuff Done* rather than *Do Stuff The Right Way*. Makes you
+dislike your team because they're all incompetent.
 
-**Internet Technology** (*Internettechnologie*): TODO
+**Internet Technology** (*Internettechnologie*): Quite simple, completely
+useless.
 
 **Formal Languages, Automata, Complexity** (*Formele talen, automaten,
-complexiteit*): TODO
+complexiteit*): I thought this was a dull course, but I remember a number of
+concepts we saw in this course (e.g. the distinctions between regular and
+context free languages, the halting problem) really clearly so I guess it was
+not bad after all.
 
-**Scientific Computing** (*Wetenschappelijk rekenen*)
+**Scientific Computing** (*Wetenschappelijk rekenen*): Well-taught and quite
+interesting. I barely remember anything from this course though: except the fact
+that numerical computing can be hard even when it seems easy. Therefore, one
+should just use existing libraries and applications.
 
 ## Optional courses
 
-**Economy** (*Economy*): TODO
+**Economy** (*Economy*): Probably one of the easiest courses at UGent. I was
+doing a lot of open-source development and other exciting stuff at this time so
+I didn't want to waste too much time with another course. Well, I never attended
+any lessons and studied less than two days as exam preparation -- so I think it
+deserves the title.
 
-**Programming Languages** (*Programmeertalen*): TODO
+**Programming Languages** (*Programmeertalen*): This course simply boils down to
+reading [Concepts, Techniques, and Models of Computer
+Programming](http://www.info.ucl.ac.be/~pvr/book.html) and programming a bit in
+[Oz]. But hey, it's a really good book, and Oz is a fun language.
+
+[Oz]: http://en.wikipedia.org/wiki/Oz_%28programming_language%29
 
 # Fourth year
 
