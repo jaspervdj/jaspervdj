@@ -129,6 +129,11 @@ biology.
 
 ## Mandatory courses
 
+**Algorithms and Data Structures III**: (*Algoritmen en datastructuren III*):
+See *Algorithms and Data Structures I* and *II*. My main complaint on this
+course is that the chapter on distributed algorithms seemed to dated from a time
+in which distributed algorithms were not actually used. Yep.
+
 **Communication Networks** (*Communicatienetwerken*): This was a pretty useful
 one. Some stuff on networks, and commonly used protocols on different layers
 such as IP, TCP/UDP, HTTP. The more advanced topics included IPv6, IPSEC and
