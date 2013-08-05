@@ -12,6 +12,11 @@ or current UGent Computer Science students.
 
 [Ghent University]: http://ugent.be/
 
+This is purely my own opinion. One should also note that I review the courses as
+they were at the point that I followed them, and I know that of the courses have
+been revised at this point. I can't comment on the revisions since I didn't take
+any courses more than once.
+
 # First year
 
 We only had mandatory courses in our first year.
@@ -50,8 +55,8 @@ problem with this course is that all exercises, and even the exam, could be
 solved by copy-pasting previous or example exercises. Hence, no one even
 bothered to really study this.
 
-**Programming I** (*Programmeren I*): Really teaches Java instead of
-"Programming". I also think this course suffers a bit from an
+**Programming I** (*Programmeren I*): The lessons are pretty good, but it really
+teaches Java instead of "Programming". I guess this course suffers a bit from an
 *Everything-Is-An-Object-Even-When-It-Isn't*-symptom. I believe it would be more
 useful to start out with simple procedural programming and teach that well, then
 introduce Object-Oriented programming later as a natural transition by coupling
@@ -60,7 +65,7 @@ datatypes and related procedures.
 **Programming II** (*Programmeren II*): This course was basically about two
 things: the Swing framework and the corresponding interpretation of
 Model-View-Controller. I don't think a lot of interesting materials are taught
-here. However, this course came with a project, which yielded valuable
+here. However, this course came with a project, which yielded really valuable
 programming experience.
 
 **Scripting Languages** (*Scriptingtalen*): Basically the continuation of
@@ -78,7 +83,8 @@ In our second year, we were allowed to choose a single optional course.
 
 **Algorithms and Data Structures II**: (*Algoritmen en datastructuren II*):
 Largely a continuation of *Algorithms and Data Structures I*. More algorithms,
-more data structures. Not a bad course.
+more data structures. Not a bad course -- the professor really knows this stuff
+and is very enthusiastic, which made the lessons quite fun.
 
 **Applied Formal Logic II** (*Toegepaste formele logica II*): I actually do not
 quite remember anything specific that I learned in this course. This course
@@ -88,7 +94,8 @@ seems mostly unnecessary.
 
 **Computer Architecture** (*Computerarchitectuur*): This teaches some essential
 basics of how a computer works. I feel like this course belongs in the first
-year rather than the second year.
+year rather than the second year. Very well-taught and the lab sessions are very
+cool.
 
 **Databases** (*Databanken*): I think this course should be called "History of
 Databases: Where we start out with ancient history and end in the 90s!".
@@ -110,10 +117,12 @@ Both were useless and uninteresting.
 
 **Multimedia** (*Multimedia*): Some important multimedia fundamentals,
 supplemented by a collection of mildly interesting trivia on widely used formats
-such as [VRML](http://en.wikipedia.org/wiki/VRML).
+such as [VRML](http://en.wikipedia.org/wiki/VRML). This course didn't really
+appeal to me.
 
 **Probability Calculus and Statistics** (*Waarschijnlijkheidsrekenen en
-statistiek*): Another fundamental but kind of dull course.
+statistiek*): Another fundamental but kind of dull course. Due to lack of time
+we didn't properly see statistics, which I think is a bit problematic.
 
 ## Optional courses
 
@@ -130,14 +139,20 @@ biology.
 ## Mandatory courses
 
 **Algorithms and Data Structures III**: (*Algoritmen en datastructuren III*):
-See *Algorithms and Data Structures I* and *II*. My main complaint on this
-course is that the chapter on distributed algorithms seemed to dated from a time
-in which distributed algorithms were not actually used. Yep.
+See *Algorithms and Data Structures II*: same professor, different subjects.
+Pretty much my only complaint about this course is that the chapter on
+distributed algorithms seemed to date from a time in which distributed
+algorithms were not actually used. Yep.
 
 **Communication Networks** (*Communicatienetwerken*): This was a pretty useful
 one. Some stuff on networks, and commonly used protocols on different layers
 such as IP, TCP/UDP, HTTP. The more advanced topics included IPv6, IPSEC and
 VPN. The lab sessions were very well set-up and intriguing.
+
+**Cross-Course Project** (*Vakoverschijdend project*): Build a simple webapp. A
+pretty nice experience, altough building a such a project over 12 weeks makes
+you focus on *Get Stuff Done* rather than *Do Stuff The Right Way*. Makes you
+dislike your team because they're all incompetent.
 
 **Data Communication** (*Datacommunicatie*): Definitely deserves a nomination
 for all-round worst course in the program. The subjects are dull and they are
@@ -153,11 +168,6 @@ should not be a mandatory course -- most of it seems only related in a very
 indirect way. Nonetheless, I kind of enjoyed knowing a bit more about this
 stuff, although I forgot most of it soon afterwards.
 
-**Cross-Course Project** (*Vakoverschijdend project*): Build a simple webapp. A
-pretty nice experience, altough building a such a project over 12 weeks makes
-you focus on *Get Stuff Done* rather than *Do Stuff The Right Way*. Makes you
-dislike your team because they're all incompetent.
-
 **Internet Technology** (*Internettechnologie*): Quite simple, completely
 useless.
 
@@ -166,6 +176,11 @@ complexiteit*): I thought this was a dull course, but I remember a number of
 concepts we saw in this course (e.g. the distinctions between regular and
 context free languages, the halting problem) really clearly so I guess it was
 not bad after all.
+
+**Operating Systems** (*Besturingssystemen*): Regardless of the name, this
+pretty much feels like a continuation of *Computer Architecture*. Some
+intriguing low-level stuff is taught here, and the course has great lab
+sessions as well.
 
 **Scientific Computing** (*Wetenschappelijk rekenen*): Well-taught and quite
 interesting. I barely remember anything from this course though: except the fact
