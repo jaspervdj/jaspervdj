@@ -12,6 +12,8 @@ or current UGent Computer Science students.
 
 [Ghent University]: http://ugent.be/
 
+![After the graduation ceremony](/images/2013-08-10-graduation.jpg)
+
 This is purely my own opinion and I do not represent my classmates. One should
 also note that I review the courses as they were at the point that I followed
 them, and I know that some of the courses have been revised at this point. I
@@ -38,9 +40,9 @@ when it comes to making slides.
 
 **Computer usage** (*Computergebruik*): This course teaches some UNIX and
 command-line basics. The exercises and practical exam focus on esoteric problems
-which are hard to solve using the given tools. While this makes it challenging
-and interesting, the course comes with a big "Do Not Try This Stuff For
-Real"-warning.
+which are hard to solve using the given tools. While this makes it fun,
+challenging and interesting, the course comes with a big "Do Not Try This Stuff
+For Real"-warning.
 
 **Discrete mathematics** (*Discrete wiskunde*): Quite interesting, I guess. Kind
 of hard as well.
