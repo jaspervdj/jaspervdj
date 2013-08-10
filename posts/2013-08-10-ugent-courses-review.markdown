@@ -12,10 +12,10 @@ or current UGent Computer Science students.
 
 [Ghent University]: http://ugent.be/
 
-This is purely my own opinion. One should also note that I review the courses as
-they were at the point that I followed them, and I know that of the courses have
-been revised at this point. I can't comment on the revisions since I didn't take
-any courses more than once.
+This is purely my own opinion and I do not represent my classmates. One should
+also note that I review the courses as they were at the point that I followed
+them, and I know that some of the courses have been revised at this point. I
+can't comment on the revisions since I didn't take any courses more than once.
 
 # First year
 
@@ -206,51 +206,103 @@ Programming](http://www.info.ucl.ac.be/~pvr/book.html) and programming a bit in
 
 ## Mandatory courses
 
-**Advanced Computer Architecture** (*Geavanceerde computerarchitectuur*): TODO
+**Advanced Computer Architecture** (*Geavanceerde computerarchitectuur*):
+Another nice course on low-level stuff. We had to do some research for this as
+well. That was cool, but unfortunately, there were lots of other projects in
+this term, so the research projects didn't get the attention they deserved.
 
 **Design of Distributed Software** (*Ontwerp van gedistribueerde software*):
-TODO
+Except for some chapters on [MPI] and a few interesting algorithms, I found the
+subjects in this course [extremely boring](http://en.wikipedia.org/wiki/J2ee) or
+[pretty much useless](http://en.wikipedia.org/wiki/Corba).
+
+[MPI]: http://en.wikipedia.org/wiki/Message_Passing_Interface
 
 **Design of Multimedia Applications** (*Ontwerp van multimediatoepassingen*):
-TODO
+This course had challenging and interesting projects to work on. I didn't really
+like the theoretical classes and found them rather shallow and untechnical.
 
-**Multimedia Networks** (*Multimedianetwerken*): TODO
+**Multimedia Networks** (*Multimedianetwerken*): Another course containing a
+wide variety of subjects, sometimes related, sometimes not. Teaches you a whole
+bunch of facts about backbone networks and routing in these networks -- most of
+which I forgot about a week later. Some of the lab sessions were quite cool
+though.
 
-**Queuing Theory** (*Wachtlijntheorie*): TODO
+**Queuing Theory** (*Wachtlijntheorie*): I can figure out basic queues and I
+guess I can look up other models if I ever need to. I'm not sure why we need an
+entire course on this subject.
 
-**Software Architecture** (*Softwarearchitectuur*): TODO
+**Software Architecture** (*Softwarearchitectuur*): Spend an entire term writing
+documents and making presentations about a product you'll never end up coding.
+Earn bonus points for hypothetically earning money and win the game if you
+manage to out-bluff the other teams in terms of complicated design patterns and
+buzzwords.
 
-**Software Design Project** (*Software-ontwerpproject*): TODO
+**Software Design Project** (*Software-ontwerpproject*): Now you get to actually
+implement the product you designed in *Software Architecture*. Only, you'll cut
+as many features as you can first, add a whole bunch of others, scratch those
+again, redesign it and then still code something else entirely. The end result
+might be a total turd but at least you'll have a Test Manager ensuring you that
+no tests failed so everything will work as expected, and a shitload of pretty
+presentations to convince clients around the world.
 
-**Software Management** (*Softwarebeheer*): TODO
+**Software Management** (*Softwarebeheer*): This (extremely dull and completely
+useless) course has made me realize that [Dilbert] must be based on actual
+facts.
+
+[Dilbert]: http://en.wikipedia.org/wiki/Dilbert
 
 ## Optional courses
 
-**Information Security** (*Informatiebeveiliging*): TODO
+**Information Security** (*Informatiebeveiliging*): I liked this course. It's
+practical and gets technical, while still providing a very good high-level
+overview.
 
 **Functional and Logical Programming Languages** (*Functionele en logische
-programmeertalen*): TODO
+programmeertalen*): Since I'm an avid fan of functional programming languages,
+the fact that I enjoyed this course will probably not be a suprise to you. I'll
+just add that I liked the teaching style, and the combination of two
+paradigms/languages (Prolog and Haskell) which highlighted the strengths and
+weaknesses of both.
 
 # Fifth year
 
 ## Mandatory courses
 
 **Formal Systems Modelling for Software** (*Formele systeemmodellering voor
-software*): TODO
+software*): A lot of subjects lie in the intersection of the *Applied Formal
+Logic I/II* and this course, so there was a lot of repetition of an already
+quite dull field. We did get an interesting [ACL2] project which I liked a lot
+once I sort of got into it.
 
-**Information Management** (*Informatiebeheer*): TODO
+[ACL2]: http://en.wikipedia.org/wiki/ACL2
 
-**Msc. Thesis** (*Masterproef*): TODO
+**Information Management** (*Informatiebeheer*): A variety of subjects: Data
+Mining, B-Trees (we already saw that), how filesystems work (what?), Data
+Warehousing, mobile databases (what??), storing geographical POIs in a DB
+(what???). The practical exam also deserves a nomination for
+*Lots-Of-Calculations-Showing-Absolutely-Nothing*, although in this area it
+still loses to *Data Communication*.
 
 ## Optional courses
 
-**Compilers** (*Compilers*): TODO
+**Compilers** (*Compilers*): A good course on compilers which mostly interesting
+lab sessions. This course should be mandatory rather than optional in any
+Computer Science program.
 
-**Movement and Sports: Now and Later** (*Bewegen en sport: nu en
-later*): TODO
+**Movement and Sports: Now and Later** (*Bewegen en sport: nu en later*): I took
+this one mostly because it seemed like fun. It was less fun than I expected, but
+still pretty easy (the other reason I chose this course).
 
-**Business Law** (*Ondernemingsrecht*): TODO
+**Business Law** (*Ondernemingsrecht*): I don't ever want to study anything like
+this again as long as I live. The only thing I remember is that starting a
+Business brings with it a awful shitload of legal work in Belgium.
 
-**Investment Analysis** (*Beleggingsleer*): TODO
+**Internship** (*Stage*): I worked for 3 months in Tokyo, coding Haskell,
+with amazing people at an [awesome company](http://www.tsurucapital.com/en/). It
+was fantastic.
 
-**Internship** (*Stage*): TODO
+**Investment Analysis** (*Beleggingsleer*): I chose this course because it
+related to my *Internship*. While it gave a pretty good high-level overview, it
+wasn't really practical and we skipped some of the most interesting subjects
+(futures, options).
