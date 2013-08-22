@@ -26,6 +26,7 @@ instead of songs.
 - Guide To An Escape by Rue Royale (Folk)
 - High Times by Washed Out (Downtempo)
 - In The Aeroplane Over The Sea by Neutral Milk Hotel (Rock)
+- Learning by Perfume Genius (Singer-songwriter?)
 - Lonerism by Tame Impala (Psychedelic)
 - Loveless by My Bloody Valentine (Shoegaze)
 - Metaphorical Music by Nujabes (Hiphop)
