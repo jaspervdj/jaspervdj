@@ -109,7 +109,7 @@ The [http-conduit] library can be used to what we just did using `curl`:
 >         , Http.path = "/json"
 >         }
 
-A remaining issue is that the JSON contains the WebSockets URL as a single
+One remaining issue is that the JSON contains the WebSockets URL as a single
 string, and the WebSockets library expects a (host, port, path) triple. Luckily
 for us, the standard [network] library has a `Network.URI` module which makes
 this task pretty simple:
@@ -169,3 +169,8 @@ example, I wonder if it would be possible to create a simple [Selenium]-like
 framework for web application testing in Haskell.
 
 [Selenium]: http://docs.seleniumhq.org/
+
+Thanks to Gilles J. for a quick proofread and Ilya Grigorik for this
+[inspiring blogpost]!
+
+[inspiring blogpost]: http://www.igvita.com/2012/04/09/driving-google-chrome-via-websocket-api/
