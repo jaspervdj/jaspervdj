@@ -31,7 +31,7 @@ you can get it from [the github repo] though, if you want to: check out the
 
 [the github repo]: https://github.com/jaspervdj/websockets
 
-This file is written in literate Haskell so we'll have a few boilerplate
+This file is written in literate Haskell so we will have a few boilerplate
 declarations and imports first:
 
 > {-# LANGUAGE OverloadedStrings #-}
@@ -58,11 +58,11 @@ Locating the WebSockets server
 To enable the WebSockets server, chrome must be launched with the
 `--remote-debugging-port` flag enabled:
 
-    chromium --remote-debugging-port 9160
+    chromium --remote-debugging-port=9160
 
-Now, in order to connect to connect to the built-in WebSockets server, we have
-to know its URI and this requires some extra code. We'll first use [cURL] to
-demonstrate this:
+Now, in order to connect to the built-in WebSockets server, we have to know its
+URI and this requires some extra code. We will first use [cURL] to demonstrate
+this:
 
 [cURL]: http://curl.haxx.se/
 
@@ -73,10 +73,10 @@ demonstrate this:
        "webSocketDebuggerUrl": "ws://localhost:9160/devtools/page/8937C189-5CED-8E34-E26E-A389641FE8FF"
     } ]
 
-That `webSocketDebuggerUrl` is the one we want. Let's write some Haskell code to
-automate obtaining it.
+That `webSocketDebuggerUrl` is the one we want. Let us write some Haskell code
+to automate obtaining it.
 
-We create a datatype to hold this info. Currently, we're only interested in a
+We create a datatype to hold this info. Currently, we are only interested in a
 single field:
 
 > data ChromiumPageInfo = ChromiumPageInfo
@@ -142,7 +142,7 @@ We use the aeson library again here, to convert these commands into JSON data:
 >         , "params" .= M.fromList (commandParams cmd)
 >         ]
 
-What's left is a simple main function to tie it all together.
+What is left is a simple main function to tie it all together.
 
 > main :: IO ()
 > main = do
