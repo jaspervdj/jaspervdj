@@ -19,8 +19,9 @@ project.
 
 Since I am currently rewriting the WebSockets library to have it use
 [io-streams], I wanted to give this a try and made it into a blogpost. As a
-sidenote -- the port is going great, io-streams is a great library and I managed
-to solve a whole lot of issues in the library (mostly exception handling stuff).
+sidenote -- the port is going great, io-streams is a very nice library and I
+managed to solve a whole lot of issues in the library (mostly exception handling
+stuff).
 
 [io-streams]: http://hackage.haskell.org/package/io-streams
 
