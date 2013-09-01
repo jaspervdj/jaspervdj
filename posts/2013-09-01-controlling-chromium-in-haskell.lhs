@@ -93,7 +93,7 @@ datatype:
 >         ChromiumPageInfo <$> obj .: "webSocketDebuggerUrl"
 >     parseJSON _              = mzero
 
-The [http-conduit] library can be used to what we just did using `curl`:
+The [http-conduit] library can be used to do what we just did using `curl`:
 
 [http-conduit]: http://hackage.haskell.org/package/http-conduit
 
