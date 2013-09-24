@@ -19,6 +19,11 @@ nonprofits, so I am confident in my teamwork and organizational skills.
 
 I'll list only relevant jobs here.
 
+- In September 2013, I started as a Software Engineer at [Erudify]. I still work
+  here and love it.
+
+[Erudify]: http://erudify.com/
+
 - In 2012, I did a 3-month long full-time programming internship at
   [Tsuru Capital LLC], a proprietary trading fund based in Tokyo and Singapore.
 
