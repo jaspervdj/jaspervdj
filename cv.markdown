@@ -49,6 +49,11 @@ involved in the community.
 
 Here is a list of some projects I have worked on in the past years.
 
+- [stylish-haskell] (2012 - present): A simple tool (and library) for
+  formatting [Haskell] code.
+
+[stylish-haskell]: http://github.com/jaspervdj/stylish-haskell
+
 - [websockets] (2011 - present): I created a library for easily writing robust
   WebSocket-capable servers in [Haskell].
 
