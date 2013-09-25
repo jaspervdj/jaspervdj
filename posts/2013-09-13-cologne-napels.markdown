@@ -27,7 +27,11 @@ get there).
 
 [Cathedral]: http://en.wikipedia.org/wiki/Cologne_Cathedral
 
-![Cologne Cathedral by night](/images/2013-09-13-cologne-cathedral.jpg)
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9649654862/">
+<img src="/images/2013-09-13-cologne-cathedral.jpg" />
+</a>
+</div>
 
 I think what I enjoyed most was the modern art museum in Cologne: [Museum
 Ludwig]. They had a nice and very varied collection. We got some sort of
@@ -44,7 +48,11 @@ downloaded the album once I got home.
 
 [Sic Alps]: http://www.sicalps.com/
 
-![Sic Alps gig at King Georg, Cologne](/images/2013-09-13-sic-alps.jpg)
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9646423235/">
+<img src="/images/2013-09-13-sic-alps.jpg" />
+</a>
+</div>
 
 # Napels
 
@@ -68,7 +76,11 @@ the entire city but we never once felt unsafe in the parts we visited.
 
 [waste problems]: http://en.wikipedia.org/wiki/Naples_waste_management_issue
 
-![View from a window in Naples](/images/2013-09-13-naples-window.jpg)
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9701060251/">
+<img src="/images/2013-09-13-naples-window.jpg" />
+</a>
+</div>
 
 One of Naples' main highlights is definitely the food. It is the place were
 pizza was invented, and obviously it is located in Italy, so the list is goes
@@ -89,7 +101,11 @@ Festival](http://www.pizzavillage.it/it/) (which we did not even know existed).
 While somewhat limited in menu choice, they had some of the best margherita's
 there (probably amongst the top of the world).
 
-![At the Pizza Festival](/images/2013-09-13-pizza-festival.jpg)
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9931302293/">
+<img src="/images/2013-09-13-pizza-festival.jpg" />
+</a>
+</div>
 
 Naples has some interesting places to go and see, such as the [opera house], the
 [royal palace], a castle, some museums... I am not entirely sure but I think I
@@ -100,11 +116,12 @@ seeing an opera.
 [opera house]: http://en.wikipedia.org/wiki/Teatro_di_San_Carlo
 [royal palace]: http://en.wikipedia.org/wiki/Royal_Palace_of_Naples
 
-![The famous Naples opera house](/images/2013-09-13-opera-house.jpg)
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9701073813/">
+<img src="/images/2013-09-13-opera-house.jpg" />
+</a>
+</div>
 
 All in all, I think Naples is a city you should visit for the unique atmosphere
 and the great food rather than the tourist attractions. The fact that food and
 drinks are not at all expensive there helps, too.
-
-The pictures in this blogpost were taken by me and can be found in higher
-resolutions on my [Flickr page](http://www.flickr.com/photos/jaspervdj/).

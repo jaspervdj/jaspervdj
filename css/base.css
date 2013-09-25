@@ -37,6 +37,10 @@ a {
     border-bottom: 1px solid #555;
 }
 
+div.figure a{
+    border: none;
+}
+
 a img {
     margin-bottom: 0px;
 }
