@@ -1,0 +1,70 @@
+---
+title: Erudify
+description: About my new job as Software Engineer at Erudify
+tags: life
+---
+
+# Introduction
+
+After [graduating] from [Ghent University] in July and taking a long holiday, I
+started my first job, now almost two weeks ago: software engineer at [Erudify]
+in Zürich.
+
+[graduating]: /posts/2013-08-10-ugent-courses-review.html
+[Ghent University]: http://ugent.be/
+[Erudify]: http://erudify.com/
+
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9902794345/">
+<img src="/images/2013-09-27-zurichsee.jpg" />
+</a>
+</div>
+
+# Work at Erudify
+
+There are several reasons why I wanted to work for Erudify. I had a few options
+after finishing my studies, some of which were more attractive than others. In
+the end I think my criteria were the following (in no particular order):
+
+- I want to code [Haskell] to some extent. I am more productive in Haskell
+  compared to other languages, and I also find it more enjoyable. This mostly
+  due to the fact that I have been doing some Haskell open source development
+  for a long time now.
+
+[Haskell]: http://haskell.org/
+
+- This leads me to second criterion: I love the open source community. It is
+  important to me that the place I work at has a liberal open source policy.
+  We all use free, open source software these days (which tech company doesn not
+  run linux on its servers?) and there is no better way to show appreciation
+  than to return the favor by releasing great open source libraries.
+
+- I want to improve the world. I really do. Releasing open source libraries is
+  one way to do this, but that is usually only a *side effect* of the actual
+  work you are doing. I want to *actively* improve the state of the world by
+  creating something that actually helps people.
+
+- Europe is my home. I love to travel, but most of my friends are in Europe.
+  Visiting people in another European country is fairly cheap and convenient,
+  and this is, unfortunately, usually not the case once you are outside of
+  Europe.
+
+- Big companies are not my thing -- I hate administration and complex
+  hierarchies. When I have a question for someone, I want to just be able to
+  walk to their desk and ask them. When I have a suggestion, I want to just be
+  able to tell the person in charge. I want to be valued and not just be some
+  easily replaceable code-spitting machine.
+
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9902779895/">
+<img src="/images/2013-09-27-lindenhof.jpg" />
+</a>
+</div>
+
+# Life in Zürich
+
+<div class="figure flickr">
+<a href="http://www.flickr.com/photos/jaspervdj/9902908133/">
+<img src="/images/2013-09-27-munsterbrucke.jpg" />
+</a>
+</div>
