@@ -7,8 +7,8 @@ tags: life
 # Introduction
 
 After [graduating] from [Ghent University] in July and taking a long holiday, I
-started my first job, now almost two weeks ago: software engineer at [Erudify]
-in Zürich.
+started my first job, now two weeks ago: software engineer at [Erudify] in
+Zürich.
 
 [graduating]: /posts/2013-08-10-ugent-courses-review.html
 [Ghent University]: http://ugent.be/
@@ -27,7 +27,7 @@ after finishing my studies, some of which were more attractive than others. In
 the end I think my criteria were the following (in no particular order):
 
 - I want to code [Haskell] to some extent. I am more productive in Haskell
-  compared to other languages, and I also find it more enjoyable. This mostly
+  compared to other languages, and I also find it more enjoyable. This is mostly
   due to the fact that I have been doing some Haskell open source development
   for a long time now.
 
@@ -35,7 +35,7 @@ the end I think my criteria were the following (in no particular order):
 
 - This leads me to second criterion: I love the open source community. It is
   important to me that the place I work at has a liberal open source policy.
-  We all use free, open source software these days (which tech company doesn not
+  We all use free, open source software these days (which tech company does not
   run linux on its servers?) and there is no better way to show appreciation
   than to return the favor by releasing great open source libraries.
 
@@ -60,6 +60,30 @@ the end I think my criteria were the following (in no particular order):
 <img src="/images/2013-09-27-lindenhof.jpg" />
 </a>
 </div>
+
+Erudify scored well on all of these criteria. Now, I have only been working here
+for for two weeks, so I do not think I can already accurately comment on how
+well the reality matches my expectations. However, I can say that the work has
+been very enjoyable in the past two weeks.
+
+Admittedly I have not been very productive yet, since I am still gradually
+learning the codebase, but with some good mentoring I was able to already fix a
+few small issues from the third day onwards.
+
+My work is not limited to backend engineering but also includes frontend
+development. I am quite new to the latter, but it has been interesting to
+explore some new technologies: I sort of like [TypeScript] and I really like
+some parts of [AngularJS]. Additionally, this introduces some nice variation.
+
+[TypeScript]: http://www.typescriptlang.org/
+[AngularJS]: http://angularjs.org/
+
+The Haskell side is obviously also very interesting. It ranges from more or less
+straightforward [CRUD] tasks to harder problems such as versioning and object
+models. Most of it is web-related, which is cool -- I like the web. I hope to
+blog about this more once I have done some actually interesting stuff.
+
+[CRUD]: http://en.wikipedia.org/wiki/Create,_read,_update_and_delete
 
 # Life in Zürich
 
