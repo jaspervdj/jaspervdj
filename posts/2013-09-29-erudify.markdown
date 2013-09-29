@@ -16,7 +16,7 @@ Zürich.
 
 <div class="figure flickr">
 <a href="http://www.flickr.com/photos/jaspervdj/9902794345/">
-<img src="/images/2013-09-27-zurichsee.jpg" />
+<img src="/images/2013-09-29-zurichsee.jpg" />
 </a>
 </div>
 
@@ -57,7 +57,7 @@ the end I think my criteria were the following (in no particular order):
 
 <div class="figure flickr">
 <a href="http://www.flickr.com/photos/jaspervdj/9902779895/">
-<img src="/images/2013-09-27-lindenhof.jpg" />
+<img src="/images/2013-09-29-lindenhof.jpg" />
 </a>
 </div>
 
@@ -68,7 +68,7 @@ been very enjoyable in the past two weeks.
 
 Admittedly I have not been very productive yet, since I am still gradually
 learning the codebase, but with some good mentoring I was able to already fix a
-few small issues from the third day onwards.
+few small issues from the third day onward.
 
 My work is not limited to backend engineering but also includes frontend
 development. I am quite new to the latter, but it has been interesting to
@@ -89,6 +89,28 @@ blog about this more once I have done some actually interesting stuff.
 
 <div class="figure flickr">
 <a href="http://www.flickr.com/photos/jaspervdj/9902908133/">
-<img src="/images/2013-09-27-munsterbrucke.jpg" />
+<img src="/images/2013-09-29-munsterbrucke.jpg" />
 </a>
+</div>
+
+I moved to Zürich for this job. Living in Zürich is pretty nice. It is a
+relatively small city but due to the large number of expats and foreign students
+living there, there is quite a large international community. Compared to
+Belgium, the city is tidy and public transportation actually works. The main
+disadvantage is that everything is much more expensive, especially meat.
+
+Fun and affordable bars are hard to find, especially bars that are fun *and*
+affordable. Last week, I went to [El Lokal], which is one of the coolest places
+I have been to here (though I have not been to many places yet).
+
+[El Lokal]: http://www.ellokal.ch/
+
+One of my favorite leisure activities is downhill skateboarding and as you might
+guess, that is **awesome** here. It turns out Switzerland has a large bunch of
+mountains, usually with efficient public transport to take you to the top.
+
+To end this blogpost, here is a quick skating clip from yesterday:
+
+<div style="text-align: center">
+<iframe width="480" height="360" src="//www.youtube.com/embed/gYdEVib_0AM" frameborder="0" allowfullscreen></iframe>
 </div>
