@@ -1,5 +1,5 @@
 ---
-title: Travelling: Cologne & Napels
+title: Travelling: Cologne & Naples
 description: Trying some travel blogging: two cities I visited this summer
 tags: life
 ---
@@ -13,9 +13,9 @@ lately anyway.
 This was the last summer before I will start a Proper Job (TM) (you can probably
 expect a blogpost about this soon), so I really wanted to take advantage of
 that. I travelled a lot this summer, and places I have visited include Cologne,
-London, Bruges, Amsterdam, Rome, and Napels.
+London, Bruges, Amsterdam, Rome, and Naples.
 
-I wanted to do a short post on Cologne and Napels since I figured these are
+I wanted to do a short post on Cologne and Naples since I figured these are
 probably the two less common tourist destinations in that list.
 
 # Cologne
@@ -54,7 +54,7 @@ downloaded the album once I got home.
 </a>
 </div>
 
-# Napels
+# Naples
 
 The visit to Naples was part of a larger trip (we travelled from Rome to Naples)
 but I feel like enough has probably been written about Rome.
@@ -96,7 +96,7 @@ foodie-to-do list, well, I do not think I lost any weight during this trip.
 Back to pizza -- at some point, it was getting late and we were getting hungry.
 We had been searching for a nice restaurant for a while but we had not found
 anything yet. At some point, walking by the seaside, we saw a lot of lights not
-that far off. We decided to check it out -- turns out it was the [Napels Pizza
+that far off. We decided to check it out -- turns out it was the [Naples Pizza
 Festival](http://www.pizzavillage.it/it/) (which we did not even know existed).
 While somewhat limited in menu choice, they had some of the best margherita's
 there (probably amongst the top of the world).
