@@ -20,8 +20,7 @@ element from a frequency list. It is written in Literate Haskell so you should
 be able to drop it into a file and run it -- the raw version can be found
 [here](TODO).
 
-> import           Data.List       (foldl', sortBy)
-> import           Data.Map.Strict (Map)
+> import           Data.List       (sortBy)
 > import qualified Data.Map.Strict as M
 > import           System.Random   (randomRIO)
 
@@ -37,17 +36,21 @@ a song that fundamentally changed the music industry in the early 2000s:
 Badger badger badger</br>
 Mushroom mushroom</br>
 Badger badger badger</br>
-Panic, a snake</blockquote>
+Panic, a snake
+Badger badger badger
+Oh, it's a snake!</blockquote>
 
 This gives us the following frequency list:
 
 > badgers :: [(String, Int)]
 > badgers =
->     [ ("badger",   6)
+>     [ ("a",        2)
+>     , ("badger",   9)
+>     , ("it's",     1)
 >     , ("mushroom", 2)
+>     , ("oh",       1)
 >     , ("panic",    1)
->     , ("a",        1)
->     , ("snake",    1)
+>     , ("snake",    2)
 >     ]
 
 The sum of all the frequencies in this list is 11. This means that we will e.g.
@@ -94,94 +97,86 @@ needs to be solved.
 Frequency Trees
 ===============
 
-> data FrequencyTree a
->     = FrequencyTreeLeaf {-# UNPACK #-} !Int !a
->     | FrequencyTreeNode {-# UNPACK #-} !Int (FrequencyTree a) (FrequencyTree a)
->     deriving (Read)
+It is easy to see why `sample2` is relatively slow: indexing in a linked list is
+expensive. Purely functional programming languages usually solve this by using
+trees instead of lists where fast indexing is required. We can use a similar
+approach here.
 
+A leaf in the tree simply holds an item and its frequency. A branch also holds
+a frequency -- namely, the sum of the frequencies of its children. By storing
+this computed value, we will be able to write a fast indexing this method.
 
-> instance Show a => Show (FrequencyTree a) where
->     show = unlines . show'
->       where
->         indent             = map ("    " ++)
->         mapLast _ []       = []
->         mapLast f [x]      = [f x]
->         mapLast f (x : xs) = x : mapLast f xs
+> data FreqTree a
+>     = Leaf   !Int !a
+>     | Branch !Int (FreqTree a) (FreqTree a)
+>     deriving (Show)
 
->         show' (FrequencyTreeLeaf f i) =
->             ["(FrequencyTreeLeaf " ++ show f ++ " " ++ show i ++ ")"]
->         show' (FrequencyTreeNode f l r) =
->             ["(FrequencyTreeNode " ++ show f] ++
->             indent (show' l) ++
->             indent (mapLast (++ ")") $ show' r)
+A quick utility function to get the sum of the frequencies in such a tree:
 
+> sumFreqs :: FreqTree a -> Int
+> sumFreqs (Leaf   f _)   = f
+> sumFreqs (Branch f _ _) = f
 
-> singleton :: Ord a => a -> FrequencyTree a
-> singleton = FrequencyTreeLeaf 1
+Let us look at the tree for `badgers` (we will discuss how this tree is computer
+later):
 
+> badgersTree :: FreqTree String
+> badgersTree =
+>     (Branch 11
+>         (Leaf 6 "badger")
+>         (Branch 5
+>             (Branch 3
+>                 (Leaf 2 "mushroom")
+>                 (Leaf 1 "snake"))
+>             (Branch 2
+>                 (Leaf 1 "a")
+>                 (Leaf 1 "panic"))))
 
-> fromList :: Ord a => [a] -> FrequencyTree a
-> fromList = frequencyMapToTree . listToFrequencyMap
+Once we have this structure, it is not hard to write a faster indexing function,
+which is basically a search in a binary tree:
 
+> indexFreqTree :: Int -> FreqTree a -> a
+> indexFreqTree idx tree = case tree of
+>     (Leaf _ x)             -> x
+>     (Branch _ l r)
+>         | idx < sumFreqs l -> indexFreqTree idx                l
+>         | otherwise        -> indexFreqTree (idx - sumFreqs l) r
 
-> fromFrequencies :: Ord a => [(a, Int)] -> FrequencyTree a
-> fromFrequencies = frequencyMapToTree . M.fromListWith (+)
+> sample3 :: FreqTree a -> IO a
+> sample3 tree = do
+>     idx <- randomRIO (0, sumFreqs tree - 1)
+>     return $ indexFreqTree idx tree
 
-
-> append :: Ord a
->        => FrequencyTree a -> FrequencyTree a -> FrequencyTree a
-> append x y = FrequencyTreeNode (treeSum x + treeSum y) x y
-
-
-> optimize :: Ord a => FrequencyTree a -> FrequencyTree a
-> optimize = frequencyMapToTree . frequencyTreeToMap
-
-
-> treeSum :: Ord a => FrequencyTree a -> Int
-> treeSum (FrequencyTreeLeaf f _)   = f
-> treeSum (FrequencyTreeNode f _ _) = f
-
-
-> treeSample :: Ord a => Int -> FrequencyTree a -> a
-> treeSample seed initial =
->     go (seed `mod` treeSum initial) initial
+> balancedTree :: Ord a => [(a, Int)] -> FreqTree a
+> balancedTree =
+>     go . filter ((> 0) . snd) . M.toList . M.fromListWith (+)
 >   where
->     go _   (FrequencyTreeLeaf _ i)   = i
->     go idx (FrequencyTreeNode _ l r)
->         | idx < lsum                 = go idx          l
->         | otherwise                  = go (idx - lsum) r
->       where
->         lsum = treeSum l
+>     go []       = error "balancedTree: Empty list"
+>     go [(x, f)] = Leaf f x
+>     go xs       =
+>         let half     = length xs `div` 2
+>             (ys, zs) = splitAt half xs
+>             f        = sum $ map snd xs
+>         in Branch f (go ys) (go zs)
 
+![A nicely balanced tree](/images/2013-11-20-badgers-balanced.png)
 
-> treeSampleIO :: Ord a => FrequencyTree a -> IO a
-> treeSampleIO ft = do
->     idx <- randomRIO (0, treeSum ft - 1)
->     return $ treeSample idx ft
-
-
-> type FrequencyMap a = Map a Int
-
-
-> frequencyTreeToMap :: Ord a => FrequencyTree a -> FrequencyMap a
-> frequencyTreeToMap (FrequencyTreeLeaf f i)   = M.singleton i f
-> frequencyTreeToMap (FrequencyTreeNode _ l r) =
->     M.unionWith (+) (frequencyTreeToMap l) (frequencyTreeToMap r)
-
-
-> -- | This function builds a 'FrequencyTree' that has good performance
+> -- | This function builds a 'FreqTree' that has good performance
 > -- characteristics in most cases.
-> frequencyMapToTree :: Ord a => FrequencyMap a -> FrequencyTree a
-> frequencyMapToTree =
+> partitionedTree :: Ord a => [(a, Int)] -> FreqTree a
+> partitionedTree =
 >     listToTree . sortBy (\(_, x) (_, y) -> compare y x) .
->     filter ((> 0) . snd) . M.toList
+>     filter ((> 0) . snd) .
+>     M.toList . M.fromListWith (+)
 
-> listToTree :: [(a, Int)] -> FrequencyTree a
-> listToTree []       = error "frequencyMapToTree: Empty FrequencyMap"
-> listToTree [(x, f)] = FrequencyTreeLeaf f x
+![A tree built using partitioning](/images/2013-11-20-badgers-partitioned.png)
+
+> listToTree :: [(a, Int)] -> FreqTree a
+> listToTree []       = error "frequencyMapToTree: Empty list"
+> listToTree [(x, f)] = Leaf f x
 > listToTree xs       =
 >     let (l, lSum, r, rSum) = partition xs
->     in FrequencyTreeNode (lSum + rSum)
+>     in Branch (lSum + rSum)
 >         (listToTree l) (listToTree r)
 
 > partition :: [(a, Int)] -> ([(a, Int)], Int, [(a, Int)], Int)
@@ -193,6 +188,48 @@ Frequency Trees
 >             | lSum <= rSum -> go ((x, f) : l) (f + lSum) r rSum xs
 >             | otherwise    -> go l lSum ((x, f) : r) (f + rSum) xs
 
+> harmonicNumber :: Int -> Double
+> harmonicNumber n = sum [1 / fromIntegral k | k <- [1 .. n]]
 
-> listToFrequencyMap :: Ord a => [a] -> FrequencyMap a
-> listToFrequencyMap = foldl' (\hm i -> M.insertWith (+) i 1 hm) M.empty
+> probabilities :: Double -> Int -> [Double]
+> probabilities s n =
+>     [1 / (fromIntegral k ** s * hn) | k <- [1 .. n]]
+>   where
+>     hn = harmonicNumber n
+
+> averageDepthPartitioned :: Double -> Int -> Double
+> averageDepthPartitioned s n = sum
+>     [ log invProb / invProb
+>     | k <- [1 .. n]
+>     , let invProb = fromIntegral k ** s * hn
+>     ]
+>   where
+>     hn = harmonicNumber n
+
+> averageDepthBalanced :: Int -> Double
+> averageDepthBalanced = log . fromIntegral
+
+> writeData :: IO ()
+> writeData = writeFile "data" $ unlines $
+>     [ show n ++ "," ++
+>         show (averageDepthBalanced n) ++ "," ++
+>         show (averageDepthPartitioned 1 n)
+>     | n <- [1000, 2000 .. 100000]
+>     ]
+
+> graphviz :: String -> FreqTree String -> IO ()
+> graphviz fileName ft = writeFile fileName $ unlines $
+>     ["graph freqtree {"]  ++
+>     ["node [shape=box];"] ++
+>     go "t" ft             ++
+>     ["}"]
+>   where
+>     go n (Leaf   f x)   =
+>         [n ++ " [label=\"" ++ x ++ ", " ++ show f ++ "\"];"]
+>     go n (Branch f l r) =
+>         go (n ++ "l") l                                          ++
+>         go (n ++ "r") r                                          ++
+>         [n ++ " [label=\"" ++ show f ++ "\", shape=plaintext];"] ++
+>         [n ++ " -- " ++ n ++ "l;"]                               ++
+>         [n ++ " -- " ++ n ++ "r;"]
+

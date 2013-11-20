@@ -1,0 +1,28 @@
+graph freqtree {
+node [shape=box];
+tll [label="a, 2"];
+tlrl [label="badger, 9"];
+tlrr [label="it's, 1"];
+tlr [label="10", shape=plaintext];
+tlr -- tlrl;
+tlr -- tlrr;
+tl [label="12", shape=plaintext];
+tl -- tll;
+tl -- tlr;
+trll [label="mushroom, 2"];
+trlr [label="oh, 1"];
+trl [label="3", shape=plaintext];
+trl -- trll;
+trl -- trlr;
+trrl [label="panic, 1"];
+trrr [label="snake, 2"];
+trr [label="3", shape=plaintext];
+trr -- trrl;
+trr -- trrr;
+tr [label="6", shape=plaintext];
+tr -- trl;
+tr -- trr;
+t [label="18", shape=plaintext];
+t -- tl;
+t -- tr;
+}
