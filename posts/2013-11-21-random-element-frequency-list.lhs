@@ -18,7 +18,7 @@ format.
 This blogpost explains a mildly interesting algorithm I used to pick a random
 element from a frequency list. It is written in Literate Haskell so you should
 be able to drop it into a file and run it -- the raw version can be found
-[here](https://github.com/jaspervdj/jaspervdj/blob/master/posts/2013-11-20-random-element-frequency-list.lhs).
+[here](https://github.com/jaspervdj/jaspervdj/blob/master/posts/2013-11-21-random-element-frequency-list.lhs).
 
 > import           Data.List       (sortBy)
 > import           Data.Ord        (comparing)
@@ -71,8 +71,8 @@ randomly.
 >     return $ expanded !! idx
 
 This is obviously extremely inefficient, and it is not that hard to come up with
-a better definition: we do not expand the list, and use a specialised indexing
-function for frequency lists.
+a better definition: we do not expand the list, and instead use a specialised
+indexing function for frequency lists.
 
 > indexFreqs :: Int -> [(a, Int)] -> a
 > indexFreqs _   [] = error "please reboot computer"
@@ -123,7 +123,7 @@ A quick utility function to get the sum of the frequencies in such a tree:
 Let us look at the tree for `badgers` (we will discuss how this tree is computer
 later):
 
-![A nicely balanced tree for the badgers example](/images/2013-11-20-badgers-balanced.png)
+![A nicely balanced tree for the badgers example](/images/2013-11-21-badgers-balanced.png)
 
 Once we have this structure, it is not that hard to write a faster indexing
 function, which is basically a search in a binary tree:
@@ -160,7 +160,7 @@ We first have a simple utility function to clean up such a list of frequencies:
 >     M.toList . M.fromListWith (+) . filter ((> 0) . snd)
 
 And then we have the function that actually builds the tree. For a singleton
-list, we just obtain a leaf. Otherwise, we simply split the list in half, build
+list, we just return a leaf. Otherwise, we simply split the list in half, build
 trees out of those halves, and join them under a new parent node. Computing the
 total frequency of the parent node (`freq`) is done a bit inefficiently, but
 that is not the focus at this point.
@@ -221,7 +221,7 @@ list: this is our final frequency tree.
 
 This yields the following tree for our example:
 
-![A tree built using the huffman algorithm](/images/2013-11-20-badgers-huffman.png)
+![A tree built using the huffman algorithm](/images/2013-11-21-badgers-huffman.png)
 
 Is the second approach really better?
 =====================================
@@ -238,7 +238,7 @@ the number of unique words):
 E[L_{bal}] = \log_2(N)
 -->
 
-![](/images/2013-11-20-expected-length-bal.gif)
+![](/images/2013-11-21-expected-length-bal.gif)
 
 However, if we have a tree we built using the `huffmanTree`, it is not that easy
 to calculate the expected path length. We know that for a Huffman tree, the path
@@ -249,7 +249,7 @@ approximation for the path length for item with a specified frequency $f$:
 L_{huf}(f_i) \approx \log_2(\frac{F}{f_i})
 -->
 
-![](/images/2013-11-20-length-huf.gif)
+![](/images/2013-11-21-length-huf.gif)
 
 Where $F$ is the total sum of all frequencies. If we assume that we know the
 frequency for every item, the expected path length is simply a weighted mean:
@@ -259,7 +259,7 @@ E[L_{huf}] \approx \sum_{i=1}^N}{\frac{f_i}{F} L_{huf}(f_i)}
     \approx \sum_{i=1}^N}{\frac{f_i}{F} \log_2(\frac{F}{f_i})}
 -->
 
-![](/images/2013-11-20-expected-length-huf.gif)
+![](/images/2013-11-21-expected-length-huf.gif)
 
 This is where it gets interesting. It turns out that the frequency of words in a
 natural language is a [well-researched](http://planetmath.org/ZipfsLaw)
@@ -267,7 +267,7 @@ natural language is a [well-researched](http://planetmath.org/ZipfsLaw)
 called *Zipf's law*. This law tells us that the frequency of an item $f$ can be
 estimated by:
 
-![](/images/2013-11-20-zipfs-law.gif)
+![](/images/2013-11-21-zipfs-law.gif)
 
 Where *s* characterises the distribution and is typically very close to 1 for
 natural languages. *H* is the generalised [harmonic number]:
@@ -278,7 +278,7 @@ natural languages. *H* is the generalised [harmonic number]:
 H_s(N) = \sum_{n=1}^N{\frac{1}{n^s}}
 -->
 
-![](/images/2013-11-20-harmonic-number.gif)
+![](/images/2013-11-21-harmonic-number.gif)
 
 If we substitute in the definition for the frequencies into the formula for the
 expected path length, we get:
@@ -287,11 +287,11 @@ expected path length, we get:
 E[L_{huf}] \approx \sum_{i=1}^N}{\frac{1}{i^sH_s(N)} \log_2(i^sH_s(N))}
 -->
 
-![](/images/2013-11-20-expected-length-huf-expanded.gif)
+![](/images/2013-11-21-expected-length-huf-expanded.gif)
 
 This is something we can work with! If we plot this for *s = 1*, we get:
 
-![](/images/2013-11-20-graph-bal-huf.png)
+![](/images/2013-11-21-graph-bal-huf.png)
 
 It is now clear that the expected path length for a frequency tree built using
 `huffmanTree` is expected to be significantly shorter than a frequency tree
@@ -308,55 +308,7 @@ corpora calidis, in. Arcana ut puppis, ad agitur telum conveniant quae ardor?
 Adhuc [arcu acies corpore](http://haskell.org/) amplexans equis non velamina
 buxi gemini est somni.
 
-> log2 :: Double -> Double
-> log2 n = log n / log 2
-
-
-> balancedAvgDepth :: Int -> Double
-> balancedAvgDepth = log2 . fromIntegral
-
-> harmonicNumber :: Int -> Double
-> harmonicNumber n = sum [1 / fromIntegral k | k <- [1 .. n]]
-
-> probabilities :: Double -> Int -> [Double]
-> probabilities s n =
->     [fromIntegral n / (fromIntegral k ** s * hn) | k <- [1 .. n]]
->   where
->     hn = harmonicNumber n
-
-> averageDepthPartitioned :: Double -> Int -> Double
-> averageDepthPartitioned s n = sum
->     [ log2 invProb / invProb
->     | k <- [1 .. n]
->     , let invProb = fromIntegral k ** s * hn
->     ]
->   where
->     hn = harmonicNumber n
-
-> averageDepthBalanced :: Int -> Double
-> averageDepthBalanced = log2 . fromIntegral
-
-> writeData :: IO ()
-> writeData = writeFile "data" $ unlines $
->     [ show n ++ "," ++
->         show (averageDepthBalanced n) ++ "," ++
->         show (averageDepthPartitioned 1 n)
->     | n <- [1000, 2000 .. 100000]
->     ]
-
-> graphviz :: String -> FreqTree String -> IO ()
-> graphviz fileName ft = writeFile fileName $ unlines $
->     ["graph freqtree {"]  ++
->     ["node [shape=box];"] ++
->     go "t" ft             ++
->     ["}"]
->   where
->     go n (Leaf   f x)   =
->         [n ++ " [label=\"" ++ x ++ ", " ++ show f ++ "\"];"]
->     go n (Branch f l r) =
->         go (n ++ "l") l                                          ++
->         go (n ++ "r") r                                          ++
->         [n ++ " [label=\"" ++ show f ++ "\", shape=plaintext];"] ++
->         [n ++ " -- " ++ n ++ "l;"]                               ++
->         [n ++ " -- " ++ n ++ "r;"]
-
+Thanks to [Simon Meier](https://github.com/meiersi), [Francesco
+Mazzoli](http://mazzo.li/) and some other people at
+[Erudify](http://www.erudify.com/) for the interesting discussions about this
+topic!
