@@ -231,7 +231,7 @@ explained why the second approach is *probably* better. Let us see if we can
 justify this claim a bit more, and find out *how much* better it is.
 
 The expected path length *L* of an item in a balanced tree can be very easily
-approached, since it is just a binary tree and we all know those (suppose $N$ is
+approached, since it is just a binary tree and we all know those (suppose *N* is
 the number of unique words):
 
 <!--
@@ -243,7 +243,7 @@ E[L_{bal}] = \log_2(N)
 However, if we have a tree we built using the `huffmanTree`, it is not that easy
 to calculate the expected path length. We know that for a Huffman tree, the path
 length should approximate the entropy, which, in our case, gives us an
-approximation for the path length for item with a specified frequency $f$:
+approximation for the path length for item with a specified frequency *f*:
 
 <!--
 L_{huf}(f_i) \approx \log_2(\frac{F}{f_i})
@@ -251,7 +251,7 @@ L_{huf}(f_i) \approx \log_2(\frac{F}{f_i})
 
 ![](/images/2013-11-21-length-huf.gif)
 
-Where $F$ is the total sum of all frequencies. If we assume that we know the
+Where *F* is the total sum of all frequencies. If we assume that we know the
 frequency for every item, the expected path length is simply a weighted mean:
 
 <!--
@@ -264,7 +264,7 @@ E[L_{huf}] \approx \sum_{i=1}^N}{\frac{f_i}{F} L_{huf}(f_i)}
 This is where it gets interesting. It turns out that the frequency of words in a
 natural language is a [well-researched](http://planetmath.org/ZipfsLaw)
 [topic](http://en.wikipedia.org/wiki/Zipf%27s_law), and predicted by something
-called *Zipf's law*. This law tells us that the frequency of an item $f$ can be
+called *Zipf's law*. This law tells us that the frequency of an item *f* can be
 estimated by:
 
 ![](/images/2013-11-21-zipfs-law.gif)
