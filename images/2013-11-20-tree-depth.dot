@@ -1,0 +1,25 @@
+graph freqtree {
+node [shape=box];
+
+t [label = "32", shape = plaintext];
+tl [label = "16"];
+tr [label = "16", shape = plaintext];
+trl [label = "8", shape = plaintext];
+trr [label = "8"];
+trll [label = "4"];
+trlr [label = "4"];
+
+t -- tl;
+t -- tr;
+tr -- trl;
+tr -- trr;
+trl -- trll;
+trl -- trlr;
+
+d0 [label = "0", shape = plaintext];
+d1 [label = "1", shape = plaintext];
+d2 [label = "2", shape = plaintext];
+d3 [label = "3", shape = plaintext];
+
+d0 -- d1 -- d2 -- d3 [style = "invis"];
+}

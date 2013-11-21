@@ -18,9 +18,10 @@ format.
 This blogpost explains a mildly interesting algorithm I used to pick a random
 element from a frequency list. It is written in Literate Haskell so you should
 be able to drop it into a file and run it -- the raw version can be found
-[here](TODO).
+[here](https://github.com/jaspervdj/jaspervdj/blob/master/posts/2013-11-20-random-element-frequency-list.lhs).
 
 > import           Data.List       (sortBy)
+> import           Data.Ord        (comparing)
 > import qualified Data.Map.Strict as M
 > import           System.Random   (randomRIO)
 
@@ -30,14 +31,15 @@ The problem
 Lorem ipsum generators usually create random but realistic-looking text by using
 sample data, on which a model is trained. A very simple example of that is just
 to pick words according to their frequencies. Let us take some sample data from
-a song that fundamentally changed the music industry in the early 2000s:
+a song that [fundamentally changed](http://www.youtube.com/watch?v=EIyixC9NsLI)
+the music industry in the early 2000s:
 
 <blockquote>
 Badger badger badger</br>
 Mushroom mushroom</br>
 Badger badger badger</br>
-Panic, a snake
-Badger badger badger
+Panic, a snake</br>
+Badger badger badger</br>
 Oh, it's a snake!</blockquote>
 
 This gives us the following frequency list:
@@ -53,9 +55,10 @@ This gives us the following frequency list:
 >     , ("snake",    2)
 >     ]
 
-The sum of all the frequencies in this list is 11. This means that we will e.g.
-pick "badger" with a chance of 6/11. We can naively implement this by expanding
-the list so it contains the items in the given frequencies and then picking one.
+The sum of all the frequencies in this list is 18. This means that we will e.g.
+pick "badger" with a chance of 9/18. We can naively implement this by expanding
+the list so it contains the items in the given frequencies and then picking one
+randomly.
 
 > decodeRle :: [(a, Int)] -> [a]
 > decodeRle []            = []
@@ -120,20 +123,10 @@ A quick utility function to get the sum of the frequencies in such a tree:
 Let us look at the tree for `badgers` (we will discuss how this tree is computer
 later):
 
-> badgersTree :: FreqTree String
-> badgersTree =
->     (Branch 11
->         (Leaf 6 "badger")
->         (Branch 5
->             (Branch 3
->                 (Leaf 2 "mushroom")
->                 (Leaf 1 "snake"))
->             (Branch 2
->                 (Leaf 1 "a")
->                 (Leaf 1 "panic"))))
+![A nicely balanced tree for the badgers example](/images/2013-11-20-badgers-balanced.png)
 
-Once we have this structure, it is not hard to write a faster indexing function,
-which is basically a search in a binary tree:
+Once we have this structure, it is not that hard to write a faster indexing
+function, which is basically a search in a binary tree:
 
 > indexFreqTree :: Int -> FreqTree a -> a
 > indexFreqTree idx tree = case tree of
@@ -147,59 +140,193 @@ which is basically a search in a binary tree:
 >     idx <- randomRIO (0, sumFreqs tree - 1)
 >     return $ indexFreqTree idx tree
 
+There we go! We intuitively see this method is faster since we only have to walk
+through a few nodes -- namely, those on the path from the root node to the
+specific leaf node.
+
+But how fast is this, exactly? This depends on how we build the tree.
+
+Well-balanced trees
+===================
+
+Given a list with frequencies, we can build a nicely balanced tree (i.e., in the
+sense in which binary tries are balanced). This minimizes the longest path from
+the root to any node.
+
+We first have a simple utility function to clean up such a list of frequencies:
+
+> uniqueFrequencies :: Ord a => [(a, Int)] -> [(a, Int)]
+> uniqueFrequencies =
+>     M.toList . M.fromListWith (+) . filter ((> 0) . snd)
+
+And then we have the function that actually builds the tree. For a singleton
+list, we just obtain a leaf. Otherwise, we simply split the list in half, build
+trees out of those halves, and join them under a new parent node. Computing the
+total frequency of the parent node (`freq`) is done a bit inefficiently, but
+that is not the focus at this point.
+
 > balancedTree :: Ord a => [(a, Int)] -> FreqTree a
-> balancedTree =
->     go . filter ((> 0) . snd) . M.toList . M.fromListWith (+)
+> balancedTree = go . uniqueFrequencies
 >   where
 >     go []       = error "balancedTree: Empty list"
 >     go [(x, f)] = Leaf f x
 >     go xs       =
 >         let half     = length xs `div` 2
 >             (ys, zs) = splitAt half xs
->             f        = sum $ map snd xs
->         in Branch f (go ys) (go zs)
+>             freq     = sum $ map snd xs
+>         in Branch freq (go ys) (go zs)
 
-![A nicely balanced tree](/images/2013-11-20-badgers-balanced.png)
+Huffman-balanced trees
+======================
 
-> -- | This function builds a 'FreqTree' that has good performance
-> -- characteristics in most cases.
-> partitionedTree :: Ord a => [(a, Int)] -> FreqTree a
-> partitionedTree =
->     listToTree . sortBy (\(_, x) (_, y) -> compare y x) .
->     filter ((> 0) . snd) .
->     M.toList . M.fromListWith (+)
+However, well-balanced trees might not be the best solution for this problem.
+It is [generally known] that few words in most natural languages are extremely
+commonly used (e.g. "the", "a", or in or case, "badger") while most words are
+rarely used.
 
-![A tree built using partitioning](/images/2013-11-20-badgers-partitioned.png)
+[generally known]: http://www.oxforddictionaries.com/us/words/the-oec-facts-about-the-language
 
-> listToTree :: [(a, Int)] -> FreqTree a
-> listToTree []       = error "frequencyMapToTree: Empty list"
-> listToTree [(x, f)] = Leaf f x
-> listToTree xs       =
->     let (l, lSum, r, rSum) = partition xs
->     in Branch (lSum + rSum)
->         (listToTree l) (listToTree r)
+For our tree, it would make sense to have the more commonly used words closer to
+the root of the tree -- in that case, it seems intuitive that the *[expected]*
+number of nodes visited to pick a random word will be lower.
 
-> partition :: [(a, Int)] -> ([(a, Int)], Int, [(a, Int)], Int)
-> partition = go [] 0 [] 0
+[expected]: http://en.wikipedia.org/wiki/Expected_value
+
+It turns out that this idea exactly corresponds to a [Huffman tree]. In a
+Huffman tree, we want to minimize the expected code length, which equals the
+expected path length. Here, we want to minimize the expected number of nodes
+visited during a lookup -- which is precisely the expected path length!
+
+[Huffman tree]: http://en.wikipedia.org/wiki/Huffman_coding
+
+The algorithm to construct such a tree is surprisingly simple. We start out with
+a list of trees: namely, one singleton leaf tree for each element in our
+frequency list.
+
+Then, given this list, we take the two trees which have the lowest total sums of
+frequencies (`sumFreqs`), and join these using a branch node. This new tree is
+then inserted back into the list.
+
+This algorithm is repeated until we are left with only a single tree in the
+list: this is our final frequency tree.
+
+> huffmanTree :: Ord a => [(a, Int)] -> FreqTree a
+> huffmanTree = go . map (\(x, f) -> Leaf f x) . uniqueFrequencies
 >   where
->     go l lSum r rSum ls = case ls of
->         []                 -> (reverse l, lSum, reverse r, rSum)
->         ((x, f) : xs)
->             | lSum <= rSum -> go ((x, f) : l) (f + lSum) r rSum xs
->             | otherwise    -> go l lSum ((x, f) : r) (f + rSum) xs
+>     go trees = case sortBy (comparing sumFreqs) trees of
+>         []             -> error "huffmanTree: Empty list"
+>         [ft]           -> ft
+>         (t1 : t2 : ts) ->
+>             go $ Branch (sumFreqs t1 + sumFreqs t2) t1 t2 : ts
+
+This yields the following tree for our example:
+
+![A tree built using the huffman algorithm](/images/2013-11-20-badgers-huffman.png)
+
+Is the second approach really better?
+=====================================
+
+Although Huffman trees are well-studied, for our example, we only *intuitively*
+explained why the second approach is *probably* better. Let us see if we can
+justify this claim a bit more, and find out *how much* better it is.
+
+The expected path length *L* of an item in a balanced tree can be very easily
+approached, since it is just a binary tree and we all know those (suppose $N$ is
+the number of unique words):
+
+<!--
+E[L_{bal}] = \log_2(N)
+-->
+
+![](/images/2013-11-20-expected-length-bal.gif)
+
+However, if we have a tree we built using the `huffmanTree`, it is not that easy
+to calculate the expected path length. We know that for a Huffman tree, the path
+length should approximate the entropy, which, in our case, gives us an
+approximation for the path length for item with a specified frequency $f$:
+
+<!--
+L_{huf}(f_i) \approx \log_2(\frac{F}{f_i})
+-->
+
+![](/images/2013-11-20-length-huf.gif)
+
+Where $F$ is the total sum of all frequencies. If we assume that we know the
+frequency for every item, the expected path length is simply a weighted mean:
+
+<!--
+E[L_{huf}] \approx \sum_{i=1}^N}{\frac{f_i}{F} L_{huf}(f_i)}
+    \approx \sum_{i=1}^N}{\frac{f_i}{F} \log_2(\frac{F}{f_i})}
+-->
+
+![](/images/2013-11-20-expected-length-huf.gif)
+
+This is where it gets interesting. It turns out that the frequency of words in a
+natural language is a [well-researched](http://planetmath.org/ZipfsLaw)
+[topic](http://en.wikipedia.org/wiki/Zipf%27s_law), and predicted by something
+called *Zipf's law*. This law tells us that the frequency of an item $f$ can be
+estimated by:
+
+![](/images/2013-11-20-zipfs-law.gif)
+
+Where *s* characterises the distribution and is typically very close to 1 for
+natural languages. *H* is the generalised [harmonic number]:
+
+[harmonic number]: http://en.wikipedia.org/wiki/Harmonic_number
+
+<!--
+H_s(N) = \sum_{n=1}^N{\frac{1}{n^s}}
+-->
+
+![](/images/2013-11-20-harmonic-number.gif)
+
+If we substitute in the definition for the frequencies into the formula for the
+expected path length, we get:
+
+<!--
+E[L_{huf}] \approx \sum_{i=1}^N}{\frac{1}{i^sH_s(N)} \log_2(i^sH_s(N))}
+-->
+
+![](/images/2013-11-20-expected-length-huf-expanded.gif)
+
+This is something we can work with! If we plot this for *s = 1*, we get:
+
+![](/images/2013-11-20-graph-bal-huf.png)
+
+It is now clear that the expected path length for a frequency tree built using
+`huffmanTree` is expected to be significantly shorter than a frequency tree
+built using `balancedTree`, even for relatively small *N*. Yay! Since the
+algorithm now works, the conclusion is straightforward.
+
+Conclusion
+==========
+
+Lorem markdownum constitit foret tibi Phoebes propior poenam. Nostro sub flos
+auctor ventris illa choreas magnis at ille. Haec his et tuorum formae [obstantes
+et viribus](http://www.wtfpl.net/) videret vertit, spoliavit iam quem neptem
+corpora calidis, in. Arcana ut puppis, ad agitur telum conveniant quae ardor?
+Adhuc [arcu acies corpore](http://haskell.org/) amplexans equis non velamina
+buxi gemini est somni.
+
+> log2 :: Double -> Double
+> log2 n = log n / log 2
+
+
+> balancedAvgDepth :: Int -> Double
+> balancedAvgDepth = log2 . fromIntegral
 
 > harmonicNumber :: Int -> Double
 > harmonicNumber n = sum [1 / fromIntegral k | k <- [1 .. n]]
 
 > probabilities :: Double -> Int -> [Double]
 > probabilities s n =
->     [1 / (fromIntegral k ** s * hn) | k <- [1 .. n]]
+>     [fromIntegral n / (fromIntegral k ** s * hn) | k <- [1 .. n]]
 >   where
 >     hn = harmonicNumber n
 
 > averageDepthPartitioned :: Double -> Int -> Double
 > averageDepthPartitioned s n = sum
->     [ log invProb / invProb
+>     [ log2 invProb / invProb
 >     | k <- [1 .. n]
 >     , let invProb = fromIntegral k ** s * hn
 >     ]
@@ -207,7 +334,7 @@ which is basically a search in a binary tree:
 >     hn = harmonicNumber n
 
 > averageDepthBalanced :: Int -> Double
-> averageDepthBalanced = log . fromIntegral
+> averageDepthBalanced = log2 . fromIntegral
 
 > writeData :: IO ()
 > writeData = writeFile "data" $ unlines $
