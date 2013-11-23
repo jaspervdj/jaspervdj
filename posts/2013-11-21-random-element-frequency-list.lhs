@@ -18,7 +18,7 @@ format.
 This blogpost explains a mildly interesting algorithm I used to pick a random
 element from a frequency list. It is written in Literate Haskell so you should
 be able to drop it into a file and run it -- the raw version can be found
-[here](https://github.com/jaspervdj/jaspervdj/blob/master/posts/2013-11-21-random-element-frequency-list.lhs).
+[here](https://raw.github.com/jaspervdj/jaspervdj/master/posts/2013-11-21-random-element-frequency-list.lhs).
 
 > import           Data.List       (sortBy)
 > import           Data.Ord        (comparing)
@@ -120,7 +120,7 @@ A quick utility function to get the sum of the frequencies in such a tree:
 > sumFreqs (Leaf   f _)   = f
 > sumFreqs (Branch f _ _) = f
 
-Let us look at the tree for `badgers` (we will discuss how this tree is computer
+Let us look at the tree for `badgers` (we will discuss how this tree is computed
 later):
 
 ![A nicely balanced tree for the badgers example](/images/2013-11-21-badgers-balanced.png)
