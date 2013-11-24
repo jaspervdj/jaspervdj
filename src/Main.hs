@@ -21,9 +21,17 @@ import           Hakyll
 main :: IO ()
 main = hakyllWith config $ do
     -- Static files
-    match ("images/*" .||. "favicon.ico" .||. "files/**") $ do
+    match ("images/*.jpg" .||. "images/*.png" .||. "images/*.gif" .||.
+            "favicon.ico" .||. "files/**") $ do
         route   idRoute
         compile copyFileCompiler
+
+    -- Formula images
+    match "images/*.tex" $ do
+        route   $ setExtension "png"
+        compile $ getResourceBody
+            >>= loadAndApplyTemplate "templates/formula.tex" defaultContext
+            >>= pdflatex >>= pdfToPng
 
     -- Compress CSS
     match "css/*" $ do
@@ -205,3 +213,15 @@ pdflatex item = do
         return ()
 
     makeItem $ TmpFile pdfPath
+
+
+--------------------------------------------------------------------------------
+pdfToPng :: Item TmpFile -> Compiler (Item TmpFile)
+pdfToPng item = do
+    let TmpFile pdfPath = itemBody item
+        pngPath         = replaceExtension pdfPath "png"
+    unsafeCompiler $ do
+        _ <- system $ unwords ["convert", "-density", "150", "-quality", "90",
+                pdfPath, pngPath]
+        return ()
+    makeItem $ TmpFile pngPath
