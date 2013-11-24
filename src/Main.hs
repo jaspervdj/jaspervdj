@@ -208,7 +208,7 @@ pdflatex item = do
 
     unsafeCompiler $ do
         writeFile texPath $ itemBody item
-        _ <- system $ unwords ["pdflatex",
+        _ <- system $ unwords ["pdflatex", "-halt-on-error",
             "-output-directory", tmpDir, texPath, ">/dev/null", "2>&1"]
         return ()
 
