@@ -49,6 +49,13 @@ involved in the community.
 
 Here is a list of some projects I have worked on in the past years.
 
+- [Lorem Markdownum] (2013): A [lorem ipsum] text generator which generates
+  structured [markdown].
+
+[Lorem Markdownum]: http://jaspervdj.be/lorem-markdownum
+[lorem ipsum]: http://lipsum.com/
+[markdown]: http://daringfireball.net/projects/markdown/
+
 - [stylish-haskell] (2012 - present): A simple tool (and library) for
   formatting [Haskell] code.
 
