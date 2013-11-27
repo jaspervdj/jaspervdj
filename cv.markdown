@@ -139,6 +139,12 @@ PDF version -->
 
 I've given a number of talks, mostly centered around Haskell. Here is a list:
 
+- [HaskellerZ], Zürich, 31th of October 2013, "Build your own blog using the
+  Hakyll static site generator"
+  ([slides](http://jaspervdj.be/files/2013-haskellerz-hakyll.pdf))
+
+[HaskellerZ]: http://www.meetup.com/HaskellerZ/events/146646212/
+
 - Small guest lecture for "Functional and Logic Programming" at Ghent
   University, Ghent, 12th of December 2012, "Haskell at Tsuru Capital"
 
