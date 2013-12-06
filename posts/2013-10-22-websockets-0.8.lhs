@@ -50,6 +50,13 @@ soon (or [contact] me if you would like to hack on this).
 [wai]: http://hackage.haskell.org/package/wai
 [contact]: /contact.html
 
+**Update**: [Ting-Yen Lai] has been so kind to
+[update](https://github.com/yesodweb/wai/pull/197) the bindings for [wai]. You
+can now just use the [wai-websockets] package from Hackage!
+
+[Ting-Yen Lai]: https://github.com/banacorn
+[wai-websockets]: http://hackage.haskell.org/package/wai-websockets
+
 > {-# LANGUAGE OverloadedStrings #-}
 > module Main where
 
