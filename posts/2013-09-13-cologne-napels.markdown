@@ -1,5 +1,5 @@
 ---
-title: Travelling: Cologne & Naples
+title: Travelling: Cologne &amp; Naples
 description: Trying some travel blogging: two cities I visited this summer
 tags: life
 ---

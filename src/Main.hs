@@ -91,7 +91,7 @@ main = hakyllWith config $ do
             route   $ setExtension "xml"
             compile $ loadAllSnapshots pattern "content"
                 >>= fmap (take 10) . recentFirst
-                >>= renderAtom (feedConfiguration title) feedCtx
+                >>= renderRss (feedConfiguration title) feedCtx
 
     -- Index
     match "index.html" $ do
@@ -130,7 +130,7 @@ main = hakyllWith config $ do
         compile $ do
             loadAllSnapshots "posts/*" "content"
                 >>= fmap (take 10) . recentFirst
-                >>= renderAtom (feedConfiguration "All posts") feedCtx
+                >>= renderRss (feedConfiguration "All posts") feedCtx
 
     -- CV as HTML
     match "cv.markdown" $ do
