@@ -7,20 +7,20 @@ tags: life
 I cannot remember many occasions in the past few years where I have vividly and
 intensely participated in group discussions. I used to attribute this to my
 natural shyness but in the past year I have come to realise this has not been
-the main cause at least recently, since I have clearly become less shy over the
-years, whilst at the same time there has been little change in how I participate
-in discussions.
+the main cause for at least recently, since I have clearly become less shy over
+the years, whilst at the same time there has been little change in how I
+participate in arguments.
 
 My attitude usually shifts between questioning and an *"I guess I understand how
 you feel about it"*-kind of agreeing. I think the reason for this is twofold.
 
 The first one is simply that of having a defensive point-of-view: as you express
-express stronger opinions and make stronger claims, the consequences of being
-wrong grow as well.
+stronger opinions and make stronger claims, the consequences of being wrong grow
+worse as well.
 
 The second one, I think, is more interesting. I hate arguing about subjects of
-which I do not *know enough about* -- and the amount of subjects where I have
-some knowledge is awfully small.
+which I do not *know enough about* -- and the number of subjects I know about is
+awfully small.
 
 Hence, my opinions are rarely clear and solid. They are fuzzy and there is lot
 of *"I agree that if X then Y, but I don't know much about X so I cannot tell
@@ -40,18 +40,16 @@ Another example is the great VIM vs. Emacs debate which, after decades, still
 inspires many blogposts and articles. I use VIM and I am happy with it, and I
 can customize the bits I do not like. However, I would never claim VIM is
 superior to Emacs in any way, before at least trying Emacs seriously for half a
-year or more.
+year or more. And consequently, I would rather behave in a questioning and
+passive way. I prefer learning something more about Emacs over convincing
+someone to use VIM simply for the sake of winning the argument.
 
-It goes further than that. I can introspect again, and state that this blogpost
-is probably wrong or at least unjustified since I do not have a lot of
+It goes further than that. I can do a meta-discussion, and state that this
+blogpost is probably wrong or at least unjustified since I do not have a lot of
 experience with the other side -- making strong claims on a variety of subjects.
 
 Still, it intuitively feels wrong when I hear people who clearly do not have the
-slightest clue on how nuclear fusion and radiation exactly work [^1] make claims
-and even convince other people on whether or not we should abolish nuclear
-energy.
-
-[^1]: No, I do not think reading the wikipedia entry and watching a few
-      documentaries does makes you an expert on any subject.
+slightest clue on how nuclear fusion and radiation exactly work make claims and
+even convince other people on whether or not we should abolish nuclear energy.
 
 I guess I would not make a very good politician.
