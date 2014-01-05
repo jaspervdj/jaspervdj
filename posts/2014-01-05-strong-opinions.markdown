@@ -26,7 +26,7 @@ Hence, my opinions are rarely clear and solid. They are fuzzy and there is lot
 of *"I agree that if X then Y, but I don't know much about X so I cannot tell
 about Y"*.
 
-TODO: skate wheels picture
+![Flashbacks and Cults in various states of wear](/images/2014-01-05-skate-wheels.jpg)
 
 Note that this is mostly unrelated to whether or not the claim is subjective.
 For example, I think Abec11 70s Flashbacks are vastly superior skate wheels
@@ -48,8 +48,8 @@ It goes further than that. I can do a meta-discussion, and state that this
 blogpost is probably wrong or at least unjustified since I do not have a lot of
 experience with the other side -- making strong claims on a variety of subjects.
 
-Still, it intuitively feels wrong when I hear people who clearly do not have the
-slightest clue on how nuclear fusion and radiation exactly work make claims and
-even convince other people on whether or not we should abolish nuclear energy.
+Still, it intuitively feels wrong when I hear people who clearly do not know how
+nuclear fusion and radiation exactly work make claims and even convince other
+people on whether or not we should abolish nuclear energy.
 
 I guess I would not make a very good politician.
