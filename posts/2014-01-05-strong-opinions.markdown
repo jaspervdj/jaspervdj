@@ -6,10 +6,10 @@ tags: life
 
 I cannot remember many occasions in the past few years where I have vividly and
 intensely participated in group discussions. I used to attribute this to my
-natural shyness but in the past year I have come to realise this has not been
-the main cause for at least recently, since I have clearly become less shy over
-the years, whilst at the same time there has been little change in how I
-participate in arguments.
+natural shyness, but in the past year I have come to realise this has not been
+the main cause for at least recently: I have clearly become less shy over the
+years, whilst at the same time there has been little change in how I participate
+in arguments.
 
 My attitude usually shifts between questioning and an *"I guess I understand how
 you feel about it"*-kind of agreeing. I think the reason for this is twofold.
