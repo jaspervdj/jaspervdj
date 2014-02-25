@@ -13,9 +13,9 @@ where most allocation is done.
 [GHC]: http://www.haskell.org/ghc/
 [amazing tools]: http://book.realworldhaskell.org/read/profiling-and-optimization.html
 
-However, at [Erudify], we have a big amount of Haskell code -- and at this point
-`.prof` files can become very unwieldy, and the text representation is harder to
-grok.
+However, at [Erudify], we have a huge amount of Haskell code -- and at this
+point `.prof` files can become very unwieldy, and the text representation is
+harder to grok.
 
 [Erudify]: http://www.erudify.com/
 
@@ -23,6 +23,8 @@ This is why I coded [profiteur], a simple HTML-based visualiser for GHC `.prof`
 files.
 
 [profiteur]: http://github.com/jaspervdj/profiteur
+
+![Screenshot of profiteur](/images/2014-02-25-profiteur.png)
 
 # Installation
 
@@ -59,7 +61,7 @@ This generates the file `binary-trees.prof`. We can pass that to `profiteur`:
     $ profiteur binary-trees.prof
     Wrote binary-trees.prof.html
 
-Open the resulting file in your (modern) favorite browser and you are good to
+Open the resulting file in your favorite (modern) browser and you are good to
 go! [Here is the resulting HTML file] so you can have a look without installing
 `profiteur`.
 
