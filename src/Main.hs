@@ -1,15 +1,22 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE Arrows            #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Arrows             #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE OverloadedStrings  #-}
 module Main where
 
 
 --------------------------------------------------------------------------------
-import           Data.Monoid     ((<>), mconcat)
-import           Prelude         hiding (id)
-import           System.Cmd      (system)
-import           System.FilePath (replaceExtension, takeDirectory)
-import qualified Text.Pandoc     as Pandoc
+import           Control.Applicative ((<$>), (<*>))
+import           Data.Binary         (Binary (..))
+import           Data.Monoid         (mconcat, (<>))
+import           Data.Typeable       (Typeable)
+import           Prelude             hiding (id)
+import Data.Char (toUpper)
+import           System.Cmd          (system)
+import           System.Directory    (copyFile)
+import           System.FilePath     (replaceExtension, takeDirectory)
+import qualified Text.Pandoc         as Pandoc
+import qualified Graphics.Exif       as Exif
 
 
 --------------------------------------------------------------------------------
@@ -153,6 +160,37 @@ main = hakyllWith config $ do
                 >>= (return . fmap (Pandoc.writeLaTeX Pandoc.def))
                 >>= applyTemplate cvTpl defaultContext
                 >>= pdflatex
+
+    -- Photographs
+    match "photos/*/*.jpg" $ do
+        route   idRoute
+        compile compilePhotograph
+
+    -- Photo galleries
+    galleries <- buildCategories "photos/*/*.jpg" (fromCapture "photos/*.html")
+    tagsRules galleries $ \name pattern -> do
+        -- Copied from posts, need to refactor
+        route idRoute
+        compile $ do
+            photos <- recentFirst =<< loadAll pattern
+            let ctx = constField "title" (capitalize name) <>
+                        listField "photos" photographCtx (return photos) <>
+                        defaultContext
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/gallery.html" ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= relativizeUrls
+
+    -- Photo index page
+    match "photos.markdown" $ do
+        route   $ setExtension "html"
+        compile $ do
+            _ <- loadAll "photos/*/*.jpg" :: Compiler [Item Photograph]
+            getResourceBody
+                >>= applyAsTemplate (galleryCtx galleries)
+                >>= return . renderPandoc
+                >>= loadAndApplyTemplate "templates/default.html" defaultContext
+                >>= relativizeUrls
   where
     pages =
         [ "contact.markdown"
@@ -225,3 +263,82 @@ pdfToPng item = do
                 pdfPath, pngPath]
         return ()
     makeItem $ TmpFile pngPath
+
+
+--------------------------------------------------------------------------------
+data Photograph = Photograph
+    { photographFilePath :: FilePath
+    , photographIso      :: Int
+    , photographAperture :: Double
+    , photographShutter  :: String
+    , photographFocal    :: Int
+    } deriving (Show, Typeable)
+
+
+--------------------------------------------------------------------------------
+instance Writable Photograph where
+    write fp item = copyFile (photographFilePath (itemBody item)) fp
+
+
+--------------------------------------------------------------------------------
+instance Binary Photograph where
+    get = Photograph <$> get <*> get <*> get <*> get <*> get
+
+    put (Photograph filePath iso aperture shutterSpeed focalLength) =
+        put filePath >> put iso >> put aperture >> put shutterSpeed >>
+        put focalLength
+
+
+--------------------------------------------------------------------------------
+compilePhotograph :: Compiler (Item Photograph)
+compilePhotograph = do
+    filePath     <- toFilePath <$> getUnderlying
+    exif         <- unsafeCompiler $ Exif.fromFile filePath
+    iso          <- read <$> getTag exif "ISOSpeedRatings"
+    aperture     <- read . tail . dropWhile (/= '/') <$> getTag exif "FNumber"
+    shutterSpeed <- head . words <$> getTag exif "ExposureTime"
+    focalLength  <- read <$> getTag exif "FocalLengthIn35mmFilm"
+    makeItem Photograph
+        { photographFilePath = filePath
+        , photographIso      = iso
+        , photographAperture = aperture
+        , photographShutter  = shutterSpeed
+        , photographFocal    = focalLength
+        }
+  where
+    getTag exif str = do
+        tag <- unsafeCompiler $ Exif.getTag exif str
+        case tag of
+            Nothing -> fail $ "Tag not found: " ++ str
+            Just t  -> return t
+
+
+--------------------------------------------------------------------------------
+photographCtx :: Context Photograph
+photographCtx = mconcat
+    [ field "iso"      $ return . show . photographIso      . itemBody
+    , field "aperture" $ return . show . photographAperture . itemBody
+    , field "shutter"  $ return .        photographShutter  . itemBody
+    , field "focal"    $ return . show . photographFocal    . itemBody
+    , urlField "url"
+    , metadataField
+    ]
+
+
+--------------------------------------------------------------------------------
+capitalize :: String -> String
+capitalize []       = []
+capitalize (x : xs) = toUpper x : xs
+
+
+--------------------------------------------------------------------------------
+galleryCtx :: Tags -> Context a
+galleryCtx tags = listField "galleries" itemCtx $
+    return [Item (tagsMakeId tags name) name | (name, _) <- tagsMap tags]
+  where
+    itemCtx = mconcat
+        [ field "title" $ return . capitalize . itemBody
+        , field "size"  $ \item -> return $
+            show $ maybe 0 length $ lookup (itemBody item) (tagsMap tags)
+        , defaultContext
+        ]
