@@ -41,6 +41,11 @@ div.figure a{
     border: none;
 }
 
+div.flickr img {
+    border: 1px solid #888;
+    padding: 6px;
+}
+
 a img {
     margin-bottom: 0px;
 }
