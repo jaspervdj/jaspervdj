@@ -8,15 +8,15 @@ module Main where
 --------------------------------------------------------------------------------
 import           Control.Applicative ((<$>), (<*>))
 import           Data.Binary         (Binary (..))
+import           Data.Char           (isAlphaNum, isSpace, toLower, toUpper)
 import           Data.Monoid         (mconcat, (<>))
 import           Data.Typeable       (Typeable)
+import qualified Graphics.Exif       as Exif
 import           Prelude             hiding (id)
-import Data.Char (toUpper)
 import           System.Cmd          (system)
 import           System.Directory    (copyFile)
 import           System.FilePath     (replaceExtension, takeDirectory)
 import qualified Text.Pandoc         as Pandoc
-import qualified Graphics.Exif       as Exif
 
 
 --------------------------------------------------------------------------------
@@ -162,12 +162,13 @@ main = hakyllWith config $ do
                 >>= pdflatex
 
     -- Photographs
-    match "photos/*/*.jpg" $ do
+    match "photos/*.jpg" $ do
         route   idRoute
         compile compilePhotograph
 
     -- Photo galleries
-    galleries <- buildCategories "photos/*/*.jpg" (fromCapture "photos/*.html")
+    galleries <- buildTags "photos/*.jpg"
+                    (fromCapture "photos/*.html" . urlFriendlyTag)
     tagsRules galleries $ \name pattern -> do
         -- Copied from posts, need to refactor
         route idRoute
@@ -185,7 +186,7 @@ main = hakyllWith config $ do
     match "photos.markdown" $ do
         route   $ setExtension "html"
         compile $ do
-            _ <- loadAll "photos/*/*.jpg" :: Compiler [Item Photograph]
+            _ <- loadAll "photos/*.jpg" :: Compiler [Item Photograph]
             getResourceBody
                 >>= applyAsTemplate (galleryCtx galleries)
                 >>= return . renderPandoc
@@ -337,8 +338,17 @@ galleryCtx tags = listField "galleries" itemCtx $
     return [Item (tagsMakeId tags name) name | (name, _) <- tagsMap tags]
   where
     itemCtx = mconcat
-        [ field "title" $ return . capitalize . itemBody
+        [ field "title" $ return . itemBody
         , field "size"  $ \item -> return $
             show $ maybe 0 length $ lookup (itemBody item) (tagsMap tags)
         , defaultContext
         ]
+
+
+--------------------------------------------------------------------------------
+urlFriendlyTag :: String -> String
+urlFriendlyTag []  = []
+urlFriendlyTag (c : cs)
+    | isSpace c    = '-'       : urlFriendlyTag cs
+    | isAlphaNum c = toLower c : urlFriendlyTag cs
+    | otherwise    =             urlFriendlyTag cs
