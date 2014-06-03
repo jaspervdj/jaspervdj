@@ -13,7 +13,7 @@ import           Data.Monoid         (mconcat, (<>))
 import           Data.Typeable       (Typeable)
 import qualified Graphics.Exif       as Exif
 import           Prelude             hiding (id)
-import           System.Cmd          (system)
+import           System.Process      (system)
 import           System.Directory    (copyFile)
 import           System.FilePath     (replaceExtension, takeDirectory)
 import qualified Text.Pandoc         as Pandoc
@@ -322,6 +322,7 @@ photographCtx = mconcat
     , field "shutter"  $ return .        photographShutter  . itemBody
     , field "focal"    $ return . show . photographFocal    . itemBody
     , urlField "url"
+    , dateField "date" "%B %e, %Y"
     , metadataField
     ]
 
