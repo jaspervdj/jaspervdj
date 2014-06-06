@@ -111,15 +111,29 @@ div.footnotes hr {
 }
 
 div.pagination {
+    padding:  0px;
+    margin:   0px;
+    position: relative;
+}
+
+div.pagination a {
+    border: none;
+}
+
+div.pagination .current {
     text-align: center;
 }
 
-div.pagination span.previous {
-    float: left;
+div.pagination .previous {
+    right:    50%;
+    position: absolute;
+    margin:   0px 36px 0px 0px;
 }
 
-div.pagination span.next {
-    float: right;
+div.pagination .next {
+    left:     50%;
+    position: absolute;
+    margin:   0px 0px 0px 36px;
 }
 
 div#footer {
