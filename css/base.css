@@ -46,6 +46,11 @@ div.flickr img {
     padding: 6px;
 }
 
+div.flickr {
+    margin-top:    60px;
+    margin-bottom: 60px;
+}
+
 a img {
     margin-bottom: 0px;
 }
