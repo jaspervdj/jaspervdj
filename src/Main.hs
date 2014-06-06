@@ -182,15 +182,38 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
-    -- Photo index page
+    -- Photo index page. This is just an HTML blob that will be included on the
+    -- first page of the photo blog.
     match "photos.markdown" $ do
-        route   $ setExtension "html"
         compile $ do
             _ <- loadAll "photos/*.jpg" :: Compiler [Item Photograph]
             getResourceBody
                 >>= applyAsTemplate (galleryCtx galleries)
                 >>= return . renderPandoc
-                >>= loadAndApplyTemplate "templates/default.html" defaultContext
+
+    -- Photo blog
+    photoBlog <- buildPaginateWith
+        (fmap (paginateEvery 5) . sortRecentFirst)
+        "photos/*.jpg"
+        (\n -> if n == 1
+            then "photos.html"
+            else fromCapture "photos/*.html" (show n))
+
+    paginateRules photoBlog $ \pageNum pattern -> do
+        -- Copied from posts, need to refactor
+        route idRoute
+        compile $ do
+            photos <- recentFirst =<< loadAll pattern
+            intro  <- load "photos.markdown"
+            let ctx = constField "title" ("Photos - page " ++ show pageNum) <>
+                        listField "photos" photographCtx (return photos)    <>
+                        paginateContext photoBlog pageNum                   <>
+                        constField "intro"
+                            (if pageNum == 1 then itemBody intro else "")   <>
+                        defaultContext
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/photos.html"  ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
   where
     pages =

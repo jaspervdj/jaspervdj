@@ -105,6 +105,18 @@ div.footnotes hr {
     display: none;
 }
 
+div.pagination {
+    text-align: center;
+}
+
+div.pagination span.previous {
+    float: left;
+}
+
+div.pagination span.next {
+    float: right;
+}
+
 div#footer {
     font-size: 14px;
 }

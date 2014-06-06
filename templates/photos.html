@@ -1,0 +1,47 @@
+<h1>$title$</h1>
+
+$intro$
+
+<div class="pagination">
+    <span class="previous">
+        $if(firstPageNum)$
+            <a href="$firstPageUrl$">first</a>
+        $endif$
+        $if(previousPageNum)$
+            <a href="$previousPageUrl$">previous</a>
+        $endif$
+    </span>
+    <span class="next">
+        $if(nextPageNum)$
+            <a href="$nextPageUrl$">next</a>
+        $endif$
+        $if(lastPageNum)$
+            <a href="$lastPageUrl$">last</a>
+        $endif$
+    </span>
+    <span class="current">$currentPageNum$/$numPages$</span>
+</div>
+
+$for(photos)$
+$partial("templates/photo.html")$
+$endfor$
+
+<div class="pagination">
+    <span class="previous">
+        $if(firstPageNum)$
+            <a href="$firstPageUrl$">first</a>
+        $endif$
+        $if(previousPageNum)$
+            <a href="$previousPageUrl$">previous</a>
+        $endif$
+    </span>
+    <span class="next">
+        $if(nextPageNum)$
+            <a href="$nextPageUrl$">next</a>
+        $endif$
+        $if(lastPageNum)$
+            <a href="$lastPageUrl$">last</a>
+        $endif$
+    </span>
+    <span class="current">$currentPageNum$/$numPages$</span>
+</div>
