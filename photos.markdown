@@ -6,6 +6,6 @@ about photography and I have been hooked ever since.
 I try to organize my photos nicely into different sets:
 
 $for(galleries)$
-- [$title$ - $size$ photos]($url$)$endfor$
+- [$title$]($url$) - $size$ photos$endfor$
 
 You can also browse them as a photo blog below.

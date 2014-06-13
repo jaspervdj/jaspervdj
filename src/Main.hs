@@ -193,7 +193,7 @@ main = hakyllWith config $ do
 
     -- Photo blog
     photoBlog <- buildPaginateWith
-        (fmap (paginateEvery 5) . sortRecentFirst)
+        (fmap (paginateEvery 10) . sortRecentFirst)
         "photos/*.jpg"
         (\n -> if n == 1
             then "photos.html"
