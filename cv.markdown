@@ -201,12 +201,12 @@ I've given a number of talks, mostly centered around Haskell. Here is a list:
 
 ## Trivia
 
-- For the period of 2009 - present, I am in the organizing committee of the
+- For the period of 2009 - 2013, I was in the organizing committee of the
   students' Computer Science Workgroup at [Ghent University], [Zeus WPI].
 
 [Ghent University]: http://ugent.be/
 
-- For the period of 2010 - present, I am in the organizing committee of the
+- For the period of 2010 - 2013, I was in the organizing committee of the
   [Ghent Functional Programming Group][GhentFPG].
 
 [GhentFPG]: http://www.haskell.org/haskellwiki/Ghent_Functional_Programming_Group
