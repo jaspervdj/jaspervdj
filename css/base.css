@@ -110,30 +110,27 @@ div.footnotes hr {
     display: none;
 }
 
-div.pagination {
-    padding:  0px;
-    margin:   0px;
-    position: relative;
-}
-
-div.pagination a {
-    border: none;
-}
-
-div.pagination .current {
+div#lightbox {
     text-align: center;
 }
 
-div.pagination .previous {
-    right:    50%;
-    position: absolute;
-    margin:   0px 36px 0px 0px;
+div#lightbox img {
+    max-width:  100%;
+    max-height: 90%;
+    margin: 0px auto 0px auto;
 }
 
-div.pagination .next {
-    left:     50%;
-    position: absolute;
-    margin:   0px 0px 0px 36px;
+div#lightbox a {
+    border: none;
+}
+
+div#lightbox div.pagination {
+    font-size: 14px;
+    color: #888;
+}
+
+div#lightbox div.pagination a {
+    color: #888;
 }
 
 div#footer {

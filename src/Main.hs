@@ -2,19 +2,14 @@
 {-# LANGUAGE Arrows             #-}
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE OverloadedStrings  #-}
-module Main where
+module Main (main) where
 
 
 --------------------------------------------------------------------------------
-import           Control.Applicative ((<$>), (<*>))
-import           Data.Binary         (Binary (..))
-import           Data.Char           (isAlphaNum, isSpace, toLower, toUpper)
 import           Data.Monoid         (mconcat, (<>))
-import           Data.Typeable       (Typeable)
-import qualified Graphics.Exif       as Exif
+import           Data.List           (sort)
 import           Prelude             hiding (id)
 import           System.Process      (system)
-import           System.Directory    (copyFile)
 import           System.FilePath     (replaceExtension, takeDirectory)
 import qualified Text.Pandoc         as Pandoc
 
@@ -61,6 +56,7 @@ main = hakyllWith config $ do
                 >>= saveSnapshot "content"
                 >>= return . fmap demoteHeaders
                 >>= loadAndApplyTemplate "templates/post.html" (postCtx tags)
+                >>= loadAndApplyTemplate "templates/content.html" defaultContext
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
@@ -74,6 +70,7 @@ main = hakyllWith config $ do
                         defaultContext
             makeItem ""
                 >>= loadAndApplyTemplate "templates/posts.html" ctx
+                >>= loadAndApplyTemplate "templates/content.html" ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
@@ -90,6 +87,7 @@ main = hakyllWith config $ do
                         defaultContext
             makeItem ""
                 >>= loadAndApplyTemplate "templates/posts.html" ctx
+                >>= loadAndApplyTemplate "templates/content.html" ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
@@ -112,6 +110,7 @@ main = hakyllWith config $ do
 
             getResourceBody
                 >>= applyAsTemplate indexContext
+                >>= loadAndApplyTemplate "templates/content.html" indexContext
                 >>= loadAndApplyTemplate "templates/default.html" indexContext
                 >>= relativizeUrls
 
@@ -122,6 +121,7 @@ main = hakyllWith config $ do
     match (fromList pages) $ do
         route   $ setExtension ".html"
         compile $ pandocCompiler
+            >>= loadAndApplyTemplate "templates/content.html" defaultContext
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
@@ -129,6 +129,7 @@ main = hakyllWith config $ do
     match "404.html" $ do
         route idRoute
         compile $ pandocCompiler
+            >>= loadAndApplyTemplate "templates/content.html" defaultContext
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
 
     -- Render RSS feed
@@ -142,77 +143,47 @@ main = hakyllWith config $ do
     -- CV as HTML
     match "cv.markdown" $ do
         route   $ setExtension ".html"
-        compile $ do
-            cvTpl      <- loadBody "templates/cv.html"
-            defaultTpl <- loadBody "templates/default.html"
-            pandocCompiler
-                >>= applyTemplate cvTpl defaultContext
-                >>= applyTemplate defaultTpl defaultContext
-                >>= relativizeUrls
+        compile $ pandocCompiler
+            >>= loadAndApplyTemplate "templates/cv.html"      defaultContext
+            >>= loadAndApplyTemplate "templates/content.html" defaultContext
+            >>= loadAndApplyTemplate "templates/default.html" defaultContext
+            >>= relativizeUrls
 
     -- CV as PDF
     match "cv.markdown" $ version "pdf" $ do
         route   $ setExtension ".pdf"
-        compile $ do
-            cvTpl <- loadBody "templates/cv.tex"
-            getResourceBody
-                >>= (return . readPandoc)
-                >>= (return . fmap (Pandoc.writeLaTeX Pandoc.def))
-                >>= applyTemplate cvTpl defaultContext
-                >>= pdflatex
+        compile $ do getResourceBody
+            >>= (return . readPandoc)
+            >>= (return . fmap (Pandoc.writeLaTeX Pandoc.def))
+            >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
+            >>= pdflatex
 
     -- Photographs
     match "photos/*.jpg" $ do
         route   idRoute
-        compile compilePhotograph
+        compile copyFileCompiler
 
-    -- Photo galleries
-    galleries <- buildTags "photos/*.jpg"
-                    (fromCapture "photos/*.html" . urlFriendlyTag)
-    tagsRules galleries $ \name pattern -> do
-        -- Copied from posts, need to refactor
-        route idRoute
-        compile $ do
-            photos <- recentFirst =<< loadAll pattern
-            let ctx = constField "title" (capitalize name) <>
-                        listField "photos" photographCtx (return photos) <>
-                        defaultContext
-            makeItem ""
-                >>= loadAndApplyTemplate "templates/gallery.html" ctx
-                >>= loadAndApplyTemplate "templates/default.html" ctx
-                >>= relativizeUrls
-
-    -- Photo index page. This is just an HTML blob that will be included on the
-    -- first page of the photo blog.
-    match "photos.markdown" $ do
-        compile $ do
-            _ <- loadAll "photos/*.jpg" :: Compiler [Item Photograph]
-            getResourceBody
-                >>= applyAsTemplate (galleryCtx galleries)
-                >>= return . renderPandoc
-
-    -- Photo blog
+    -- Photography portfolio
     photoBlog <- buildPaginateWith
-        (fmap (paginateEvery 10) . sortRecentFirst)
+        (return . map return . sort)
         "photos/*.jpg"
         (\n -> if n == 1
             then "photos.html"
             else fromCapture "photos/*.html" (show n))
-
     paginateRules photoBlog $ \pageNum pattern -> do
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
-            photos <- recentFirst =<< loadAll pattern
-            intro  <- load "photos.markdown"
-            let ctx = constField "title" ("Photos - page " ++ show pageNum) <>
-                        listField "photos" photographCtx (return photos)    <>
-                        paginateContext photoBlog pageNum                   <>
-                        constField "intro"
-                            (if pageNum == 1 then itemBody intro else "")   <>
-                        defaultContext
+            photos <- loadAll pattern  -- Should be just one
+            let paginateCtx = paginateContext photoBlog pageNum
+            let ctx         =
+                    constField "title" "Photos"                        <>
+                    listField "photos"
+                        (photographCtx <> paginateCtx) (return photos) <>
+                    paginateCtx                                        <>
+                    defaultContext
             makeItem ""
-                >>= loadAndApplyTemplate "templates/photos.html"  ctx
+                >>= loadAndApplyTemplate "templates/photo.html"   ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
   where
@@ -290,89 +261,9 @@ pdfToPng item = do
 
 
 --------------------------------------------------------------------------------
-data Photograph = Photograph
-    { photographFilePath :: FilePath
-    , photographIso      :: Int
-    , photographAperture :: Double
-    , photographShutter  :: String
-    , photographFocal    :: Int
-    } deriving (Show, Typeable)
-
-
---------------------------------------------------------------------------------
-instance Writable Photograph where
-    write fp item = copyFile (photographFilePath (itemBody item)) fp
-
-
---------------------------------------------------------------------------------
-instance Binary Photograph where
-    get = Photograph <$> get <*> get <*> get <*> get <*> get
-
-    put (Photograph filePath iso aperture shutterSpeed focalLength) =
-        put filePath >> put iso >> put aperture >> put shutterSpeed >>
-        put focalLength
-
-
---------------------------------------------------------------------------------
-compilePhotograph :: Compiler (Item Photograph)
-compilePhotograph = do
-    filePath     <- toFilePath <$> getUnderlying
-    exif         <- unsafeCompiler $ Exif.fromFile filePath
-    iso          <- read <$> getTag exif "ISOSpeedRatings"
-    aperture     <- read . tail . dropWhile (/= '/') <$> getTag exif "FNumber"
-    shutterSpeed <- head . words <$> getTag exif "ExposureTime"
-    focalLength  <- read <$> getTag exif "FocalLengthIn35mmFilm"
-    makeItem Photograph
-        { photographFilePath = filePath
-        , photographIso      = iso
-        , photographAperture = aperture
-        , photographShutter  = shutterSpeed
-        , photographFocal    = focalLength
-        }
-  where
-    getTag exif str = do
-        tag <- unsafeCompiler $ Exif.getTag exif str
-        case tag of
-            Nothing -> fail $ "Tag not found: " ++ str
-            Just t  -> return t
-
-
---------------------------------------------------------------------------------
-photographCtx :: Context Photograph
+photographCtx :: Context CopyFile
 photographCtx = mconcat
-    [ field "iso"      $ return . show . photographIso      . itemBody
-    , field "aperture" $ return . show . photographAperture . itemBody
-    , field "shutter"  $ return .        photographShutter  . itemBody
-    , field "focal"    $ return . show . photographFocal    . itemBody
-    , urlField "url"
+    [ urlField "url"
     , dateField "date" "%B %e, %Y"
     , metadataField
     ]
-
-
---------------------------------------------------------------------------------
-capitalize :: String -> String
-capitalize []       = []
-capitalize (x : xs) = toUpper x : xs
-
-
---------------------------------------------------------------------------------
-galleryCtx :: Tags -> Context a
-galleryCtx tags = listField "galleries" itemCtx $
-    return [Item (tagsMakeId tags name) name | (name, _) <- tagsMap tags]
-  where
-    itemCtx = mconcat
-        [ field "title" $ return . itemBody
-        , field "size"  $ \item -> return $
-            show $ maybe 0 length $ lookup (itemBody item) (tagsMap tags)
-        , defaultContext
-        ]
-
-
---------------------------------------------------------------------------------
-urlFriendlyTag :: String -> String
-urlFriendlyTag []  = []
-urlFriendlyTag (c : cs)
-    | isSpace c    = '-'       : urlFriendlyTag cs
-    | isAlphaNum c = toLower c : urlFriendlyTag cs
-    | otherwise    =             urlFriendlyTag cs

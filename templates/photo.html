@@ -1,8 +1,25 @@
-<div class="figure flickr">
-    <a href="$link$"><img src="$url$" alt="$title$" /></a>
-    <p class="caption">
-        $title$ – $date$<br />
-        ISO$iso$, ƒ/$aperture$, $shutter$s, $focal$mm (35mm equivalent)
-    </p>
-</div>
+<div id="lightbox">
+    $for(photos)$
+    $if(nextPageNum)$
+        <a href="$nextPageUrl$"><img src="$url$" alt="Photo" /></a>
+    $else$
+        <a href="$firstPageUrl$"><img src="$url$" alt="Photo" /></a>
+    $endif$
+    $endfor$
 
+    <div class="pagination">
+        $if(previousPageNum)$
+            <a href="$previousPageUrl$">previous</a>
+        $else$
+            <a href="$lastPageUrl$">previous</a>
+        $endif$
+        &mdash;
+        $currentPageNum$ of $numPages$
+        &mdash;
+        $if(nextPageNum)$
+            <a href="$nextPageUrl$">next</a>
+        $else$
+            <a href="$firstPageUrl$">next</a>
+        $endif$
+    </div>
+</div>

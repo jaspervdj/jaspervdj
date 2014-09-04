@@ -1,11 +1,13 @@
 html {
     margin: 0px;
     padding: 0px;
+    height: 100%;
 }
 
 body {
     margin: 0px;
     padding: 0px 0px 0px 0px;
+    height: 100%;
 }
 
 div#navigation {
@@ -21,6 +23,13 @@ div#navigation a {
 
 div#content {
     margin: 12px;
+}
+
+div#lightbox {
+    margin: 0px;
+    background-color: #000;
+    height: 100%;
+    padding: 6px;
 }
 
 @media all and (min-width: 822px) {
@@ -52,5 +61,10 @@ div#content {
         margin: 0px 0px 0px 156px;
         padding: 0px 36px 0px 36px;
         width: 648px;
+    }
+
+    div#lightbox {
+        margin: 0px 0px 0px 155px;
+        padding: 12px;
     }
 }
