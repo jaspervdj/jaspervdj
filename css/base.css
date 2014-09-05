@@ -117,7 +117,7 @@ div#lightbox {
 div#lightbox img {
     max-width:  100%;
     max-height: 90%;
-    margin: 0px auto 0px auto;
+    margin: 12px auto 12px auto;
 }
 
 div#lightbox a {

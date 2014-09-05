@@ -29,7 +29,6 @@ div#lightbox {
     margin: 0px;
     background-color: #000;
     height: 100%;
-    padding: 6px;
 }
 
 @media all and (min-width: 822px) {
@@ -65,6 +64,5 @@ div#lightbox {
 
     div#lightbox {
         margin: 0px 0px 0px 155px;
-        padding: 12px;
     }
 }
