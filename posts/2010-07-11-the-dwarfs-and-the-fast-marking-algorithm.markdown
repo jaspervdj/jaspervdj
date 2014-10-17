@@ -81,11 +81,9 @@ very hard, and it will be a good exercise."
 
 # The solution
 
-<div onclick="document.getElementById('solution').style.display='block';">
-
-__(Big spoiler warning here)__: Click here to reveal the solution.
-
-</div>
+<button onclick="document.getElementById('solution').style.display='block';">
+<strong>Spoiler warning: Click here to reveal the solution.</strong>
+</button>
 
 <div id="solution" style="display: none">
 

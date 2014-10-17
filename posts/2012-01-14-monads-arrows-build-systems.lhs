@@ -4,8 +4,8 @@ description: An success story of Arrows
 tags: haskell
 ---
 
-This is a recap of an [older blogpost] of me. I decided to rewrite it after I
-wanted to link a friend to it, and I saw the blogpost clearly failed a bit in
+This is a recap of an [older blogpost] of mine. I decided to rewrite it after I
+wanted to refer a friend to it, and I saw the blogpost clearly failed a bit in
 getting the point across. In this blogpost, I hope to correct that. It's about a
 situation in which Monads fall short, but Arrows (and Applicative) prove to be
 very powerful. It assumes some basic familiarity with Monads, familiarity with
@@ -257,13 +257,11 @@ Arrow. I've chosen Arrow for two reasons:
 It's a fun challenge to implement this Applicative instance for the `BuildA`
 datatype.
 
-<div onclick="$('#applicative').show(1000)">
+<button onclick="document.getElementById('solution').style.display='block';">
+<strong>Spoiler warning: Click here to reveal the solution.</strong>
+</button>
 
-<strong>Click here to reveal the solution.</strong>
-
-<div></div></div>  <!-- HACKS -->
-
-<div id='applicative' style='display: none'>
+<div id='solution' style='display: none'>
 
 > instance Functor (BuildA a) where
 >     fmap f (BuildA deps g) = BuildA deps (fmap f . g)
@@ -281,7 +279,7 @@ Arrow-based `testBuildA'`. However, this is due to the fact that our example is
 very simple -- Applicative solutions tend to get quite complicated when more is
 involved.
 
-<div></div></div>
+</div>
 
 I hope this blogpost made some of the advantages and disadvantages between Monad
 and Arrow clear. All comments and feedback are welcome, as always. Thanks to
