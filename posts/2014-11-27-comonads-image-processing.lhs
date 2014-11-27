@@ -1,5 +1,5 @@
 ---
-title: Comonads for Image Processing
+title: Image Processing with Comonads
 description: A simple real-world example showing an image-processing Comonad
 tags: haskell
 ---
@@ -75,19 +75,37 @@ Now, we want to be able to convert from a JuicyPixels image to our own
 images (`BoxedImage Word8`), since this makes the image processing algorithms
 mentioned here a lot easier to understand.
 
-> boxImage :: Juicy.Image Juicy.Pixel8 -> BoxedImage Word8
+> type Pixel = Word8  -- Grayscale
+
+> boxImage :: Juicy.Image Juicy.Pixel8 -> BoxedImage Pixel
 > boxImage image = BoxedImage
 >     { biWidth  = Juicy.imageWidth image
 >     , biHeight = Juicy.imageHeight image
 >     , biData   = VG.convert (Juicy.imageData image)
 >     }
 
-> unboxImage :: BoxedImage Word8 -> Juicy.Image Juicy.Pixel8
+> unboxImage :: BoxedImage Pixel -> Juicy.Image Juicy.Pixel8
 > unboxImage boxedImage = Juicy.Image
 >     { Juicy.imageWidth  = biWidth boxedImage
 >     , Juicy.imageHeight = biHeight boxedImage
 >     , Juicy.imageData   = VG.convert (biData boxedImage)
 >     }
+
+With the help of `boxImage` and `unboxImage`, we can now call out to the
+JuicyPixels library:
+
+> readImage :: FilePath -> IO (BoxedImage Pixel)
+> readImage filePath = do
+>     errOrImage <- Juicy.readImage filePath
+>     case errOrImage of
+>         Right (Juicy.ImageY8 img) -> return (boxImage img)
+>         Right _                   ->
+>             error "readImage: unsupported format"
+>         Left err                  ->
+>             error $ "readImage: could not load image: " ++ err
+
+> writePng :: FilePath -> BoxedImage Pixel -> IO ()
+> writePng filePath = Juicy.writePng filePath . unboxImage
 
 Focused images
 ==============
@@ -99,29 +117,29 @@ produce a single output pixel.
 
 For this purpose, let us create an additional type that focuses on a specific
 location in the image. We typically want to use a smart constructor for this, so
-that we don't allow focusing on an `(x, y)`-pair outside of the `pBoxedImage`.
+that we don't allow focusing on an `(x, y)`-pair outside of the `piBoxedImage`.
 
-> data Pixel a = Pixel
->     { pBoxedImage :: !(BoxedImage a)
->     , pX          :: !Int
->     , pY          :: !Int
+> data FocusedImage a = FocusedImage
+>     { piBoxedImage :: !(BoxedImage a)
+>     , piX          :: !Int
+>     , piY          :: !Int
 >     }
 
 Conversion to and from a `BoxedImage` is easy:
 
-> toPixel :: BoxedImage a -> Pixel a
-> toPixel bi
->     | biWidth bi > 0 && biHeight bi > 0 = Pixel bi 0 0
+> focus :: BoxedImage a -> FocusedImage a
+> focus bi
+>     | biWidth bi > 0 && biHeight bi > 0 = FocusedImage bi 0 0
 >     | otherwise                         =
->         error "Cannot create pixel for empty images"
+>         error "Cannot focus on empty images"
 
-> fromPixel :: Pixel a -> BoxedImage a
-> fromPixel (Pixel bi _ _) = bi
+> unfocus :: FocusedImage a -> BoxedImage a
+> unfocus (FocusedImage bi _ _) = bi
 
 And the functor instance is straightforward, too:
 
-> instance Functor Pixel where
->     fmap f (Pixel bi x y) = Pixel (fmap f bi) x y
+> instance Functor FocusedImage where
+>     fmap f (FocusedImage bi x y) = FocusedImage (fmap f bi) x y
 
 Now, we can implement the fabled Comonad class:
 
@@ -133,22 +151,22 @@ The implementation of `extract` is straightforward. `extend` is a little
 trickier. If we look at it's concrete type:
 
 ```haskell
-extend :: (Pixel a -> b) -> Pixel a -> Pixel b
+extend :: (FocusedImage a -> b) -> FocusedImage a -> FocusedImage b
 ```
 
 We want to convert all pixels in the image, and the conversion function is
-supplied as `f :: Pixel a -> b`. In order to apply this to all pixels in the
-image, we must thus create a `Pixel` for every position in the image. Then, we
-can simply pass this to `f` which gives us the result at that position.
+supplied as `f :: FocusedImage a -> b`. In order to apply this to all pixels in
+the image, we must thus create a `FocusedImage` for every position in the image.
+Then, we can simply pass this to `f` which gives us the result at that position.
 
-> instance Comonad Pixel where
->     extract (Pixel bi x y) =
+> instance Comonad FocusedImage where
+>     extract (FocusedImage bi x y) =
 >         biData bi V.! (y * biWidth bi + x)
 >
->     extend f (Pixel bi@(BoxedImage w h _) x y) = Pixel
+>     extend f (FocusedImage bi@(BoxedImage w h _) x y) = FocusedImage
 >         (BoxedImage w h $ V.generate (w * h) $ \i ->
 >             let (y', x') = i `divMod` w
->             in f (Pixel bi x' y'))
+>             in f (FocusedImage bi x' y'))
 >         x y
 
 Proving that this instance adheres to the Comonad laws is a bit tedious but not
@@ -163,10 +181,10 @@ want to be able to look around in a pixel's neighbourhood easily. In order to do
 this, we create this function which shifts the focus by a given pair of
 coordinates:
 
-> neighbour :: Int -> Int -> Pixel a -> Maybe (Pixel a)
-> neighbour dx dy (Pixel bi x y)
+> neighbour :: Int -> Int -> FocusedImage a -> Maybe (FocusedImage a)
+> neighbour dx dy (FocusedImage bi x y)
 >     | outOfBounds = Nothing
->     | otherwise   = Just (Pixel bi x' y')
+>     | otherwise   = Just (FocusedImage bi x' y')
 >   where
 >     x'          = x + dx
 >     y'          = y + dy
@@ -186,17 +204,18 @@ Comonad-based mini-framework.
 
 A really easy noise reduction algorithm is one that looks at a local
 neighbourhood of a pixel, and replaces that pixel by the median of all the pixels
-in the neighbourhood. This can be easily implemented using `neighbour`:
+in the neighbourhood. This can be easily implemented using `neighbour` and
+`extract`:
 
-> reduceNoise1 :: Pixel Word8 -> Word8
+> reduceNoise1 :: FocusedImage Pixel -> Pixel
 > reduceNoise1 pixel = median
 >     [ extract p
 >     | x <- [-2, -1 .. 2], y <- [-2, -1 .. 2]
 >     , p <- maybeToList (neighbour x y pixel)
 >     ]
 
-Note how our Comonadic filter takes the form of `w a -> b`. With a little
-intuition, we can see how this is the dual of a monadic filter, which would be
+Note how our Comonadic function takes the form of `w a -> b`. With a little
+intuition, we can see how this is the dual of a monadic function, which would be
 of type `a -> m b`.
 
 We used an auxiliary function which simply gives us the median of a list:
@@ -210,6 +229,14 @@ We used an auxiliary function which simply gives us the median of a list:
 >   where
 >     !len = length xs
 
+So `reduceNoise1` is a function which takes a pixel in the context of its
+neighbours, and returns a new pixel. We can use `extend` to apply this comonadic
+action to an entire image:
+
+```haskell
+extend reduceNoise1 :: FocusedImage Pixel -> FocusedImage Pixel
+```
+
 ![After applying reduceNoise1](/images/2014-11-27-stairs-reduce-noise-01.png)
 
 Running this algorithm on our original picture already gives an interesting
@@ -220,14 +247,14 @@ Blur filter
 ===========
 
 A more complicated noise-reduction filter uses a blur effect first. We can
-implement a blur by replacing each pixel by a weighted sum of it's neighbouring
-pixels.
+implement a blur by replacing each pixel by a weighted sum of its neighbouring
+pixels. At the edges, we just keep the pixels as-is.
 
 This function implements the simple blurring kernel:
 
 ![](/images/2014-11-27-gaussian-blur-kernel.png)
 
-> blur :: Pixel Word8 -> Word8
+> blur :: FocusedImage Pixel -> Pixel
 > blur pixel = fromMaybe (extract pixel) $ do
 >     let self = fromIntegral (extract pixel) :: Int
 >     topLeft     <- extractNeighbour (-1) (-1)
@@ -271,7 +298,7 @@ more texture in the image (and not make it look like a watercolour).
 
 Our second noise reduction algorithm is thus:
 
-> reduceNoise2 :: Pixel Word8 -> Word8
+> reduceNoise2 :: FocusedImage Pixel -> Pixel
 > reduceNoise2 pixel =
 >     let !original = extract pixel
 >         !blurred  = blur pixel
@@ -289,7 +316,7 @@ That we are able to compose these functions easily is even more apparent if we
 try to build a hybrid filter, which uses a weighted sum of the original,
 `reduceNoise1`, and `reduceNoise2`.
 
-> reduceNoise3 :: Pixel Word8 -> Word8
+> reduceNoise3 :: FocusedImage Pixel -> Pixel
 > reduceNoise3 pixel =
 >     let !original = extract      pixel
 >         !reduced1 = reduceNoise1 pixel
@@ -305,14 +332,13 @@ Here is our main function which ties everything up:
 
 > main :: IO ()
 > main = do
->     Right (Juicy.ImageY8 image) <- Juicy.readImage filePath
->     let pixel = toPixel $ boxImage image
->     Juicy.writePng "images/2014-11-27-stairs-reduce-noise-01.png" $
->         unboxImage $ fromPixel $ extend reduceNoise1 pixel
->     Juicy.writePng "images/2014-11-27-stairs-reduce-noise-02.png" $
->         unboxImage $ fromPixel $ extend reduceNoise2 pixel
->     Juicy.writePng "images/2014-11-27-stairs-reduce-noise-03.png" $
->         unboxImage $ fromPixel $ extend reduceNoise3 pixel
+>     image <- readImage filePath
+>     writePng "images/2014-11-27-stairs-reduce-noise-01.png" $
+>         unfocus $ extend reduceNoise1 $ focus image
+>     writePng "images/2014-11-27-stairs-reduce-noise-02.png" $
+>         unfocus $ extend reduceNoise2 $ focus image
+>     writePng "images/2014-11-27-stairs-reduce-noise-03.png" $
+>         unfocus $ extend reduceNoise3 $ focus image
 >   where
 >     filePath = "images/2014-11-27-stairs-original.png"
 
