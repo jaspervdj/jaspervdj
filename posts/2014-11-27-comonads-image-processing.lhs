@@ -13,15 +13,17 @@ A Comonad is a structure from [category theory] dual to [Monad].
 [Monad]: http://www.haskell.org/haskellwiki/Monad
 
 <blockquote>
+<p>
 Comonads are well-suited for image processing <br />
 – Pretty much everyone on the internet
+</p>
 </blockquote>
 
 Whenever Comonads come up, people usually mention the canonical example of
-[evaluating cellular automatons]. Because many image processing algorithms can
-be modelled as a cellular automata, this is also a frequently mentioned example.
+[evaluating cellular automata]. Because many image processing algorithms can be
+modelled as a cellular automaton, this is also a frequently mentioned example.
 
-[evaluating cellular automatons]: http://blog.sigfpe.com/2006/12/evaluating-cellular-automata-is.html
+[evaluating cellular automata]: http://blog.sigfpe.com/2006/12/evaluating-cellular-automata-is.html
 
 However, when I was trying to explain Comonads to a friend recently, I couldn't
 find any standalone example of how exactly this applies to image processing, so
@@ -284,10 +286,10 @@ we get the edges:
 ![The edges in the image](/images/2014-11-27-stairs-edge.png)
 
 If we apply a high-pass filter here, i.e., we drop all edges below a certain
-treshold, such that we only retain the "most significant" edges, we get
+threshold, such that we only retain the "most significant" edges, we get
 something like:
 
-![The edges after applying a treshold](/images/2014-11-27-stairs-treshold.png)
+![The edges after applying a threshold](/images/2014-11-27-stairs-threshold.png)
 
 While there is still some noise, we can see that it's clearly been reduced. If
 we now add this to the blurred image, we get our noise-reduced image number #2.
@@ -300,11 +302,11 @@ Our second noise reduction algorithm is thus:
 
 > reduceNoise2 :: FocusedImage Pixel -> Pixel
 > reduceNoise2 pixel =
->     let !original = extract pixel
->         !blurred  = blur pixel
->         !edge     = fromIntegral original - fromIntegral blurred :: Int
->         !treshold = if edge < 7 && edge > (-7) then 0 else edge
->     in fromIntegral $ fromIntegral blurred + treshold
+>     let !original  = extract pixel
+>         !blurred   = blur pixel
+>         !edge      = fromIntegral original - fromIntegral blurred :: Int
+>         !threshold = if edge < 7 && edge > (-7) then 0 else edge
+>     in fromIntegral $ fromIntegral blurred + threshold
 
 We can already see how the Comonad pattern lets us combine `extract` and `blur`,
 and simple arithmetic to achieve powerful results.
@@ -341,6 +343,11 @@ Here is our main function which ties everything up:
 >         unfocus $ extend reduceNoise3 $ focus image
 >   where
 >     filePath = "images/2014-11-27-stairs-original.png"
+
+And here is a 300% crop which should show the difference between the original
+(left) and the result of `reduceNoise3` (right) better:
+
+![](/images/2014-11-27-stairs-crop.png)
 
 Conclusion
 ==========
