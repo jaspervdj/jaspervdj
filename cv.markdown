@@ -125,8 +125,8 @@ This list is not complete: you can view more projects on my [GitHub page].
 
 ## Education
 
-- 2011 - ...: Ghent University: Master in Computer Science: Software
-  Engineering (in progress)
+- 2011 - 2013: Ghent University: Master in Computer Science: Software
+  Engineering
 - 2008 - 2011: Ghent University: Bachelor in Computer Science
 - 2002 - 2008: Secondary school: Sint-Lodewijkscollege Lokeren -- ASO,
   Latin & maths specialization
