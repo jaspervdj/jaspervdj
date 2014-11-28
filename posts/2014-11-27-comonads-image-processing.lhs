@@ -359,3 +359,5 @@ naturally compose well.
 
 Additionally, I hope this blogpost provided some insight the image processing
 algorithms as well, which I also think is an interesting field.
+
+Thanks to [Alex Sayers](http://asayers.org/) for proofreading!
