@@ -9,23 +9,58 @@ title: Curriculum Vitae
 
 ## Summary
 
-I have a strong interest for and a lot of experience with functional programming
-languages, mainly Haskell and OCaml. I am also well-versed in more traditional
-programming languages and I have a strong Linux background. I am fluent in Dutch
-and English, both orally and in writing. I have volunteered in different
-nonprofits, so I am confident in my teamwork and organizational skills.
+I am an experienced Haskell developer, which I have been using commercially, for
+lots of open source work, and for my studies before that.
+
+I think strong typing and functional programming has helped me achieve a very
+rigorous attitude in programming -- not only in Haskell, but also in the other
+languages I write such as OCaml, Java, C and C++, JavaScript -- by constantly
+striving towards correctness and excellence.
+
+My personal development projects include various libraries written in Haskell,
+and a technical blog.
+
+## Skills
+
+**Functional programming**: I have a deep and broad experience with Haskell, as
+I have applied it many different areas ranging from High Frequence Trading to
+Web Programming.
+
+**Imperative programming**: Problems should be solved in the *right* way. This
+means that at many occasions, I have had to dive into low-level and system
+programming, which has given me a rigid understanding of C.
+
+**Object-oriented programming**: My experiences with functional languages have
+taught me many new and valuable lessons about object-oriented programming and
+design. I believe these lessons will be extremely valuable now parallel
+programming has become ubiquitous.
+
+**System administration**: For years, I have been using Linux-based operating
+systems such as Debian and Archlinux to manage personal servers. This experience
+proved very useful when I later learned to manage deployments to multiple
+servers using tools such as Ansible, Puppet and NixOps.
+
+**Front end**: As a full-stack engineer, I have also become very fluent with
+front-end programming, with e.g. JavaScript (though I prefer TypeScript) and CSS
+(though I prefer tools such as LESS).
+
+**Soft skills**: I have a strong Linux background. I am fluent in Dutch and
+English, both orally and in writing. I have volunteered in different nonprofits,
+so I am confident in my teamwork and organizational skills.
 
 ## Work experience
 
 I'll list only relevant jobs here.
 
-- In September 2013, I started as a Software Engineer at [Better] (previously
-  known as *Erudify*). I still work here and love it.
+- In September 2013, I started as a full-stack Software Engineer at [Better]
+  (previously known as *Erudify*). I still work here and love it.
 
 [Better]: http://better.com/
 
-- In 2012, I did a 3-month long full-time programming internship at
-  [Tsuru Capital LLC], a proprietary trading fund based in Tokyo and Singapore.
+- In 2012, I did a internship as a programmer at [Tsuru Capital LLC], a
+  proprietary trading fund based in Tokyo and Singapore. This position taught me
+  a lot about desiging large applications on one side, and how to make my code
+  run *fast* on the other side.
 
 [Tsuru Capital LLC]: http://tsurucapital.com/
 
@@ -132,72 +167,14 @@ This list is not complete: you can view more projects on my [GitHub page].
   Latin & maths specialization
 - 1996 - 2002: Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte
 
-## Talks
+## Speaking and writing
 
-<!-- We link directly to the slide files because it also needs to work in the
-PDF version -->
-
-I've given a number of talks, mostly centered around Haskell. Here is a list:
-
-- [HaskellerZ], Zürich, 31th of October 2013, "Build your own blog using the
-  Hakyll static site generator"
-  ([slides](http://jaspervdj.be/files/2013-haskellerz-hakyll.pdf))
-
-[HaskellerZ]: http://www.meetup.com/HaskellerZ/events/146646212/
-
-- Small guest lecture for "Functional and Logic Programming" at Ghent
-  University, Ghent, 12th of December 2012, "Haskell at Tsuru Capital"
-
-- [DHD 2012], Utrecht, 20th of April 2012, "Supporting Different Versions of the
-  WebSockets Protocol"
-  ([slides](http://jaspervdj.be/files/2012-dutchhug-websockets.pdf))
-
-- GhentFPG, Ghent, 20th of March 2012, "digestive-functors 0.3"
-  ([slides](http://jaspervdj.be/files/2012-ghentfpg-digestive-functors.pdf))
-
-- [CamHac], Cambridge, 14th of August 2011, "GSoC: Text/UTF-8"
-  ([slides](http://jaspervdj.be/files/2011-camhac-text-utf8.pdf))
-
-- [DutchHUG], Utrecht, 14th of July 2011, "Porting Text to UTF-8"
-  ([slides](http://jaspervdj.be/files/2011-dutchhug-text-utf8.pdf))
-
-- GhentFPG, Ghent, 30th of May 2011, "Introduction to optimizing Haskell code"
-  ([slides](http://jaspervdj.be/files/2011-ghentfpg-introduction-optimizing.pdf))
-
-- BarcampGhent, Ghent, 25th of May 2011, "Laziness"
-  ([slides](http://jaspervdj.be/files/2011-barcampghent-laziness.pdf))
-
-- [Functional Programming Exchange], London, 18th of March 2011, "BlazeHtml:
-  blazingly fast HTML combinators"
-  ([slides](http://jaspervdj.be/files/2011-functionalpx-blaze-html.pdf))
-
-- [Zeus WPI], Ghent, 2nd of December 2010, "An interactive introduction to Git"
-  ([slides](http://jaspervdj.be/files/2010-zeus-git.pdf))
-
-- American Express (tech department), New York City, 24th of August 2010,
-  "BlazeHtml: a DSL for HTML generation in Haskell"
-  ([slides](http://jaspervdj.be/files/2010-amex-blaze-html.pdf))
-
-- [DutchHUG], Utrecht, 24th of April 2010, "BlazeHtml: design of a blazingly
-  fast HTML combinator library"
-  ([slides](http://jaspervdj.be/files/2010-dutchhug-blaze-html.pdf))
-
-- GhentFPG, Ghent, 1st of April 2010, "BlazeHtml: a blazingly fast HTML
-  generator in Haskell"
-  ([slides](http://jaspervdj.be/files/2010-ghentfpg-blaze-html.pdf))
-
-- ZuriHac, Zürich, 21th of March 2010, "BlazeHtml: a blazingly fast HTML
-  combinator library"
-  ([slides](http://jaspervdj.be/files/2010-zurihac-blaze-html.pdf))
-
-- BarcampGhent, Ghent, 29th of November 2009, "Learn you a Haskell in 20
-  minutes"
-  ([slides](http://jaspervdj.be/files/2009-barcampghent-haskell.pdf))
-
-[DutchHUG]: http://dutchhug.nl/
-[Functional Programming Exchange]: http://skillsmatter.com/event/scala/functionalpx-2011
-[CamHac]: http://www.haskell.org/haskellwiki/CamHac
-[DHD 2012]: http://www.haskell.org/haskellwiki/DHD_UHac
+Apart from the technical blog I maintain at
+[jaspervdj.be](http://jaspervdj.be/), I have also given a lot of talks at
+various conferences and user groups. My talks have almost exclusively been
+around Haskell, and I have spoken in Ghent, Utrecht, Cambridge, New York, London
+and Zurich. A full list would be too long to include here, but topics and slides
+are available on request.
 
 ## Trivia
 
