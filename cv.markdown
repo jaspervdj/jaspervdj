@@ -9,16 +9,16 @@ title: Curriculum Vitae
 
 ## Summary
 
-I am an experienced Haskell developer, which I have been using commercially, for
-lots of open source work, and for my studies before that.
+I am a software engineer with lots of experience using Haskell, both
+professionally and for open source projects.
 
 I think strong typing and functional programming has helped me achieve a very
 rigorous attitude in programming -- not only in Haskell, but also in the other
 languages I write such as OCaml, Java, C and C++, JavaScript -- by constantly
-striving towards correctness and excellence.
+striving towards correctness, principled design, and robustness.
 
-My personal development projects include various libraries written in Haskell,
-and a technical blog.
+My personal development projects include various high-profile libraries written
+in Haskell, and a technical blog.
 
 ## Skills
 
@@ -28,7 +28,7 @@ Web Programming.
 
 **Imperative programming**: Problems should be solved in the *right* way. This
 means that at many occasions, I have had to dive into low-level and system
-programming, which has given me a rigid understanding of C.
+programming, which has given me a good understanding of C.
 
 **Object-oriented programming**: My experiences with functional languages have
 taught me many new and valuable lessons about object-oriented programming and
@@ -44,9 +44,9 @@ servers using tools such as Ansible, Puppet and NixOps.
 front-end programming, with e.g. JavaScript (though I prefer TypeScript) and CSS
 (though I prefer tools such as LESS).
 
-**Soft skills**: I have a strong Linux background. I am fluent in Dutch and
-English, both orally and in writing. I have volunteered in different nonprofits,
-so I am confident in my teamwork and organizational skills.
+**Soft skills**: I am fluent in Dutch and English, both spoken and written.
+have volunteered in different nonprofits, so I am confident in my teamwork and
+organizational skills.
 
 ## Work experience
 
@@ -84,27 +84,17 @@ involved in the community.
 
 Here is a list of some projects I have worked on in the past years.
 
-- [Lorem Markdownum] (2013): A [lorem ipsum] text generator which generates
-  structured [markdown].
+- [blaze-builder] (2010): Simon Meier and I developed an initial version of a
+  fast builder monoid for the [BlazeHtml] project. This library is now used in
+  many Haskell projects. Simon is the current maintainer.
 
-[Lorem Markdownum]: http://jaspervdj.be/lorem-markdownum
-[lorem ipsum]: http://lipsum.com/
-[markdown]: http://daringfireball.net/projects/markdown/
+[blaze-builder]: http://github.com/meiersi/blaze-builder/
 
-- [stylish-haskell] (2012 - present): A simple tool (and library) for
-  formatting [Haskell] code.
+- [BlazeHtml] (2010 - present) is a blazingly fast HTML combinator library for the
+  Haskell programming language. I worked on this project for [Google Summer of
+  Code] 2010.
 
-[stylish-haskell]: http://github.com/jaspervdj/stylish-haskell
-
-- [websockets] (2011 - present): I created a library for easily writing robust
-  WebSocket-capable servers in [Haskell].
-
-[websockets]: http://jaspervdj.be/websockets/
-
-- [Snap Framework] (2011 - present): I am an occasional contributor to this
-  [Haskell] web framework.
-
-[Snap Framework]: http://snapframework.com/
+[BlazeHtml]: http://jaspervdj.be/blaze
 
 - [Text] (2011): I worked on the text library as a [Google Summer of Code]
   student, creating a port which uses UTF-8 internally, and doing extensive
@@ -112,29 +102,43 @@ Here is a list of some projects I have worked on in the past years.
 
 [Text]: https://github.com/bos/text
 
-- [blaze-builder] (2010): Simon Meier and I developed an initial version of a
-  fast builder monoid for the [BlazeHtml] project. This library is now used in
-  many [Haskell] projects. Simon is the current maintainer.
-
-[blaze-builder]: http://github.com/meiersi/blaze-builder/
-
-- [BlazeHtml] (2010 - present) is a blazingly fast HTML combinator library for the
-  [Haskell] programming language. I worked on this project for [Google Summer of
-  Code] 2010.
-
-[BlazeHtml]: http://jaspervdj.be/blaze
-
 - [Hakyll] (2009 - present): I wanted a custom system for my personal homepage,
-  so I wrote [Hakyll], a static site generator in [Haskell].
+  so I wrote Hakyll, a static site generator in Haskell.
 
 [Hakyll]: http://jaspervdj.be/hakyll
-[Haskell]: http://haskell.org/
+
+- [websockets] (2011 - present): I created a library for easily writing robust
+  WebSocket-capable servers in Haskell.
+
+[websockets]: http://jaspervdj.be/websockets/
+
+- [Snap Framework] (2011 - present): I am an occasional contributor to this
+  Haskell web framework.
+
+[Snap Framework]: http://snapframework.com/
+
+- [stylish-haskell] (2012 - present): A simple tool (and library) for
+  formatting Haskell code.
+
+[stylish-haskell]: http://github.com/jaspervdj/stylish-haskell
 
 - [Digestive functors] (2010 - present) is a general way of consuming input in
-  [Haskell]. It can be used to generate HTML forms and parse the form input, as
+  Haskell. It can be used to generate HTML forms and parse the form input, as
   well as command-line applications.
 
 [Digestive functors]: http://github.com/jaspervdj/digestive-functors/
+
+- [psqueues] (2014) is a Haskell package providing faster priority search
+  queues. These are useful to build high-performance caching infrastructure.
+
+[psqueues]: https://hackage.haskell.org/package/psqueues
+
+- [Lorem Markdownum] (2013): A [lorem ipsum] text generator which generates
+  structured [markdown] using markov chains and huffman trees.
+
+[Lorem Markdownum]: http://jaspervdj.be/lorem-markdownum
+[lorem ipsum]: http://lipsum.com/
+[markdown]: http://daringfireball.net/projects/markdown/
 
 - [geohub.github.com](http://geohub.github.com/) (2012): This is a small tool to
   geolocate your github collaborators.
@@ -176,7 +180,7 @@ around Haskell, and I have spoken in Ghent, Utrecht, Cambridge, New York, London
 and Zurich. A full list would be too long to include here, but topics and slides
 are available on request.
 
-## Trivia
+## Miscellaneous
 
 - For the period of 2009 - 2013, I was in the organizing committee of the
   students' Computer Science Workgroup at [Ghent University], [Zeus WPI].
