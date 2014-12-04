@@ -10,191 +10,138 @@ title: Curriculum Vitae
 ## Summary
 
 I am a software engineer with lots of experience using Haskell, both
-professionally and for open source projects.
-
-I think strong typing and functional programming has helped me achieve a very
-rigorous attitude in programming -- not only in Haskell, but also in the other
-languages I write such as OCaml, Java, C and C++, JavaScript -- by constantly
-striving towards correctness, principled design, and robustness.
-
-My personal development projects include various high-profile libraries written
-in Haskell, and a technical blog.
+professionally and for open source projects. Strong typing and functional
+programming have helped me achieve a rigorous attitude towards programming --
+not only in Haskell, but also in other languages I use such as Java, C, C++,
+OCaml and JavaScript -- by constantly striving towards correctness, principled
+design, and robustness. My personal development projects include high-profile
+Haskell libraries, and a technical blog.
 
 ## Skills
 
-**Functional programming**: I have a deep and broad experience with Haskell, as
-I have applied it many different areas ranging from High Frequence Trading to
-Web Programming.
+- **Functional programming**: I have a deep and broad experience with Haskell,
+  as I have applied it many different areas ranging from High Frequence Trading
+  to Web Programming.
 
-**Imperative programming**: Problems should be solved in the *right* way. This
-means that at many occasions, I have had to dive into low-level and system
-programming, which has given me a good understanding of C.
+- **Imperative programming**: Problems should be solved in the *right* way. This
+  means that at many occasions, I have had to dive into low-level and system
+  programming.
 
-**Object-oriented programming**: My experiences with functional languages have
-taught me many new and valuable lessons about object-oriented programming and
-design. I believe these lessons will be extremely valuable now parallel
-programming has become ubiquitous.
+- **Object-oriented programming**: My experiences with functional languages have
+  taught me many new and valuable lessons about object-oriented programming and
+  design. I believe these lessons will be extremely valuable now that parallel
+  programming has become ubiquitous.
 
-**System administration**: For years, I have been using Linux-based operating
-systems such as Debian and Archlinux to manage personal servers. This experience
-proved very useful when I later learned to manage deployments to multiple
-servers using tools such as Ansible, Puppet and NixOps.
+- **System administration**: For years, I have been using Linux-based operating
+  systems such as Debian and Archlinux to manage personal servers. This
+  experience proved very useful when I later learned to manage deployments to
+  multiple servers using tools such as Ansible, Puppet and NixOps.
 
-**Front end**: As a full-stack engineer, I have also become very fluent with
-front-end programming, with e.g. JavaScript (though I prefer TypeScript) and CSS
-(though I prefer tools such as LESS).
+- **Front end**: As a full-stack engineer, I have also become fluent with
+  front-end programming, with e.g. JavaScript (though I prefer TypeScript) and
+  CSS (though I prefer tools such as LESS).
 
-**Soft skills**: I am fluent in Dutch and English, both spoken and written.
-have volunteered in different nonprofits, so I am confident in my teamwork and
-organizational skills.
+- **Soft skills**: I am fluent in Dutch and English, both spoken and written.
+  have volunteered in different nonprofits, so I am confident in my teamwork and
+  organizational skills.
 
-## Work experience
-
-I'll list only relevant jobs here.
-
-- In September 2013, I started as a full-stack Software Engineer at [Better]
-  (previously known as *Erudify*). I still work here and love it.
-
-[Better]: http://better.com/
-
-- In 2012, I did a internship as a programmer at [Tsuru Capital LLC], a
-  proprietary trading fund based in Tokyo and Singapore. This position taught me
-  a lot about desiging large applications on one side, and how to make my code
-  run *fast* on the other side.
-
-[Tsuru Capital LLC]: http://tsurucapital.com/
-
-- I participated in [Google Summer of Code] twice, in 2010 and 2011. In both
-  cases, I worked for a Haskell project and was positively evaluated.
-
-[Google Summer of Code]: http://code.google.com/soc/
-
-- In the summer of 2011, I worked as a Software Engineer at [Amplidata]. The job
-  involved extending their proprietary Distributed Storage System with an NFS
-  frontend, written in [OCaml].
-
-[Amplidata]: http://www.amplidata.com/
-[OCaml]: http://caml.inria.fr/
-
-## Open source projects
-
-Since 2009, I have been doing a lot of open source development. This is mostly
-centered around the [Haskell] programming language, where I am also actively
-involved in the community.
-
-Here is a list of some projects I have worked on in the past years.
-
-- [blaze-builder] (2010): Simon Meier and I developed an initial version of a
-  fast builder monoid for the [BlazeHtml] project. This library is now used in
-  many Haskell projects. Simon is the current maintainer.
-
-[blaze-builder]: http://github.com/meiersi/blaze-builder/
-
-- [BlazeHtml] (2010 - present) is a blazingly fast HTML combinator library for the
-  Haskell programming language. I worked on this project for [Google Summer of
-  Code] 2010.
-
-[BlazeHtml]: http://jaspervdj.be/blaze
-
-- [Text] (2011): I worked on the text library as a [Google Summer of Code]
-  student, creating a port which uses UTF-8 internally, and doing extensive
-  benchmarking to discover the trade-offs between the different encodings.
-
-[Text]: https://github.com/bos/text
-
-- [Hakyll] (2009 - present): I wanted a custom system for my personal homepage,
-  so I wrote Hakyll, a static site generator in Haskell.
-
-[Hakyll]: http://jaspervdj.be/hakyll
-
-- [websockets] (2011 - present): I created a library for easily writing robust
-  WebSocket-capable servers in Haskell.
-
-[websockets]: http://jaspervdj.be/websockets/
-
-- [Snap Framework] (2011 - present): I am an occasional contributor to this
-  Haskell web framework.
-
-[Snap Framework]: http://snapframework.com/
-
-- [stylish-haskell] (2012 - present): A simple tool (and library) for
-  formatting Haskell code.
-
-[stylish-haskell]: http://github.com/jaspervdj/stylish-haskell
-
-- [Digestive functors] (2010 - present) is a general way of consuming input in
-  Haskell. It can be used to generate HTML forms and parse the form input, as
-  well as command-line applications.
-
-[Digestive functors]: http://github.com/jaspervdj/digestive-functors/
-
-- [psqueues] (2014) is a Haskell package providing faster priority search
-  queues. These are useful to build high-performance caching infrastructure.
-
-[psqueues]: https://hackage.haskell.org/package/psqueues
-
-- [Lorem Markdownum] (2013): A [lorem ipsum] text generator which generates
-  structured [markdown] using markov chains and huffman trees.
-
-[Lorem Markdownum]: http://jaspervdj.be/lorem-markdownum
-[lorem ipsum]: http://lipsum.com/
-[markdown]: http://daringfireball.net/projects/markdown/
-
-- [geohub.github.com](http://geohub.github.com/) (2012): This is a small tool to
-  geolocate your github collaborators.
-
-- [12Urenloop] (2011 - present): With [Zeus WPI], we created software to count
-  laps for this yearly [student event](http://12urenloop.be) (Dutch). I
-  specifically focused on `count-von-count`, a central component used to process
-  raw bluetooth events into useful lap data.
-
-[12Urenloop]: https://github.com/ZeusWPI/12Urenloop
-[Zeus WPI]: http://zeus.ugent.be/
-
-- [JVGS] (2009) is an "artsy" platform game that is not like the others. I
-  implemented a subset of the [SVG specification] to give the game it's original
-  look.
-
-[JVGS]: http://jvgs.sf.net/
-[SVG specification]: http://www.w3.org/Graphics/SVG/
-
-This list is not complete: you can view more projects on my [GitHub page].
-
-[GitHub page]: http://github.com/jaspervdj
+- **Other skills**: Relational databases, NoSQL databases, version control
+  systems, scripting...
 
 ## Education
 
-- 2011 - 2013: Ghent University: Master in Computer Science: Software
-  Engineering
-- 2008 - 2011: Ghent University: Bachelor in Computer Science
-- 2002 - 2008: Secondary school: Sint-Lodewijkscollege Lokeren -- ASO,
-  Latin & maths specialization
-- 1996 - 2002: Primary school: Stedelijke basisschool Lokeren -- afdeling Staakte
+- **Ghent University** (2011 - 2013):
+  Master in Computer Science: Software Engineering, graduated with high
+  distinction
 
-## Speaking and writing
+- **Ghent University** (2008 - 2011):
+  Ghent University: Bachelor in Computer Science, graduated with high
+  distinction
+
+- **Sint-Lodewijkscollege Lokeren** (2002 - 2008):
+  Secondary school: ASO, Latin & maths specialization
+
+## Technical work experience
+
+- **Better** (2013 - 2014): In September 2013, I started as a full-stack
+  Software Engineer at [Better] (previously known as *Erudify*). I mostly worked
+  on the Haskell backend and business logic.
+
+- **Tsuru Capital LLC** (2012): I did a internship as a programmer at [Tsuru
+  Capital LLC], a proprietary trading fund based in Tokyo and Singapore. This
+  position taught me a lot about desiging large applications, and how to make my
+  code run *fast*.
+
+- **Google Summer of Code** (2010 - 2011): I participated in [Google Summer of
+  Code] twice, in 2010 and 2011. In both cases, I worked for a Haskell project
+  and was positively evaluated.
+
+- **Amplidata** (2011): I worked as a Software Engineer at [Amplidata] as a
+  summer job. This involved extending their proprietary Distributed Storage
+  System with an NFS frontend, written in [OCaml].
+
+[Tsuru Capital LLC]: http://tsurucapital.com/
+[Better]: http://better.com/
+[Google Summer of Code]: http://code.google.com/soc/
+[Amplidata]: http://www.amplidata.com/
+[OCaml]: http://caml.inria.fr/
+
+## Open source contributions
+
+- **[Hakyll]**: I wanted a custom system for my personal homepage,
+  so I wrote Hakyll, a static site generator in Haskell.
+
+- **[blaze-builder]**: Simon Meier and I developed an initial version of a
+  fast builder monoid for the [BlazeHtml] project. This library is now used in
+  many Haskell projects. Simon is the current maintainer.
+
+- **[blaze-html]**: a blazingly fast HTML combinator library for the Haskell
+  programming language. I worked on this project for
+  [Google Summer of Code] 2010.
+
+- **[Text]**: I worked on the text library as a [Google Summer of Code]
+  student, creating a port which uses UTF-8 internally, and doing extensive
+  benchmarking to discover the trade-offs between the different encodings.
+
+- **[websockets]**: I created a library for easily writing
+  robust WebSocket-capable servers in Haskell.
+
+Apart from these projects, I have also authored or co-authored
+[stylish-haskell], [Digestive functors], [psqueues], [Lorem Markdownum],
+[geohub.github.com], [12Urenloop], [JVGS], and more. I have also made
+contributions to many Haskell libraries and tools. Most info can be found on my
+[GitHub page], and I would be glad to provide details on request.
+
+[geohub.github.com]: http://geohub.github.io/
+[12Urenloop]: https://github.com/ZeusWPI/12Urenloop
+[blaze-html]: http://jaspervdj.be/blaze
+[Digestive functors]: http://github.com/jaspervdj/digestive-functors/
+[GitHub page]: http://github.com/jaspervdj
+[Hakyll]: http://jaspervdj.be/hakyll
+[JVGS]: http://jvgs.sf.net/
+[Lorem Markdownum]: http://jaspervdj.be/lorem-markdownum
+[Text]: https://github.com/bos/text
+[Zeus WPI]: http://zeus.ugent.be/
+[blaze-builder]: http://github.com/meiersi/blaze-builder/
+[lorem ipsum]: http://lipsum.com/
+[markdown]: http://daringfireball.net/projects/markdown/
+[psqueues]: https://hackage.haskell.org/package/psqueues
+[stylish-haskell]: http://github.com/jaspervdj/stylish-haskell
+[websockets]: http://jaspervdj.be/websockets/
+
+## Community involvement
 
 Apart from the technical blog I maintain at
 [jaspervdj.be](http://jaspervdj.be/), I have also given a lot of talks at
 various conferences and user groups. My talks have almost exclusively been
 around Haskell, and I have spoken in Ghent, Utrecht, Cambridge, New York, London
-and Zurich. A full list would be too long to include here, but topics and slides
-are available on request.
+and Zurich. I would be happy to provide a full list of topics and slides on
+request.
 
-## Miscellaneous
+During the time I was at [Ghent University], I was in the organizing committee
+of the students' Computer Science Workgroup, [Zeus WPI], as well as the
+organizing committee of the [Ghent Functional Programming Group].
 
-- For the period of 2009 - 2013, I was in the organizing committee of the
-  students' Computer Science Workgroup at [Ghent University], [Zeus WPI].
-
+[Ghent Functional Programming Group]: http://www.haskell.org/haskellwiki/Ghent_Functional_Programming_Group
 [Ghent University]: http://ugent.be/
-
-- For the period of 2010 - 2013, I was in the organizing committee of the
-  [Ghent Functional Programming Group][GhentFPG].
-
-[GhentFPG]: http://www.haskell.org/haskellwiki/Ghent_Functional_Programming_Group
-
-- 2nd place (of 83) in [The Flemish Programming Contest] 2011, together with
-  [Pieter De Baets] and [Toon Willems]
-
-[The Flemish Programming Contest]: http://vlaamseprogrammeerwedstrijd.be/
-[Pieter De Baets]: http://thinkjavache.be/
-[Toon Willems]: http://twitter.com/nudded/
+[Zeus WPI]: http://zeus.ugent.be/

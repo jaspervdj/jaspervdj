@@ -1,7 +1,7 @@
 \documentclass[a4paper, 11pt]{article}
 
 \usepackage{geometry}
-\geometry{includeheadfoot, margin=1in}
+\geometry{margin=0.8in}
 
 \usepackage{color}
 \definecolor{darkblue}{RGB}{0,0,100}
@@ -9,14 +9,19 @@
 \usepackage[colorlinks=true, allcolors=darkblue, pdfborder={0 0 0}]{hyperref}
 
 \usepackage{titlesec}
-\titleformat{\subsection}{\large\bfseries}{\thesection}{1em}{\hrule\vspace{1em}}
+\titleformat{\subsection}{\large\bfseries}{\thesection}{0.5em}{\hrule\vspace{1em}}
 
 \usepackage{graphicx}
 
+\usepackage{parskip}
 \setlength{\parindent}{0em}
+\setlength{\parskip}{0.5em}
 \setcounter{secnumdepth}{-1}
-\renewcommand{\labelitemi}{$$\circ$$}
 \renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=*}
+\renewcommand{\labelitemi}{$$\circ$$}
 
 \begin{document}
 
