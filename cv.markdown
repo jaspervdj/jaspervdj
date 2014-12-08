@@ -55,8 +55,7 @@ Haskell libraries, and a technical blog.
   distinction
 
 - **Ghent University** (2008 - 2011):
-  Ghent University: Bachelor in Computer Science, graduated with high
-  distinction
+  Bachelor in Computer Science, graduated with high distinction
 
 - **Sint-Lodewijkscollege Lokeren** (2002 - 2008):
   Secondary school: ASO, with Latin & maths specialization
