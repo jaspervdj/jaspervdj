@@ -11,9 +11,9 @@ title: Curriculum Vitae
 
 I am a software engineer with lots of experience using Haskell, both
 professionally and for open source projects. Strong typing and functional
-programming have helped me achieve a rigorous attitude towards programming --
+programming have helped me achieve a rigorous attitude towards programming –
 not only in Haskell, but also in other languages I use such as Java, C, C++,
-OCaml and JavaScript -- by constantly striving towards correctness, principled
+OCaml and JavaScript – by constantly striving towards correctness, principled
 design, and robustness. My personal development projects include high-profile
 Haskell libraries, and a technical blog.
 
@@ -59,7 +59,7 @@ Haskell libraries, and a technical blog.
   distinction
 
 - **Sint-Lodewijkscollege Lokeren** (2002 - 2008):
-  Secondary school: ASO, Latin & maths specialization
+  Secondary school: ASO, with Latin & maths specialization
 
 ## Technical work experience
 
@@ -135,7 +135,7 @@ Apart from the technical blog I maintain at
 [jaspervdj.be](http://jaspervdj.be/), I have also given a lot of talks at
 various conferences and user groups. My talks have almost exclusively been
 around Haskell, and I have spoken in Ghent, Utrecht, Cambridge, New York, London
-and Zurich. I would be happy to provide a full list of topics and slides on
+and Zürich. I would be happy to provide a full list of topics and slides on
 request.
 
 During the time I was at [Ghent University], I was in the organizing committee

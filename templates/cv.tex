@@ -9,7 +9,7 @@
 \usepackage[colorlinks=true, allcolors=darkblue, pdfborder={0 0 0}]{hyperref}
 
 \usepackage{titlesec}
-\titleformat{\subsection}{\large\bfseries}{\thesection}{0.5em}{\hrule\vspace{1em}}
+\titleformat{\subsection}{\large\bfseries}{\thesection}{0.2em}{\hrule\vspace{0.4em}}
 
 \usepackage{graphicx}
 
@@ -17,7 +17,9 @@
 \setlength{\parindent}{0em}
 \setlength{\parskip}{0.5em}
 \setcounter{secnumdepth}{-1}
-\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage{fontspec}
+\setmainfont{Palatino}
 
 \usepackage{enumitem}
 \setlist[itemize]{leftmargin=*}

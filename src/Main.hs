@@ -33,7 +33,7 @@ main = hakyllWith config $ do
         route   $ setExtension "png"
         compile $ getResourceBody
             >>= loadAndApplyTemplate "templates/formula.tex" defaultContext
-            >>= pdflatex >>= pdfToPng
+            >>= xelatex >>= pdfToPng
 
     -- Compress CSS
     match "css/*" $ do
@@ -154,9 +154,9 @@ main = hakyllWith config $ do
         route   $ setExtension ".pdf"
         compile $ do getResourceBody
             >>= (return . readPandoc)
-            >>= (return . fmap (Pandoc.writeLaTeX Pandoc.def))
+            >>= (return . fmap writeXeTex)
             >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
-            >>= pdflatex
+            >>= xelatex
 
     -- Photographs
     match "photos/*.jpg" $ do
@@ -192,6 +192,9 @@ main = hakyllWith config $ do
         , "links.markdown"
         , "recommendations.markdown"
         ]
+
+    writeXeTex =
+        Pandoc.writeLaTeX Pandoc.def {Pandoc.writerTeXLigatures = False}
 
 
 --------------------------------------------------------------------------------
@@ -233,15 +236,15 @@ feedConfiguration title = FeedConfiguration
 
 --------------------------------------------------------------------------------
 -- | Hacky.
-pdflatex :: Item String -> Compiler (Item TmpFile)
-pdflatex item = do
-    TmpFile texPath <- newTmpFile "pdflatex.tex"
+xelatex :: Item String -> Compiler (Item TmpFile)
+xelatex item = do
+    TmpFile texPath <- newTmpFile "xelatex.tex"
     let tmpDir  = takeDirectory texPath
         pdfPath = replaceExtension texPath "pdf"
 
     unsafeCompiler $ do
         writeFile texPath $ itemBody item
-        _ <- system $ unwords ["pdflatex", "-halt-on-error",
+        _ <- system $ unwords ["xelatex", "-halt-on-error",
             "-output-directory", tmpDir, texPath, ">/dev/null", "2>&1"]
         return ()
 
