@@ -61,6 +61,19 @@ pre {
     overflow: auto;
 }
 
+pre code {
+    background-color: transparent;
+    padding: 0px;
+    margin: 0px;
+}
+
+code {
+    background-color: #e6e6e6;
+    padding: 0px 4px 0px 4px;
+    margin: 0px 2px 0px 2px;
+    color: black;
+}
+
 h1, h2, h3 {
     font-weight: normal;
 }
