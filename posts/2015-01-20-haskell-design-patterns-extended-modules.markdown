@@ -1,5 +1,5 @@
 ---
-title: Haskell Design Patterns: `.Extended` Modules
+title: Haskell Design Patterns: .Extended Modules
 description: A clean way of extending third-party modules
 tags: haskell
 ---
@@ -32,7 +32,7 @@ The first blogpost deals with what I call `.Extended` Modules. While the general
 idea has probably been around for a while, the credit for this specific scheme
 goes to Bas van Dijk, Simon Meier, and Thomas Schilling.
 
-# `.Extended` Modules: the problem
+# .Extended Modules: the problem
 
 This problem mainly resolves around *organisation* of code.
 
