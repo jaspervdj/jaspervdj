@@ -1,5 +1,5 @@
 ---
-title: Haskell Design Patterns: Extended Modules
+title: Haskell Design Patterns: `.Extended` Modules
 description: A clean way of extending third-party modules
 tags: haskell
 ---
@@ -28,11 +28,11 @@ This has given me a better insight into these patterns, so I hope to write a
 couple of blogposts like this over the next couple of months. We will see how it
 goes -- I am not exactly a prolific blogger.
 
-The first blogpost deals with what I call Extended Modules. While the general
+The first blogpost deals with what I call `.Extended` Modules. While the general
 idea has probably been around for a while, the credit for this specific scheme
 goes to Bas van Dijk, Simon Meier, and Thomas Schilling.
 
-# Extended Modules: the problem
+# `.Extended` Modules: the problem
 
 This problem mainly resolves around *organisation* of code.
 
@@ -121,7 +121,7 @@ instance (Binary k, Binary v, Eq k, Hashable k) => Binary (HashMap k v) where
     get = fmap fromList get
 ~~~~~
 
-A special case of these Extended modules is `Prelude.Extended`. Since you will
+A special case of these `.Extended` modules is `Prelude.Extended`. Since you will
 typically import `Prelude.Extended` into almost all modules in your application,
 it is a great way to add a bunch of (very) common imports from `base`, so import
 noise is reduced.
@@ -173,7 +173,7 @@ application, it is clear to me that this is a great way to organise and share
 code in a team.
 
 A side-effect of this scheme is that it becomes very convenient to consider some
-utility functions from these Extended modules for inclusion in their respective
+utility functions from these `.Extended` modules for inclusion in their respective
 libraries, since they all live in the same place. If they do get added, just
 remove the originals from hackage-extended, and the rest of your code doesn't
 even break!
