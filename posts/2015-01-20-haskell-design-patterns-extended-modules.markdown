@@ -11,12 +11,12 @@ Patterns in Haskell. This never really worked out. It is hard to write about
 Design Patterns.
 
 First off, I have been writing Haskell for a long time, so mostly things feel
-naturally and I do not really think about code in terms of Design Patterns.
+natural and I do not really think about code in terms of Design Patterns.
 
 Additionaly, I think there is a very, very thin line between what we call
 "Design Patterns" and what we call "Common Sense". Too much on one side of the
 line, and you sound like a complete idiot. Too much on the other side of the
-line, and you sound look like a pretentious fool who needs five UML diagrams in
+line, and you sound like a pretentious fool who needs five UML diagrams in
 order to write a 100-line program.
 
 However, in the last year, I have both been teaching more Haskell, and I have
@@ -24,13 +24,13 @@ been reading even more code written by other people. The former made me think
 harder about why I do things, and the latter made me notice patterns I hadn't
 thought of before, in particular if they were formulated in another way.
 
-This has given me a better oversight over these patterns, so I hope to write a
-couple of blogposts like this over the next couple of months. We will see how
-it goes -- I am not exactly a prolific blogger.
+This has given me a better insight into these patterns, so I hope to write a
+couple of blogposts like this over the next couple of months. We will see how it
+goes -- I am not exactly a prolific blogger.
 
 The first blogpost deals with what I call Extended Modules. While the general
 idea has probably been around for a while, the credit for this specific scheme
-goes to Bas van Dijk, Simon Meier, and Thomas Schilling (as far as we know).
+goes to Bas van Dijk, Simon Meier, and Thomas Schilling.
 
 # Extended Modules: the problem
 
@@ -92,11 +92,10 @@ Snap.Core.Extended` as a drop-in replacement for `import Snap.Core`.
 This also makes sharing code in a team easier. For example, say that you are
 looking for a `catMaybes` for `Data.Vector`.
 
-Before, I would have considered either defining this locally in a `where`
-clause, or locally as a non-exported function. This works for single-person
-projects, but not when different people are working on different modules: you
-end up with five implementations of this method, scattered throughout the
-codebase.
+Before, I would have considered either defining this in a `where` clause, or
+locally as a non-exported function. This works for single-person projects, but
+not when different people are working on different modules: you end up with five
+implementations of this method, scattered throughout the codebase.
 
 With this scheme, however, it's clear where to look for such a method: in
 `Data.Vector.Extended`. If it's not there, you add it.
@@ -122,6 +121,29 @@ instance (Binary k, Binary v, Eq k, Hashable k) => Binary (HashMap k v) where
     get = fmap fromList get
 ~~~~~
 
+A special case of these Extended modules is `Prelude.Extended`. Since you will
+typically import `Prelude.Extended` into almost all modules in your application,
+it is a great way to add a bunch of (very) common imports from `base`, so import
+noise is reduced.
+
+This is, of course, quite subjective. Some might want to add a few specific
+functions to `Prelude` (as illustrated below), and others might prefer to add
+all of `Control.Applicative`, `Data.List`, `Data.Maybe`, and so on.
+
+`src/Prelude/Extended.hs`:
+
+~~~~~{.haskell}
+module Prelude.Extended
+    ( module Prelude
+    , foldl'
+    , fromMaybe
+    ) where
+
+import           Data.List  (foldl')
+import           Data.Maybe (fromMaybe)
+import           Prelude
+~~~~~
+
 # Scaling up
 
 The basic scheme breaks once our application consists of several cabal packages.
@@ -130,19 +152,19 @@ If we have a package `acmecorp-web`, which depends on `acmecorp-core`, we would
 have to expose `Data.HashMap.Strict.Extended` from `acmecorp-core`, which feels
 weird.
 
-A simple solution is to create an proprietary `unordered-containers-extended`
-package, which is obviously not uploaded to the public Hackage. Then, you can
+A simple solution is to create an `unordered-containers-extended` package (which
+is **not** uploaded to the public Hackage for obvious reasons). Then, you can
 export `Data.HashMap.Strict.Extended` from there.
 
-This solution creates quite a lot of overhead. Having many modules is a great
-thing, since they are easy to manage -- they are just files after all. Managing
-many packages, however, is harder: every package introduces a significant amount
-of overhead: for example, repos need to be maintained, and dependencies need to
-be managed explicitly in the cabal file.
+This solution creates quite a lot of overhead. Having many modules is fine,
+since they are easy to manage -- they are just files after all. Managing many
+packages, however, is harder: every package introduces a significant amount of
+overhead: for example, repos need to be maintained, and dependencies need to be
+managed explicitly in the cabal file.
 
 An alternative solution is to simply put all of these modules together in a
-proprietary `hackage-extended` package. This solves the maintenance overhead and
-still gives you a very clean module hierarchy.
+`hackage-extended` package. This solves the maintenance overhead and still gives
+you a very clean module hierarchy.
 
 # Conclusion
 
@@ -150,9 +172,13 @@ After using this scheme for over year in a large, constantly evolving Haskell
 application, it is clear to me that this is a great way to organise and share
 code in a team.
 
-Additionally, great side effect of this scheme is that, after using this system
-for a while, you can consider some utility functions from these Extended modules
-for inclusion in their respective libraries. Since these functions have been
-allowed to simmer for a while, they should be battle-tested, and since
-you have been using them for a while, you can argue more precisely about
-why this particular function is useful.
+Additionally, great side-effect of this scheme is that, after using this system
+for a while, it is very convenient (since they all live in the same place) to
+consider some utility functions from these Extended modules for inclusion in
+their respective libraries. Since these functions have been allowed to simmer
+for a while, they should be battle-tested, and since you have been using them
+for a while, you can argue more precisely about why a particular function is
+useful. If they do get added, just remove the originals from hackage-extended,
+and the rest of your code doesn't even break!
+
+Thanks to Alex Sayers for proofreading!
