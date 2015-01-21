@@ -172,13 +172,10 @@ After using this scheme for over year in a large, constantly evolving Haskell
 application, it is clear to me that this is a great way to organise and share
 code in a team.
 
-Additionally, great side-effect of this scheme is that, after using this system
-for a while, it is very convenient (since they all live in the same place) to
-consider some utility functions from these Extended modules for inclusion in
-their respective libraries. Since these functions have been allowed to simmer
-for a while, they should be battle-tested, and since you have been using them
-for a while, you can argue more precisely about why a particular function is
-useful. If they do get added, just remove the originals from hackage-extended,
-and the rest of your code doesn't even break!
+A side-effect of this scheme is that it becomes very convenient to consider some
+utility functions from these Extended modules for inclusion in their respective
+libraries, since they all live in the same place. If they do get added, just
+remove the originals from hackage-extended, and the rest of your code doesn't
+even break!
 
 Thanks to Alex Sayers for proofreading!
