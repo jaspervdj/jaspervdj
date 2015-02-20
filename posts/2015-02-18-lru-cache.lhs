@@ -35,21 +35,23 @@ We obviously needs some imports since, again, this is a literate Haskell file.
 
 > {-# LANGUAGE BangPatterns #-}
 
-> import           Control.Applicative     ((<$>))
-> import           Data.Hashable           (Hashable, hash)
-> import qualified Data.HashPSQ            as HashPSQ
-> import           Data.Int                (Int64)
-> import qualified Data.Vector as V
-> import Data.IORef (IORef, newIORef, atomicModifyIORef')
-> import Prelude hiding (lookup)
-> import Data.Maybe (isNothing)
+> import           Control.Applicative ((<$>))
+> import           Data.Hashable       (Hashable, hash)
+> import qualified Data.HashPSQ        as HashPSQ
+> import           Data.IORef          (IORef, newIORef, atomicModifyIORef')
+> import           Data.Int            (Int64)
+> import           Data.Maybe          (isNothing)
+> import qualified Data.Vector         as V
+> import           Prelude             hiding (lookup)
 
 Let's start with our datatype definition. Our `Cache` is parameterized by type
-over `k` and `v`, respecively our key and value types. We use the `k` and `v` as
-key value types in our priority search queue, and as priority we are using an
-`Int64`.
+over `k` and `v`. The types represent our key and value respectively. We will
+use the `k` and `v` as key value types in our priority search queue `cQueue`,
+and as priority we are using an `Int64`.
 
-The `cTick` field represents a simple logical time value.
+The `cTick` field represents a simple logical time value, and the next item we
+insert will have this priority -- this means that another invariant of our code
+is that all priorities in `cQueue` are smaller than `cTick`.
 
 > data Cache k v = Cache
 >     { cCapacity :: !Int
@@ -85,7 +87,9 @@ often.
 >     | cTick c >= maxBound    = empty (cCapacity c)
 
 Then, we just need to check if our size is still within bounds. If it is not, we
-drop the oldest item -- that is the item with the smallest tick.
+drop the oldest item -- that is the item with the smallest tick. We will only
+ever need to drop one item at a time, because we will call `trim` after every
+`insert`.
 
 >     | cSize c <= cCapacity c = c
 >     | otherwise              = c
@@ -116,7 +120,7 @@ This is necessary, since we need to know whether or not we need to update
 
 Lookup is not that hard either, but we need to remember that in addition to
 looking up the item, we also want to bump the priority. We can do this using the
-`alter` function from psqueues: that allows to modify a value (bump its
+`alter` function from psqueues: that allows us to modify a value (bump its
 priority) and return something (the value, if found) at the same time.
 
 ~~~~~{.haskell}
@@ -141,7 +145,7 @@ The `b` in the signature above becomes our lookup result.
 
 That basically gives a clean and simple implementation of a pure LRU Cache. If
 you are only writing pure code, you should be good to go! However, most
-applications deal with caches in IO, so we will have a adjust for that.
+applications deal with caches in IO, so we will have to adjust it for that.
 
 A simple IO-based cache
 =======================
@@ -173,14 +177,13 @@ in that case we modify the cache.
 >         Nothing      -> (c,  Nothing)
 >         Just (v, c') -> (c', Just v)
 
-
 If it is found, we can just return it.
 
 >     case lookupRes of
 >         Just v  -> return v
 
-Otherwise, execute the `IO` action and call `atomicModifyIORef'` again to insert
-it into the cache.
+Otherwise, we execute the `IO` action and call `atomicModifyIORef'` again to
+insert it into the cache.
 
 >         Nothing -> do
 >             v <- io
@@ -194,23 +197,25 @@ This scheme already gives us fairly good performance. However, that can degrade
 a little when lots of threads are calling `atomicModifyIORef'` on the same
 `IORef`.
 
-`atomicModifyIORef'` is implemented using a compare-and-swap, a bit like this:
+`atomicModifyIORef'` is implemented using a compare-and-swap, so conceptually it
+works a bit like this:
 
 ~~~~~~{.haskell}
 atomicModifyIORef' :: IORef a -> (a -> (a, b)) -> IO b
 atomicModifyIORef' ref f = do
     x <- readIORef ref
     let (!y, !b) = f x
-    swapped <- compareAndSwap ref x y  -- Only works if the value is still x
+    swapped <- compareAndSwap ref x y  -- Atomically write y if value is still x
     if swapped
         then return b
         else atomicModifyIORef' ref f  -- Retry
 ~~~~~~
 
-We can see that this can lead to contention: the more concurrent
-`atomicModifyIORef'`s we get, the more retries, which will eventually bring our
+We can see that this can lead to contention: if we have a lot of concurrent
+`atomicModifyIORef'`s, we can get into a retry loop. It cannot cause a deadlock
+(i.e., it should still eventually finish), but it will eventually bring our
 performance to a grinding halt. This is a common problem with `IORef`s which I
-have personaly encountered in real-world scenarios.
+have also personaly encountered in real-world scenarios.
 
 A striped cache
 ===============
@@ -238,9 +243,18 @@ Our hash function then determines which `Handle` we should use:
 >   where
 >     idx = hash k `mod` V.length v
 
+Because our access pattern is now distributed amongst the different `Handle`s,
+we should be able to avoid the contention problem.
+
 Conclusion
 ==========
 
 We have implemented a common data structure, with two variations and decent
 performance. Thanks to the psqueues package, the implementations are very
-straightforward and should be possible to tune the caches to your need.
+straightforward, small in code size, and it should be possible to tune the
+caches to your need.
+
+For embedding the pure cache into IO, there obviously many other possibilities
+than the ones seen here: for example, we could also use [MVar]s or [STM].
+
+Thanks to the dashing Alex Sayers for proofreading.
