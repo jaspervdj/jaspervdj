@@ -23,7 +23,7 @@ your needs.
 The base for a bounded LRU Cache is usually a Priority Queue. We will use the
 [psqueues](TODO) package, which provides Priority Search Queues. Priority Search
 Queues are Priority Queues which have additional *lookup by key* functionality
--- so perfect for our cache lookups.
+-- which is perfect for our cache lookups.
 
 This blogpost is written in literate Haskell, so you should be able to plug it
 into GHCi and play around with it -- the raw file can be found [here](TODO).
@@ -82,7 +82,7 @@ The first thing we want to check is if our logical time reaches the maximum
 value it can take. If this is the case, can either reset all the ticks in our
 queue, or we can clear it. We choose for the latter here, since that is simply
 easier to code, and we are talking about a scenario that should not happen
-often.
+very often.
 
 >     | cTick c >= maxBound    = empty (cCapacity c)
 
@@ -141,7 +141,7 @@ The `b` in the signature above becomes our lookup result.
 >         in Just (x, c')
 >   where
 >     lookupAndBump Nothing       = (Nothing, Nothing)
->     lookupAndBump (Just (_, x)) = (Just x, Just ((cTick c), x))
+>     lookupAndBump (Just (_, x)) = (Just x,  Just ((cTick c), x))
 
 That basically gives a clean and simple implementation of a pure LRU Cache. If
 you are only writing pure code, you should be good to go! However, most
@@ -249,12 +249,18 @@ we should be able to avoid the contention problem.
 Conclusion
 ==========
 
-We have implemented a common data structure, with two variations and decent
-performance. Thanks to the psqueues package, the implementations are very
-straightforward, small in code size, and it should be possible to tune the
-caches to your need.
+We have implemented a very useful datastructure for many applications, with two
+variations and decent performance. Thanks to the psqueues package, the
+implementations are very straightforward, small in code size, and it should be
+possible to tune the caches to your needs.
 
-For embedding the pure cache into IO, there obviously many other possibilities
-than the ones seen here: for example, we could also use [MVar]s or [STM].
+Many variations are possible: you can use real timestamps (`UTCTime`) as
+priorities in the queue and have items expire after a given amount of time. Or,
+if modifications of the values `v` are allowed, you can add a function which
+writes the updates to the cache as well as to the underlying data source.
+
+For embedding the pure cache into IO, there many other possibilities than the
+(optionally striped) `IORef`s as well: for example, we could also use [MVar]s or
+[STM].
 
 Thanks to the dashing Alex Sayers for proofreading.
