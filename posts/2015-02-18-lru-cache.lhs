@@ -56,9 +56,9 @@ insert will have this priority -- this means that another invariant of our code
 is that all priorities in `cQueue` are smaller than `cTick`.
 
 > data Cache k v = Cache
->     { cCapacity :: !Int
->     , cSize     :: !Int
->     , cTick     :: !Priority
+>     { cCapacity :: !Int       -- ^ The maximum number of elements in the queue
+>     , cSize     :: !Int       -- ^ The current number of elements in the queue
+>     , cTick     :: !Priority  -- ^ The next logical time
 >     , cQueue    :: !(HashPSQ.HashPSQ k Priority v)
 >     }
 
