@@ -30,7 +30,7 @@ blogpost we will be using its `HashPSQ` data type.
 
 This blogpost is written in literate Haskell, so you should be able to plug it
 into GHCi and play around with it. The raw file can be found
-[here](https://github.com/asayers/jaspervdj/blob/master/posts/2015-02-24-lru-cache.lhs).
+[here](https://github.com/jaspervdj/jaspervdj/blob/master/posts/2015-02-24-lru-cache.lhs).
 
 A pure implementation
 =====================
@@ -282,4 +282,5 @@ cache for use across your entire application, you could allow it to store
 heterogeneously-typed values, and provide multiple strongly-typed interfaces to
 the same cache. However, implementing these things is a story for another time.
 
-Thanks to the dashing Alex Sayers for proofreading.
+Thanks to the dashing Alex Sayers for proofreading and suggesting many
+corrections and improvements.
