@@ -270,8 +270,15 @@ priorities in the queue and have items expire after a given amount of time. Or,
 if modifications of the values `v` are allowed, you can add a function which
 writes the updates to the cache as well as to the underlying data source.
 
-For embedding the pure cache into IO, there many other possibilities than the
-(optionally striped) `IORef`s as well: for example, we could also use [MVar]s or
-[STM].
+For embedding the pure cache into IO, there many alternatives to using
+`IORef`s: for example, we could have used [MVar]s or [TVar]s. There are
+other strategies for reducing contention other than striping, too.
+
+You could even write a cache which is bounded by its total size on the heap,
+rather than by the number of elements in the queue. If you want a single
+bounded cache for use across your entire application, you could allow it to
+store hetrogenously-typed values, and provide multiple strongly-typed
+interfaces to the same cache. However, implementing these things is a story for
+another time.
 
 Thanks to the dashing Alex Sayers for proofreading.
