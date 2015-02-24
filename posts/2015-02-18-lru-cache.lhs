@@ -121,12 +121,12 @@ This is necessary, since we need to know whether or not we need to update
 `cSize`.
 
 > insert :: (Hashable k, Ord k) => k -> v -> Cache k v -> Cache k v
-> insert k x c = trim $!
->     let (mbOldVal, q) = HashPSQ.insertView k (cTick c) x (cQueue c)
+> insert key val c = trim $!
+>     let (mbOldVal, queue) = HashPSQ.insertView key (cTick c) val (cQueue c)
 >     in c
 >         { cSize  = if isNothing mbOldVal then cSize c + 1 else cSize c
 >         , cTick  = cTick c + 1
->         , cQueue = q
+>         , cQueue = queue
 >         }
 
 Lookup is not that hard either, but we need to remember that in addition to
