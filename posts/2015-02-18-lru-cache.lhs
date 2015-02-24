@@ -113,9 +113,9 @@ This is necessary, since we need to know whether or not we need to update
 
 > insert :: (Hashable k, Ord k) => k -> v -> Cache k v -> Cache k v
 > insert k x c = trim $!
->     let (mbRemoved, q) = HashPSQ.insertView k (cTick c) x (cQueue c)
+>     let (mbOldVal, q) = HashPSQ.insertView k (cTick c) x (cQueue c)
 >     in c
->         { cSize  = if isNothing mbRemoved then cSize c + 1 else cSize c
+>         { cSize  = if isNothing mbOldVal then cSize c + 1 else cSize c
 >         , cTick  = cTick c + 1
 >         , cQueue = q
 >         }
