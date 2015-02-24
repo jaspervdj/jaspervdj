@@ -49,6 +49,8 @@ over `k` and `v`. The types represent our key and value respectively. We will
 use the `k` and `v` as key value types in our priority search queue `cQueue`,
 and as priority we are using an `Int64`.
 
+> type Priority = Int64
+
 The `cTick` field represents a simple logical time value, and the next item we
 insert will have this priority -- this means that another invariant of our code
 is that all priorities in `cQueue` are smaller than `cTick`.
@@ -56,8 +58,8 @@ is that all priorities in `cQueue` are smaller than `cTick`.
 > data Cache k v = Cache
 >     { cCapacity :: !Int
 >     , cSize     :: !Int
->     , cTick     :: !Int64
->     , cQueue    :: !(HashPSQ.HashPSQ k Int64 v)
+>     , cTick     :: !Priority
+>     , cQueue    :: !(HashPSQ.HashPSQ k Priority v)
 >     }
 
 Creating an empty `Cache` is easy; we just need to know the maximum capacity.
