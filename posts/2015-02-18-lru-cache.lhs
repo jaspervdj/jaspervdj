@@ -84,7 +84,7 @@ queue, or we can clear it. We choose for the latter here, since that is simply
 easier to code, and we are talking about a scenario that should not happen
 very often.
 
->     | cTick c >= maxBound    = empty (cCapacity c)
+>     | cTick c == maxBound   = empty (cCapacity c)
 
 Then, we just need to check if our size is still within bounds. If it is not, we
 drop the oldest item -- that is the item with the smallest tick. We will only
