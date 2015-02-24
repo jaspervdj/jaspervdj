@@ -26,6 +26,9 @@ accessed. A number of Priority Search Queue implementations are provided by the
 [psqueues](TODO) package, and in this blogpost we will be using its `HashPSQ`
 data type.
 
+<small>Disclaimer: I am one of the principal authors of the psqueues
+package.</small>
+
 This blogpost is written in literate Haskell, so you should be able to plug it
 into GHCi and play around with it. The raw file can be found [here](TODO).
 
