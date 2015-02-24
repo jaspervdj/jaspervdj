@@ -44,16 +44,21 @@ First, we import some things, including the `Data.HashPSQ` module from psqueues.
 > import qualified Data.Vector         as V
 > import           Prelude             hiding (lookup)
 
-Let's start with our datatype definition. Our `Cache` is parameterized by type
-over `k` and `v`. The types represent our key and value respectively. We will
-use the `k` and `v` as key value types in our priority search queue `cQueue`,
-and as priority we are using an `Int64`.
+Let's start with our datatype definition. Our `Cache` type is parameterized by
+`k` and `v`, which represent the types of our keys and values respectively.
+The priorities of our elements will be the logical time at which they were
+last accessed, or the time at which they were inserted (for elements which have
+never been accessed). We will represent these logical times by values of type
+`Int64`.
 
 > type Priority = Int64
 
-The `cTick` field represents a simple logical time value, and the next item we
-insert will have this priority -- this means that another invariant of our code
-is that all priorities in `cQueue` are smaller than `cTick`.
+The `cTick` field stores the "next" logical time -- that is, the value of
+`cTick` should be one greater than the maximum priority in `cQueue`. At the
+very least, we need to maintain the invariant that all priorities in `cQueue`
+are smaller than `cTick`. A consequence of this is that `cTick` should increase
+monotonically. This is violated in the case of an integer overflow, so we need
+to care special care of that case.
 
 > data Cache k v = Cache
 >     { cCapacity :: !Int       -- ^ The maximum number of elements in the queue
