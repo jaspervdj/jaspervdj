@@ -84,18 +84,18 @@ queue, or we can clear it. We choose for the latter here, since that is simply
 easier to code, and we are talking about a scenario that should not happen
 very often.
 
->     | cTick c == maxBound   = empty (cCapacity c)
+>     | cTick c == maxBound  = empty (cCapacity c)
 
 Then, we just need to check if our size is still within bounds. If it is not, we
 drop the oldest item -- that is the item with the smallest tick. We will only
 ever need to drop one item at a time, because we will call `trim` after every
 `insert`.
 
->     | cSize c <= cCapacity c = c
->     | otherwise              = c
+>     | cSize c > cCapacity c = c
 >         { cSize  = cSize c - 1
 >         , cQueue = HashPSQ.deleteMin (cQueue c)
 >         }
+>     | otherwise             = c
 
 Insert is pretty straighforward to implement now. We use the `insertView`
 function from `psqueues` which tells us whether or not an item was overwritten.
