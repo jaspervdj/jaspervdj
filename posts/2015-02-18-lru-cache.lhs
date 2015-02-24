@@ -15,7 +15,7 @@ performance reasons according to their usage pattern, or use a specific
 interface that works really well for them.
 
 However, this sometimes results in less-than-optimal design choices. I thought I
-would take some time and explain how a bounded LRU Cache can be written in a
+would take some time and explain how a bounded LRU cache can be written in a
 reasonably straightforward way (the code is fairly short), while still achieving
 great performance. Hence, it should not be too much trouble to tune this code to
 your needs.
@@ -26,7 +26,7 @@ Queues are Priority Queues which have additional *lookup by key* functionality
 -- which is perfect for our cache lookups.
 
 This blogpost is written in literate Haskell, so you should be able to plug it
-into GHCi and play around with it -- the raw file can be found [here](TODO).
+into GHCi and play around with it. The raw file can be found [here](TODO).
 
 A pure implementation
 =====================
@@ -60,7 +60,7 @@ is that all priorities in `cQueue` are smaller than `cTick`.
 >     , cQueue    :: !(HashPSQ.HashPSQ k Int64 v)
 >     }
 
-Creating an empty `Cache` is easy, we just need to know the maximum capacity:
+Creating an empty `Cache` is easy; we just need to know the maximum capacity.
 
 > empty :: Int -> Cache k v
 > empty capacity
@@ -72,7 +72,7 @@ Creating an empty `Cache` is easy, we just need to know the maximum capacity:
 >         , cQueue    = HashPSQ.empty
 >         }
 
-Next, we will write a utility function to ensure the invariants of our datatype.
+Next, we will write a utility function to ensure that the invariants of our datatype are met.
 We can then use that in our `lookup` and `insert` functions.
 
 > trim :: (Hashable k, Ord k) => Cache k v -> Cache k v
@@ -223,11 +223,11 @@ A striped cache
 A good solution around this problem, since we already have a `Hashable` instance
 for our key anyway, is striping the keyspace. We can even reuse our `Handle` in
 quite an elegant way. Instead of just using one `Handle`, we create a `Vector`
-instead:
+of `Handle`s instead:
 
 > newtype StripedHandle k v = StripedHandle (V.Vector (Handle k v))
 
-The user can configure the number of handles that is created:
+The user can configure the number of handles that are created:
 
 > newStripedHandle :: Int -> Int -> IO (StripedHandle k v)
 > newStripedHandle numStripes capacityPerStripe =
@@ -249,7 +249,7 @@ we should be able to avoid the contention problem.
 Conclusion
 ==========
 
-We have implemented a very useful datastructure for many applications, with two
+We have implemented a very useful data structure for many applications, with two
 variations and decent performance. Thanks to the psqueues package, the
 implementations are very straightforward, small in code size, and it should be
 possible to tune the caches to your needs.
