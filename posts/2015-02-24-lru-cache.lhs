@@ -1,5 +1,5 @@
 ---
-title: Writing an bounded LRU Cache in Haskell
+title: Writing an LRU Cache in Haskell
 description: Using psqueues to write simple but fast code
 tags: haskell
 ---
