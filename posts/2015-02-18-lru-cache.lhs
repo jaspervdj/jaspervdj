@@ -206,10 +206,10 @@ works a bit like this:
 atomicModifyIORef' :: IORef a -> (a -> (a, b)) -> IO b
 atomicModifyIORef' ref f = do
     x <- readIORef ref
-    let (!y, !b) = f x
-    swapped <- compareAndSwap ref x y  -- Atomically write y if value is still x
+    let (!x', !y) = f x
+    swapped <- compareAndSwap ref x x'  -- Atomically write x' if value is still x
     if swapped
-        then return b
+        then return y
         else atomicModifyIORef' ref f  -- Retry
 ~~~~~~
 
