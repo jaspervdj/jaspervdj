@@ -20,10 +20,11 @@ reasonably straightforward way (the code is fairly short), while still achieving
 great performance. Hence, it should not be too much trouble to tune this code to
 your needs.
 
-The base for an LRU Cache is usually a Priority Queue. We will use the
-[psqueues](TODO) package, which provides Priority Search Queues. Priority Search
-Queues are Priority Queues which have additional *lookup by key* functionality
--- which is perfect for our cache lookups.
+The data structure usually underpinning an LRU cache is a Priority Search
+Queue, where the priority of an element is the time at which it was last
+accessed. A number of Priority Search Queue implementations are provided by the
+[psqueues](TODO) package, and in this blogpost we will be using its `HashPSQ`
+data type.
 
 This blogpost is written in literate Haskell, so you should be able to plug it
 into GHCi and play around with it. The raw file can be found [here](TODO).
