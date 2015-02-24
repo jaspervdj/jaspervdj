@@ -15,12 +15,12 @@ performance reasons according to their usage pattern, or use a specific
 interface that works really well for them.
 
 However, this sometimes results in less-than-optimal design choices. I thought I
-would take some time and explain how a bounded LRU cache can be written in a
+would take some time and explain how an LRU cache can be written in a
 reasonably straightforward way (the code is fairly short), while still achieving
 great performance. Hence, it should not be too much trouble to tune this code to
 your needs.
 
-The base for a bounded LRU Cache is usually a Priority Queue. We will use the
+The base for an LRU Cache is usually a Priority Queue. We will use the
 [psqueues](TODO) package, which provides Priority Search Queues. Priority Search
 Queues are Priority Queues which have additional *lookup by key* functionality
 -- which is perfect for our cache lookups.
@@ -31,7 +31,7 @@ into GHCi and play around with it. The raw file can be found [here](TODO).
 A pure implementation
 =====================
 
-We obviously needs some imports since, again, this is a literate Haskell file.
+First, we import some things, including the `Data.HashPSQ` module from psqueues.
 
 > {-# LANGUAGE BangPatterns #-}
 
@@ -87,8 +87,8 @@ very often.
 >     | cTick c == maxBound  = empty (cCapacity c)
 
 Then, we just need to check if our size is still within bounds. If it is not, we
-drop the oldest item -- that is the item with the smallest tick. We will only
-ever need to drop one item at a time, because we will call `trim` after every
+drop the oldest item -- that is the item with the smallest priority. We will only
+ever need to drop one item at a time, because our cache is number-bounded and we will call `trim` after every
 `insert`.
 
 >     | cSize c > cCapacity c = c
@@ -98,7 +98,7 @@ ever need to drop one item at a time, because we will call `trim` after every
 >     | otherwise             = c
 
 Insert is pretty straighforward to implement now. We use the `insertView`
-function from `psqueues` which tells us whether or not an item was overwritten.
+function from `Data.HashPSQ` which tells us whether or not an item was overwritten.
 
 ~~~~~~{.haskell}
 insertView
