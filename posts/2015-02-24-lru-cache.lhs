@@ -20,17 +20,17 @@ reasonably straightforward way (the code is fairly short), while still achieving
 great performance. Hence, it should not be too much trouble to tune this code to
 your needs.
 
-The data structure usually underpinning an LRU cache is a Priority Search
-Queue, where the priority of an element is the time at which it was last
-accessed. A number of Priority Search Queue implementations are provided by the
-[psqueues](TODO) package, and in this blogpost we will be using its `HashPSQ`
-data type.
+The data structure usually underpinning an LRU cache is a Priority Search Queue,
+where the priority of an element is the time at which it was last accessed. A
+number of Priority Search Queue implementations are provided by the
+[psqueues](http://hackage.haskell.org/package/psqueues) package, and in this
+blogpost we will be using its `HashPSQ` data type.
 
-<small>Disclaimer: I am one of the principal authors of the psqueues
-package.</small>
+*Disclaimer: I am one of the principal authors of the psqueues package.*
 
 This blogpost is written in literate Haskell, so you should be able to plug it
-into GHCi and play around with it. The raw file can be found [here](TODO).
+into GHCi and play around with it. The raw file can be found
+[here](https://github.com/asayers/jaspervdj/blob/master/posts/2015-02-24-lru-cache.lhs).
 
 A pure implementation
 =====================
@@ -98,9 +98,9 @@ very often.
 >     | cTick c == maxBound  = empty (cCapacity c)
 
 Then, we just need to check if our size is still within bounds. If it is not, we
-drop the oldest item -- that is the item with the smallest priority. We will only
-ever need to drop one item at a time, because our cache is number-bounded and we will call `trim` after every
-`insert`.
+drop the oldest item -- that is the item with the smallest priority. We will
+only ever need to drop one item at a time, because our cache is number-bounded
+and we will call `trim` after every `insert`.
 
 >     | cSize c > cCapacity c = c
 >         { cSize  = cSize c - 1
@@ -108,7 +108,7 @@ ever need to drop one item at a time, because our cache is number-bounded and we
 >         }
 >     | otherwise             = c
 
-Insert is pretty straighforward to implement now. We use the `insertView`
+Insert is pretty straightforward to implement now. We use the `insertView`
 function from `Data.HashPSQ` which tells us whether or not an item was overwritten.
 
 ~~~~~~{.haskell}
@@ -216,7 +216,9 @@ atomicModifyIORef' :: IORef a -> (a -> (a, b)) -> IO b
 atomicModifyIORef' ref f = do
     x <- readIORef ref
     let (!x', !y) = f x
-    swapped <- compareAndSwap ref x x'  -- Atomically write x' if value is still x
+
+    -- Atomically write x' if value is still x
+    swapped <- compareAndSwap ref x x'
     if swapped
         then return y
         else atomicModifyIORef' ref f  -- Retry
@@ -224,9 +226,9 @@ atomicModifyIORef' ref f = do
 
 We can see that this can lead to contention: if we have a lot of concurrent
 `atomicModifyIORef'`s, we can get into a retry loop. It cannot cause a deadlock
-(i.e., it should still eventually finish), but it will eventually bring our
+(i.e., it should still eventually finish), but it will still bring our
 performance to a grinding halt. This is a common problem with `IORef`s which I
-have also personaly encountered in real-world scenarios.
+have also personally encountered in real-world scenarios.
 
 A striped cache
 ===============
@@ -254,8 +256,8 @@ Our hash function then determines which `Handle` we should use:
 >   where
 >     idx = hash k `mod` V.length v
 
-Because our access pattern is now distributed amongst the different `Handle`s,
-we should be able to avoid the contention problem.
+Because our access pattern is now distributed among the different `Handle`s, we
+should be able to avoid the contention problem.
 
 Conclusion
 ==========
@@ -271,14 +273,13 @@ if modifications of the values `v` are allowed, you can add a function which
 writes the updates to the cache as well as to the underlying data source.
 
 For embedding the pure cache into IO, there many alternatives to using
-`IORef`s: for example, we could have used [MVar]s or [TVar]s. There are
+`IORef`s: for example, we could have used `MVar`s or `TVar`s. There are
 other strategies for reducing contention other than striping, too.
 
 You could even write a cache which is bounded by its total size on the heap,
-rather than by the number of elements in the queue. If you want a single
-bounded cache for use across your entire application, you could allow it to
-store hetrogenously-typed values, and provide multiple strongly-typed
-interfaces to the same cache. However, implementing these things is a story for
-another time.
+rather than by the number of elements in the queue. If you want a single bounded
+cache for use across your entire application, you could allow it to store
+heterogeneously-typed values, and provide multiple strongly-typed interfaces to
+the same cache. However, implementing these things is a story for another time.
 
 Thanks to the dashing Alex Sayers for proofreading.
