@@ -15,23 +15,27 @@ performance reasons according to their usage pattern, or use a specific
 interface that works really well for them.
 
 However, this sometimes results in less-than-optimal design choices. I thought I
-would take some time and explain how a bounded LRU Cache can be written in a
+would take some time and explain how an LRU cache can be written in a
 reasonably straightforward way (the code is fairly short), while still achieving
 great performance. Hence, it should not be too much trouble to tune this code to
 your needs.
 
-The base for a bounded LRU Cache is usually a Priority Queue. We will use the
-[psqueues](TODO) package, which provides Priority Search Queues. Priority Search
-Queues are Priority Queues which have additional *lookup by key* functionality
--- which is perfect for our cache lookups.
+The data structure usually underpinning an LRU cache is a Priority Search
+Queue, where the priority of an element is the time at which it was last
+accessed. A number of Priority Search Queue implementations are provided by the
+[psqueues](TODO) package, and in this blogpost we will be using its `HashPSQ`
+data type.
+
+<small>Disclaimer: I am one of the principal authors of the psqueues
+package.</small>
 
 This blogpost is written in literate Haskell, so you should be able to plug it
-into GHCi and play around with it -- the raw file can be found [here](TODO).
+into GHCi and play around with it. The raw file can be found [here](TODO).
 
 A pure implementation
 =====================
 
-We obviously needs some imports since, again, this is a literate Haskell file.
+First, we import some things, including the `Data.HashPSQ` module from psqueues.
 
 > {-# LANGUAGE BangPatterns #-}
 
@@ -44,23 +48,30 @@ We obviously needs some imports since, again, this is a literate Haskell file.
 > import qualified Data.Vector         as V
 > import           Prelude             hiding (lookup)
 
-Let's start with our datatype definition. Our `Cache` is parameterized by type
-over `k` and `v`. The types represent our key and value respectively. We will
-use the `k` and `v` as key value types in our priority search queue `cQueue`,
-and as priority we are using an `Int64`.
+Let's start with our datatype definition. Our `Cache` type is parameterized by
+`k` and `v`, which represent the types of our keys and values respectively.
+The priorities of our elements will be the logical time at which they were
+last accessed, or the time at which they were inserted (for elements which have
+never been accessed). We will represent these logical times by values of type
+`Int64`.
 
-The `cTick` field represents a simple logical time value, and the next item we
-insert will have this priority -- this means that another invariant of our code
-is that all priorities in `cQueue` are smaller than `cTick`.
+> type Priority = Int64
+
+The `cTick` field stores the "next" logical time -- that is, the value of
+`cTick` should be one greater than the maximum priority in `cQueue`. At the
+very least, we need to maintain the invariant that all priorities in `cQueue`
+are smaller than `cTick`. A consequence of this is that `cTick` should increase
+monotonically. This is violated in the case of an integer overflow, so we need
+to care special care of that case.
 
 > data Cache k v = Cache
->     { cCapacity :: !Int
->     , cSize     :: !Int
->     , cTick     :: !Int64
->     , cQueue    :: !(HashPSQ.HashPSQ k Int64 v)
+>     { cCapacity :: !Int       -- ^ The maximum number of elements in the queue
+>     , cSize     :: !Int       -- ^ The current number of elements in the queue
+>     , cTick     :: !Priority  -- ^ The next logical time
+>     , cQueue    :: !(HashPSQ.HashPSQ k Priority v)
 >     }
 
-Creating an empty `Cache` is easy, we just need to know the maximum capacity:
+Creating an empty `Cache` is easy; we just need to know the maximum capacity.
 
 > empty :: Int -> Cache k v
 > empty capacity
@@ -72,7 +83,7 @@ Creating an empty `Cache` is easy, we just need to know the maximum capacity:
 >         , cQueue    = HashPSQ.empty
 >         }
 
-Next, we will write a utility function to ensure the invariants of our datatype.
+Next, we will write a utility function to ensure that the invariants of our datatype are met.
 We can then use that in our `lookup` and `insert` functions.
 
 > trim :: (Hashable k, Ord k) => Cache k v -> Cache k v
@@ -84,21 +95,21 @@ queue, or we can clear it. We choose for the latter here, since that is simply
 easier to code, and we are talking about a scenario that should not happen
 very often.
 
->     | cTick c >= maxBound    = empty (cCapacity c)
+>     | cTick c == maxBound  = empty (cCapacity c)
 
 Then, we just need to check if our size is still within bounds. If it is not, we
-drop the oldest item -- that is the item with the smallest tick. We will only
-ever need to drop one item at a time, because we will call `trim` after every
+drop the oldest item -- that is the item with the smallest priority. We will only
+ever need to drop one item at a time, because our cache is number-bounded and we will call `trim` after every
 `insert`.
 
->     | cSize c <= cCapacity c = c
->     | otherwise              = c
+>     | cSize c > cCapacity c = c
 >         { cSize  = cSize c - 1
 >         , cQueue = HashPSQ.deleteMin (cQueue c)
 >         }
+>     | otherwise             = c
 
 Insert is pretty straighforward to implement now. We use the `insertView`
-function from `psqueues` which tells us whether or not an item was overwritten.
+function from `Data.HashPSQ` which tells us whether or not an item was overwritten.
 
 ~~~~~~{.haskell}
 insertView
@@ -110,12 +121,12 @@ This is necessary, since we need to know whether or not we need to update
 `cSize`.
 
 > insert :: (Hashable k, Ord k) => k -> v -> Cache k v -> Cache k v
-> insert k x c = trim $!
->     let (mbRemoved, q) = HashPSQ.insertView k (cTick c) x (cQueue c)
+> insert key val c = trim $!
+>     let (mbOldVal, queue) = HashPSQ.insertView key (cTick c) val (cQueue c)
 >     in c
->         { cSize  = if isNothing mbRemoved then cSize c + 1 else cSize c
+>         { cSize  = if isNothing mbOldVal then cSize c + 1 else cSize c
 >         , cTick  = cTick c + 1
->         , cQueue = q
+>         , cQueue = queue
 >         }
 
 Lookup is not that hard either, but we need to remember that in addition to
@@ -204,10 +215,10 @@ works a bit like this:
 atomicModifyIORef' :: IORef a -> (a -> (a, b)) -> IO b
 atomicModifyIORef' ref f = do
     x <- readIORef ref
-    let (!y, !b) = f x
-    swapped <- compareAndSwap ref x y  -- Atomically write y if value is still x
+    let (!x', !y) = f x
+    swapped <- compareAndSwap ref x x'  -- Atomically write x' if value is still x
     if swapped
-        then return b
+        then return y
         else atomicModifyIORef' ref f  -- Retry
 ~~~~~~
 
@@ -223,11 +234,11 @@ A striped cache
 A good solution around this problem, since we already have a `Hashable` instance
 for our key anyway, is striping the keyspace. We can even reuse our `Handle` in
 quite an elegant way. Instead of just using one `Handle`, we create a `Vector`
-instead:
+of `Handle`s instead:
 
 > newtype StripedHandle k v = StripedHandle (V.Vector (Handle k v))
 
-The user can configure the number of handles that is created:
+The user can configure the number of handles that are created:
 
 > newStripedHandle :: Int -> Int -> IO (StripedHandle k v)
 > newStripedHandle numStripes capacityPerStripe =
@@ -249,7 +260,7 @@ we should be able to avoid the contention problem.
 Conclusion
 ==========
 
-We have implemented a very useful datastructure for many applications, with two
+We have implemented a very useful data structure for many applications, with two
 variations and decent performance. Thanks to the psqueues package, the
 implementations are very straightforward, small in code size, and it should be
 possible to tune the caches to your needs.
@@ -259,8 +270,15 @@ priorities in the queue and have items expire after a given amount of time. Or,
 if modifications of the values `v` are allowed, you can add a function which
 writes the updates to the cache as well as to the underlying data source.
 
-For embedding the pure cache into IO, there many other possibilities than the
-(optionally striped) `IORef`s as well: for example, we could also use [MVar]s or
-[STM].
+For embedding the pure cache into IO, there many alternatives to using
+`IORef`s: for example, we could have used [MVar]s or [TVar]s. There are
+other strategies for reducing contention other than striping, too.
+
+You could even write a cache which is bounded by its total size on the heap,
+rather than by the number of elements in the queue. If you want a single
+bounded cache for use across your entire application, you could allow it to
+store hetrogenously-typed values, and provide multiple strongly-typed
+interfaces to the same cache. However, implementing these things is a story for
+another time.
 
 Thanks to the dashing Alex Sayers for proofreading.
