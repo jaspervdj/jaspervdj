@@ -62,7 +62,7 @@ The `cTick` field stores the "next" logical time -- that is, the value of
 very least, we need to maintain the invariant that all priorities in `cQueue`
 are smaller than `cTick`. A consequence of this is that `cTick` should increase
 monotonically. This is violated in the case of an integer overflow, so we need
-to care special care of that case.
+to take special care of that case.
 
 > data Cache k v = Cache
 >     { cCapacity :: !Int       -- ^ The maximum number of elements in the queue
