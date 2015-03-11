@@ -58,7 +58,7 @@ A module structure for tests
 Many Haskell projects start out by just having a `tests.hs` file somewhere, but
 this obviously does not scale well to larger codebases.
 
-The way I like to organise tests is based on how we organise code in general:
+The way I like to organize tests is based on how we organize code in general:
 through the module hierarchy. If I have the following modules in `src/`:
 
     AcmeCompany.AwesomeProduct.Database
@@ -177,7 +177,7 @@ datastructure becomes more complicated, especially if there are complicated
 invariants. Additionally, if we take any shortcuts in the implementation of
 `arbitrary`, we might not test the edge cases well!
 
-Another way to write the `Arbitrary` instance is by modelling our API. We only
+Another way to write the `Arbitrary` instance is by modeling our API. We only
 have two things we can do with a pure `Cache`: insert and lookup.
 
 > data CacheAction k v
@@ -367,7 +367,7 @@ main = defaultMain $ testGroup "Tests"
 Conclusion
 ==========
 
-We have looked into organising test suites, and how we can use IO in both
+We have looked into organizing test suites, and how we can use IO in both
 HUnit and QuickCheck tests. Furthermore, I think generating `Arbitrary`
 instances using their user-facing API is particularly interesting.
 
