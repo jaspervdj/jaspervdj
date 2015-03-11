@@ -38,6 +38,7 @@ A pure implementation
 First, we import some things, including the `Data.HashPSQ` module from psqueues.
 
 > {-# LANGUAGE BangPatterns #-}
+> module Data.SimpleLruCache where
 
 > import           Control.Applicative ((<$>))
 > import           Data.Hashable       (Hashable, hash)
@@ -69,7 +70,7 @@ to take special care of that case.
 >     , cSize     :: !Int       -- ^ The current number of elements in the queue
 >     , cTick     :: !Priority  -- ^ The next logical time
 >     , cQueue    :: !(HashPSQ.HashPSQ k Priority v)
->     }
+>     } deriving (Eq, Show)
 
 Creating an empty `Cache` is easy; we just need to know the maximum capacity.
 
