@@ -15,14 +15,19 @@ although I think a lot of the ideas in the blogpost also apply to benchmarking.
 
 [how to write an LRU Cache]: /2015-02-24-lru-cache.html
 
-This post is written in Literate Haskell and the code can be found in
-[this repo](https://github.com/jaspervdj/jaspervdj/). Since this code depends on
-the LRU Cache we wrote last time, I load it using something like:
+This post is written in Literate Haskell. It depends on the LRU Cache we wrote
+last time, so you need both modules if you want to play around with the code.
+Both can be found in [this repo](https://github.com/jaspervdj/jaspervdj/).
 
-    $ ghci posts/2015-02-24-lru-cache.hs \
-        posts/2015-03-11-practical-testing-in-haskell
+Since I use a different format for blogpost filenames than GHC expects for
+module names, loading both modules is a bit tricky. The following works for me:
+
+    $ ghci posts/2015-02-24-lru-cache.lhs \
+        posts/2015-03-11-practical-testing-in-haskell.lhs
     *Data.SimpleLruCache> :m +Data.SimpleLruCache.Tests
     *Data.SimpleLruCache Data.SimpleLruCache.Tests>
+
+Alternatively, you can of course rename the files.
 
 Test frameworks in Haskell
 ==========================
@@ -32,18 +37,19 @@ We will be touching three test frameworks today:
 - [HUnit] is a simple unit testing library, which we can use to write concrete
   test *cases*.
 
-- [QuickCheck] allows you to test *properties* rather test *cases*. This is
+- [QuickCheck] allows you to test *properties* rather than *cases*. This is
   something that might be unfamiliar to be people just starting out in Haskell.
   However, because there already are great [tutorials] out there on there on
-  QuickCheck, I will not explain the basics of QuickCheck in detail.
+  QuickCheck, I will not explain it in detail.
 
-- [Tasty] is a test framework which lets us tie it all together, thus, run HUnit
-  and QuickCheck tests in the same test suite. It all gives us plenty of
-  convenient options, e.g. running only a part of the test suite.
+- [Tasty] is a test framework which lets us tie all our tests together; in this
+  case, it lets us run HUnit and QuickCheck tests in the same test suite. It
+  also gives us plenty of convenient options, e.g. running only a part of the
+  test suite.
 
-This is, of course, not an exhaustive list -- for some use cases [smallcheck]
-could be a better fit than QuickCheck, or one could opt to use [test-framework]
-instead of tasty.
+This is, of course, not an exhaustive list -- [smallcheck] could be a better fit
+than QuickCheck, or one could opt to use [test-framework] or [Hspec] instead of
+tasty.
 
 [HUnit]: http://hackage.haskell.org/package/HUnit
 [QuickCheck]: http://hackage.haskell.org/package/QuickCheck
@@ -51,6 +57,7 @@ instead of tasty.
 [tasty]: http://hackage.haskell.org/package/tasty
 [smallcheck]: http://hackage.haskell.org/package/smallcheck
 [test-framework]: http://hackage.haskell.org/package/test-framework
+[Hspec]: http://hspec.github.io/
 
 A module structure for tests
 ============================
@@ -77,10 +84,10 @@ wanted to test our entire awesome product, I would write the tests in
 `AcmeCompany.AwesomeProduct.Tests`.
 
 Every `.Tests` module exports a `tests :: TestTree` value. A `TestTree` is a
-[tasty] concept -- basically a structured group of tests. Let us go to our
-leading example, testing the LRU Cache I wrote in the previous blogpost.
+[tasty] concept -- basically a structured group of tests. Let's go to our
+motivating example: testing the LRU Cache I wrote in the previous blogpost.
 
-Since I put that cache in `Data.SimpleLruCache`, we use
+Since I named the module `Data.SimpleLruCache`, we use
 `Data.SimpleLruCache.Tests` here.
 
 > {-# OPTIONS_GHC -fno-warn-orphans #-}
@@ -90,7 +97,8 @@ Since I put that cache in `Data.SimpleLruCache`, we use
 
 > import           Control.Applicative     ((<$>), (<*>))
 > import           Control.DeepSeq         (NFData)
-> import           Data.Hashable           (Hashable)
+> import           Control.Monad           (foldM_)
+> import           Data.Hashable           (Hashable (..))
 > import qualified Data.HashPSQ            as HashPSQ
 > import           Data.IORef              (newIORef, readIORef, writeIORef)
 > import           Data.List               (foldl')
@@ -104,23 +112,54 @@ Since I put that cache in `Data.SimpleLruCache`, we use
 > import           Test.Tasty.QuickCheck   (testProperty)
 > import           Test.HUnit              (Assertion, (@?=))
 
+What to test
+============
+
+One of the hardest questions is, of course, which functions and modules should I
+test? If unlimited time and resources are available, the obvious answer is
+"everything". Unfortunately, time and resources are often scarce.
+
+My rule of thumb is based on my development style. I tend to use GHCi a lot
+during development, and play around with datastructures and functions until they
+seem to work. These "it seems to work" cases I execute in GHCi often make great
+candidates for simple HUnit tests, so I usually start with that.
+
+Then I look at invariants of the code, and try to model these as QuickCheck
+properties. This sometimes requires writing a tricky `Arbitrary` instances, for
+which I will give an example later in this blogpost.
+
+I probably don't have to say that the more critical the code is, the more tests
+should be added at this point.
+
+After doing this, it is still likely that we will hit bugs if the code is
+non-trivial. These bugs form good candidates for testing as well:
+
+1. Add a test case to reproduce the bug. Sometimes a test case will be a better
+   fit, sometimes we should go with a property -- it depends on the bug.
+2. Fix the bug so the test case passes.
+3. Leave in the test case for regression testing.
+
+Using this strategy, you should be able to convince yourself (and others) that
+the code works.
+
 Simple HUnit tests
 ==================
 
 Testing simple cases using HUnit is trivial, so we won't spend that much time
-here. Let's just check that trimming the empty `Cache` doesn't do anything evil:
+here. `@?=` asserts that two values must be equal, so let's use that to check
+that trimming the empty `Cache` doesn't do anything evil:
 
 > testCache01 :: Assertion
 > testCache01 =
 >     trim (empty 3 :: Cache String Int) @?= empty 3
 
-If we need to some IO for our test, we can do so without much trouble in HUnit.
+If we need to some I/O for our test, we can do so without much trouble in HUnit.
 After all,
 
     Test.HUnit> :i Assertion
     type Assertion = IO ()  -- Defined in 'Test.HUnit.Lang'
 
-so `Assertion` is just IO!
+so `Assertion` is just `IO`!
 
 > testCache02 :: Assertion
 > testCache02 = do
@@ -146,7 +185,8 @@ Calling `HashPSQ.size` takes *O(n)* time, which is why are keeping our own
 counter, `cSize`. We should check that it matches `HashPSQ.size`, though:
 
 > sizeMatches :: (Hashable k, Ord k) => Cache k v -> Bool
-> sizeMatches c = cSize c == HashPSQ.size (cQueue c)
+> sizeMatches c =
+>     cSize c == HashPSQ.size (cQueue c)
 
 The `cTick` field contains the priority of our next element that we will insert.
 The priorities currently in the queue should all be smaller than that.
@@ -160,15 +200,20 @@ The priorities currently in the queue should all be smaller than that.
 Lastly, the size should always be smaller than or equal to the capacity:
 
 > sizeSmallerThanCapacity :: (Hashable k, Ord k) => Cache k v -> Bool
-> sizeSmallerThanCapacity c = cSize c <= cCapacity c
+> sizeSmallerThanCapacity c =
+>     cSize c <= cCapacity c
 
-On Arbitrary instances
-======================
+Aside: Tricks for writing Arbitrary instances
+=============================================
+
+The Action trick
+----------------
 
 Of course, if you are somewhat familiar with QuickCheck, you will know that the
 previous properties require an `Arbitrary` instance for `Cache`.
 
-One option to do so is generating a list of `[(key, priority, value)]` pairs and
+One way to write such instances is what I'll call the "direct" method. For us
+this would mean generating a list of `[(key, priority, value)]` pairs and
 convert that to a `HashPSQ`. Then we could compute the size of that and
 initialize the remaining fields.
 
@@ -177,8 +222,9 @@ datastructure becomes more complicated, especially if there are complicated
 invariants. Additionally, if we take any shortcuts in the implementation of
 `arbitrary`, we might not test the edge cases well!
 
-Another way to write the `Arbitrary` instance is by modeling our API. We only
-have two things we can do with a pure `Cache`: insert and lookup.
+Another way to write the `Arbitrary` instance is by modeling use of the API. In
+our case, there are only things we can do with a pure `Cache`: insert and
+lookup.
 
 > data CacheAction k v
 >     = InsertAction k v
@@ -197,7 +243,7 @@ This has a trivial `Arbitrary` instance:
 And we can apply these actions to our pure `Cache` to get a new `Cache`:
 
 > applyCacheAction
->     :: (Hashable k, NFData v, Ord k)
+>     :: (Hashable k, Ord k)
 >     => CacheAction k v -> Cache k v -> Cache k v
 > applyCacheAction (InsertAction k v) c = insert k v c
 > applyCacheAction (LookupAction k)   c = case lookup k c of
@@ -221,24 +267,41 @@ datatype, I think this is a great way to write `Arbitrary` instances. After all,
 our `Arbitrary` instance should then be able to reach the same states as a user
 of our code.
 
+An extension of this trick is using a separate datatype which holds the list of
+actions we used to generate the `Cache` as well as the `Cache`.
+
+> data ArbitraryCache k v = ArbitraryCache [CacheAction k v] (Cache k v)
+>     deriving (Show)
+
+When a test fails, we can then log the list of actions which got us into the
+invalid state -- very useful for debugging. Furthermore, we can implement the
+`shrink` method in order to try to reach a similar invalid state using less
+actions.
+
+The SmallInt trick
+------------------
+
 Now, note that our `Arbitrary` instance is for `Cache k v`, i.e., we haven't
 chosen yet what we want to have as `k` and `v` for our tests. In this case `v`
 is not so important, but the choice of `k` is important.
 
-If we were to pick `String` or `Int`, we would run into the problem that the
-cardinality of both of these types is huge -- a random `String` or `Int` can
-have so many values that it is unlikely for us to have any key collisions in our
-tests. That is unfortunate, since those are exactly the sort of edge cases we
-want to test.
+We want to cover all corner cases, and this includes ensuring that we cover
+collisions. If we use `String` or `Int` as key type `k`, collisions are very
+unlikely due to the high cardinality of both types. Since we are using a
+hash-based container underneath, hash collisions must also be covered.
 
-Solving this is easy, we simply use a `newtype` to restrict the cardinality of
-`Int`:
+We can solve both problems by introducing a `newtype` which restricts the
+cardinality of `Int`, and uses a "worse" (in the traditional sense) hashing
+method.
 
 > newtype SmallInt = SmallInt Int
->     deriving (Eq, Hashable, Ord, Show)
+>     deriving (Eq, Ord, Show)
 
 > instance QC.Arbitrary SmallInt where
 >     arbitrary = SmallInt <$> QC.choose (1, 100)
+
+> instance Hashable SmallInt where
+>     hashWithSalt salt (SmallInt x) = (salt + x) `mod` 10
 
 Monadic QuickCheck
 ==================
@@ -252,13 +315,10 @@ cached
     => Handle k v -> k -> IO v -> IO v
 ~~~~~
 
-We won't really go into detail on how we can check that the *values* in the
-cache are correct, but rather write a test to ensure it retains the correct
-key-value pairs. I think that is where the code was the most tricky, so it is a
-good thing to test.
-
-Our property takes two arguments: the capacity of the LRU Cache, and a list of
-key-value pairs we will insert using `cached`.
+We will write a property to ensure our cache retains and evicts the right
+key-value pairs. It takes two arguments: the capacity of the LRU Cache (we use a
+`SmallInt` in order to get more evictions), and a list of key-value pairs we
+will insert using `cached` (we use `SmallInt` so we will cover collisions).
 
 > historic
 >     :: SmallInt              -- ^ Capacity
@@ -266,46 +326,38 @@ key-value pairs we will insert using `cached`.
 >     -> QC.Property           -- ^ Property
 > historic (SmallInt capacity) pairs = QC.monadicIO $ do
 
-`QC.run` is used to lift IO code code into the QuickCheck property monad
+`QC.run` is used to lift `IO` code code into the QuickCheck property monad
 `PropertyM` -- so it is a bit like a more concrete version of `liftIO`. I prefer
 it here over `liftIO` because it makes it a bit more clear what is going on.
 
-We initialize a new `Handle` and will then recurse over the `pairs`.
-
 >     h <- QC.run $ newHandle capacity
->     go h [] pairs
+
+We will fold (`foldM_`) over the pairs we need to insert. The state we pass in
+this `foldM_` is the history of pairs we previously inserted. By building this
+up again using `:`, we ensure `history` contains a recent-first list, which is
+very convenient.
+
+Inside every step, we call `cached`. By using an `IORef` in the code where we
+would usually actually "load" the value `v`, we can communicate whether or not
+the value was already in the cache. If it was already in the cache, the write
+will not be executed, so the `IORef` will still be set to `False`. We store that
+result in `wasInCache`.
+
+In order to verify this result, we reconstruct a set of the N most recent keys.
+We can easily do this using the list of recent-first key-value pairs we have in
+`history`.
+
+>     foldM_ (step h) [] pairs
 >   where
-
-If we are out of key-value pairs, we are done.
-
->     go _ _       []                = return ()
-
-Otherwise, we call `cached`. By using an `IORef` in the code where we would
-usually actually "load" the value `v`, we can communicate whether or not the
-value was already in the cache. If it was already in the cache, the write will
-not be executed, so the `IORef` will still be set to `False`.
-
->     go h history ((k, v) : future) = do
+>     step h history (k, v) = do
 >         wasInCacheRef <- QC.run $ newIORef True
 >         _             <- QC.run $ cached h k $ do
 >             writeIORef wasInCacheRef False
 >             return v
 >         wasInCache    <- QC.run $ readIORef wasInCacheRef
-
-As the second argument of `go`, we build a list of recent-first key-value pairs
-we saw. Using this history, we can easily reconstruct a set of the N most recent
-keys.
-
 >         let recentKeys = nMostRecentKeys capacity S.empty history
-
-If `k` is in that set, `wasInCache` must be `True` -- and otherwise,
-`wasInCache` must be `False`.
-
 >         QC.assert (S.member k recentKeys == wasInCache)
-
-We then put `(k, v)` on top of `history` and continue.
-
->         go h ((k, v) : history) future
+>         return ((k, v) : history)
 
 This is our auxiliary function to calculate the N most recent keys, given a
 recent-first key-value pair list.
@@ -317,6 +369,11 @@ recent-first key-value pair list.
 >     | otherwise           =
 >         nMostRecentKeys n (S.insert k keys) history
 
+This test did not cover checking that the *values* in the cache are correct, but
+only ensures it retains the correct key-value pairs. This is a conscious
+decision: I think the retaining/evicting part of the LRU Cache code was the most
+tricky, so we should prioritize testing that.
+
 Tying everything up
 ===================
 
@@ -324,8 +381,8 @@ Lastly, we have our `tests :: TestTree`. It is not much more than an index of
 tests in the module. We use `testCase` to pass HUnit tests to the framework, and
 `testProperty` for QuickCheck properties.
 
-Note that I usually tend to put these at the top of the module, but put it at
-the bottom of the blogpost for educational purposes.
+Note that I usually tend to put these at the top of the module, but here I put
+it at the bottom of the blogpost for easier reading.
 
 > tests :: TestTree
 > tests = testGroup "Data.SimpleLruCache"
@@ -342,8 +399,9 @@ the bottom of the blogpost for educational purposes.
 >     , testProperty "historic" historic
 >     ]
 
-Then follows the main file. If use the scheme which I described above, this
-should look very neat:
+The last thing we need is a `main` function for `cabal test` to invoke. I
+usually put this in something like `tests/Main.hs`. If you use the scheme which
+I described above, this file should look very neat:
 
 ~~~~~{.haskell}
 module Main where
@@ -367,12 +425,14 @@ main = defaultMain $ testGroup "Tests"
 Conclusion
 ==========
 
-We have looked into organizing test suites, and how we can use IO in both
+We have looked into organizing test suites, and how we can use I/O in both
 HUnit and QuickCheck tests. Furthermore, I think generating `Arbitrary`
 instances using their user-facing API is particularly interesting.
 
-If you are still hungry for more Haskell testing, a next subject I would
-recommend is looking into [Haskell program coverage] for mission-critical
-modules.
+If you are still hungry for more Haskell testing, I would recommend looking into
+[Haskell program coverage] for mission-critical modules.
 
 [Haskell program coverage]: http://wiki.haskell.org/Haskell_program_coverage
+
+Special thanks to Alex Sayers, who beat everyone's expectations when he managed
+to stay sober for just long enough to proofread this blogpost.
