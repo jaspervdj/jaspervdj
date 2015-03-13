@@ -23,7 +23,7 @@ Since I use a different format for blogpost filenames than GHC expects for
 module names, loading both modules is a bit tricky. The following works for me:
 
     $ ghci posts/2015-02-24-lru-cache.lhs \
-        posts/2015-03-11-practical-testing-in-haskell.lhs
+        posts/2015-03-13-practical-testing-in-haskell.lhs
     *Data.SimpleLruCache> :m +Data.SimpleLruCache.Tests
     *Data.SimpleLruCache Data.SimpleLruCache.Tests>
 
