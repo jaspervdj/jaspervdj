@@ -91,7 +91,9 @@ Since I named the module `Data.SimpleLruCache`, we use
 > {-# OPTIONS_GHC -fno-warn-orphans #-}
 > {-# LANGUAGE BangPatterns               #-}
 > {-# LANGUAGE GeneralizedNewtypeDeriving #-}
-> module Data.SimpleLruCache.Tests where
+> module Data.SimpleLruCache.Tests
+>     ( tests
+>     ) where
 
 > import           Control.Applicative     ((<$>), (<*>))
 > import           Control.DeepSeq         (NFData)
