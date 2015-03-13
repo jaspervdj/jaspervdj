@@ -125,7 +125,7 @@ seem to work. These "it seems to work" cases I execute in GHCi often make great
 candidates for simple HUnit tests, so I usually start with that.
 
 Then I look at invariants of the code, and try to model these as QuickCheck
-properties. This sometimes requires writing a tricky `Arbitrary` instances; I
+properties. This sometimes requires writing tricky `Arbitrary` instances; I
 will give an example of this later in this blogpost.
 
 I probably don't have to say that the more critical the code is, the more tests
