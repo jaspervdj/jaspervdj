@@ -223,7 +223,7 @@ invariants. Additionally, if we take any shortcuts in the implementation of
 `arbitrary`, we might not test the edge cases well!
 
 Another way to write the `Arbitrary` instance is by modeling use of the API. In
-our case, there are only things we can do with a pure `Cache`: insert and
+our case, there are only two things we can do with a pure `Cache`: insert and
 lookup.
 
 > data CacheAction k v
