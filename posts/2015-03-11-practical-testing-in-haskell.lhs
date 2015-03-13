@@ -7,7 +7,7 @@ tags: haskell
 Introduction
 ============
 
-There has been a trend of "Practical Haskell" in the last few blogposts I
+There has been a theme of "Practical Haskell" in the last few blogposts I
 published, and when I published the last one, on [how to write an LRU Cache],
 someone asked me if I could elaborate on how I would test or benchmark such a
 module. For the sake of brevity, I will constrain myself to testing for now,
@@ -32,24 +32,22 @@ Alternatively, you can of course rename the files.
 Test frameworks in Haskell
 ==========================
 
-We will be touching three test frameworks today:
+There are roughly two kinds of test frameworks which are commonly used in the
+Haskell world:
 
-- [HUnit] is a simple unit testing library, which we can use to write concrete
-  test *cases*.
+- Unit testing, for writing concrete test *cases*. We will be using
+  [HUnit].
 
-- [QuickCheck] allows you to test *properties* rather than *cases*. This is
-  something that might be unfamiliar to be people just starting out in Haskell.
-  However, because there already are great [tutorials] out there on there on
-  QuickCheck, I will not explain it in detail.
+- Property testing, which allows you to test *properties* rather than specific
+  *cases*. We will be using [QuickCheck]. Property testing is something that
+  might be unfamiliar to be people just starting out in Haskell. However,
+  because there already are great [tutorials] out there on there on QuickCheck,
+  I will not explain it in detail. [smallcheck] also falls in this category.
 
-- [Tasty] is a test framework which lets us tie all our tests together; in this
-  case, it lets us run HUnit and QuickCheck tests in the same test suite. It
-  also gives us plenty of convenient options, e.g. running only a part of the
-  test suite.
-
-This is, of course, not an exhaustive list -- [smallcheck] could be a better fit
-than QuickCheck, or one could opt to use [test-framework] or [Hspec] instead of
-tasty.
+Finally, it's nice to have something to tie it all together. We will be using
+[Tasty], which lets us run HUnit and QuickCheck tests in the same test suite. It
+also gives us plenty of convenient options, e.g. running only a part of the test
+suite. We could also choose to use [test-framework] or [Hspec] instead of Tasty.
 
 [HUnit]: http://hackage.haskell.org/package/HUnit
 [QuickCheck]: http://hackage.haskell.org/package/QuickCheck
@@ -125,17 +123,17 @@ seem to work. These "it seems to work" cases I execute in GHCi often make great
 candidates for simple HUnit tests, so I usually start with that.
 
 Then I look at invariants of the code, and try to model these as QuickCheck
-properties. This sometimes requires writing a tricky `Arbitrary` instances, for
-which I will give an example later in this blogpost.
+properties. This sometimes requires writing a tricky `Arbitrary` instances; I
+will give an example of this later in this blogpost.
 
 I probably don't have to say that the more critical the code is, the more tests
-should be added at this point.
+should be added.
 
 After doing this, it is still likely that we will hit bugs if the code is
 non-trivial. These bugs form good candidates for testing as well:
 
-1. Add a test case to reproduce the bug. Sometimes a test case will be a better
-   fit, sometimes we should go with a property -- it depends on the bug.
+1. First, add a test case to reproduce the bug. Sometimes a test case will be a
+   better fit, sometimes we should go with a property -- it depends on the bug.
 2. Fix the bug so the test case passes.
 3. Leave in the test case for regression testing.
 
@@ -203,8 +201,8 @@ Lastly, the size should always be smaller than or equal to the capacity:
 > sizeSmallerThanCapacity c =
 >     cSize c <= cCapacity c
 
-Aside: Tricks for writing Arbitrary instances
-=============================================
+Tricks for writing Arbitrary instances
+======================================
 
 The Action trick
 ----------------
