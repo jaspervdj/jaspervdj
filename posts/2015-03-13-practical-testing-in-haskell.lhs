@@ -422,13 +422,6 @@ main = defaultMain $ testGroup "Tests"
     ]
 ~~~~~
 
-Conclusion
-==========
-
-We have looked into organizing test suites, and how we can use I/O in both
-HUnit and QuickCheck tests. Furthermore, I think generating `Arbitrary`
-instances using their user-facing API is particularly interesting.
-
 If you are still hungry for more Haskell testing, I would recommend looking into
 [Haskell program coverage] for mission-critical modules.
 
