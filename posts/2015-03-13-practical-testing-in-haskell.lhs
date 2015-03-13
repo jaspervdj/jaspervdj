@@ -40,9 +40,9 @@ Haskell world:
 
 - Property testing, which allows you to test *properties* rather than specific
   *cases*. We will be using [QuickCheck]. Property testing is something that
-  might be unfamiliar to be people just starting out in Haskell. However,
-  because there already are great [tutorials] out there on there on QuickCheck,
-  I will not explain it in detail. [smallcheck] also falls in this category.
+  might be unfamiliar to people just starting out in Haskell. However, because
+  there already are great [tutorials] out there on there on QuickCheck, I will
+  not explain it in detail. [smallcheck] also falls in this category.
 
 Finally, it's nice to have something to tie it all together. We will be using
 [Tasty], which lets us run HUnit and QuickCheck tests in the same test suite. It
