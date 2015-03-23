@@ -326,7 +326,7 @@ will insert using `cached` (we use `SmallInt` so we will cover collisions).
 >     -> QC.Property           -- ^ Property
 > historic (SmallInt capacity) pairs = QC.monadicIO $ do
 
-`QC.run` is used to lift `IO` code code into the QuickCheck property monad
+`QC.run` is used to lift `IO` code into the QuickCheck property monad
 `PropertyM` -- so it is a bit like a more concrete version of `liftIO`. I prefer
 it here over `liftIO` because it makes it a bit more clear what is going on.
 
