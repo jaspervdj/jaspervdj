@@ -114,6 +114,22 @@ div.figure p {
     margin-top: 6px;
 }
 
+a.footnoteRef {
+    border: none;
+}
+
+a.footnoteRef sup:before {
+    content: "(";
+}
+
+a.footnoteRef sup:after {
+    content: ")";
+}
+
+a.footnoteRef sup {
+    padding: 2px;
+}
+
 div.footnotes {
     color: #555;
     border-left: 1px dashed #555;
