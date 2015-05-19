@@ -32,11 +32,16 @@ Introduction
 ============
 
 For the last month or, I have been working as a contractor for [Luminal]. I am
-helping them implement [Fugue], and more specifically Ludwig -- a compiler for
+helping them implement [Fugue], and more specifically Ludwig -- a compiler a for
 statically typed declarative configuration language. This is one of the most
 interesting projects I have worked on so far -- writing a compiler is really
 fun. While implementing some parts of this compiler, I came across an
-interesting [discussion].
+interesting problem.
+
+In particular, a typeclass instance seemed to adhere to both the Monad and
+Applicative laws, but with differing behaviour -- which felt a bit fishy. I
+started a [discussion] on Twitter understand it better, and these are my
+thoughts on the matter.
 
 [Luminal]: http://luminal.io/
 [Fugue]: https://www.fugue.it/
@@ -45,8 +50,16 @@ interesting [discussion].
 The problem
 ===========
 
-Suppose we have a typical Either-like type: some code can succeed (`Ok`), or an
-error might occur (`Failed`).
+Suppose we're writing a typechecker. We have to do a number of things:
+
+- Parse the program to get a list of user-defined types.
+- Typecheck each expression.
+- A bunch of other things, but for the purpose of this post we're going to leave
+  it at that.
+
+Now, any of these steps could fail, and we'd like to log the reason for failure.
+Clearly this is a case for something like `Either`! Let's define ourselves an
+appropriate datatype.
 
 > data Check e a
 >     = Failed e
@@ -70,8 +83,8 @@ The Monad instance is also very obvious:
 However, the Applicative instance is not that obvious -- we seem to have a
 choice.
 
-But first, lets take a step back to formulate the problem a bit more clearly and
-give some more context. Imagine we have the following types in our compiler:
+But first, lets take a step back and stub out our compiler a bit more, so that
+we have some more context. Imagine we have the following types in our compiler:
 
 ~~~~~{.haskell}
 data Type = ...
@@ -118,8 +131,8 @@ scope expr2`?
 It turns out this is possible, precisely because the second call to `typeCheck1`
 does not depend on the result of the first call -- so we can execute them in
 parallel, if you will. And that is precisely the difference in expressive power
-between Monad and Applicative: Monadic `>>=` needs access to previously computed
-results, where Applicative `<*>` does not. Let's *(ab?)*use this to our
+between Monad and Applicative: Monadic `>>=` provides access to previously
+computed results, where Applicative `<*>` does not. Let's *(ab?)*use this to our
 advantage.
 
 The solution?
@@ -301,17 +314,10 @@ We will get a compiler warning telling us we should use `*>` instead.
 
 Explicitly, we now convert between `Check` and `MonoidCheck` by simply calling
 `MonoidCheck` and `unMonoidCheck`. We can do this inside other transformers if
-necessary, when your stack is more complex than just `Either`:
+necessary, using e.g. `mapReaderT`.
 
-~~~~~{.haskell}
-mapReaderT MonoidCheck
-    :: ReaderT r (Check e) a -> ReaderT r (MonoidCheck e) a
-mapReaderT unMonoidCheck
-    :: ReaderT r (MonoidCheck e) a -> ReaderT r (Check e) a
-~~~~~
-
-Conclusion
-==========
+Data.Either.Validation
+======================
 
 The `MonoidCheck` discussed in this blogpost is available as
 [Data.Either.Validation] on hackage. The main difference is that instead of
@@ -344,3 +350,38 @@ Instead of:
 ~~~~~{.haskell}
 MonoidCheck $ Failed ["Can't go mucking with a 'void*'"]
 ~~~~~
+
+At this point, it shouldn't surprise you that `Validation` intentionally does not
+provide a Monad instance.
+
+Conclusion
+==========
+
+This, of course, is all my opinion -- there doesn't seem to be any *definite*
+consensus on whether or not `ap` should be the same as `<*>`, since differing
+behaviour occurs in [prominent libraries]. While the Monad and Applicative laws
+are relatively well known, there is no *canonical* law saying that `ap = <*>`.
+
+[prominent libraries]: http://community.haskell.org/~simonmar/papers/haxl-icfp14.pdf
+
+However, when reasoning about the different classes and the hierarchy between
+them, everything points to the direction that `ap` should be `<*>`, especially
+since the [AMP] *actually* related the two typeclasses. Before that, arguing
+that the two classes were in a way "unrelated" was still an option, but that is
+no longer the case.
+
+[AMP]: https://wiki.haskell.org/Functor-Applicative-Monad_Proposal
+
+Furthermore, considering this as a law might reveal opportunities for
+optimisation [^optimisation].
+
+[^optimisation]: Take this with a grain of salt -- Currently, GHC does not use
+any of the Monad laws to perform any optimisation. However, some Monad instances
+use them in `RULES` pragmas.
+
+I am definitely a fan of implementing these differing behaviours using different
+types and then converting between them: the fact that types explicitly tell me
+about the behaviour of code is one of the reasons I like Haskell.
+
+Thanks to [Alex Sayers](http://www.asayers.org/) for proofreading and
+suggestions.
