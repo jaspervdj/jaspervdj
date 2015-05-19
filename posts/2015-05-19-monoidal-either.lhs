@@ -364,13 +364,18 @@ are relatively well known, there is no *canonical* law saying that `ap = <*>`.
 
 [prominent libraries]: http://community.haskell.org/~simonmar/papers/haxl-icfp14.pdf
 
-However, when reasoning about the different classes and the hierarchy between
-them, everything points to the direction that `ap` should be `<*>`, especially
-since the [AMP] *actually* related the two typeclasses. Before that, arguing
-that the two classes were in a way "unrelated" was still an option, but that is
-no longer the case.
+**Update**: there actually *is* a canonical law that `ap` should be `<*>`, and
+it was right under my nose in the [Monad documentation] since [AMP]. Before
+that, it was mentioned in the Applicative documentation. Thanks to [quchen] for
+pointing that out to me!
 
+[Monad documentation]: https://hackage.haskell.org/package/base-4.8.0.0/docs/Control-Monad.html#t:Monad
 [AMP]: https://wiki.haskell.org/Functor-Applicative-Monad_Proposal
+[quchen]: https://github.com/quchen
+
+A key point here is that the [AMP] *actually* related the two typeclasses.
+Before that, arguing that the two classes were in a way "unrelated" was still a
+(dubious) option, but that is no longer the case.
 
 Furthermore, considering this as a law might reveal opportunities for
 optimisation [^optimisation].
@@ -379,9 +384,9 @@ optimisation [^optimisation].
 any of the Monad laws to perform any optimisation. However, some Monad instances
 use them in `RULES` pragmas.
 
-I am definitely a fan of implementing these differing behaviours using different
-types and then converting between them: the fact that types explicitly tell me
-about the behaviour of code is one of the reasons I like Haskell.
+Lastly, I am definitely a fan of implementing these differing behaviours using
+different types and then converting between them: the fact that types explicitly
+tell me about the behaviour of code is one of the reasons I like Haskell.
 
 Thanks to [Alex Sayers](http://www.asayers.org/) for proofreading and
 suggestions.
