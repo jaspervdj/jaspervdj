@@ -190,7 +190,6 @@ main = hakyllWith config $ do
     pages =
         [ "contact.markdown"
         , "links.markdown"
-        , "recommendations.markdown"
         ]
 
     writeXeTex =
