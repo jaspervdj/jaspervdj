@@ -8,7 +8,7 @@ Introduction
 ============
 
 When writing some code recently, I came across a very interesting Applicative
-Functor. I wanted to write about for two reasons:
+Functor. I wanted to write about it for two reasons:
 
 - It really shows the power of Applicative (compared to Monad). Applicative does
   not require access to previously computed results, which helps in this case,
@@ -28,10 +28,14 @@ it up in GHCi and play around with it (you can find the raw `.lhs` file
 > import           Control.Applicative (Applicative (..), (<$>))
 > import           Control.Monad       (forM, liftM, liftM2)
 > import           Control.Monad.State (State, runState, state)
+> import           Unsafe.Coerce       (unsafeCoerce)
 > import           Data.List           (sortBy)
+> import qualified Data.Map            as M
 > import           Data.Ord            (comparing)
+> import qualified Data.OrdPSQ         as PSQ
 > import           Data.Traversable    (traverse)
 > import qualified Data.Vector         as V
+> import           GHC.Exts            (Any)
 
 The problem
 ===========
@@ -76,6 +80,15 @@ keep track of what's available.
 For `RequestCheapestDessert`, we make use of the fact that our inventory is
 sorted by price. This means the head of the list is the cheapest dessert, so we
 serve that and put the tail of the list (`xs`) back.
+
+We can do that conveniently using the `state` function, which allows us to
+modify the state and compute a result at the same time:
+
+~~~~~{.haskell}
+state :: (s -> (a, s)) -> State s a
+~~~~~
+
+The implementation becomes:
 
 > doRequest RequestCheapestDessert =
 >     state $ \inventory -> case inventory of
@@ -193,9 +206,14 @@ The `Prio` Applicative has three type parameters:
 - `a`: Our result type.
 
 We use a [GADT] which mirrors the interface of Applicative, and one additional
-constructor, which holds a monadic action together with its priority.
+constructor, which holds a monadic action together with its priority [^free].
 
 [GADT]: https://wiki.haskell.org/Generalised_algebraic_datatype
+
+[^free]: It could also be implemented on top of the [Free Applicative], but I
+have decided against that to keep this blogpost as simple as possible.
+
+[Free Applicative]: https://hackage.haskell.org/package/free-4.12.1/docs/Control-Applicative-Free.html
 
 > data Prio p m a where
 >     Pure :: a -> Prio p m a
@@ -256,7 +274,8 @@ can use `unsafeEvaluate` to evaluate the whole tree [^runPrio].
 [^runPrio]: This implementation is very slow (quadratic in terms of the number
 of nodes in the `Prio` "tree"). I have found a faster way to implement this, but
 it is again less concise and requires the use of `unsafeCoerce`, so it is
-omitted from this blogpost.
+omitted from this blogpost. **Update**: I have included this method in the
+Appendix.
 
 > runPrio :: (Monad m, Ord p) => Prio p m a -> m a
 > runPrio os = case findMinimalPriority os of
@@ -382,3 +401,75 @@ between Applicative and Monad very well.
 
 Thanks to Alex Sayers, Jared Tobin and Maciej Wos for proofreading and
 discussions.
+
+Appendix: a faster runPrio
+==========================
+
+<div style="display: none">
+
+> test05 = runState (fastRunPrio $ prioFamilyRequests familyRequest) defaultInventory
+
+</div>
+
+I have been requested to include the code for a faster `runPrio`, so here it is.
+As you might expect, it is not as clean as the original one.
+
+> fastRunPrio :: forall p m a. (Monad m, Ord p) => Prio p m a -> m a
+> fastRunPrio prio0 = do
+
+The code runs in roughly three steps:
+
+1. Build a queue which sorts all the elements by priority. In addition to the
+   priority, we have an `Int` key per `Prio` node, determined by position.
+
+2. Evaluate this queue in the arbitrary Monad `m`. As result we now get a `Map`
+   which maps this `Int` key to the value (of type `Any`).
+
+3. Run through the original `Prio` again, and whenever we encounter a `Prio`
+   node, we use the `Int` key to lookup and `unsafeCoerce` the evaluated value
+   from the `Map`.
+
+>     let (queue, _) = buildQueue 0 prio0 PSQ.empty
+>     m <- evaluateQueue queue M.empty
+>     let (x, _) = evalPrio m 0 prio0
+>     return x
+>   where
+
+The three steps are implemented in three auxiliary methods, which you can find
+here:
+
+>     buildQueue
+>         :: forall b.
+>            Int
+>         -> Prio p m b
+>         -> PSQ.OrdPSQ Int p (m Any)
+>         -> (PSQ.OrdPSQ Int p (m Any), Int)
+>     buildQueue !i (Pure _)    !acc = (acc, i)
+>     buildQueue !i (App x y)   !acc =
+>         let (acc', i') = buildQueue i x acc in buildQueue i' y acc'
+>     buildQueue !i (Prio p mx) !acc =
+>         (PSQ.insert i p (liftM unsafeCoerce mx) acc, i + 1)
+>
+>     evaluateQueue
+>         :: PSQ.OrdPSQ Int p (m Any)
+>         -> M.Map Int Any
+>         -> m (M.Map Int Any)
+>     evaluateQueue q !acc = case PSQ.minView q of
+>         Nothing             -> return acc
+>         Just (k, _, mx, q') -> do
+>             x <- mx
+>             evaluateQueue q' (M.insert k x acc)
+>
+>     evalPrio
+>         :: forall b.
+>            M.Map Int Any
+>         -> Int
+>         -> Prio p m b
+>         -> (b, Int)
+>     evalPrio m !i (Pure x)    = (x, i)
+>     evalPrio m !i (App x y)   =
+>         let (x', i')  = evalPrio m i x
+>             (y', i'') = evalPrio m i' y
+>         in (x' y', i'')
+>     evalPrio m !i (Prio p mx) =
+>         (unsafeCoerce (m M.! i), i + 1)
