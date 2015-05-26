@@ -414,9 +414,6 @@ Appendix: a faster runPrio
 I have been requested to include the code for a faster `runPrio`, so here it is.
 As you might expect, it is not as clean as the original one.
 
-> fastRunPrio :: forall p m a. (Monad m, Ord p) => Prio p m a -> m a
-> fastRunPrio prio0 = do
-
 The code runs in roughly three steps:
 
 1. Build a queue which sorts all the elements by priority. In addition to the
@@ -429,6 +426,8 @@ The code runs in roughly three steps:
    node, we use the `Int` key to lookup and `unsafeCoerce` the evaluated value
    from the `Map`.
 
+> fastRunPrio :: forall p m a. (Monad m, Ord p) => Prio p m a -> m a
+> fastRunPrio prio0 = do
 >     let (queue, _) = buildQueue 0 prio0 PSQ.empty
 >     m <- evaluateQueue queue M.empty
 >     let (x, _) = evalPrio m 0 prio0
