@@ -8,7 +8,7 @@ Introduction
 ============
 
 When writing some code recently, I came across a very interesting Applicative
-Functor. I wanted to write about for two reasons:
+Functor. I wanted to write about it for two reasons:
 
 - It really shows the power of Applicative (compared to Monad). Applicative does
   not require access to previously computed results, which helps in this case,
@@ -76,6 +76,15 @@ keep track of what's available.
 For `RequestCheapestDessert`, we make use of the fact that our inventory is
 sorted by price. This means the head of the list is the cheapest dessert, so we
 serve that and put the tail of the list (`xs`) back.
+
+We can do that conveniently using the `state` function, which allows us to
+modify the state and compute a result at the same time:
+
+~~~~~{.haskell}
+state :: (s -> (a, s)) -> State s a
+~~~~~
+
+The implementation becomes:
 
 > doRequest RequestCheapestDessert =
 >     state $ \inventory -> case inventory of
