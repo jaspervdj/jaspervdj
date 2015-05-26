@@ -10,18 +10,16 @@ Introduction
 When writing some code recently, I came across a very interesting Applicative
 Functor. I wanted to write about for two reasons:
 
-- It really shows the power of Applicative. Applicative does not require access
-  to previously computed results, which helps in this case, because it allows us
-  to execute statements in whatever order is convenient.
+- It really shows the power of Applicative (compared to Monad). Applicative does
+  not require access to previously computed results, which helps in this case,
+  because it allows us to execute statements in whatever order is convenient.
 
-- I think it is novel, I digged for a bit and could not find a similar
+- I think it is novel, I was digging for a bit and could not find a similar
   Applicative in any Haskell code.
 
 This blogpost is written in literate Haskell so you should be able to just load
 it up in GHCi and play around with it (you can find the raw `.lhs` file
-[here](https://github.com/jaspervdj/jaspervdj/raw/master/posts/2014-11-27-comonads-image-processing.lhs)).
-
-TODO: Change the above link.
+[here](https://github.com/jaspervdj/jaspervdj/raw/master/posts/2015-05-26-prio-applicative.lhs)).
 
 > {-# LANGUAGE BangPatterns        #-}
 > {-# LANGUAGE GADTs               #-}
@@ -38,7 +36,7 @@ TODO: Change the above link.
 The problem
 ===========
 
-In our example, we will be modelling a dessert restaurant.
+In our example, we will be modeling a dessert restaurant.
 
 > type Dessert = String
 
@@ -58,7 +56,7 @@ expensive.
 
 Whenever a client wants to order something, they have two options:
 
-- Pick a specific dessert;
+- Request a specific dessert;
 - Just get the cheapest one we have available.
 
 In the first case, they will not get served anything if the specific dessert is
@@ -179,7 +177,7 @@ And we want to implement:
 How do we go about that? Instead of just sorting by priority, we need to tag
 which request belongs to which parent or child, then sort them, and... it gets
 messy -- especially if the problem becomes more complicated. Imagine, for
-example, that chilren get given a bit more priority. It would be cool if we
+example, that children get given a bit more priority. It would be cool if we
 could *separate* the evaluation order (priority) from our actual logic.
 
 Fortunately, there is an Applicative Functor which solves exactly this problem.
@@ -205,6 +203,14 @@ constructor, which holds a monadic action together with its priority.
 
 >     Prio :: p -> m a -> Prio p m a
 
+For reference, here is the interface of Applicative again:
+
+~~~~~{.haskell}
+class Functor f => Applicative f where
+    pure  :: a -> f a
+    (<*>) :: f (a -> b) -> f a -> f b
+~~~~~
+
 We can define a functor instance in terms of Applicative:
 
 > instance Functor (Prio p m) where
@@ -228,8 +234,8 @@ The implementation of `prio` is straightforward:
 > prio :: p -> m a -> Prio p m a
 > prio = Prio
 
-A simple implementation of `modifyPrio` goes through the tree and modifies
-priorities [^modifyPrio].
+A simple implementation of `modifyPrio` walks through the tree and modifies
+priorities (`Prio` nodes) as it encounters them [^modifyPrio].
 
 [^modifyPrio]: A faster (but less concise) implementation would be to add a
 `ModifyPrio` constructor, and evaluate all of these at once, so we only have to
@@ -373,3 +379,6 @@ Use cases are rare. I've only encountered one and I could also have implemented
 it in a different way (although this feels a lot cleaner). However, I think a
 really important point about it is that it really illustrates the difference
 between Applicative and Monad very well.
+
+Thanks to Alex Sayers, Jared Tobin and Maciej Wos for proofreading and
+discussions.
