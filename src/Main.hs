@@ -153,7 +153,7 @@ main = hakyllWith config $ do
     match "cv.markdown" $ version "pdf" $ do
         route   $ setExtension ".pdf"
         compile $ do getResourceBody
-            >>= (return . readPandoc)
+            >>= readPandoc
             >>= (return . fmap writeXeTex)
             >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
             >>= xelatex
