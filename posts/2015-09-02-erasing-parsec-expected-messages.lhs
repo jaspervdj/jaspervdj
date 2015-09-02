@@ -160,7 +160,7 @@ this message. However, when we take a closer look at the Parsec source code, it
 turns out that there is a way: using `<?>` with the empty string `""`.
 
 I think treating the empty string as a special case is a bit un-Haskelly --
-`<?>` would be more self-documenting if it took a Maybe String as its second
+`<?>` would be more self-documenting if it took a `Maybe String` as its second
 argument -- but it is what it is.
 
 `<?> ""` is a bit confusing to read -- it is not immediately clear what it does
