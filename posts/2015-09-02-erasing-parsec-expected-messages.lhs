@@ -155,8 +155,8 @@ The error message is correct but a bit verbose. Sure, there could be a comment
 or whitespace at that position, but the user is probably aware of that. The real
 issue is that the parser is expecting an expression.
 
-In the Pandoc documentation, there is no reference to how one can manipulate
-this message. However, when we take a closer look at the Pandoc source code, it
+In the Parsec documentation, there is no reference to how one can manipulate
+this message. However, when we take a closer look at the Parsec source code, it
 turns out that there is a way: using `<?>` with the empty string `""`.
 
 I think treating the empty string as a special case is a bit un-Haskelly --
