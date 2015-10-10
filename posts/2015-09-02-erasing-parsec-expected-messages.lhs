@@ -8,10 +8,10 @@ Introduction
 ============
 
 [Parsec] is an industrial-strength parser library. I think one of its main
-advantages is that allows you generate really good error messages. However, this
-sometimes requires some non-obvious tricks. In this blogpost, I describe one of
-those. On the way, we illustrate how one can split up a Parsec parser into a
-lexer and an actual parser.
+advantages is that it allows you generate really good error messages. However,
+this sometimes requires some non-obvious tricks. In this blogpost, I describe
+one of those. On the way, we illustrate how one can split up a Parsec parser
+into a lexer and an actual parser.
 
 This blogpost assumes a little familiarity with Parsec or parser combinator
 libraries. There are tons of Parsec tutorials out there, such as [this
