@@ -1,0 +1,19 @@
+digraph {
+    graph [fontname="Helvetica"]
+    node  [fontname="Helvetica"]
+    edge  [fontname="Helvetica"]
+
+    root [shape=box, label="N"]
+    n1   [shape=box, label=""]
+    n2   [shape=box, label=""]
+    v1   [shape=plaintext, label="FullName ..."]
+    v2   [shape=plaintext, label="FullName ..."]
+
+    {rank=same n1 v1}
+    {rank=same n2 v2}
+
+    root -> n1 [label=" apple"]
+    root -> n2 [label=" banana"]
+    n1   -> v1 [style=dashed, tailclip=false]
+    n2   -> v2 [style=dashed, tailclip=false]
+}

@@ -35,6 +35,11 @@ main = hakyllWith config $ do
             >>= loadAndApplyTemplate "templates/formula.tex" defaultContext
             >>= xelatex >>= pdfToPng
 
+    -- Dot images
+    match "images/*.dot" $ do
+        route   $ setExtension "png"
+        compile $ getResourceLBS >>= traverse (unixFilterLBS "dot" ["-Tpng"])
+
     -- Compress CSS
     match "css/*" $ do
         route idRoute

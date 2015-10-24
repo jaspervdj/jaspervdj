@@ -1,0 +1,17 @@
+digraph {
+    graph [fontname="Helvetica"]
+    node  [fontname="Helvetica"]
+    edge  [fontname="Helvetica"]
+
+    root [shape=box, label="N"]
+    n1   [shape=box, label="N"]
+    n2   [shape=box, label=""]
+
+    v2   [shape=plaintext, label="\"Hello World\""]
+
+    {rank=same n2 v2}
+
+    root -> n1 [label=" foo"]
+    n1   -> n2 [label=" bar"]
+    n2   -> v2 [style=dashed, tailclip=false]
+}
