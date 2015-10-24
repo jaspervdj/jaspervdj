@@ -11,7 +11,7 @@ This blogpost is mostly based upon a part of the talk I recently gave at the
 [Haskell eXchange]. I discussed *scope checking* -- also referred to as *scope
 analysis* or *renaming*.
 
-[Haskell eXchange]: TODO
+[Haskell eXchange]: https://skillsmatter.com/conferences/7069-haskell-exchange-2015
 
 > {-# LANGUAGE DeriveFoldable    #-}
 > {-# LANGUAGE DeriveFunctor     #-}
@@ -22,13 +22,14 @@ analysis* or *renaming*.
 > import           Data.Either.Validation (Validation (..), validationToEither)
 > import           Prelude             hiding (lookup)
 
-This part is concerned with resolving *occurence names* to *full names*, where
-occurence names are just what the programmer uses in the source file, and *full
-names* contain more information. I think this is an interesting area to explore.
-The vast majority of articles about creating parsers and interpreters just use
-`String`s as names, in order to keep things simple (which is of course fully
-justified). This blogpost, on the other hand, explains what you can do if things
-become a bit more complicated.
+This part of a Compiler/Interpreter is concerned with resolving *occurence
+names* to *full names*. *Occurence names* are just what the programmer uses in
+the source file, and *full names* contain more information.
+
+I think this is an interesting area to explore. The vast majority of articles
+about creating parsers and interpreters just use `String`s as names, in order to
+keep things simple (which is of course fully justified). This blogpost, on the
+other hand, explains what you can do if things become a bit more complicated.
 
 Consider the following Haskell snippet:
 
@@ -39,8 +40,8 @@ emptyThing = HMS.empty
 ~~~~~
 
 `HMS.empty` is an *occurence name*. The *full name*, on the other hand, is
-something like `unordered-containers-0.2.5.1:Data.HashMap.Base`. Let's represent
-these types in Haskell:
+something like `unordered-containers-0.2.5.1:Data.HashMap.Base`. Let's get
+started by representing these types in Haskell:
 
 > -- E.g. ["HMS", "empty"].
 > type OccName = [String]
@@ -48,6 +49,7 @@ these types in Haskell:
 > -- E.g. ["Data", "HashMap", "Strict"]
 > type ModuleName = [String]
 >
+> -- Just an example of what sort of things can be in 'FullName'.
 > data BindingScope = ToplevelScope | LocalScope
 >     deriving (Show)
 >
@@ -57,12 +59,14 @@ these types in Haskell:
 >     , fnBindingScope :: !BindingScope
 >     } deriving (Show)
 
-Note that this is just a toy example -- there are more efficient representations
-for the above. Typically we also want to store things like the package where the
-name originated, amongst other things. The `FullName` record can really get
+Note that this is just a toy example. Firstly, we can use more efficient
+representations for the above, and we might want to add `newtype` safety.
+Secondly, we might also want to store other things in `FullName`, for example
+the package where the name originated. The `FullName` record can really get
 quite big.
 
-Our abstract syntax tree is parameterised around this name type.
+Now that we have two name types -- `OccName` and `FullName`, we can parameterise
+our abstract syntax tree around a name type.
 
 > data Expr n
 >     = Literal Int
@@ -78,7 +82,7 @@ Tries
 
 In order to implement this, it is clear that we need some sort of *"Map"* to
 store the `FullName` information. The specific data structure we will use is a
-[Trie]. For educational purposes, let's implement one here.
+[Trie]. We will implement one here for educational purposes.
 
 [Trie]: https://en.wikipedia.org/wiki/Trie
 
@@ -92,12 +96,13 @@ type Trie k v = HMS.HashMap [k] v
 However, there is a nicer representation which we will need in order to support
 some fast operations.
 
-First, we need a quick-and-dirty strict `Maybe` type. Thanks to recent-*ish*
-additions to GHC, we can just automatically derive `Foldable`, `Functor` and
-`Traversable` for it.
+First, we need a quick-and-dirty *strict* `Maybe` type.
 
 > data M a = J !a | N
 >     deriving (Foldable, Functor, Show, Traversable)
+
+Note how we automically added `Foldable`, `Functor` and `Traversable` instances
+for this type. Thanks GHC!
 
 Then, we can define `Trie` in a recursive way:
 
@@ -107,7 +112,7 @@ Then, we can define `Trie` in a recursive way:
 >     } deriving (Foldable, Functor, Show, Traversable)
 
 We can have a value at the root (`tValue`), and then the other elements in the
-`Trie` are stored the first key of their key list.
+`Trie` are stored under the first key of their key list (in `tChildren`).
 
 Now it is time is time to construct some machinery to create `Trie`s. The empty
 `Trie` is really easy:
@@ -120,8 +125,8 @@ value and no children.
 
 ![The empty trie](/images/2015-10-23-trie-empty.png)
 
-Then we can also define a function to create a `Trie` with a singleton element.
-If the list of keys is empty, we simply have a `J` value here. Otherwise, we
+We can also define a function to create a `Trie` with a single element. If the
+list of keys is empty, we simply have a `J` value at the root. Otherwise, we
 define the function recursively.
 
 > singleton :: (Eq k, Hashable k) => [k] -> v -> Trie k v
@@ -133,8 +138,8 @@ As an example, this is the result of the call
 
 ![A singleton trie](/images/2015-10-23-trie-singleton.png)
 
-We can skip insert and other functions by simply creating a `unionWith`
-function. This function unifies two `Trie`s, and you can pass in a function that
+We can skip `insert` and simply create a `unionWith` function instead. This
+function unifies two `Trie`s, while allowing you to pass in a function that
 decides what happens if there is a value collision.
 
 > unionWith
@@ -149,19 +154,19 @@ decides what happens if there is a value collision.
 >         (J x, J y) -> J (f x y)
 
 The bulk of the work is of course done by `HMS.unionWith`. This is the result of
-calling `unionWith id (singleton "foo" "Hello") (singleton "bar" "World")`:
+calling `unionWith const (singleton "foo" "Hello") (singleton "bar" "World")`:
 
 ![unionWith example](/images/2015-10-23-trie-unionwith.png)
 
-For convenience, we can then extend `unionsWith` to work on lists:
+For convenience, we can then extend `unionWith` to work on lists:
 
 > unionsWith
 >     :: (Eq k, Hashable k)
 >     => (v -> v -> v) -> [Trie k v] -> Trie k v
 > unionsWith f = foldl' (unionWith f) empty
 
-A last function we need to construct tries is `prefix`. This function prefixes a
-whole `Trie` by nesting it under a list of labels. Because of the way our `Trie`
+A last function we need to modify tries is `prefix`. This function prefixes a
+whole `Trie` by nesting it under a list of keys. Because of the way our `Trie`
 is represented, this can be done efficiently and we don't need to change every
 key.
 
@@ -194,22 +199,22 @@ We can implement our `Scope` type on top of `Trie`.
 
 > type Scope a = Trie String a
 
-We will differentiate between two different scopes. An `AmbiguousScope` might
-contain duplicate names. In that case, we want to throw an error or show a
-warning to the user. In an `UnambiguousScope`, on the other hand, we know
-precisely what every name refers to.
+We will differentiate between two different kinds of scopes (hence the `a`). An
+`AmbiguousScope` might contain duplicate names. In that case, we want to throw
+an error or show a warning to the user. In an `UnambiguousScope`, on the other
+hand, we know precisely what every name refers to.
 
 > type AmbiguousScope = Scope [FullName]
 > type UnambiguousScope = Scope FullName
 
 Let's first focus on building `AmbiguousScope`s. We will later see how we can
-validate these into an `UnambiguousScope`.
+validate these and convert them into an `UnambiguousScope`.
 
 Building a scope for one module
 ===============================
 
-In order to build a scope, start from a simple case. Let's look at a sample
-module in our DSL and construct a scope just for that module.
+In order to build a scope, let's start with a simple case. Let's look at a
+sample module in our DSL and construct a scope just for that module.
 
     module Calories.Fruit where
 
@@ -219,14 +224,14 @@ module in our DSL and construct a scope just for that module.
 We need to have some intuition for how such a module is represented in Haskell.
 Let's try to keep things as simple as possible:
 
-> data Binding n = Binding
->     { bName :: !n
->     , bBody :: !(Expr n)
->     } deriving (Show)
-
 > data Module n = Module
 >     { mName     :: !ModuleName
 >     , mBindings :: [Binding n]
+>     } deriving (Show)
+
+> data Binding n = Binding
+>     { bName :: !n
+>     , bBody :: !(Expr n)
 >     } deriving (Show)
 
 We can define a function to convert this module into a local `Scope` which
@@ -302,7 +307,7 @@ because `Trie` (and by extension `Scope`) is `Traversable`:
 >     multiple -> Failure [AmbiguousNames multiple]
 
 By using the [Validation] Applicative, we ensure that we get as many error
-messages as we can. We have a nice datatype for our possible errors cases:
+messages as we can. We have a nice datatype which describes our possible errors:
 
 [Validation]: https://hackage.haskell.org/package/either/docs/Data-Either-Validation.html
 
@@ -312,11 +317,11 @@ messages as we can. We have a nice datatype for our possible errors cases:
 >     | NotInScope OccName
 >     deriving (Show)
 
-Scopechecking an expression
-===========================
+Scope checking an expression
+============================
 
-That entails everything we needed to build an `UnambiguousScope` so we can scope
-check a program. The actual scope checking itself is trivial:
+That entails everything we needed to build an `UnambiguousScope`, so we can now
+scope check a program. The actual scope checking itself is very straightforward:
 
 > scExpr
 >     :: UnambiguousScope -> Expr OccName
@@ -337,15 +342,15 @@ Conclusion
 
 I have described a simple and (in my opinion) elegant approach to scope
 checking. I hope this is inspiring if you ever are in the situation where
-modules would be a nice extension to a DSL (or full-fledged programming
+modules would be a nice extension to some DSL (or full-fledged programming
 language) you are implementing.
 
 We've also seen how one can implement a `Trie` in a reasonably easy way. These
 often come in handy when you are modelling some sort of hierarchical `Map`.
 
 This entire blogpost is written in Literate Haskell, and works as a standalone
-example for scopechecking. If you feel up to the challenge, try to add
-Let-bindings as an exercise.
+example for scope checking. If you feel up to the challenge, try to add
+Let-bindings as an exercise!
 
 TODO: Add link to blogpost
 
