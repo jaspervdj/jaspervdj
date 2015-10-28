@@ -49,12 +49,11 @@ First, we import some things, including the `Data.HashPSQ` module from psqueues.
 > import qualified Data.Vector         as V
 > import           Prelude             hiding (lookup)
 
-Let's start with our datatype definition. Our `Cache` type is parameterized by
-`k` and `v`, which represent the types of our keys and values respectively.
-The priorities of our elements will be the logical time at which they were
-last accessed, or the time at which they were inserted (for elements which have
-never been accessed). We will represent these logical times by values of type
-`Int64`.
+Let's start with our datatype definition. Our `Cache` type is parametrized by
+`k` and `v`, which represent the types of our keys and values respectively.  The
+priorities of our elements will be the logical time at which they were last
+accessed, or the time at which they were inserted (for elements which have never
+been accessed). We will represent these logical times by values of type `Int64`.
 
 > type Priority = Int64
 

@@ -14,8 +14,8 @@ on IRC -- I lurk as `jaspervdj` in the `#haskell` channel on [freenode].
 For urgent matters, send a postcard to:
 
 > Jasper Van der Jeugt  
-> Zurlindenstrasse 50  
-> 8003 Zürich  
+> Hohlstrasse 30  
+> 8004 Zürich  
 > Switzerland  
 
 I like postcards.

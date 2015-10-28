@@ -44,7 +44,7 @@ handler = makeHandler "kick" $ return $ onCommand "KICK" $ do
         writeMessage "JOIN" [channel]
 ~~~~~
 
-I've parameterized `Handler` on `String` -- it simply specifies the string type
+I've parametrized `Handler` on `String` -- it simply specifies the string type
 used (`String` and `ByteString` are supported). I'm using an irrefutable pattern
 match, because I know that a crashing plugin won't matter much.
 

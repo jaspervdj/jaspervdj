@@ -9,10 +9,12 @@ digraph {
     n2   [shape=box, label=""]
     n4   [shape=box, label=""]
     n5   [shape=box, label=""]
+    n6   [shape=box, label=""]
     v1   [shape=plaintext, label="FullName ..."]
     v2   [shape=plaintext, label="FullName ..."]
     v4   [shape=plaintext, label="FullName ..."]
     v5   [shape=plaintext, label="FullName ..."]
+    v6   [shape=plaintext, label="FullName ..."]
 
     {rank=same n1 v1}
     {rank=same n2 v2}
@@ -21,11 +23,13 @@ digraph {
 
     root -> n1 [label=" apple"]
     root -> n2 [label=" banana"]
-    root -> n3 [label=" Cake"]
+    root -> n3 [label=" Pie"]
+    root -> n6 [label=" combo"]
     n3   -> n4 [label=" apple"]
-    n3   -> n5 [label=" chocolate"]
+    n3   -> n5 [label=" blueberry"]
     n1   -> v1 [style=dashed, tailclip=false]
     n2   -> v2 [style=dashed, tailclip=false]
     n4   -> v4 [style=dashed, tailclip=false]
     n5   -> v5 [style=dashed, tailclip=false]
+    n6   -> v6 [style=dashed, tailclip=false]
 }

@@ -16,11 +16,11 @@ analysis* or *renaming*.
 > {-# LANGUAGE DeriveFoldable    #-}
 > {-# LANGUAGE DeriveFunctor     #-}
 > {-# LANGUAGE DeriveTraversable #-}
-> import qualified Data.HashMap.Strict as HMS
-> import           Data.Hashable       (Hashable)
-> import           Data.List           (foldl')
+> import qualified Data.HashMap.Strict    as HMS
+> import           Data.Hashable          (Hashable)
+> import           Data.List              (foldl')
 > import           Data.Either.Validation (Validation (..), validationToEither)
-> import           Prelude             hiding (lookup)
+> import           Prelude                hiding (lookup)
 
 This part of a Compiler/Interpreter is concerned with resolving *occurence
 names* to *full names*. *Occurence names* are just what the programmer uses in
@@ -40,7 +40,7 @@ emptyThing = HMS.empty
 ~~~~~
 
 `HMS.empty` is an *occurence name*. The *full name*, on the other hand, is
-something like `unordered-containers-0.2.5.1:Data.HashMap.Base`. Let's get
+something like `unordered-containers-0.2.5.1:Data.HashMap.Base.empty`. Let's get
 started by representing these types in Haskell:
 
 > -- E.g. ["HMS", "empty"].
@@ -65,8 +65,8 @@ Secondly, we might also want to store other things in `FullName`, for example
 the package where the name originated. The `FullName` record can really get
 quite big.
 
-Now that we have two name types -- `OccName` and `FullName`, we can parameterise
-our abstract syntax tree around a name type.
+Now that we have two name types -- `OccName` and `FullName`, we can parametrise
+our abstract syntax tree over a name type.
 
 > data Expr n
 >     = Literal Int
@@ -82,9 +82,11 @@ Tries
 
 In order to implement this, it is clear that we need some sort of *"Map"* to
 store the `FullName` information. The specific data structure we will use is a
-[Trie]. We will implement one here for educational purposes.
+[Trie]. Tries are somewhat similar to [Radix trees], but significantly more
+simple. We will implement one here for educational purposes.
 
 [Trie]: https://en.wikipedia.org/wiki/Trie
+[radix trees]: https://en.wikipedia.org/wiki/Radix_tree
 
 A `Trie k v` can be seen as a mapping from *lists of keys* to values, so it
 *could* be defined as:
@@ -114,8 +116,11 @@ Then, we can define `Trie` in a recursive way:
 We can have a value at the root (`tValue`), and then the other elements in the
 `Trie` are stored under the first key of their key list (in `tChildren`).
 
-Now it is time is time to construct some machinery to create `Trie`s. The empty
-`Trie` is really easy:
+Now it is time to construct some machinery to create `Trie`s. The [^the-empty]
+empty `Trie` is really easy:
+
+[^the-empty]: Actually, in this representation, there is no *"the"* empty trie,
+since one can represent an empty trie in infinite ways.
 
 > empty :: Trie k v
 > empty = Trie N HMS.empty
@@ -140,7 +145,7 @@ As an example, this is the result of the call
 
 We can skip `insert` and simply create a `unionWith` function instead. This
 function unifies two `Trie`s, while allowing you to pass in a function that
-decides what happens if there is a value collision.
+decides how to merge the two values if there is a key collision.
 
 > unionWith
 >     :: (Eq k, Hashable k)
@@ -154,7 +159,8 @@ decides what happens if there is a value collision.
 >         (J x, J y) -> J (f x y)
 
 The bulk of the work is of course done by `HMS.unionWith`. This is the result of
-calling `unionWith const (singleton "foo" "Hello") (singleton "bar" "World")`:
+calling
+`unionWith (\x _ -> x) (singleton "foo" "Hello") (singleton "bar" "World")`:
 
 ![unionWith example](/images/2015-10-23-trie-unionwith.png)
 
@@ -183,7 +189,7 @@ In addition to creating `Trie`s, we also need to be able to lookup stuff in the
 `Trie`. All we need for that is a simple `lookup` function:
 
 > lookup :: (Eq k, Hashable k) => [k] -> Trie k v -> Maybe v
-> lookup []       (Trie N _)            = Nothing
+> lookup []       (Trie N     _)        = Nothing
 > lookup []       (Trie (J x) _)        = Just x
 > lookup (k : ks) (Trie _     children) = do
 >     trie <- HMS.lookup k children
@@ -195,7 +201,13 @@ course, offer more.
 The scope type
 ==============
 
-We can implement our `Scope` type on top of `Trie`.
+Now, recall that we're trying to resolve the occurrence names in a module into
+full names. We will tackle this from the opposite direction: we'll gather up all
+the names which are in scope into one place. After this actually , resolve an
+occurrence name is as simple as performing a lookup.
+
+In order to gather up all these names we need some datatype -- which is, of
+course, the `Trie` we just implemented!
 
 > type Scope a = Trie String a
 
@@ -235,19 +247,21 @@ Let's try to keep things as simple as possible:
 >     } deriving (Show)
 
 We can define a function to convert this module into a local `Scope` which
-contains all the bindings in the module.
+contains all the bindings in the module. In order to keep things simple, we
+assume *every* binding in a module is always exported.
 
 > scopeFromModule :: Module OccName -> AmbiguousScope
-> scopeFromModule m = unionsWith (++)
->     [ singleton (bName b)
+> scopeFromModule m =
+>     unionsWith (++) $ map scopeFromBinding (mBindings m)
+>   where
+>     scopeFromBinding :: Binding OccName -> AmbiguousScope
+>     scopeFromBinding b = singleton (bName b)
 >         [ FullName
 >             { fnOccName      = bName b
 >             , fnModuleName   = mName m
 >             , fnBindingScope = ToplevelScope
 >             }
 >         ]
->     | b <- mBindings m
->     ]
 
 For our example module, we obtain something like:
 
@@ -260,10 +274,10 @@ Of course, a realistic program will import multiple modules. Imagine a program
 with the following import list:
 
     import           Calories.Fruit
-    import qualified Calories.Cake  as Cake
+    import qualified Calories.Pie  as Pie
 
-    -- An apple and an apple cake!
-    combo = apple + Cake.apple
+    -- An apple and an apple pie!
+    combo = apple + Pie.apple
 
 In order to build the `Scope` for the program, we need three more things:
 
@@ -287,8 +301,9 @@ We can now build the scope for our little program. It is:
 
 > myScope :: AmbiguousScope
 > myScope = unionScopes
->     [ scopeFromModule fruitModule
->     , qualifyScope ["Cake"] $ scopeFromModule cakeModule
+>     [ scopeFromModule myModule  -- Defines 'combo'
+>     , scopeFromModule fruitModule
+>     , qualifyScope ["Pie"] $ scopeFromModule pieModule
 >     ]
 
 We get something like:
@@ -297,14 +312,24 @@ We get something like:
 
 Great! So now the problem is that we're left with an `AmbiguousScope` instead of
 an `UnambiguousScope`. Fortunately we can convert between those fairly easily,
-because `Trie` (and by extension `Scope`) is `Traversable`:
+because `Trie` (and by extension `Scope`) is [Traversable]:
+
+[Traversable]: https://hackage.haskell.org/package/base/docs/Data-Traversable.html
 
 > toUnambiguousScope
 >     :: AmbiguousScope -> Validation [ScopeError] UnambiguousScope
 > toUnambiguousScope = traverse $ \fullNames -> case fullNames of
 >     [single] -> pure single
->     []       -> Failure [InternalScopeError]
+>     []       -> Failure [InternalScopeError "empty list in scope"]
 >     multiple -> Failure [AmbiguousNames multiple]
+
+It is perhaps worth noting that this behaviour is different from GHC
+[^ghc-ambiguity].
+
+[^ghc-ambiguity]: GHC only reports ambiguity errors for imported names when they
+are actually *used*, not when they are *imported*. We could also achieve this
+behaviour by continuing with the `AmbiguousScope` and throwing an error from
+`scOccName` when there is ambiguity.
 
 By using the [Validation] Applicative, we ensure that we get as many error
 messages as we can. We have a nice datatype which describes our possible errors:
@@ -312,9 +337,9 @@ messages as we can. We have a nice datatype which describes our possible errors:
 [Validation]: https://hackage.haskell.org/package/either/docs/Data-Either-Validation.html
 
 > data ScopeError
->     = InternalScopeError
->     | AmbiguousNames [FullName]
+>     = AmbiguousNames [FullName]
 >     | NotInScope OccName
+>     | InternalScopeError String  -- For other failures
 >     deriving (Show)
 
 Scope checking an expression
@@ -369,22 +394,22 @@ testable (and hackable!).
 >         ]
 >     }
 >
-> cakeModule :: Module OccName
-> cakeModule = Module
->     { mName     = ["Calories.Cake"]
+> pieModule :: Module OccName
+> pieModule = Module
+>     { mName     = ["Calories.Pie"]
 >     , mBindings =
 >         [ Binding ["apple"]     (Literal 240)
->         , Binding ["chocolate"] (Literal 371)
+>         , Binding ["blueberry"] (Literal 371)
 >         ]
 >     }
 >
-> mainModule :: Module OccName
-> mainModule = Module
+> myModule :: Module OccName
+> myModule = Module
 >     { mName     = ["Main"]
 >     , mBindings =
 >         [ Binding ["combo"] $ Add
 >               (Var ["apple"])
->               (Var ["Cake", "apple"])
+>               (Var ["Pie", "apple"])
 >         ]
 >     }
 >
@@ -402,10 +427,10 @@ testable (and hackable!).
 > main = do
 >     let ambiguous = unionScopes
 >           [ scopeFromModule fruitModule
->           , qualifyScope ["Cake"] $ scopeFromModule cakeModule
->           , scopeFromModule mainModule
+>           , qualifyScope ["Pie"] $ scopeFromModule pieModule
+>           , scopeFromModule myModule
 >           ]
 >
 >     print $ do
 >         unambiguous <- validationToEither $ toUnambiguousScope ambiguous
->         validationToEither $ scModule unambiguous mainModule
+>         validationToEither $ scModule unambiguous myModule
