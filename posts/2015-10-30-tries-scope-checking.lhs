@@ -9,9 +9,12 @@ Introduction
 
 This blogpost is mostly based upon a part of the talk I recently gave at the
 [Haskell eXchange]. I discussed *scope checking* -- also referred to as *scope
-analysis* or *renaming*.
+analysis* or *renaming*. While the talk specifically discussed *Ludwig*, a DSL
+used to program [Fugue], the ideas around scope checking specifically are
+broadly applicable, so in this blogpost we use on a simple toy language.
 
 [Haskell eXchange]: https://skillsmatter.com/conferences/7069-haskell-exchange-2015
+[Fugue]: https://fugue.co/
 
 > {-# LANGUAGE DeriveFoldable    #-}
 > {-# LANGUAGE DeriveFunctor     #-}
