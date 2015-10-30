@@ -19,7 +19,8 @@ analysis* or *renaming*.
 > import qualified Data.HashMap.Strict    as HMS
 > import           Data.Hashable          (Hashable)
 > import           Data.List              (foldl')
-> import           Data.Either.Validation (Validation (..), validationToEither)
+> import           Data.Either.Validation (Validation (..),
+>                                          validationToEither)
 > import           Prelude                hiding (lookup)
 
 This part of a Compiler/Interpreter is concerned with resolving *occurence
