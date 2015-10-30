@@ -128,7 +128,7 @@ since one can represent an empty trie in infinite ways.
 Let's draw the empty `Trie` as a simple box with an `N` value, since it has no
 value and no children.
 
-![The empty trie](/images/2015-10-23-trie-empty.png)
+![The empty trie](/images/2015-10-30-trie-empty.png)
 
 We can also define a function to create a `Trie` with a single element. If the
 list of keys is empty, we simply have a `J` value at the root. Otherwise, we
@@ -141,7 +141,7 @@ define the function recursively.
 As an example, this is the result of the call
 `singleton ["foo", "bar"] "Hello World"`.
 
-![A singleton trie](/images/2015-10-23-trie-singleton.png)
+![A singleton trie](/images/2015-10-30-trie-singleton.png)
 
 We can skip `insert` and simply create a `unionWith` function instead. This
 function unifies two `Trie`s, while allowing you to pass in a function that
@@ -162,7 +162,7 @@ The bulk of the work is of course done by `HMS.unionWith`. This is the result of
 calling
 `unionWith (\x _ -> x) (singleton "foo" "Hello") (singleton "bar" "World")`:
 
-![unionWith example](/images/2015-10-23-trie-unionwith.png)
+![unionWith example](/images/2015-10-30-trie-unionwith.png)
 
 For convenience, we can then extend `unionWith` to work on lists:
 
@@ -183,7 +183,7 @@ key.
 This is the result of prefixing the trie from the previous example with
 `["qux"]`:
 
-![prefix example](/images/2015-10-23-trie-prefix.png)
+![prefix example](/images/2015-10-30-trie-prefix.png)
 
 In addition to creating `Trie`s, we also need to be able to lookup stuff in the
 `Trie`. All we need for that is a simple `lookup` function:
@@ -203,7 +203,7 @@ The scope type
 
 Now, recall that we're trying to resolve the occurrence names in a module into
 full names. We will tackle this from the opposite direction: we'll gather up all
-the names which are in scope into one place. After this actually , resolve an
+the names which are in scope into one place. After this, actually, resolving an
 occurrence name is as simple as performing a lookup.
 
 In order to gather up all these names we need some datatype -- which is, of
@@ -265,7 +265,7 @@ assume *every* binding in a module is always exported.
 
 For our example module, we obtain something like:
 
-![The fruit module scope](/images/2015-10-23-scope-fruit.png)
+![The fruit module scope](/images/2015-10-30-scope-fruit.png)
 
 Multiple imports
 ================
@@ -308,7 +308,7 @@ We can now build the scope for our little program. It is:
 
 We get something like:
 
-![myScope](/images/2015-10-23-scope-union.png)
+![myScope](/images/2015-10-30-scope-union.png)
 
 Great! So now the problem is that we're left with an `AmbiguousScope` instead of
 an `UnambiguousScope`. Fortunately we can convert between those fairly easily,
@@ -375,9 +375,8 @@ often come in handy when you are modelling some sort of hierarchical `Map`.
 
 This entire blogpost is written in Literate Haskell, and works as a standalone
 example for scope checking. If you feel up to the challenge, try to add
-Let-bindings as an exercise!
-
-TODO: Add link to blogpost
+Let-bindings as an exercise! You can find the raw `.lhs` file
+[here](https://github.com/jaspervdj/jaspervdj/raw/master/posts/2015-10-30-tries-scope-checking.lhs).
 
 Appendix
 ========
