@@ -24,7 +24,7 @@ analysis* or *renaming*.
 > import           Prelude                hiding (lookup)
 
 This part of a Compiler/Interpreter is concerned with resolving *occurence
-names* to *full names*. *Occurence names* are just what the programmer uses in
+names* to *full names*. *Occurrence names* are just what the programmer uses in
 the source file, and *full names* contain more information.
 
 I think this is an interesting area to explore. The vast majority of articles
@@ -40,7 +40,7 @@ import qualified Data.HashMap.Strict as HMS
 emptyThing = HMS.empty
 ~~~~~
 
-`HMS.empty` is an *occurence name*. The *full name*, on the other hand, is
+`HMS.empty` is an *occurrence name*. The *full name*, on the other hand, is
 something like `unordered-containers-0.2.5.1:Data.HashMap.Base.empty`. Let's get
 started by representing these types in Haskell:
 
