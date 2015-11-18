@@ -80,7 +80,7 @@ Haskell libraries, and a technical blog.
   System with an NFS frontend, written in [OCaml].
 
 [Tsuru Capital LLC]: http://tsurucapital.com/
-[Better]: http://better.com/
+[Better]: http://better.io/
 [Google Summer of Code]: http://code.google.com/soc/
 [Amplidata]: http://www.amplidata.com/
 [OCaml]: http://caml.inria.fr/
