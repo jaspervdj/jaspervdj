@@ -10,6 +10,11 @@ body {
     height: 100%;
 }
 
+div.avatar-wrap {
+    margin: 18px;
+    text-align: center;
+}
+
 div#navigation {
     background: #e9e9e9 url("../images/header.png") repeat-x left bottom;
     padding-bottom: 18px;
@@ -34,6 +39,11 @@ div#lightbox {
 @media all and (min-width: 822px) {
     html {
         background: transparent url("../images/sidebar.png") repeat-y left top;
+    }
+
+    div.avatar-wrap {
+        margin: 18px;
+        float: right;
     }
 
     div#navigation {
