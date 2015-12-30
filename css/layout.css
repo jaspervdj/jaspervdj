@@ -38,7 +38,7 @@ div#lightbox {
 
 @media all and (min-width: 822px) {
     html {
-        background: transparent url("../images/sidebar.png") repeat-y left top;
+        background: #fff url("../images/sidebar.png") repeat-y left top;
     }
 
     div.avatar-wrap {
