@@ -1,5 +1,5 @@
 ---
-title: BelHac: summary
+title: 'BelHac: summary'
 description: Summary of BelHac, the 12th Haskell Hackathon
 tags: haskell
 ---

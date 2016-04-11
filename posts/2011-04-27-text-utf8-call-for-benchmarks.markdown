@@ -1,5 +1,5 @@
 ---
-title: Text/UTF-8: Call for Benchmarks
+title: 'Text/UTF-8: Call for Benchmarks'
 description: A search for libraries and applications extensively using text
 tags: haskell
 ---

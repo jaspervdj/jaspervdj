@@ -1,5 +1,5 @@
 ---
-title: Text/UTF-8: Studying memory usage
+title: 'Text/UTF-8: Studying memory usage'
 description: Benchmarking the memory usage of an example server
 tags: haskell
 ---

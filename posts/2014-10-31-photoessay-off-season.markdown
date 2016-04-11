@@ -1,5 +1,5 @@
 ---
-title: Photoessay: Off-Season (Turkey)
+title: 'Photoessay: Off-Season (Turkey)'
 description: A set of pictures from Turkey
 tags: photoessay
 ---

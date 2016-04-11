@@ -1,5 +1,5 @@
 ---
-title: Haskell Design Patterns: .Extended Modules
+title: 'Haskell Design Patterns: .Extended Modules'
 description: A clean way of extending third-party modules
 tags: haskell
 ---

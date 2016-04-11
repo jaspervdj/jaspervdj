@@ -1,5 +1,5 @@
 ---
-title: Profiteur: a visualiser for Haskell GHC .prof files
+title: 'Profiteur: a visualiser for Haskell GHC .prof files'
 description: A nicer way to browse big profile files
 tags: haskell
 ---

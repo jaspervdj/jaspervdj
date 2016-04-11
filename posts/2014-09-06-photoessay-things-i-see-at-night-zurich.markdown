@@ -1,5 +1,5 @@
 ---
-title: Photoessay: things I see at night (Zürich)
+title: 'Photoessay: things I see at night (Zürich)'
 description: A short photoessay on Zürich by night
 tags: photoessay
 ---

@@ -1,5 +1,5 @@
 ---
-title: Monads and Arrows: modelling a build system
+title: 'Monads and Arrows: modelling a build system'
 description: An success story of Arrows
 tags: haskell
 ---

@@ -1,5 +1,5 @@
 ---
-title: Caching in Hakyll: Long live Data.Binary!
+title: 'Caching in Hakyll: Long live Data.Binary!'
 description: Some thoughts and findings on implementing caching in Hakyll
 tags: haskell
 ---

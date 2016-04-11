@@ -1,5 +1,5 @@
 ---
-title: BlazeHtml: Initial results
+title: 'BlazeHtml: Initial results'
 description: BlazeHtml was accepted as GSoC project, I present the project here
 tags: haskell
 ---

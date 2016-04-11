@@ -1,5 +1,5 @@
 ---
-title: Text/UTF-8: Aftermath
+title: 'Text/UTF-8: Aftermath'
 description: The final results, and what's next?
 tags: haskell
 ---

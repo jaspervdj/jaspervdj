@@ -1,5 +1,5 @@
 ---
-title: Software Development 1: My impressions
+title: 'Software Development 1: My impressions'
 description: My thoughts on our first software development course at uni
 tags: ugent
 ---

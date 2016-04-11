@@ -1,5 +1,5 @@
 ---
-title: A bit of ST and a bit of IO: Designing a DCPU-16 emulator
+title: 'A bit of ST and a bit of IO: Designing a DCPU-16 emulator'
 description: On monadic typeclasses, pure and impure state monads
 tags: haskell
 ---

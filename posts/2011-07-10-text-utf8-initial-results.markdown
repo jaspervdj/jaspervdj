@@ -1,5 +1,5 @@
 ---
-title: Text/UTF-8: Initial results
+title: 'Text/UTF-8: Initial results'
 description: A status report on my google summer of code project
 tags: haskell
 ---

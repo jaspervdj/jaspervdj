@@ -1,5 +1,5 @@
 ---
-title: UGent Courses: A Review
+title: 'UGent Courses: A Review'
 description: I recently graduated from Ghent University, so time for a review
 tags: ugent
 ---
