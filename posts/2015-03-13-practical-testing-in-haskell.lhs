@@ -13,7 +13,7 @@ someone asked me if I could elaborate on how I would test or benchmark such a
 module. For the sake of brevity, I will constrain myself to testing for now,
 although I think a lot of the ideas in the blogpost also apply to benchmarking.
 
-[how to write an LRU Cache]: /2015-02-24-lru-cache.html
+[how to write an LRU Cache]: /posts/2015-02-24-lru-cache.html
 
 This post is written in Literate Haskell. It depends on the LRU Cache we wrote
 last time, so you need both modules if you want to play around with the code.
