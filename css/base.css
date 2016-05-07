@@ -65,13 +65,12 @@ pre code {
     background-color: transparent;
     padding: 0px;
     margin: 0px;
+    color: #333;
 }
 
 code {
-    background-color: #e6e6e6;
-    padding: 0px 4px 0px 4px;
-    margin: 0px 2px 0px 2px;
-    color: black;
+    font-size: 14px;
+    color: #408090;
 }
 
 h1, h2, h3 {
