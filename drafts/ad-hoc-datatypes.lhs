@@ -1,17 +1,18 @@
 > import Control.Monad (forM_)
 
 In Haskell, it is extremely easy for the programmer to add a quick datatype.  It
-does not have to take more than a few lines.  This is extremely useful to add
-auxiliary, ad-hoc datatypes.
+does not have to take more than a few lines.  This is useful to add auxiliary,
+ad-hoc datatypes.
 
 I don't think this is used enough.  Most libraries and code I see use "heavier"
 datatypes: canonical and very well-thought-out datatypes, followed by dozens of
 instances and related functions.  These are of course great to work with, but it
-doesn't have to be a restriction.
+doesn't have to be a restriction: adding quick datatypes -- without all these
+instances and auxiliary functions -- often makes code easier to read.
 
 The key idea is that, in order to make code as simple as possible, you want to
-represent your data as simple as possible.  The definition of "simple" is not
-the same in every context.  Sometimes, looking at your data from another
+represent your data as simple as possible.  However, the definition of "simple"
+is not the same in every context.  Sometimes, looking at your data from another
 perspective makes specific tasks easier.  In those cases, introducing
 "quick-and-dirty" datatypes often makes code cleaner.
 
@@ -35,7 +36,7 @@ And we have a few functions to inspect it.
 This is very much like code you typically see in Haskell codebases (of course,
 with more complex datatypes than this simple example).
 
-The last function we want to add is printing a cart.  The exact way we print it
+The last function we want to add is printing a cart.  The exact way we format it
 depends on what is in the cart.
 
 > printCart :: Cart -> IO ()
@@ -83,7 +84,12 @@ Note that we now have a *single* location where we classify the cart.  This is
 useful if we need this information in multiple places.  If we chose to solve the
 problem by adding additional predicates such has `cartIsBonus` instead, we would
 still have to watch out that we check these predicates in the *same order*
-everywhere.
+everywhere.  Furthermore, if we need to add a case, we can simply add a
+constructor to this datatype, and the compiler will tell us where we need to
+update our code [^wall].
+
+[^wall]: If you are compiling with `-Wall`, which is what you really, really
+    should be doing.
 
 Our `printCart` becomes very simple now:
 
