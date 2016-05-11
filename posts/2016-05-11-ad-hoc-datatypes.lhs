@@ -125,6 +125,6 @@ Our `printCart` becomes very simple now:
 >         forM_ items $ \(fruit, num) ->
 >             putStrLn $ "- " ++ show num ++ " " ++ show fruit
 
-Of course, it goes without saying that ad-hoc datatypes that only used locally
-should not be exported from the module -- otherwise you end up with a mess
-again.
+Of course, it goes without saying that ad-hoc datatypes that are only used
+locally should not be exported from the module -- otherwise you end up with a
+mess again.
