@@ -17,7 +17,7 @@ ul {
 }
 
 div#footer {
-    margin: 60px 0px 36px 0px;
+    margin: 48px 0px 36px 0px;
 }
 
 html {
@@ -129,9 +129,16 @@ a.footnoteRef sup {
     padding: 2px;
 }
 
+div.footnotes:before {
+    content: "Footnotes";
+    font-size: 18px;
+    padding-left: 18px;
+}
+
 div.footnotes {
-    color: #555;
     border-left: 1px dashed #555;
+    color: #555;
+    margin-top: 60px;
 }
 
 div.footnotes hr {
