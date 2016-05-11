@@ -4,8 +4,6 @@ description: Use ad-hoc datatypes liberally to improve code readability
 tags: haskell
 ---
 
-> import Control.Monad (forM_)
-
 In Haskell, it is extremely easy for the programmer to add a quick datatype.  It
 does not have to take more than a few lines.  This is useful to add auxiliary,
 ad-hoc datatypes.
@@ -25,6 +23,8 @@ perspective makes specific tasks easier.  In those cases, introducing
 This blogpost is written in literate Haskell so you should be able to just load
 it up in GHCi and play around with it.  You can find the raw `.lhs` file
 [here](https://github.com/jaspervdj/jaspervdj/raw/master/posts/2016-05-11-ad-hoc-datatypes.lhs).
+
+> import Control.Monad (forM_)
 
 Let's look at a quick example.  Here, we have a definition of a shopping cart in
 a fruit store.
@@ -50,10 +50,10 @@ The last function we want to add is printing a cart.  The exact way we format it
 depends on what is in the cart.  There are four possible scenarios.
 
 1. The cart is empty.
-2. There is a single item in the customer's cart and we have some sort of
+2. There is a single item in the customers cart and we have some sort of
    simplified checkout.
-3. The customer only buys three (or more) of the same fruit. In that case we
-   give out a bonus.
+3. The customer buys three or more of the same fruit (and nothing else). In that
+   case we give out a bonus.
 4. None of the above.
 
 This is clearly a good candidate for Haskell's `case` statement and guards.
