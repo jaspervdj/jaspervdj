@@ -1,3 +1,9 @@
+---
+title: On Ad-hoc Datatypes
+description: Use ad-hoc datatypes liberally to improve code readability
+tags: haskell
+---
+
 > import Control.Monad (forM_)
 
 In Haskell, it is extremely easy for the programmer to add a quick datatype.  It
@@ -11,10 +17,14 @@ doesn't have to be a restriction: adding quick datatypes -- without all these
 instances and auxiliary functions -- often makes code easier to read.
 
 The key idea is that, in order to make code as simple as possible, you want to
-represent your data as simple as possible.  However, the definition of "simple"
+represent your data as simply as possible.  However, the definition of "simple"
 is not the same in every context.  Sometimes, looking at your data from another
 perspective makes specific tasks easier.  In those cases, introducing
 "quick-and-dirty" datatypes often makes code cleaner.
+
+This blogpost is written in literate Haskell so you should be able to just load
+it up in GHCi and play around with it.  You can find the raw `.lhs` file
+[here](https://github.com/jaspervdj/jaspervdj/raw/master/posts/2016-05-11-ad-hoc-datatypes.lhs).
 
 Let's look at a quick example.  Here, we have a definition of a shopping cart in
 a fruit store.
@@ -37,7 +47,17 @@ This is very much like code you typically see in Haskell codebases (of course,
 with more complex datatypes than this simple example).
 
 The last function we want to add is printing a cart.  The exact way we format it
-depends on what is in the cart.
+depends on what is in the cart.  There are four possible scenarios.
+
+1. The cart is empty.
+2. There is a single item in the customer's cart and we have some sort of
+   simplified checkout.
+3. The customer only buys three (or more) of the same fruit. In that case we
+   give out a bonus.
+4. None of the above.
+
+This is clearly a good candidate for Haskell's `case` statement and guards.
+Let's try that.
 
 > printCart :: Cart -> IO ()
 > printCart cart = case cart of
