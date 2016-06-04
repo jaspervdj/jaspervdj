@@ -23,6 +23,6 @@ Executable jaspervdj
     binary    >= 0.5  && < 0.8,
     directory >= 1.2  && < 1.3,
     filepath  >= 1.3  && < 1.5,
-    hakyll    >= 4.7  && < 4.8,
-    pandoc    >= 1.14 && < 1.17,
+    hakyll    >= 4.7  && < 4.9,
+    pandoc    >= 1.14 && < 1.18,
     process   >= 1.1  && < 1.3
