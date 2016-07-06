@@ -1,5 +1,5 @@
 ---
-title: ICC profiles on Linux
+title: Monitor calibration and Linux
 description: How I set up color management on my Linux system
 tags: photography
 ---
@@ -13,16 +13,16 @@ than on the other monitor.  When you view a picture on your smartphone, colors
 may be more saturated than on your computer, and vice versa.
 
 <div class="figure flickr">
-<a href="http://www.flickr.com/photos/jaspervdj/13928777754/">
-<img src="/images/2016-07-06-frederick-ii.jpg" width="600">
+<a href="https://www.flickr.com/photos/jaspervdj/22911640999/">
+<img src="/images/2016-07-06-florence-iii.jpg" width="600">
 </a>
 </div>
 
-While it's not a big problem when I am doing programming or reading, it becomes
-and issue when you are doing anything related to visuals.  For example, when I
-am editing a picture on my external monitor, I might notice that the reds look a
-bit too orange-like.  But on my laptop screen, they look fine.  Does this mean I
-should shift them or not?  Which monitor should I _"trust"_?
+This is not a big problem when I am programming or reading, but it becomes an
+issue when you are doing any visual stuff -- including HTML/CSS.  For example,
+when I am editing a picture on my external monitor, I might notice that the reds
+look a bit too orange-like.  But on my laptop screen, they look fine.  Does this
+mean I should shift them or not?  Which monitor should I _"trust"_?
 
 # Generating ICC profiles
 
@@ -33,18 +33,26 @@ you take digital photography (or any other hobby involving digital visuals)
 seriously, the only answer is a hardware calibrator.  Without one, editing
 pictures is guesswork at best.
 
-Of course, it is a bit of an investment.  I picked up a [DataColor]
-Spyder4Express for around $150.  I'm not sure if that particular model is still
-available, but there are newer models now for similar prices.  While not cheap,
-it is still a lot less than a fancy new lens, and I think this serves you better
-than buying another lens in a lot of cases.  Of course, it is also often
-possible to borrow one from a friend.
+Unfortunately, these are not free.  I picked up a [DataColor] Spyder4Express for
+around $150.  I'm not sure if that particular model is still available, but
+there are newer models now for similar prices.  It is not cheap, but it is still
+a lot less than the average lens, and I think this benefits you more than buying
+another lens in a lot of cases.  Of course, you can also consider borrowing one.
+Calibrating once every month or so is more than enough.
 
 [DataColor]: http://www.datacolor.com/
 
-In general, these calibrators (or wizards) generate ICC profiles (`.icm` or
+<div class="figure flickr">
+<a href="https://www.flickr.com/photos/jaspervdj/27684257125/">
+<img src="/images/2016-07-06-bushwick-ii.jpg" width="600">
+</a>
+</div>
+
+In general, these calibrators (or wizards) generate [ICC profiles] (`.icm` or
 `.icc` files).  Such a file is basically a mapping between color spaces,
-specifically in this case specifically for one monitor.
+in this case for a specific monitor.
+
+[ICC profiles]: https://en.wikipedia.org/wiki/ICC_profile
 
 Sometimes, generating and finding these files is a bit tricky.  For example, the
 calibrator I have does not support Linux (but I dual boot Windows).
@@ -53,7 +61,7 @@ Additionally, it has the arbitrary restriction that you can only calibrate a
 single monitor when using the software directly (it is almost like they really
 want you to get the expensive model!).  The problem, however, is easily solved
 by calibrating one monitor, copying the ICC profile (usually in
-`/Windows/System32/spool/drivers/color/`) someplace and then calibrating other
+`/Windows/System32/spool/drivers/color/`) somewhere and then calibrating other
 monitors.  Now, what remains is loading these profiles in Linux.
 
 # Linux scripting
@@ -62,23 +70,24 @@ While there are a few
 [solutions](http://www.argyllcms.com/)
 [available](http://xcalib.sourceforge.net/),
 I decided to implement my own in a simple script to learn a bit more about these
-things because stuff like this is always interesting.
+things -- simply because stuff like this is always interesting.
 
 <div class="figure flickr">
-<a href="http://www.flickr.com/photos/jaspervdj/13928777754/">
-<img src="/images/2016-07-06-florence-iii.jpg" width="600">
+<a href="https://www.flickr.com/photos/jaspervdj/28066452716/">
+<img src="/images/2016-07-06-frederick-ii.jpg" width="600">
 </a>
 </div>
 
-Monitors can be identified by reading their [EDID] block.  This is (usually) 128
-bytes of binary data, that contains, among other things, human-readable names
-for most monitors.  The whole EDID block can be extracted by a tool like
-[xrandr], but we need some code to parse the data.  This python snippet
-extracts the human-readable parts from an EDID block. These can appear at
-various offsets but the tags that precede them are fixed.
+It turns out that monitors can be identified by reading their [EDID] block.
+This is (usually) 128 bytes of binary data, that contains, among other things,
+human-readable names for most monitors.  The whole EDID block can be extracted
+by a tool like [xrandr], but we need some code to parse the data.  This [Python]
+snippet extracts the human-readable parts from an EDID block. These can appear
+at various offsets but the tags that precede them are known.
 
 [xrandr]: https://www.x.org/wiki/Projects/XRandR/
 [EDID]: http://read.pudn.com/downloads110/ebook/456020/E-EDID%20Standard.pdf
+[Python]: https://www.python.org/
 
 ~~~~~{.python}
 EDID_NAME_TAGS = [
@@ -99,9 +108,10 @@ def name_from_edid(edid):
 
 For my ThinkPad's monitor, this returns `LG-Display-LP140QH1-SPB1`.
 
-The rest is fairly trivial.  The [complete script] reads the EDID names and then
-finds the corresponding files in `$HOME/.color/icc`.  Then, it uses `dispwin`
-from `argyllcms` to set the profiles.
+The rest is fairly trivial.  The [complete script] reads human-readable names
+from the EDID blocks and then finds the corresponding files in
+`$HOME/.color/icc`.  If such a file is found, it uses `dispwin` from `argyllcms`
+to set the profile for that monitor.
 
     $ colorprof
     [DP1] checking: /home/jasper/.color/icc/SyncMaster.icc
