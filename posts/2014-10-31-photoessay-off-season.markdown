@@ -1,7 +1,7 @@
 ---
 title: 'Photoessay: Off-Season (Turkey)'
 description: A set of pictures from Turkey
-tags: photoessay
+tags: photography
 ---
 
 Together with my girlfriend, I made an off-season trip to Turkey a couple of

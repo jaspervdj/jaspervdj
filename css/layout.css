@@ -42,8 +42,13 @@ div#lightbox {
     }
 
     div.avatar-wrap {
-        margin: 18px;
-        float: right;
+        margin: 6px 18px 6px 0px;
+        float: left;
+    }
+
+    div.avatar-wrap img {
+        max-width: 128px;
+        margin: 0px;
     }
 
     div#navigation {

@@ -1,7 +1,7 @@
 ---
 title: 'Photoessay: things I see at night (Zürich)'
 description: A short photoessay on Zürich by night
-tags: photoessay
+tags: photography
 ---
 
 I have been living, and working, in Zürich for about a year now. The amount of
