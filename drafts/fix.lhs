@@ -35,8 +35,8 @@ You end up with something like this:
 >     , ("age",     Int1 14)
 >     ]
 
-Many operations on these recursive data structures are recursive itself.  One
-example here is creating a `HS.HashSet` of all the strings that appear in a
+Many operations on these recursive data structures are themselves recursive.
+One example here is creating a `HS.HashSet` of all the strings that appear in a
 document.  We are using a strict accumulator to get reasonably efficient code.
 
 > valStringSet1 :: Value1 -> HS.HashSet T.Text
@@ -55,6 +55,27 @@ Creating a big `foldValue1` function which takes a higher-order-function
 argument for each constructor is one solution, but it is not extremely pretty.
 Sometimes you only need to act on one constructor and then you are still
 required to pass in functions for the other arguments.
+
+One alternative is to create a `valFold` that takes care of the recursive calls.
+Such a function performs a depth-first traversal of the `Value1` tree.  It looks
+like this:
+
+> foldlValue1 :: (a -> Value1 -> a) -> a -> Value1 -> a
+> foldlValue1 f = go
+>   where
+>     go !acc val = case val of
+>         Array1  v   -> f (V.foldl' go acc v) val
+>         Object1 obj -> f (HMS.foldl' go acc obj) val
+>         String1 _   -> f acc val
+>         Int1    _   -> f acc val
+
+We can then rewrite `valStringSet1` in terms of `foldValue1`:
+
+> valStringSet1' :: Value1 -> HS.HashSet T.Text
+> valStringSet1' = foldlValue1 go HS.empty
+>   where
+>     go !acc (String1 t) = HS.insert t acc
+>     go !acc _           = acc
 
 A more elegant solution is defining the recursive datatype as a `Functor`.  This
 requires very little code, as GHC can derive the `Functor`, `Foldable` and
@@ -86,7 +107,10 @@ the rewritten `valStringSet1` which uses `foldl'` from [Data.Foldable].
 > valStringSet2 = F.foldl' go HS.empty . unValue2
 >   where
 >     go !acc (Value2 (String2 t)) = HS.insert t acc
->     go !acc (Value2 v)           = F.foldl' go acc v  -- Catch them all
+>     -- go !acc (Value2 v)           = F.foldl' go acc v  -- Catch them all
+>     go !acc (Value2 v)           = acc
+
+TODO: Check core!
 
 > test02 :: Value2
 > test02 = Value2 $ Object2 $ HMS.fromList
@@ -94,3 +118,16 @@ the rewritten `valStringSet1` which uses `foldl'` from [Data.Foldable].
 >     , ("friends", Value2 $ Array2 $ V.fromList ["timmy", "tammy"])
 >     , ("age",     Value2 (Int2 14))
 >     ]
+
+> data FValue3 a
+>     = Array3 !(V.Vector a)
+>     | Object3 !(HMS.HashMap T.Text a)
+>     | String3 !T.Text
+>     | Int3 !Int
+>     deriving (Eq, Foldable, Functor, Show, Traversable)
+
+> rev :: Value2 -> Value2
+> rev (Value2 (String2 t)) = Value2 $ String2 (T.reverse t)
+> rev (Value2 x)           = Value2 x
+
+> newtype Fix f = Fix (f (Fix f))
