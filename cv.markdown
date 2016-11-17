@@ -62,6 +62,14 @@ Haskell libraries, and a technical blog.
 
 ## Technical work experience
 
+- **Fugue** (2015 - ...): I am currently a Principal Engineer at Fugue.  My work
+  mostly revolves around the Ludwig Compiler, a compiler for a statically typed
+  functional configuration language.
+
+- **Bdellium** (2015): As a contractor, I acted as a remote Haskell developer
+  for [Bdellium] for a few months.  In this time, I rewrote one of their
+  applications that assessed and compared 401k plans.
+
 - **Better** (2013 - 2014): In September 2013, I started as a full-stack
   Software Engineer at [Better] (previously known as *Erudify*). I mostly worked
   on the Haskell backend and business logic.
@@ -79,11 +87,12 @@ Haskell libraries, and a technical blog.
   summer job. This involved extending their proprietary Distributed Storage
   System with an NFS frontend, written in [OCaml].
 
-[Tsuru Capital LLC]: http://tsurucapital.com/
+[Amplidata]: http://www.amplidata.com/
+[Bdellium]: http://bdellium.com/
 [Better]: http://better.io/
 [Google Summer of Code]: http://code.google.com/soc/
-[Amplidata]: http://www.amplidata.com/
 [OCaml]: http://caml.inria.fr/
+[Tsuru Capital LLC]: http://tsurucapital.com/
 
 ## Open source contributions
 
