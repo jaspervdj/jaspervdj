@@ -1,5 +1,5 @@
 ---
-title: indents-0.4
+title: 'Package takeover: indents'
 description: A Parsec package to deal with indentation
 tags: haskell
 ---
@@ -47,8 +47,8 @@ packages.  The hackage trustees are doing great and valuable work there.
 [took over]: https://mail.haskell.org/pipermail/haskell-cafe/2016-November/125582.html
 
 I have now uploaded a new version which fixes these issues.  To celebrate that,
-let's create a toy parser for indentation-sensitive taxonomies such as this
-one [^tea-source]:
+let's create a toy parser for indentation-sensitive taxonomies such as the big
+tea taxonomy [^tea-source]:
 
     tea
       green
@@ -120,8 +120,10 @@ Now we have a simple main to function to put it all together;
 >   where
 >     parser = pTaxonomy <* Parsec.eof
 
-We can verify that this works in GHCi:
+And we can verify that this works in GHCi:
 
     *Main> readTaxonomy "taxonomy.txt"
     Taxonomy "tea" [Taxonomy "green" [Taxonomy "korean" [...
     *Main>
+
+Special thanks to Sam Anklesaria for writing the original package.
