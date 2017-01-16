@@ -23,12 +23,12 @@ usual, so I will start with a high-level overview of what you can expect:
   graph that works on these infinite graphs and that has good performance
   characteristics.
 
-- We show how we can implement Lazy I/O to model infinite graphs as pure values
+- We show how we can implement lazy I/O to model infinite graphs as pure values
   in Haskell, in a way that only the "necessary" parts of the graph are loaded
   from a database.  This is done using the `unsafeInterleaveIO` primitive.
 
 - Finally, we discuss the disadvantages of this approach as well, and we review
-  some of common problems associated with Lazy I/O.
+  some of common problems associated with lazy I/O.
 
 [^infinite]: In this blogpost, I frequently talk about _"infinite graphs"_.  Of
 course most of these examples are not truly infinite, but we can consider
@@ -470,3 +470,43 @@ This works as expected:
     Brotherhood Without Banners Hideout -> Crossroads Inn ->
     Darry -> Saltpans -> QuietIsle -> Antlers -> Sow's Horn ->
     Brindlewood -> Hayford -> King's Landing
+
+Disadvantages of Lazy I/O
+=========================
+
+Lazy I/O also has many disadvantages, which have been widely discussed.  Among
+those are:
+
+1. Code becomes harder to reason about.  In a setting without lazy I/O, you can
+   casually reason about an `Int` as either an integer that's already computed,
+   or as something that will do some (pure) computation and then yield an `Int`.
+
+    When lazy I/O enters the picture, things become more complicated.  That
+    `Int` you wanted to print?  Yeah, it fired a bunch of missiles and returned
+    the bodycount.
+
+    This is why I would not seriously consider using lazy I/O when working with
+    a team or on a large project -- it can be easy to forget what is lazily
+    loaded and what is not, and there's no easy way to tell.
+
+2. Finite resources can easily become a problem if you are not careful.  If we
+   keep a reference to a `City` in our heap, that means we also keep a reference
+   to the cache and the SQLite connection.
+
+    We must ensure that we fully evaluate the solution to something that doesn't
+    refer to these resources (to e.g. a printed string) so that the references
+    can be garbage collected and the connections can be closed.
+
+    Closing the connections is a problem in itself -- if we cannot guarantee
+    that e.g. streams will be fully read, we need to rely on finalizers, which
+    are pretty unreliable...
+
+3. If we go a step further and add concurrency to our application, it becomes
+   even tricker.  Deadlocks are not easy to reason about -- so how about
+   reasoning about deadlocks when you're not sure when the `IO` is going to be
+   executed at all?
+
+Despite all these shortcomings, I believe lazy I/O is a powerful and elegant
+tool that belongs in every Haskeller's toolbox.  Like pretty much anything, you
+need to be aware of what you are doing and understand the advantages as well as
+the disadvantages.
