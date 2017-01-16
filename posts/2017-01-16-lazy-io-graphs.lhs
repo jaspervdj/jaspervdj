@@ -363,6 +363,8 @@ access to the cache (assuming that is what we want).
 [^stripe]: While blocking is good in this case, it might hurt performance when
 running in a concurrent environment.  A good solution to that would be to stripe
 the `MVar`s based on the keys, but that is beyond the scope of this blogpost.
+If you are interested in the subject, I talk about it
+[here](/posts/2015-02-24-lru-cache.html#a-striped-cache).
 
 > type Cache k v = MVar (HMS.HashMap k v)
 
@@ -421,7 +423,7 @@ want.  However, doing this "the normal way" would cause problems:
 
 This is where Lazy I/O shines.  Lazy I/O is typically implemented using the
 [unsafeInterleaveIO](http://hackage.haskell.org/package/base/docs/System-IO-Unsafe.html#v:unsafeInterleaveIO)
-primitive.  It's type is very simple and doesn't look as threatening as
+primitive.  Its type is very simple and doesn't look as threatening as
 `unsafePerformIO`:
 
     unsafeInterleaveIO :: IO a -> IO a
@@ -441,7 +443,7 @@ And then return the `City` we constructed:
 >     return $ City id' name (x, y) neighbours
 
 Lastly, we will add a quick-and-dirty wrapper around `getCityById` so that we
-are also able to load cities by name.  It's implementation is trivial:
+are also able to load cities by name.  Its implementation is trivial:
 
 > getCityByName
 >     :: SQLite.Connection -> Cache CityId City -> T.Text
@@ -489,7 +491,7 @@ those are:
     a team or on a large project -- it can be easy to forget what is lazily
     loaded and what is not, and there's no easy way to tell.
 
-2. Finite resources can easily become a problem if you are not careful.  If we
+2. Scarce resources can easily become a problem if you are not careful.  If we
    keep a reference to a `City` in our heap, that means we also keep a reference
    to the cache and the SQLite connection.
 
