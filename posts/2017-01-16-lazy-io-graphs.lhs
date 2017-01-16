@@ -14,7 +14,7 @@ usual, so I will start with a high-level overview of what you can expect:
   means we will not use a dedicated `Graph` type and rather represent edges by
   directly referencing other Haskell values.
 
-- This is a good fairly match when we want to encode infinite [^infinite]
+- This is a fairly good match when we want to encode infinite [^infinite]
   graphs.  When dealing with infinite graphs, there is no need to "reify" the
   graph and enumerate all the nodes and egdes -- this would be futile anyway, in
   most cases.
