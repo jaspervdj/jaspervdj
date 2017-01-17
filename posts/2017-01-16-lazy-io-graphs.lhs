@@ -512,3 +512,24 @@ Despite all these shortcomings, I believe lazy I/O is a powerful and elegant
 tool that belongs in every Haskeller's toolbox.  Like pretty much anything, you
 need to be aware of what you are doing and understand the advantages as well as
 the disadvantages.
+
+For example, the above downsides do not really apply if lazy I/O is only used
+_within_ a module.  Applied to this blogpost, it means we could export the
+following interface:
+
+> shortestPathBetweenCities
+>     :: FilePath                       -- ^ Database name
+>     -> CityId                         -- ^ Start city ID
+>     -> CityId                         -- ^ Goal city ID
+>     -> IO (Maybe (Double, [CityId]))  -- ^ Cost and path
+> shortestPathBetweenCities dbFilePath startId goalId = do
+>     cache <- newCache
+>     conn  <- SQLite.open dbFilePath
+>     start <- getCityById conn cache startId
+>     goal  <- getCityById conn cache goalId
+>     case shortestPath cityId cityNeighbours start goal of
+>         Nothing           -> return Nothing
+>         Just (cost, path) ->
+>             let ids = map cityId path in
+>             cost `seq` foldr seq () ids `seq`
+>             return (Just (cost, ids))
