@@ -16,8 +16,7 @@ usual, so I will start with a high-level overview of what you can expect:
 
 - This is a fairly good match when we want to encode infinite [^infinite]
   graphs.  When dealing with infinite graphs, there is no need to "reify" the
-  graph and enumerate all the nodes and egdes -- this would be futile anyway, in
-  most cases.
+  graph and enumerate all the nodes and egdes -- this would be futile anyway.
 
 - We discuss a Haskell implementation of shortest path search in a weighted
   graph that works on these infinite graphs and that has good performance
