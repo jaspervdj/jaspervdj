@@ -39,7 +39,7 @@ Let's get to it!
 
 As usual, this is a [literate Haskell] file, which means that you can just load
 this blogpost into GHCi and play with it.  You can find the raw `.lhs` file
-[here](https://raw.githubusercontent.com/jaspervdj/jaspervdj/master/posts/2017-01-16-lazy-io-graphs.lhs).
+[here](https://raw.githubusercontent.com/jaspervdj/jaspervdj/master/posts/2017-01-17-lazy-io-graphs.lhs).
 
 [literate Haskell]: https://wiki.haskell.org/Literate_programming
 
@@ -61,7 +61,7 @@ this blogpost into GHCi and play with it.  You can find the raw `.lhs` file
 The problem at hand
 ===================
 
-![](/images/2017-01-16-throne.jpg)
+![](/images/2017-01-17-throne.jpg)
 
 As an example problem, we will look at finding the shortest path between cities
 in [Westeros], the fictional location where the [A Song of Ice and Fire] novels
@@ -102,7 +102,7 @@ Getting the data
 
 We will be using data extracted from [got.show], conveniently licensed under a
 Creative Commons license.  You can find the complete [sqlite] dump
-[here](/files/2017-01-16-got.sql.txt).  The schema of the database should not be
+[here](/files/2017-01-17-got.sql.txt).  The schema of the database should not be
 too surprising:
 
 ~~~~~{.sql}
@@ -130,7 +130,7 @@ random number uniformly chosen between `0.6` and `1.4`.
 You can load this database by issueing:
 
 ~~~~~{.sh}
-curl -L jaspervdj.be/files/2017-01-16-got.sql.txt | sqlite3 got.db
+curl -L jaspervdj.be/files/2017-01-17-got.sql.txt | sqlite3 got.db
 ~~~~~
 
 But instead of considering the whole database (which we'll get to later), let's
@@ -155,7 +155,7 @@ We can use a `let` to create bindings that refer to one another easily.
 >     printSolution $
 >         shortestPath cityId cityNeighbours winterfell kingsLanding
 
-![Illustration of test01](/images/2017-01-16-test-01-map.png)
+![Illustration of test01](/images/2017-01-17-test-01-map.png)
 
 `printSolution` is defined as:
 
@@ -190,7 +190,7 @@ return to the algorithm later.
 
 [this section]: #interlude-a-very-simple-cache
 
-![](/images/2017-01-16-bran.jpg)
+![](/images/2017-01-17-bran.jpg)
 
 We have two auxiliary datatypes.
 
@@ -355,7 +355,7 @@ that, so we just use `()` there.
 Interlude: A (very) simple cache
 ================================
 
-![](/images/2017-01-16-ghost.jpg)
+![](/images/2017-01-17-ghost.jpg)
 
 Lazy I/O will guarantee that we only load the nodes in the graph when necessary.
 
@@ -540,3 +540,8 @@ the following interface:
 >             let ids = map cityId path in
 >             cost `seq` foldr seq () ids `seq`
 >             return (Just (cost, ids))
+
+Thanks for reading -- and I hope I was able to offer you a nuanced view on lazy
+I/O.  Special thanks to [Jared Tobin] for proofreading.
+
+[Jared Tobin]: https://jtobin.io/
