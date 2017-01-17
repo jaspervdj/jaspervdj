@@ -37,9 +37,11 @@ them as _"infinite for practical purposes"_.
 
 Let's get to it!
 
-As usual, this is a literate Haskell file, which means that you can just load
+As usual, this is a [literate Haskell] file, which means that you can just load
 this blogpost into GHCi and play with it.  You can find the raw `.lhs` file
 [here](https://raw.githubusercontent.com/jaspervdj/jaspervdj/master/posts/2017-01-16-lazy-io-graphs.lhs).
+
+[literate Haskell]: https://wiki.haskell.org/Literate_programming
 
 > {-# LANGUAGE OverloadedStrings   #-}
 > {-# LANGUAGE ScopedTypeVariables #-}
@@ -103,19 +105,21 @@ Creative Commons license.  You can find the complete [sqlite] dump
 [here](/files/2017-01-16-got.sql.txt).  The schema of the database should not be
 too surprising:
 
-    CREATE TABLE cities (
-      id   text  PRIMARY KEY NOT NULL,
-      name text  NOT NULL,
-      x    float NOT NULL,
-      y    float NOT NULL
-    );
-    CREATE TABLE roads (
-      origin      text  NOT NULL,
-      destination text  NOT NULL,
-      cost        float NOT NULL,
-      PRIMARY KEY (origin, destination)
-    );
-    CREATE INDEX roads_origin ON roads (origin);
+~~~~~{.sql}
+CREATE TABLE cities (
+  id   text  PRIMARY KEY NOT NULL,
+  name text  NOT NULL,
+  x    float NOT NULL,
+  y    float NOT NULL
+);
+CREATE TABLE roads (
+  origin      text  NOT NULL,
+  destination text  NOT NULL,
+  cost        float NOT NULL,
+  PRIMARY KEY (origin, destination)
+);
+CREATE INDEX roads_origin ON roads (origin);
+~~~~~
 
 [got.show]: https://got.show/
 [sqlite]: http://sqlite.org/
@@ -125,7 +129,9 @@ random number uniformly chosen between `0.6` and `1.4`.
 
 You can load this database by issueing:
 
-    curl -L jaspervdj.be/files/2017-01-16-got.sql.txt | sqlite3 got.db
+~~~~~{.sh}
+curl -L jaspervdj.be/files/2017-01-16-got.sql.txt | sqlite3 got.db
+~~~~~
 
 But instead of considering the whole database (which we'll get to later), let's
 construct a simple example in Haskell so we can demonstrate the interface a bit.
@@ -135,19 +141,14 @@ We can use a `let` to create bindings that refer to one another easily.
 > test01 = do
 >     let winterfell = City "wtf" "Winterfell" (-105, 78)
 >           [(13, moatCailin), (12, whiteHarbor)]
->
 >         whiteHarbor = City "wih" "White Hardbor" (-96, 74)
 >           [(15, braavos), (12, winterfell)]
->
 >         moatCailin = City "mtc" "Moat Cailin" (-104, 72)
 >           [(20, crossroads), (13, winterfell)]
->
 >         braavos = City "brv" "Braavos" (-43, 67)
 >           [(17, kingsLanding), (15, whiteHarbor)]
->
 >         crossroads = City "crs" "Crossroads Inn" (-94, 58)
 >           [(7, kingsLanding), (20, crossroads)]
->
 >         kingsLanding = City "kgl" "King's Landing" (-84, 45)
 >           [(7, crossroads), (17, kingsLanding)]
 >
@@ -240,8 +241,8 @@ associated costs (`nodeNeighbours`).
 > shortestPath nodeKey nodeNeighbours start goal =
 
 We start by creating an initial `SearchState` for our algorithm.  Our initial
-queue holds one item (visiting the `start`) and our initial back references map
-is empty (we haven't visited anything yet).
+queue holds one item (implying that we need explore the `start`) and our initial
+back references map is empty (we haven't explored anything yet).
 
 >     let startbr      = BackRef start start
 >         queue0       = HashPSQ.singleton (nodeKey start) 0 startbr
@@ -260,9 +261,10 @@ reconstruct from the back references (`followBackRefs`).
 >   where
 
 Now, we have a bunch of functions that are used within the algorithm.  The first
-one, `walk`, is the main body.  We start by visiting the next node in the queue.
-If that's the goal, we're done.  Otherwise, we check the node's neighbours and
-update the queue with those neighbours.  Then, we recursively call `walk`.
+one, `walk`, is the main body.  We start by exploring the next node in the
+queue.  By construction, this is _always_ a node we haven't explored before.  If
+this node is the goal, we're done.  Otherwise, we check the node's neighbours
+and update the queue with those neighbours.  Then, we recursively call `walk`.
 
 >     walk :: State (SearchState node key cost) (Maybe cost)
 >     walk = do
@@ -277,7 +279,7 @@ update the queue with those neighbours.  Then, we recursively call `walk`.
 >                         updateQueue (cost + c) (BackRef next curr)
 >                     walk
 
-Visiting the next node is fairly easy to implement using a priority queue: we
+Exploring the next node is fairly easy to implement using a priority queue: we
 simply need to pop the element with the minimal priority (cost) using `minView`.
 We also need indicate that we reached this node and save the back reference by
 inserting that info into `ssBackRefs`.
@@ -325,11 +327,11 @@ accumulator `acc` on the way, until we reach the start.
 >     followBackRefs paths = go [goal] goal
 >       where
 >         go acc node0 = case HMS.lookup (nodeKey node0) paths of
+>             Nothing    -> acc
 >             Just node1 ->
 >                 if nodeKey node1 == nodeKey start
 >                    then start : acc
 >                    else go (node1 : acc) node1
->             Nothing    -> acc
 
 That's it!  The only utility left is the `insertIfLowerPrio` function.
 Fortunately, we can easily define this using the `alter` function from the
@@ -368,7 +370,7 @@ access to the cache (assuming that is what we want).
 [^stripe]: While blocking is good in this case, it might hurt performance when
 running in a concurrent environment.  A good solution to that would be to stripe
 the `MVar`s based on the keys, but that is beyond the scope of this blogpost.
-If you are interested in the subject, I talk about it
+If you are interested in the subject, I talk about it a bit
 [here](/posts/2015-02-24-lru-cache.html#a-striped-cache).
 
 > type Cache k v = MVar (HMS.HashMap k v)
@@ -426,10 +428,10 @@ want.  However, doing this "the normal way" would cause problems:
    `MVar` in the `Cache`.  We block access to the `Cache` while we are in the
    `cached` combinator, so calling `getCityById` again would cause a deadlock.
 
-This is where Lazy I/O shines.  Lazy I/O is typically implemented using the
+This is where Lazy I/O shines.  We can implement lazy I/O by using the
 [unsafeInterleaveIO](http://hackage.haskell.org/package/base/docs/System-IO-Unsafe.html#v:unsafeInterleaveIO)
 primitive.  Its type is very simple and doesn't look as threatening as
-`unsafePerformIO`:
+`unsafePerformIO`.
 
     unsafeInterleaveIO :: IO a -> IO a
 
