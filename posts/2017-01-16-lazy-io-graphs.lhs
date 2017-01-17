@@ -514,8 +514,8 @@ need to be aware of what you are doing and understand the advantages as well as
 the disadvantages.
 
 For example, the above downsides do not really apply if lazy I/O is only used
-_within_ a module.  Applied to this blogpost, it means we could export the
-following interface:
+_within_ a module.  Applied to this blogpost, it means we could safely export
+the following interface:
 
 > shortestPathBetweenCities
 >     :: FilePath                       -- ^ Database name
