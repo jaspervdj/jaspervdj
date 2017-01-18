@@ -40,10 +40,13 @@ main = hakyllWith config $ do
         route   $ setExtension "png"
         compile $ getResourceLBS >>= traverse (unixFilterLBS "dot" ["-Tpng"])
 
-    -- Compress CSS
-    match "css/*" $ do
+    -- Compress CSS into one file.
+    match "css/*" $ compile compressCssCompiler
+    create ["style.css"] $ do
         route idRoute
-        compile compressCssCompiler
+        compile $ do
+            csses <- loadAll "css/*.css"
+            makeItem $ unlines $ map itemBody csses
 
     -- Render the /tmp index page
     match "tmp/index.html" $ do
