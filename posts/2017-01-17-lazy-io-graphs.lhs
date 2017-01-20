@@ -389,6 +389,10 @@ If you are interested in the subject, I talk about it a bit
 >             v <- iov
 >             return (HMS.insert k v cache, v)
 
+Note that we don't really delete things from the cache.  In order to keep things
+simple, we can assume that we will use a new cache for every shortest path we
+want to find, and that we throw away that cache afterwards.
+
 Loading the graph using Lazy I/O
 ================================
 
