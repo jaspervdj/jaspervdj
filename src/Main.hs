@@ -188,7 +188,8 @@ main = hakyllWith config $ do
                     paginateCtx                                        <>
                     defaultContext
             makeItem ""
-                >>= loadAndApplyTemplate "templates/photo.html"   ctx
+                >>= loadAndApplyTemplate "templates/photo.html" ctx
+                >>= loadAndApplyTemplate "templates/content.html" ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
   where

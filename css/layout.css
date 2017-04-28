@@ -30,11 +30,6 @@ div#content {
     margin: 12px;
 }
 
-div#lightbox {
-    margin: 0px;
-    background-color: #000;
-}
-
 @media all and (min-width: 822px) {
     html {
         background: #fff url("../images/sidebar.png") repeat-y left top;
@@ -74,9 +69,5 @@ div#lightbox {
         margin: 0px 0px 0px 156px;
         padding: 0px 36px 0px 36px;
         width: 648px;
-    }
-
-    div#lightbox {
-        margin: 0px 0px 0px 155px;
     }
 }

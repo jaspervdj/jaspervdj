@@ -1,4 +1,5 @@
-<div id="lightbox">
+<h1>Photoblog</h1>
+<div class="photoblog">
     $for(photos)$
     <img src="$image$" alt="Photo" />
     $endfor$
@@ -10,7 +11,7 @@
             <a href="$lastPageUrl$">previous</a>
         $endif$
         &mdash;
-        $currentPageNum$ of $numPages$
+        page $currentPageNum$ of $numPages$
         &mdash;
         $if(nextPageNum)$
             <a href="$nextPageUrl$">next</a>

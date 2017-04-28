@@ -147,27 +147,14 @@ div.footnotes hr {
     display: none;
 }
 
-div#lightbox {
-    text-align: center;
+div.photoblog img {
+    margin-top: 48px;
+    margin-bottom: 48px;
 }
 
-div#lightbox img {
-    max-width: 90%;
-    margin: 48px auto;
-}
-
-div#lightbox a {
-    border: none;
-}
-
-div#lightbox div.pagination {
+div.photoblog div.pagination {
     font-size: 14px;
-    color: #888;
     padding: 12px 0px;
-}
-
-div#lightbox div.pagination a {
-    color: #888;
 }
 
 div#footer {
