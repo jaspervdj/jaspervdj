@@ -152,9 +152,8 @@ div#lightbox {
 }
 
 div#lightbox img {
-    max-width:  100%;
-    max-height: 90%;
-    margin: 12px auto 12px auto;
+    max-width: 90%;
+    margin: 48px auto;
 }
 
 div#lightbox a {
@@ -164,6 +163,7 @@ div#lightbox a {
 div#lightbox div.pagination {
     font-size: 14px;
     color: #888;
+    padding: 12px 0px;
 }
 
 div#lightbox div.pagination a {

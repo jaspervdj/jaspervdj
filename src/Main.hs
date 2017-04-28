@@ -6,7 +6,6 @@ module Main (main) where
 
 
 --------------------------------------------------------------------------------
-import           Data.List       (sort)
 import           Data.Monoid     ((<>))
 import           Prelude         hiding (id)
 import           System.FilePath (replaceExtension, takeDirectory)
@@ -167,14 +166,12 @@ main = hakyllWith config $ do
             >>= xelatex
 
     -- Photographs
-    match "photos/*.jpg" $ do
-        route   idRoute
-        compile copyFileCompiler
+    match "photos/*.md" $ compile getResourceBody
 
     -- Photography portfolio
     photoBlog <- buildPaginateWith
-        (return . map return . sort)
-        "photos/*.jpg"
+        (\ids -> sortRecentFirst ids >>= return . paginateEvery 5)
+        "photos/*.md"
         (\n -> if n == 1
             then "photos.html"
             else fromCapture "photos/*.html" (show n))
@@ -182,7 +179,7 @@ main = hakyllWith config $ do
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
-            photos <- loadAll pattern  -- Should be just one
+            photos <- recentFirst =<< loadAll pattern  -- Should be just one
             let paginateCtx = paginateContext photoBlog pageNum
             let ctx         =
                     constField "title" "Photos"                        <>
@@ -271,9 +268,8 @@ pdfToPng item = do
 
 
 --------------------------------------------------------------------------------
-photographCtx :: Context CopyFile
+photographCtx :: Context String
 photographCtx = mconcat
-    [ urlField "url"
-    , dateField "date" "%B %e, %Y"
+    [ dateField "date" "%B %e, %Y"
     , metadataField
     ]

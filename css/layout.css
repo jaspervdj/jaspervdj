@@ -33,7 +33,6 @@ div#content {
 div#lightbox {
     margin: 0px;
     background-color: #000;
-    height: 100%;
 }
 
 @media all and (min-width: 822px) {

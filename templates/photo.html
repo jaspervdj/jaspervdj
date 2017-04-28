@@ -1,10 +1,6 @@
 <div id="lightbox">
     $for(photos)$
-    $if(nextPageNum)$
-        <a href="$nextPageUrl$"><img src="$url$" alt="Photo" /></a>
-    $else$
-        <a href="$firstPageUrl$"><img src="$url$" alt="Photo" /></a>
-    $endif$
+    <img src="$image$" alt="Photo" />
     $endfor$
 
     <div class="pagination">
