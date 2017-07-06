@@ -7,8 +7,8 @@ tags: haskell
 Introduction
 ============
 
-This is a small write-up of a fun project that [Andras Slemmer], [Francesco
-Mazzoli] and I worked on during [ZuriHac] 2017.
+This is a small write-up of a fun Haskell project that [Andras Slemmer],
+[Francesco Mazzoli] and I worked on during [ZuriHac] 2017.
 
 [ZuriHac]: https://zurihac.info/
 [Andras Slemmer]: https://github.com/exFalso
@@ -26,8 +26,6 @@ Pokémon_](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon).  Rather tha
 picking a slow, turn-based game such as Pokémon, however, we wanted to try the
 same thing for a fast game, such as a platformer.
 
-
-
 For the inpatient, here is the video:
 
 TODO: it's not online yet.
@@ -40,6 +38,7 @@ aggregate them when you have many concurrent users.  _Twitch Plays Pokémon_
 solved this problem in two distinct modes:
 
 1. Anarchy mode (the default): any user keypress is sent directly to the game.
+
 2. Democracy mode: there is a voting window, after which the most popular user
    keypress is selected and sent to the game.
 
@@ -50,9 +49,12 @@ There are a bunch of reasons why this does not work great for faster games:
 - Action games typically need you to hold a key for a certain amount of time,
   rather than just pressing and then releasing the key (e.g. Mario jumps higher
   if you hold `jump` for longer).
+
 - There's little time to switch between modes in a fast-paced game.
+
 - Many games require you to press more than one key at the same time (e.g.
   `jump` and `right` in Mario).
+
 - ...
 
 We solved this by putting a key voting algorithm in place to aggregate the
@@ -65,7 +67,7 @@ is pressed:
 
 ![](/images/2017-07-04-key-voting-01.png)
 
-We divide the time in sample intervals.  The length of the sample interval is
+We divide the time in sample intervals.  The length of the sample interval
 can be tweaked per game.  Let's imagine it is 10ms for our example.
 
 ![](/images/2017-07-04-key-voting-02.png)
@@ -85,8 +87,9 @@ pressing the key.  This gives us the following aggregates:
 
 After we've aggregated the key presses, we can send the result to the game.
 It's important to note that this happens one sample interval _after_ the actual
-user keypresses.  This adds some latency but we didn't find this a problem in
-practice for the games we tried.
+user keypresses, since you are not easily able to make any conclusions before
+the interval has ended.  This adds some latency but we didn't find this a
+problem in practice for the games we tried.
 
 ![](/images/2017-07-04-key-voting-05.png)
 
