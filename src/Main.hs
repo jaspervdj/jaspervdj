@@ -8,8 +8,9 @@ module Main (main) where
 --------------------------------------------------------------------------------
 import           Data.Monoid     ((<>))
 import           Prelude         hiding (id)
+import           System.Exit     (ExitCode)
 import           System.FilePath (replaceExtension, takeDirectory)
-import           System.Process  (system)
+import qualified System.Process  as Process
 import qualified Text.Pandoc     as Pandoc
 
 
@@ -223,10 +224,24 @@ feedCtx = mconcat
 --------------------------------------------------------------------------------
 config :: Configuration
 config = defaultConfiguration
-    { deployCommand = "rsync --checksum -ave 'ssh -p 2222' \
-                      \_site/* jaspervdj@jaspervdj.be:jaspervdj.be"
+    { deploySite = deploy
     }
-
+  where
+    deploy :: Configuration -> IO ExitCode
+    deploy _c = do
+        branch <- Process.readProcess
+            "git" ["rev-parse", "--abbrev-ref", "HEAD"] ""
+        case words branch of
+            ["master"] -> Process.rawSystem "rsync"
+                [ "--checksum", "-ave", "ssh -p 2222"
+                , "_site/", "jaspervdj@jaspervdj.be:jaspervdj.be"
+                ]
+            ["drafts"] -> Process.rawSystem "rsync"
+                [ "--checksum", "-ave", "ssh -p 2222"
+                , "_site/", "jaspervdj@jaspervdj.be:jaspervdj.be/staging"
+                ]
+            _ -> fail $
+                "I don't know how to deploy the branch " ++ show branch
 
 --------------------------------------------------------------------------------
 feedConfiguration :: String -> FeedConfiguration
@@ -249,7 +264,7 @@ xelatex item = do
 
     unsafeCompiler $ do
         writeFile texPath $ itemBody item
-        _ <- system $ unwords ["xelatex", "-halt-on-error",
+        _ <- Process.system $ unwords ["xelatex", "-halt-on-error",
             "-output-directory", tmpDir, texPath, ">/dev/null", "2>&1"]
         return ()
 
@@ -262,8 +277,8 @@ pdfToPng item = do
     let TmpFile pdfPath = itemBody item
         pngPath         = replaceExtension pdfPath "png"
     unsafeCompiler $ do
-        _ <- system $ unwords ["convert", "-density", "150", "-quality", "90",
-                pdfPath, pngPath]
+        _ <- Process.system $ unwords
+            ["convert", "-density", "150", "-quality", "90", pdfPath, pngPath]
         return ()
     makeItem $ TmpFile pngPath
 
