@@ -26,9 +26,15 @@ Pokémon_](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon).  Rather tha
 picking a slow, turn-based game such as Pokémon, however, we wanted to try the
 same thing for a fast game, such as a platformer.
 
-For the inpatient, here is the video:
+For the impatient, here is a quick preview:
 
-TODO: it's not online yet.
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Haskell
+programmers: amazing programmers, terrible at coordinating a game of Super
+Mario. <a href="https://twitter.com/hashtag/ZuriHac?src=hash">#ZuriHac</a> <a
+href="https://t.co/74ts3WF5Eu">pic.twitter.com/74ts3WF5Eu</a></p>&mdash;
+cocharles (@acid2) <a
+href="https://twitter.com/acid2/status/873907429267972096">June 11,
+2017</a></blockquote>
 
 The core design
 ===============
@@ -65,17 +71,17 @@ First, imagine that we are looking at every key independently.  For a given key,
 we might receive the following input from users, where a block means that the key
 is pressed:
 
-![](/images/2017-07-04-key-voting-01.png)
+![](/images/2017-07-17-key-voting-01.png)
 
 We divide the time in sample intervals.  The length of the sample interval
 can be tweaked per game.  Let's imagine it is 10ms for our example.
 
-![](/images/2017-07-04-key-voting-02.png)
+![](/images/2017-07-17-key-voting-02.png)
 
 Every key press is expanded to match the sample interval first.  This gives us
 something like:
 
-![](/images/2017-07-04-key-voting-03.png)
+![](/images/2017-07-17-key-voting-03.png)
 
 We can aggregate them according to a treshold.  This is another parameter that
 can be tweaked per game.  In our example, we can set this treshold to 0.5.  This
@@ -83,7 +89,7 @@ means that 50% of users must be pressing a key before we consider it pressed.
 Concretely, for our 3 users, that means that at least two people must be
 pressing the key.  This gives us the following aggregates:
 
-![](/images/2017-07-04-key-voting-04.png)
+![](/images/2017-07-17-key-voting-04.png)
 
 After we've aggregated the key presses, we can send the result to the game.
 It's important to note that this happens one sample interval _after_ the actual
@@ -91,7 +97,7 @@ user keypresses, since you are not easily able to make any conclusions before
 the interval has ended.  This adds some latency but we didn't find this a
 problem in practice for the games we tried.
 
-![](/images/2017-07-04-key-voting-05.png)
+![](/images/2017-07-17-key-voting-05.png)
 
 Apart from that, we added to more complications to make the experience smoother:
 
@@ -119,7 +125,7 @@ The setup
 
 That takes care of the key logic component, so now let's look at the stack.
 
-![](/images/2017-07-04-setup.png)
+![](/images/2017-07-17-setup.png)
 
 It's all pretty self-explanatory:
 
@@ -144,6 +150,14 @@ collaboration between users.
 Thanks for joining in the fun!  The code for our project can be found
 [here](https://github.com/bitonic/zurihac-plays).
 
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Here is
+the video I actually meant to upload but twitter cropped. <a
+href="https://twitter.com/hashtag/zuriHac?src=hash">#zuriHac</a> plays Mario <a
+href="https://t.co/Ku76aH0OpN">pic.twitter.com/Ku76aH0OpN</a></p>&mdash;
+cocharles (@acid2) <a
+href="https://twitter.com/acid2/status/874170993778073600">June 12,
+2017</a></blockquote>
+
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en"
 dir="ltr">Collaborative Mario at <a
 href="https://twitter.com/ZuriHac">@ZuriHac</a> <a
@@ -152,4 +166,6 @@ href="https://twitter.com/hashtag/zurihac2017?src=hash">#zurihac2017</a> fun!
 Simon Thompson (@thompson_si) <a
 href="https://twitter.com/thompson_si/status/873906086444752896">June 11,
 2017</a></blockquote>
+
+<!-- I'm very sorry for breaking the no-JavaScript rule on my website. -->
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
