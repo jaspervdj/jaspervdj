@@ -28,12 +28,12 @@ same thing for a fast game, such as a platformer.
 
 For the impatient, here is a quick preview:
 
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Haskell
-programmers: amazing programmers, terrible at coordinating a game of Super
-Mario. <a href="https://twitter.com/hashtag/ZuriHac?src=hash">#ZuriHac</a> <a
-href="https://t.co/74ts3WF5Eu">pic.twitter.com/74ts3WF5Eu</a></p>&mdash;
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Here is
+the video I actually meant to upload but twitter cropped. <a
+href="https://twitter.com/hashtag/zuriHac?src=hash">#zuriHac</a> plays Mario <a
+href="https://t.co/Ku76aH0OpN">pic.twitter.com/Ku76aH0OpN</a></p>&mdash;
 cocharles (@acid2) <a
-href="https://twitter.com/acid2/status/873907429267972096">June 11,
+href="https://twitter.com/acid2/status/874170993778073600">June 12,
 2017</a></blockquote>
 
 The core design
@@ -149,14 +149,6 @@ collaboration between users.
 
 Thanks for joining in the fun!  The code for our project can be found
 [here](https://github.com/bitonic/zurihac-plays).
-
-<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Here is
-the video I actually meant to upload but twitter cropped. <a
-href="https://twitter.com/hashtag/zuriHac?src=hash">#zuriHac</a> plays Mario <a
-href="https://t.co/Ku76aH0OpN">pic.twitter.com/Ku76aH0OpN</a></p>&mdash;
-cocharles (@acid2) <a
-href="https://twitter.com/acid2/status/874170993778073600">June 12,
-2017</a></blockquote>
 
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en"
 dir="ltr">Collaborative Mario at <a
