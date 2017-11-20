@@ -10,6 +10,7 @@ import           Data.Monoid     ((<>))
 import           Prelude         hiding (id)
 import           System.Exit     (ExitCode)
 import           System.FilePath (replaceExtension, takeDirectory)
+import qualified Data.Text as T
 import qualified System.Process  as Process
 import qualified Text.Pandoc     as Pandoc
 
@@ -162,7 +163,7 @@ main = hakyllWith config $ do
         route   $ setExtension ".pdf"
         compile $ do getResourceBody
             >>= readPandoc
-            >>= (return . fmap writeXeTex)
+            >>= writeXeTex
             >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
             >>= xelatex
 
@@ -199,8 +200,11 @@ main = hakyllWith config $ do
         , "links.markdown"
         ]
 
-    writeXeTex =
-        Pandoc.writeLaTeX Pandoc.def {Pandoc.writerTeXLigatures = False}
+    writeXeTex :: Item Pandoc.Pandoc -> Compiler (Item String)
+    writeXeTex = traverse $ \pandoc ->
+        case Pandoc.runPure (Pandoc.writeLaTeX Pandoc.def pandoc) of
+            Left err -> fail $ show err
+            Right x  -> return (T.unpack x)
 
 
 --------------------------------------------------------------------------------
