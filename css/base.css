@@ -37,6 +37,12 @@ a {
     border-bottom: 1px solid #555;
 }
 
+/* Pandoc 2 puts 'a' elements inside code blocks for linking to lines.  We don't
+ * want to underline those. */
+code a {
+    border-bottom: none;
+}
+
 div.figure a{
     border: none;
 }
