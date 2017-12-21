@@ -19,3 +19,11 @@ For urgent matters, send a postcard to:
 > Switzerland  
 
 I like postcards.
+
+## Donate
+
+I used to have a bunch of donate buttons on websites of various side projects,
+from back when I was a poor student.  Since I am no longer a poor student, I
+have now removed these buttons and I am redirecting the links here.  Instead of
+donating something to me, please consider donating to
+[Project HOPE](http://www.projecthope.org/) instead.
