@@ -108,6 +108,16 @@ blockquote {
     padding: 6px 6px 6px 54px;
 }
 
+hr {
+    border: none;
+    margin: 36px auto 36px auto;
+    text-align: center;
+}
+
+hr:after {
+    content: "\002217  \002217  \002217";
+}
+
 .soft, .caption {
     font-style: italic;
     color: #555;
@@ -121,35 +131,40 @@ div.figure p {
     margin-top: 6px;
 }
 
-a.footnoteRef {
+a.footnote-ref {
     border: none;
 }
 
-a.footnoteRef sup:before {
+a.footnote-ref sup:before {
     content: "(";
 }
 
-a.footnoteRef sup:after {
+a.footnote-ref sup:after {
     content: ")";
 }
 
-a.footnoteRef sup {
+a.footnote-ref sup {
     padding: 2px;
 }
 
-div.footnotes:before {
+a.footnote-back {
+    border: none;
+    padding: 0px 6px 0px 6px;
+}
+
+section.footnotes:before {
     content: "Footnotes";
     font-size: 18px;
     padding-left: 18px;
 }
 
-div.footnotes {
+section.footnotes {
     border-left: 1px dashed #555;
     color: #555;
     margin-top: 36px;
 }
 
-div.footnotes hr {
+section.footnotes hr {
     display: none;
 }
 
