@@ -416,7 +416,7 @@ horrible battles with the guts of these implementations, _then_ you could start
 looking at what the different implementations have in common.  At this point,
 you'll also be a bit wiser about where they differ -- and you'll be able to take
 these important details into account, at which point you retire from just being
-idiot drawing squares and arrows on a whiteboard.
+an idiot drawing squares and arrows on a whiteboard.
 
 This is why I recommend sticking with simple `Handle`s until [you really need
 it].  But naturally, sometimes we really need the extra power.
