@@ -402,11 +402,11 @@ It usually goes like this:
    weeks in
 5. You add another parameter, or another method, mostly for one specific
    interface
-6. This causes some promblems or inconsistencies for interfaces
+6. This causes some problems or inconsistencies for interfaces
 7. Go back to (4)
 
 What you end up with is a leaky abstraction that is the _product_ of all
-concrete implementations -- where you what really wanted is the _greatest common
+concrete implementations -- where what you really wanted is the _greatest common
 divisor_.
 
 There's no magic bullet to avoid broken abstractions so my advice is usually to
@@ -425,7 +425,7 @@ it].  But naturally, sometimes we really need the extra power.
 
 ## A Handle interface
 
-So let's do the simplest thing that can possible work.  Consider the following
+So let's do the simplest thing that can possibly work.  Consider the following
 definition of the `Handle` we discussed before:
 
 ~~~~~{.haskell}
