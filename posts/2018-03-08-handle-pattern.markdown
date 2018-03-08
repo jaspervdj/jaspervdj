@@ -447,7 +447,7 @@ createUser :: Handle -> Text -> IO User
 
 It's exactly the same as before!  This is pretty much a requirement: it means we
 can move our `Handle`s to this approach when we need it, not when we envision
-that we will need at some point in the future.
+that we will need it at some point in the future.
 
 ## A Handle implementation
 
@@ -495,7 +495,7 @@ these large records gets kind of ugly.
 
 # Compared to other approaches
 
-We've presented an approach to modularize the effectful layer of a medium- to
+We've presented an approach to modularize the effectful layer of medium- to
 large-scaled Haskell applications.  There are many other approaches to tackling
 this, so any comparison I come up with would probably be inexhaustive.
 
@@ -551,7 +551,7 @@ often allow us to express complex ideas concisely.  For effectful code, on the
 other hand, they do not seem to offer many advantages and often make it harder
 to reason about code.
 
-My personal preference for writing complex effectful code is to use reify the
+My personal preference for writing complex effectful code is to reify the
 effectful operations as a datatype and then write pure code manipulating these
 effectful operations.  An interpreter can then simply use the `Handle`s to
 perform the effects.  For simpler effectful code, we can just use `Handle`s
@@ -562,4 +562,5 @@ web application [fugacious](https://github.com/jaspervdj/fugacious), in case you
 want to see them in action or if you want a more elaborate example than the
 short snippets in this blogpost.  Finally, I would like to thank [Alex
 Lang](https://github.com/alang9/) and [Nicolas Mattia](http://www.nmattia.com/)
-for proofreading.
+for proofreading, and [Titouan Vervack](https://github.com/tivervac) for many
+corrections and typos.
