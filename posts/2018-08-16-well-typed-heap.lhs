@@ -42,11 +42,11 @@ a bit more on the advanced side.
 > {-# LANGUAGE UndecidableInstances #-}
 
 Since the goal of this blogpost is mainly educational, we will only use a few
-standard modules and generally define things ourselves in this blogpost.  This
+standard modules and generally define things ourselves.  This
 also helps us to show that there is no
 [magic](https://github.com/ekmett/constraints/blob/5ffe5e7da8249eb3adbc0a735c039e75a7feab65/src/Data/Constraint/Nat.hs#L70)
 [going on](http://hackage.haskell.org/package/base-4.11.1.0/docs/Unsafe-Coerce.html#v:unsafeCoerce)
-behind the scenes: all term-level functions in this file are complete and
+behind the scenes: all term-level functions in this file are total and
 compile fine with `-Wall`.
 
 > import           Data.List          (minimumBy)
@@ -102,15 +102,15 @@ non-trivial (and again, insanely cool) example of dependent Haskell programming.
 Singletons and type equality
 ============================
 
-If I perform an appropriate amount of hand-waving and squinting a little, I feel
-like there are two ways to work with these stronger type guarantees in Haskell.
+If I perform an appropriate amount of hand-waving and squinting, I feel
+like there are two ways to work with these stronger-than-usual types in Haskell.
 We can either make sure things are correct by _construction_, or we can prove
-that things are correct by _destruction_.
+that things are correct by _destruction_ TODO.
 
 The former is the simpler approach we saw in the `Vec` [snippet](#vec): by using
-the constructors provided by the GADT, our always are satisfied.  The latter
-builds on the [singletons] approach introduced by Richard Eisenberg and
-Stephanie Weirich.
+the constructors provided by the GADT, our constraints always are satisfied.
+The latter builds on the [singletons] approach introduced by Richard Eisenberg
+and Stephanie Weirich.
 
 [singletons]: https://cs.brynmawr.edu/~rae/papers/2012/singletons/paper.pdf
 
@@ -228,7 +228,7 @@ Some illustrations to make this a bit more clear:
     clear.
 
 This is definitely a very good example of the correctness by construction
-approach I talked about earlier: it is simple impossible to create a tree that
+approach I talked about earlier: it is simply impossible to create a tree that
 does not have the right shape.
 
 Empty trees to do not exist according to this definition.  A singleton tree is
