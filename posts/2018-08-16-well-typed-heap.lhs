@@ -322,7 +322,7 @@ programmers while cantating Richard Eisenberg's writings.
 
 To that end, it is almost always worth trying to figure out alternate
 representations that work out more elegantly.  This can lead to some arbitrary
-looking choices, which we will discuss a bit more in TODO(SelectTree).
+looking choices, which we will discuss a bit more in TODO(PopCandidate).
 
 Addition is not too hard either:
 
@@ -704,6 +704,9 @@ However, just selecting (and removing) a single tree turns out to be quite an
 endeavour on its own.  We define an auxiliary GADT which holds the tree, the
 remainder of the heap, and most importantly a lot of invariants.
 
+Feel free to scroll down to the datatype from here if you are willing to assume
+the specific constraint and types are there for a reason.
+
 The two first fields are simply evidence singletons that we carry about.  `o`
 stands for the same concept as in `Trees`, it means we are starting with an
 order of `o`.  `x` stands for the index of the tree that was selected.
@@ -734,14 +737,14 @@ between different functions and datatypes, where you try to mediate by making
 the requested and expected types match by bringing them closer together step by
 step.
 
-> data SelectTree (o :: Nat) (b :: Binary) a where
->     SelectTree
+> data PopCandidate (o :: Nat) (b :: Binary) a where
+>     PopCandidate
 >         :: Width (BAdd b (Ones x)) ~ Width (BInc (BAdd b (Ones x)))
 >         => SNat x
 >         -> SNat o
 >         -> Tree (NAdd o x) a
 >         -> Trees o b a
->         -> SelectTree o (BInc (BAdd b (Ones x))) a
+>         -> PopCandidate o (BInc (BAdd b (Ones x))) a
 
 `selectTrees_go` is the worker function that takes all possible trees out of a
 heap.  For every _1_ in the shape of the heap, we have a tree: therefore it
@@ -752,7 +755,7 @@ should not be a surprise that the length of the resulting vector is
 >     :: forall o b a.
 >        SNat o
 >     -> Trees o b a
->     -> Vec (BPopcount b) (SelectTree o b a)
+>     -> Vec (BPopcount b) (PopCandidate o b a)
 
 The definition is recursive and a good example of how recursion corresponds with
 inductive proofs (we're using `lemma1` and `lemma2` here).  We don't go in too
@@ -761,67 +764,114 @@ surprisingly easy to read.
 
 > selectTrees_go _ TEnd = VNull
 > selectTrees_go nnat0 (T0 trees0) = fmap
->     (\selectTree -> case selectTree of
->         SelectTree xnat (SSucc nnat) t1 trees1 -> SelectTree
+>     (\popCandidate -> case popCandidate of
+>         PopCandidate xnat (SSucc nnat) t1 trees1 -> PopCandidate
 >             (SSucc xnat)
 >             nnat
 >             (case lemma2 nnat xnat of QED -> t1)
 >             (T0 trees1))
 >     (selectTrees_go (SSucc nnat0) trees0)
 > selectTrees_go nnat0 (T1 tree0 trees0) = VCons
->     (SelectTree
+>     (PopCandidate
 >         SZero
 >         nnat0
 >         (case lemma1 nnat0 of QED -> tree0)
 >         (T0 trees0))
 >     (fmap
->         (\selectTree -> case selectTree of
->             SelectTree xnat (SSucc nnat) t1 trees1 -> SelectTree
+>         (\popCandidate -> case popCandidate of
+>             PopCandidate xnat (SSucc nnat) t1 trees1 -> PopCandidate
 >                 (SSucc xnat)
 >                 nnat
 >                 (case lemma2 nnat xnat of QED -> t1)
 >                 (T1 tree0 trees1))
 >         (selectTrees_go (SSucc nnat0) trees0))
 
-> --------------------------------------------------------------------------------
-> -- PART: Tying together selectTrees_go
+Tying together selectTrees
+==========================
+
+Now that we can select `BPopcount b` trees, it time to convert this to something
+more convenient to work it.  We will use a `NonEmpty` to represent our list of
+candidates to select from.
 
 > selectTrees
 >     :: forall b a. BNonZero b ~ 'True
->     => Trees 'Zero b a -> NonEmpty.NonEmpty (SelectTree 'Zero b a)
+>     => Trees 'Zero b a
+>     -> NonEmpty.NonEmpty (PopCandidate 'Zero b a)
+
+
+First we select the `BPopcount b` trees:
+
 > selectTrees trees =
->     let selects :: Vec (BPopcount b) (SelectTree 'Zero b a)
->         selects = selectTrees_go SZero trees in
->     case lemma3 (treesToSBin trees :: SBin b) of QED -> vecToNonEmpty selects
+>     let candidates :: Vec (BPopcount b) (PopCandidate 'Zero b a)
+>         candidates = selectTrees_go SZero trees in
+
+Then we convert it to a `NonEmpty`.  This requires us to call `lemma3` (the
+proof that relates non-zeroness of a binary number with non-zeroness of a
+natural number through popcount).  We need an appropriate `SBin` to call
+`lemma3` and the auxiliary function `treesToSBin` defined just below does that
+for us.
+
+>     case lemma3 (treesToSBin trees :: SBin b) of
+>          QED -> vecToNonEmpty candidates
+
+This sneaky function constructs an `SBin b` from a `Trees o b a` value.  It is
+maybe a bit naughty but this prevents us from carrying around the singletons in
+a bunch of places.
 
 > treesToSBin :: Trees o b a -> SBin b
 > treesToSBin TEnd     = SBEnd
 > treesToSBin (T0 t)   = SB0 (treesToSBin t)
 > treesToSBin (T1 _ t) = SB1 (treesToSBin t)
 
-> --------------------------------------------------------------------------------
-> -- PART: Tying together all of popping
+Finally popping
+===============
+
+We can now find all trees in the heap that may be popped.  They are returned in
+a `PopCandidate` datatype and we can pop a candidate, returning its root and
+a new heap consisting of its children.
+
+The new heap has one less element -- hence we use `BDec` (binary decrement,
+define just a bit below).
 
 > popTree
 >     :: forall a b. Ord a
->     => SelectTree 'Zero b a
+>     => PopCandidate 'Zero b a
 >     -> (a, Trees 'Zero (BDec b) a)
-> popTree (SelectTree xnat _nnat tree (trees :: Trees 'Zero l a)) =
->     case tree of
->         Tree x (children :: Children r a) ->
->             let ctrees = childrenToTrees xnat children
->                 merged = mergeTrees trees ctrees in
->             ( x
->             , case (lemma4 (treesToSBin merged :: SBin (BAdd l (Ones r)))) of
->                 QED -> merged
->             )
 
-> selectTreeTop :: SelectTree o b a -> a
-> selectTreeTop (SelectTree _ _ (Tree x _) _) = x
+We deconstruct the `PopCandidate` to get the root (`x`) of the selected tree,
+the children of the selected trees (`children`), and the remainging trees in the
+heap (`trees`).
+
+> popTree (PopCandidate
+>             xnat _nnat
+>             (Tree x (children :: Children r a))
+>             (trees :: Trees 'Zero l a)) =
+
+We construct a new heap from the children.
+
+>     let ctrees = childrenToTrees xnat children
+
+We merge it with the remainder of the heap:
+
+>         merged :: Trees 'Zero (BAdd l (Ones r)) a
+>         merged = mergeTrees trees ctrees
+
+Now, we cast it to the result using a new `lemma4` with a singleton that we
+construct from the trees:
+
+>         evidence :: SBin (BAdd l (Ones r))
+>         evidence = treesToSBin merged in
+>     (x, case lemma4 evidence of QED -> merged)
+
+This is the type family for binary decrement.  It is partial, as expected -- you
+cannot decrement zero.  This is a bit unfortunate but necessary.  Having the
+`BNonZero` type family and using it as a constraint will solve that though.
 
 > type family BDec (binary :: Binary) :: Binary where
 >     BDec ('B1 b) = 'B0 b
 >     BDec ('B0 b) = 'B1 (BDec b)
+
+The weirdly specific `lemma4` helps us prove that (
 
 > lemma4
 >     :: (Width x ~ Width (BInc x))
@@ -830,11 +880,14 @@ surprisingly easy to read.
 > lemma4 (SB0 _) = QED
 > lemma4 (SB1 b) = case lemma4 b of QED -> QED
 
+> popCandidateRoot :: PopCandidate o b a -> a
+> popCandidateRoot (PopCandidate _ _ (Tree x _) _) = x
+
 > popHeap :: (BNonZero b ~ 'True, Ord a) => Heap b a -> (a, Heap (BDec b) a)
 > popHeap (Heap trees0) =
->     let selects = selectTrees trees0
->         select  = minimumBy (comparing selectTreeTop) selects in
->     case popTree select of
+>     let candidates = selectTrees trees0
+>         selected   = minimumBy (comparing popCandidateRoot) candidates in
+>     case popTree selected of
 >         (x, trees1) -> (x, Heap trees1)
 
 In GHCi:
