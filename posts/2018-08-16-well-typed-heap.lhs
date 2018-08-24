@@ -104,8 +104,8 @@ Singletons and type equality
 
 If I perform an appropriate amount of hand-waving and squinting, I feel
 like there are two ways to work with these stronger-than-usual types in Haskell.
-We can either make sure things are correct by _construction_, or we can prove
-that things are correct by _destruction_ TODO.
+We can either make sure things are correct by _construction_, or we can come
+up with a _proof_ that they are in fact correct.
 
 The former is the simpler approach we saw in the `Vec` [snippet](#vec): by using
 the constructors provided by the GADT, our constraints always are satisfied.
@@ -160,7 +160,7 @@ but redefined here for educational purposes.
 >
 > type a :~: b = EqualityProof a b
 
-Take a minute to think about the deep implications this GADT has -- if we can
+Take a minute to think about the implications this GADT has -- if we can
 construct a `QED` value, we have actually provided evidence that the two types
 are equal.
 
@@ -178,7 +178,8 @@ has a unique `SNat` and the other way around:
 >     SSucc :: SNat n -> SNat ('Succ n)
 
 We can use such a `SNat` to define a proof for what we were trying to
-accomplish:
+accomplish.  Since this proof can be passed any `n` in the form of an `SNat`, it
+must be correct for all `n`.
 
 > lemma1 :: SNat n -> NAdd n 'Zero :~: n
 
@@ -231,7 +232,7 @@ This is definitely a very good example of the correctness by construction
 approach I talked about earlier: it is simply impossible to create a tree that
 does not have the right shape.
 
-Empty trees to do not exist according to this definition.  A singleton tree is
+Empty trees do not exist according to this definition.  A singleton tree is
 easy to create:
 
 > singletonTree :: a -> Tree 'Zero a
@@ -261,8 +262,9 @@ Type level binary numbers
 
 With these trees defined, we can move on to _binomial heaps_.
 
-While binomial trees are cool in their own right, they can really only represent
-collections that have a number of elements that are exactly a power of two.
+While binomial trees are interesting on their own, they can really only
+represent collections that have a number of elements that are exactly a power of
+two.
 
 Binomial heaps solve this in a surprisingly simple way.  A binomial heap is
 a collection of binomial trees where we may only have at most one tree for every
@@ -270,10 +272,10 @@ order.
 
 This is where the correspondence with binary numbers originates.  If we have a
 binomial heap with 5 elements, the only way to do this is to have binomial
-trees of orders 2 and 0.
+trees of orders 2 and 0 (2² + 2⁰ = 5).
 
 We start out by defining a simple datatype that will be lifted to the kind
-level:
+level, just as we did with `Nat`:
 
 > data Binary
 >     = B0 Binary
@@ -293,14 +295,15 @@ B0 (B1 (B1 BEnd))
 
 represents the number 6 (conventionally written _110_).
 
-I think it is fairly common in Haskell to play around with different ways of
-representing a certain thing until you converge towards an elegant
-representation.  This is many, many times more important when we are dealing
-with dependently-typed Haskell.
+I think it is fairly common in Haskell for a developer to play around with
+different ways of representing a certain thing until you converge towards an
+elegant representation.  This is many, many times more important when we are
+dealing with dependently-typed Haskell.
 
-Unelegant data representations can make term-level programming clunky.
-Unelegant type representations can make type-level programming downright
-infeasible due to the sheer amount of lemmas that need to be proven.
+Unelegant and awkward data representations can make term-level programming
+clunky.  Unelegant and awkward type representations can make type-level
+programming downright infeasible due to the sheer amount of lemmas that need to
+be proven.
 
 Consider the relative elegance of defining a type family for incrementing a
 binary number that is read from the right to the left:
@@ -312,16 +315,16 @@ binary number that is read from the right to the left:
 
 Appendix TODO contains an (unused) implementation of incrementing left-to-right
 binary numbers.  Getting things like this to work is not too much of a stretch
-these days (even though GHCs error messages can be very cryptic).  Due to the
-large amount of type families involved, proving things about it presumably
-requires ritually sacrificing an inappropriate amount of Agda programmers while
-cantating Stephanie Weirich's writings.
+these days (even though GHCs error messages can be very cryptic).  However, due
+to the large amount of type families involved, proving things about it
+presumably requires ritually sacrificing an inappropriate amount of Agda
+programmers while cantating Richard Eisenberg's writings.
 
 To that end, it is almost always worth trying to figure out alternate
 representations that work out more elegantly.  This can lead to some arbitrary
 looking choices, which we will discuss a bit more in TODO(SelectTree).
 
-Addition not too hard either:
+Addition is not too hard either:
 
 > type family BAdd (x :: Binary) (y :: Binary) :: Binary where
 >     BAdd ('B0 x) ('B0 y) = 'B0 (BAdd x y)
@@ -340,7 +343,7 @@ Let's quickly define a number of examples
 > type BFour  = BInc BThree
 > type BFive  = BInc BFour
 
-This allows us to play around with this in GHCi:
+This allows us to play around with it in GHCi:
 
 ~~~~~
 *Main> :set -XDataKinds
@@ -359,14 +362,14 @@ Finally, we define a corresponding singleton to use later on:
 A bunch of trees
 ================
 
-Our heap will be relatively simple wrapper around a recursive type called
+Our heap will be a relatively simple wrapper around a recursive type called
 `Trees`.  This datastructure follows the definition of the binary numbers fairly
 closely, which makes the code in this section surprisingly easy and we end up
-requiring no lemmas or proofs whatsoever.
+requiring no lemmas or proofs whatsoever here.
 
-A `Trees o b` refers to a number of trees starting with (possibly) one of order
-`o`.  The `b` is the binary number that indicates the shape of the tree -- i.e.,
-whether we have a tree of a given order or not.
+A `Trees o b` refers to a number of trees starting with (possibly) a tree of
+order `o`.  The `b` is the binary number that indicates the shape of the tree --
+i.e., whether we have a tree of a given order or not.
 
 Using a handwavy but convenient notation, this means that _Trees 3 101_ refers
 to binomial trees of order 3 and 5 (and no tree of order 4).
@@ -409,8 +412,9 @@ numbers together:
 
 It's worth scrolling back up and seeing how the different branches in
 `insertTrees` and `mergeTrees` match up almost 1:1 with the different clauses in
-the definition of the type families `BInc` and `BAdd`.  That is why no
-additional proofs or type-level trickery is required here.
+the definition of the type families `BInc` and `BAdd`.  That is intuitive
+explanation as to why no additional proofs or type-level trickery is required
+here.
 
 The binomial heap
 =================
@@ -462,8 +466,8 @@ Popping: introduction
 =====================
 
 I think it's interesting that we have implemented an append-only heap without
-even requiring any lemmas so far.  It is a good illustration of how append-only
-datastructures are conceptually much simpler.
+even requiring any lemmas so far.  It is perhaps a good illustration of how
+append-only datastructures are conceptually much simpler.
 
 TODO: Illustration of coffee, if you wanna take a break -- this is a good time
 to do so.
@@ -485,13 +489,17 @@ one important part is taking all children from a tree and turning that into a
 new heap.
 
 We need to keep all our invariants intact, and in this case this means tracking
-them in the type system.  If we look at a three of order `o`, there are `2ᵒ - 1`
-elements.
+them in the type system.  A tree of `o` has `2ᵒ` elements.  If we remove the
+root, we have `o` children trees with `2ᵒ - 1 ` elements in total.  Every child
+becomes a tree in the new heap.  This means that the heap contains `o` full
+trees, and its shape will be written as `o` "1"s.  This matches our math: if you
+write `o` "1"s, you get the binary notation of `2ᵒ - 1`.
 
-It is actually more easy to think about this in a visual way: a
-`Tree ('Succ o) a` holds a `Children o a`, which in turn holds `o` sub-trees.
-If we convert that to a heap, the type will simply have `o` 1s.  Using a type
-family:
+Visually:
+
+    TODO
+
+We introduce a type family for computing `n` "1"s:
 
 > type family Ones (n :: Nat) :: Binary where
 >     Ones 'Zero     = 'BEnd
@@ -510,7 +518,7 @@ deal:
 
 The tricky bit is that the list of trees in `Children` has them in descending
 order, and we want them in ascending order in `Trees`.  This means we will
-reverse the list.
+have to reverse the list.
 
 We can reverse a list easily using an accumulator in Haskell.  In order to
 maintain the type invariants at every step, we will increase the size of the
@@ -571,7 +579,7 @@ Ones (NAdd x (Succ o)) ~ 'B1 (Ones (NAdd x o))
 Which only requires us to prove commutativity on `NAdd`.  You can see that
 proof in `lemma2` a bit further below.  This case also illustrates well how we
 carry around the singletons as inputs for our lemmas and call on them when
-appropriate.
+required.
 
 > childrenToTrees_go xnat (SSucc nnat) acc (CCons tree children) =
 >     case lemma2 xnat nnat of
@@ -582,11 +590,12 @@ appropriate.
 >             children
 
 Proving `lemma2` is trivial... once you figure out what you need to prove and
-how all of this works.  It took me a good amount time to put the different
-pieces together in my head.  It is not only a matter of proving the lemma.
-Restructuring the code in `childrenToTrees_go` leads to different lemmas you
-can attempt to prove, and figuring which ones are feasible is a big part of
-writing code like this.
+how all of this works.
+
+It took me a good amount time to put the different pieces together in my head.
+It is not only a matter of proving the lemma.  Restructuring the code in
+`childrenToTrees_go` leads to different lemmas you can attempt to prove, and
+figuring which ones are feasible is a big part of writing code like this.
 
 > lemma2 :: SNat n -> SNat m -> NAdd n ('Succ m) :~: 'Succ (NAdd n m)
 > lemma2 SZero     _ = QED
@@ -631,7 +640,8 @@ Popcount and width
 ==================
 
 The minimal element will always be the root of one of our trees.  That means we
-have as many choices for our minimal element as there are trees in our heap.
+have as many choices for our minimal element as there are trees in our heap.  We
+need some way to write down this number as a type.
 
 Since we have a tree for every _1_ in our binary number, we can define the
 number of trees as the [popcount] of the binary number.
@@ -655,7 +665,7 @@ non-zeroness of a binary number.
 
 In addition to caring about the `popcount` of a binary number, we are sometimes
 interested in its `width` (number of bits).  This is also easily captured in a
-type family:
+type family as well:
 
 > type family Width (binary :: Binary) :: Nat where
 >     Width 'BEnd        = 'Zero
