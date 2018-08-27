@@ -99,6 +99,29 @@ point.
 In short, this blogpost is meant to be an introductory-level explanation of a
 non-trivial (and again, insanely cool) example of dependent Haskell programming.
 
+Table of contents
+-----------------
+
+-   [Introduction](#introduction)
+-   [Singletons and type equality](#singletons-and-type-equality)
+-   [Binomial trees](#binomial-trees)
+-   [Type level binary numbers](#type-level-binary-numbers)
+-   [A bunch of trees](#a-bunch-of-trees)
+-   [The binomial heap](#the-binomial-heap)
+-   [Popping: introduction](#popping-introduction)
+-   [Deconstructing a single tree](#deconstructing-a-single-tree)
+-   [Extending Vec a little](#extending-vec-a-little)
+-   [Popcount and width](#popcount-and-width)
+-   [Selecting a tree from the heap](#selecting-a-tree-from-the-heap)
+-   [Tying together selectTrees](#tying-together-selecttrees)
+-   [Finally popping](#finally-popping)
+-   [Appendix 1: runtime cost of this
+    approach](#appendix-1-runtime-cost-of-this-approach)
+-   [Appendix 2: "pretty"-printing of
+    heaps](#appendix-2-pretty-printing-of-heaps)
+-   [Appendix 3: left-to-right
+    increment](#appendix-3-left-to-right-increment)
+
 Singletons and type equality
 ============================
 
@@ -205,8 +228,11 @@ value, the common one being a typeclass that can give us an `SNat x` from a
 always have the right singletons on hand by passing them around in a few places.
 In other words: don't worry about this for now.
 
+Building up Binomial heaps
+==========================
+
 Binomial trees
-==============
+--------------
 
 A _binomial heap_ consists of zero or more _binomial trees_.  I will quote the
 text from the Wikipedia article here since I think it is quite striking how
@@ -247,9 +273,9 @@ signature as well:
 > mergeTree :: Ord a => Tree o a -> Tree o a -> Tree ('Succ o) a
 
 Concretely, we construct the new tree by taking either the left or the right
-tree and attaching it as new child to the other tree.  Since we are building a
-priority queue, we want to keep the smallest element in the root of the new
-tree.
+tree and attaching it as new child to the other tree.  Since we are building
+heap to use for as a priority queue, we want to keep the smallest element in the
+root of the new tree.
 
 > mergeTree l@(Tree lroot lchildren) r@(Tree rroot rchildren)
 >     | lroot <= rroot = Tree lroot (CCons r lchildren)
@@ -259,7 +285,7 @@ tree.
 new child to the 'a' tree.](/images/draft-02.png)
 
 Type level binary numbers
-=========================
+-------------------------
 
 With these trees defined, we can move on to _binomial heaps_.
 
@@ -324,7 +350,7 @@ programmers while cantating Richard Eisenberg's writings.
 To that end, it is almost always worth trying to figure out alternate
 representations that work out more elegantly.  This can lead to some arbitrary
 looking choices -- we will see this in full effect when trying to define
-[PopCandidate](#popcandidate) further below.
+[CutTree](#cuttree) further below.
 
 Addition is not too hard to define:
 
@@ -361,96 +387,97 @@ Finally, we define a corresponding singleton to use later on:
 >     SB0   :: SBin b -> SBin ('B0 b)
 >     SB1   :: SBin b -> SBin ('B1 b)
 
-A bunch of trees
-================
+Binomial forests
+----------------
 
 Our heap will be a relatively simple wrapper around a recursive type called
-`Trees`.  This datastructure follows the definition of the binary numbers fairly
-closely, which makes the code in this section surprisingly easy and we end up
-requiring no lemmas or proofs whatsoever here.
+`Forest`.  This datastructure follows the definition of the binary numbers
+fairly closely, which makes the code in this section surprisingly easy and we
+end up requiring no lemmas or proofs whatsoever here.
 
-A `Trees o b` refers to a number of trees starting with (possibly) a tree of
+A `Forest o b` refers to a number of trees starting with (possibly) a tree of
 order `o`.  The `b` is the binary number that indicates the shape of the tree --
 i.e., whether we have a tree of a given order or not.
 
-Using a handwavy but convenient notation, this means that _Trees 3 101_ refers
+Using a handwavy but convenient notation, this means that _Forest 3 101_ refers
 to binomial trees of order 3 and 5 (and no tree of order 4).
 
-> data Trees (o :: Nat) (b :: Binary) a where
->     TEnd :: Trees o 'BEnd a
->     T0   ::             Trees ('Succ o) b a -> Trees o ('B0 b) a
->     T1   :: Tree o a -> Trees ('Succ o) b a -> Trees o ('B1 b) a
+> data Forest (o :: Nat) (b :: Binary) a where
+>     FEnd :: Forest o 'BEnd a
+>     F0   ::             Forest ('Succ o) b a -> Forest o ('B0 b) a
+>     F1   :: Tree o a -> Forest ('Succ o) b a -> Forest o ('B1 b) a
 
 The empty trees are easily defined:
 
-> emptyTrees :: Trees o ('B0 'BEnd) a
-> emptyTrees = T0 TEnd
+> emptyForest :: Forest o ('B0 'BEnd) a
+> emptyForest = F0 FEnd
 
-`insertTrees` inserts a new tree into the structure.  This might require merging
-two trees together -- roughly corresponding to carrying in binary increment.
+`insertTree` inserts a new tree into the structure.  This might require
+merging two trees together -- roughly corresponding to carrying in binary
+increment.
 
-> insertTrees
+> insertTree
 >     :: Ord a
->     => Tree o a -> Trees o b a
->     -> Trees o (BInc b) a
-> insertTrees s TEnd      = T1 s TEnd
-> insertTrees s (T0 ts)   = T1 s ts
-> insertTrees s (T1 t ts) = T0 (insertTrees (mergeTree s t) ts)
+>     => Tree o a -> Forest o b a
+>     -> Forest o (BInc b) a
+> insertTree s FEnd     = F1 s FEnd
+> insertTree s (F0 f)   = F1 s f
+> insertTree s (F1 t f) = F0 (insertTree (mergeTree s t) f)
 
 <div id="merge"></div>
 
 Similarly, merging two sets of trees together corresponds with adding two binary
 numbers together:
 
-> mergeTrees
+> mergeForests
 >     :: Ord a
->     => Trees o lb a -> Trees o rb a
->     -> Trees o (BAdd lb rb) a
-> mergeTrees TEnd           rt   = rt
-> mergeTrees lt             TEnd = lt
-> mergeTrees (T0 lt)   (T0 rt)   = T0 (mergeTrees lt rt)
-> mergeTrees (T1 l lt) (T0 rt)   = T1 l (mergeTrees lt rt)
-> mergeTrees (T0 lt)   (T1 r rt) = T1 r (mergeTrees lt rt)
-> mergeTrees (T1 l lt) (T1 r rt) =
->     T0 (insertTrees (mergeTree l r) (mergeTrees lt rt))
+>     => Forest o lb a -> Forest o rb a
+>     -> Forest o (BAdd lb rb) a
+> mergeForests FEnd           rf   = rf
+> mergeForests lf             FEnd = lf
+> mergeForests (F0 lf)   (F0 rf)   = F0 (mergeForests lf rf)
+> mergeForests (F1 l lf) (F0 rf)   = F1 l (mergeForests lf rf)
+> mergeForests (F0 lf)   (F1 r rf) = F1 r (mergeForests lf rf)
+> mergeForests (F1 l lf) (F1 r rf) =
+>     F0 (insertTree (mergeTree l r) (mergeForests lf rf))
 
 It's worth scrolling back up and seeing how the different branches in
-`insertTrees` and `mergeTrees` match up almost 1:1 with the different clauses in
-the definition of the type families `BInc` and `BAdd`.  That is intuitive
+`insertTree` and `mergeForests` match up almost 1:1 with the different clauses
+in the definition of the type families `BInc` and `BAdd`.  That is intuitive
 explanation as to why no additional proofs or type-level trickery is required
 here.
 
 Here is an informal illustration of what happens when we don't need to merge any
-trees.  The singleton `Trees` on the left is simply put in the empty `T0` spot
+trees.  The singleton `Forest` on the left is simply put in the empty `F0` spot
 on the right.
 
-![Simple merge](/images/draft-03.png)
+![Simple merge; 1 + 100 = 101](/images/draft-03.png)
 
 When there is already a tree there, we merge the trees using `mergeTree` and
 carry that, in a very similar way to how carrying works in the addition of
 binary numbers:
 
-![Merge with carry](/images/draft-04.png)
+![Merge with carry, 1 + 101 = 110](/images/draft-04.png)
 
 The binomial heap
-=================
+-----------------
 
-The `Trees` structure is the main workhorse and `Heap` is just a simple wrapper
+The `Forest` structure is the main workhorse and `Heap` is just a simple wrapper
 on top of that, where we start out with a tree of order 0:
 
-> newtype Heap (b :: Binary) a = Heap {unHeap :: Trees 'Zero b a}
+> newtype Heap (b :: Binary) a = Heap {unHeap :: Forest 'Zero b a}
 
 The operations on `Heap` are also simple wrappers around the previously defined
 functions:
 
 > emptyHeap :: Heap ('B0 'BEnd) a
-> emptyHeap = Heap emptyTrees
+> emptyHeap = Heap emptyForest
 
 > pushHeap :: Ord a => a -> Heap b a -> Heap (BInc b) a
-> pushHeap x (Heap trees) = Heap (insertTrees (singletonTree x) trees)
+> pushHeap x (Heap forest) = Heap (insertTree (singletonTree x) forest)
 
 > mergeHeap :: Ord a => Heap lb a -> Heap rb a -> Heap (BAdd lb rb) a
-> mergeHeap (Heap lt) (Heap rt) = Heap (mergeTrees lt rt)
+> mergeHeap (Heap lf) (Heap rf) = Heap (mergeForests lf rf)
 
 We are now ready to show this off in GHCi again:
 
@@ -478,24 +505,24 @@ show instance provided in the [appendix 2](#appendix-2):
 
 Neat!
 
-Popping: introduction
-=====================
+Popping: breaking the tree down again
+=====================================
 
 I think it's interesting that we have implemented an append-only heap without
 even requiring any lemmas so far.  It is perhaps a good illustration of how
 append-only datastructures are conceptually much simpler.
 
-    TODO: Illustration of coffee, if you wanna take a break -- this is a good time
-    to do so.
+![Yes, this is a long blogpost.  We've arrived at the halfway point, so it's a
+good time to get a coffee and take a break.](/images/draft-coffee.jpg)
 
 Things get _significantly_ more complicated when we try to implement popping the
-element with the lowest priority from the queue.  For reference, I implemented
-the heap we have at this point implemented in a couple of hours, where I worked
-on the rest of the code on and off for about a week.
+smallest element from the queue.  For reference, I implemented the heap we have
+at this point implemented in a couple of hours, where I worked on the rest of
+the code on and off for about a week.
 
 Let's look at a quick illustration of how popping works.
 
-We select the tree with the lowest priority root and remove it from the heap:
+We first select the tree with the smallest root and cut it from the heap:
 
 ![](/images/draft-06.png)
 
@@ -509,13 +536,14 @@ made out of the children of the removed tree:
 
 ![](/images/draft-08.png)
 
-Deconstructing a single tree
-============================
+The above merge requires carrying twice.
 
-If we breaking down popping an element from the queue to more manageable parts,
-one important part is taking all children from a tree and turning that into a
-new heap.  This is step 2 in the illustrations above, but we will write this
-code first since it is a bit easier.
+Taking apart a single tree
+--------------------------
+
+We will start by implementing step 2 of the algorithm above since it is a bit
+easier.  In this step, we are taking all children from a tree and turning that
+into a new heap.
 
 We need to keep all our invariants intact, and in this case this means tracking
 them in the type system.  A tree of `o` has `2ᵒ` elements.  If we remove the
@@ -534,19 +562,19 @@ We introduce a type family for computing `n` "1"s:
 >     Ones 'Zero     = 'BEnd
 >     Ones ('Succ n) = 'B1 (Ones n)
 
-We will use a helper function `childrenToTrees_go` to maintain some invariants.
-The wrapper `childrenToTrees` is trivially defined but its type tells us a whole
-deal:
+We will use a helper function `childrenToForest_go` to maintain some invariants.
+The wrapper `childrenToForest` is trivially defined but its type tells us a
+whole deal:
 
-> childrenToTrees
+> childrenToForest
 >     :: SNat n
 >     -> Children n a
->     -> Trees 'Zero (Ones n) a
-> childrenToTrees nnat children =
->     childrenToTrees_go SZero nnat TEnd children
+>     -> Forest 'Zero (Ones n) a
+> childrenToForest nnat children =
+>     childrenToForest_go SZero nnat FEnd children
 
 The tricky bit is that the list of trees in `Children` has them in descending
-order, and we want them in ascending order in `Trees`.  This means we will
+order, and we want them in ascending order in `Forest`.  This means we will
 have to reverse the list.
 
 We can reverse a list easily using an accumulator in Haskell.  In order to
@@ -554,30 +582,30 @@ maintain the type invariants at every step, we will increase the size of the
 accumulator as we descrease the size of the children.  This can be captured
 by requiring that their sum remains equal (`m ~ NAdd x n`).
 
-> childrenToTrees_go
+> childrenToForest_go
 >     :: m ~ NAdd x n
 >     => SNat x
 >     -> SNat n
->     -> Trees n (Ones x) a
+>     -> Forest n (Ones x) a
 >     -> Children n a
->     -> Trees 'Zero (Ones m) a
+>     -> Forest 'Zero (Ones m) a
 
-> childrenToTrees_go xnat _snat@SZero acc CZero =
+> childrenToForest_go xnat _snat@SZero acc CZero =
 
 I will not always go into detail on how the lemmas apply but let's do it here
 nonetheless.
 
 For the base case, we simply want to return our accumulator.  However, our
-accumulator has the type `Trees n (Ones x)` and we expect something of the type
-`Trees n (Ones m)`.  Furthermore, we know that:
+accumulator has the type `Forest n (Ones x)` and we expect something of the type
+`Forest n (Ones m)`.  Furthermore, we know that:
 
 ~~~~~~
 n ~ 'Zero, m ~ NAdd x n
 ⊢ m ~ NAdd x 'Zero
 ~~~~~~
 
-We need to prove that `x ~ m` in order to do the cast from `Trees n (Ones x)` to
-`Trees n (Ones m)`.
+We need to prove that `x ~ m` in order to do the cast from `Forest n (Ones x)`
+to `Forest n (Ones m)`.
 
 We can do so by applying `lemma1` to `x` (the latter represented here by
 `xnat`).  This gives us `lemma1 xnat :: NAdd x 'Zero :~: n`.  Combining this
@@ -610,32 +638,35 @@ proof in `lemma2` a bit further below.  This case also illustrates well how we
 carry around the singletons as inputs for our lemmas and call on them when
 required.
 
-> childrenToTrees_go xnat (SSucc nnat) acc (CCons tree children) =
+> childrenToForest_go xnat (SSucc nnat) acc (CCons tree children) =
 >     case lemma2 xnat nnat of
->         QED -> childrenToTrees_go
+>         QED -> childrenToForest_go
 >             (SSucc xnat)
 >             nnat
->             (T1 tree acc)
+>             (F1 tree acc)
 >             children
 
 Proving `lemma2` is trivial... once you figure out what you need to prove and
 how all of this works.
 
 It took me a good amount time to put the different pieces together in my head.
-It is not only a matter of proving the lemma.  Restructuring the code in
-`childrenToTrees_go` leads to different lemmas you can attempt to prove, and
+It is not only a matter of proving the lemma: restructuring the code in
+`childrenToForest_go` leads to different lemmas you can attempt to prove, and
 figuring which ones are feasible is a big part of writing code like this.
 
 > lemma2 :: SNat n -> SNat m -> NAdd n ('Succ m) :~: 'Succ (NAdd n m)
 > lemma2 SZero     _ = QED
 > lemma2 (SSucc n) m = case lemma2 n m of QED -> QED
 
-Extending Vec a little
-======================
+More Vec utilities
+------------------
 
-These are some minor auxiliary functions we need to implement on `Vec`.
-We need some sort of `map`, and we can do this by implementing the `Functor`
-typeclass.
+These are some minor auxiliary functions we need to implement on `Vec`.  We
+mention them here because we'll also need two type classes dealing with
+non-zeroness.
+
+First, we need some sort of `map`, and we can do this by implementing the
+`Functor` typeclass.
 
 > instance Functor (Vec n) where
 >     fmap _ VNull       = VNull
@@ -677,6 +708,9 @@ number of trees as the [popcount] of the binary number.
 
 [popcount]: https://en.wikichip.org/wiki/population_count
 
+In a weird twist of fate, you can also pretend this stands for "the count of
+trees which we can _pop_", which is exactly what we will be using it for.
+
 > type family Popcount (b :: Binary) :: Nat where
 >     Popcount 'BEnd   = 'Zero
 >     Popcount ('B1 b) = 'Succ (Popcount b)
@@ -694,7 +728,7 @@ non-zeroness of a binary number.
 
 In addition to caring about the `popcount` of a binary number, we are sometimes
 interested in its `width` (number of bits).  This is also easily captured in a
-type family as well:
+type family:
 
 > type family Width (binary :: Binary) :: Nat where
 >     Width 'BEnd        = 'Zero
@@ -707,16 +741,16 @@ including `BDec` (binary decrement, defined further below).
 
 ![Rectangles represent (lifted) kinds, arrows are type families](/images/draft-05.png)
 
-<div id="popcandidate"></div>
+<div id="cuttree"></div>
 
-Selecting a tree from the heap
-==============================
+Lumberjack
+----------
 
-Now, popping the element with the lowest priority from the heap first involves
-taking a single tree from the heap.  Afterwards, we take the root of that tree
+Now, popping the smallest element from the heap first involves cutting a single
+tree from the forest inside the heap.  Afterwards, we take the root of that tree
 and merge the children of the tree back together with the original heap.
 
-![Selecting a single treee](/images/draft-06.png)
+![Selecting a single tree](/images/draft-06.png)
 
 However, just selecting (and removing) a single tree turns out to be quite an
 endeavour on its own.  We define an auxiliary GADT which holds the tree, the
@@ -726,16 +760,16 @@ Feel free to scroll down to the datatype from here if you are willing to assume
 the specific constraint and types are there for a reason.
 
 The two first fields are simply evidence singletons that we carry about.  `o`
-stands for the same concept as in `Trees`, it means we are starting with an
+stands for the same concept as in `Forest`, it means we are starting with an
 order of `o`.  `x` stands for the index of the tree that was selected.
 
 This means the tree that was selected has an order of `NAdd o x`, as we can see
-in the third field.  If the remainder of the heap is `Trees o b a`, its shape is
-denoted by `b` and we can reason about the shape of the original heap.
+in the third field.  If the remainder of the heap is `Forest o b a`, its shape
+is denoted by `b` and we can reason about the shape of the original heap.
 
 The children of tree (`Tree (NAdd o x) a`) that was selected will convert to
 heap of shape `Ones x`.  If we add the root to that, we get `BInc (Ones x)`.
-Merging this together with the remainder of the heap (`Trees o b a`) yields a
+Merging this together with the remainder of the heap (`Forest o b a`) yields a
 shape of `BAdd b (BInc (Ones x))`.  Finally, we restructure the type in that
 result to `BInc (BAdd b (Ones x))`.  The restructuring is trivially allowed by
 GHC since it just requires applying the necessary type families.
@@ -750,78 +784,80 @@ we can conclude it here by construction in the GADT, we avoid having to prove it
 further down.
 
 Of course, I know that I will need this further down because I already have the
-code compiling.  When writing this, there is often a very painful dialogue in
-between different functions and datatypes, where you try to mediate by making
+code compiling.  When writing this, there is often a very, very painful dialogue
+in between different functions and datatypes, where you try to mediate by making
 the requested and expected types match by bringing them closer together step by
-step.
+step.  In the end, you get a monstrosity like:
 
-> data PopCandidate (o :: Nat) (b :: Binary) a where
->     PopCandidate
+> data CutTree (o :: Nat) (b :: Binary) a where
+>     CutTree
 >         :: Width (BAdd b (Ones x)) ~ Width (BInc (BAdd b (Ones x)))
 >         => SNat x
 >         -> SNat o
 >         -> Tree (NAdd o x) a
->         -> Trees o b a
->         -> PopCandidate o (BInc (BAdd b (Ones x))) a
+>         -> Forest o b a
+>         -> CutTree o (BInc (BAdd b (Ones x))) a
 
-`selectTrees_go` is the worker function that takes all possible trees out of a
+Fortunately, this type is internal only and doesn't need to be exported.
+
+`lumberjack_go` is the worker function that takes all possible trees out of a
 heap.  For every _1_ in the shape of the heap, we have a tree: therefore it
 should not be a surprise that the length of the resulting vector is
 `Popcount b`.
 
-> selectTrees_go
+> lumberjack_go
 >     :: forall o b a.
 >        SNat o
->     -> Trees o b a
->     -> Vec (Popcount b) (PopCandidate o b a)
+>     -> Forest o b a
+>     -> Vec (Popcount b) (CutTree o b a)
 
 The definition is recursive and a good example of how recursion corresponds with
 inductive proofs (we're using `lemma1` and `lemma2` here).  We don't go in too
-much detail with our explanation here -- this code is often hard to read but
+much detail with our explanation here -- this code is often hard to write but
 surprisingly easy to read.
 
-> selectTrees_go _ TEnd = VNull
-> selectTrees_go nnat0 (T0 trees0) = fmap
->     (\popCandidate -> case popCandidate of
->         PopCandidate xnat (SSucc nnat) t1 trees1 -> PopCandidate
+> lumberjack_go _ FEnd = VNull
+> lumberjack_go nnat0 (F0 forest0) = fmap
+>     (\cutTree -> case cutTree of
+>         CutTree xnat (SSucc nnat) t1 forest1 -> CutTree
 >             (SSucc xnat)
 >             nnat
 >             (case lemma2 nnat xnat of QED -> t1)
->             (T0 trees1))
->     (selectTrees_go (SSucc nnat0) trees0)
-> selectTrees_go nnat0 (T1 tree0 trees0) = VCons
->     (PopCandidate
+>             (F0 forest1))
+>     (lumberjack_go (SSucc nnat0) forest0)
+> lumberjack_go nnat0 (F1 tree0 forest0) = VCons
+>     (CutTree
 >         SZero
 >         nnat0
 >         (case lemma1 nnat0 of QED -> tree0)
->         (T0 trees0))
+>         (F0 forest0))
 >     (fmap
->         (\popCandidate -> case popCandidate of
->             PopCandidate xnat (SSucc nnat) t1 trees1 -> PopCandidate
+>         (\cutTree -> case cutTree of
+>             CutTree xnat (SSucc nnat) t1 forest1 -> CutTree
 >                 (SSucc xnat)
 >                 nnat
 >                 (case lemma2 nnat xnat of QED -> t1)
->                 (T1 tree0 trees1))
->         (selectTrees_go (SSucc nnat0) trees0))
+>                 (F1 tree0 forest1))
+>         (lumberjack_go (SSucc nnat0) forest0))
 
-Tying together selectTrees
-==========================
+Lumberjack: final form
+----------------------
 
 Now that we can select `Popcount b` trees, it time to convert this to something
 more convenient to work it.  We will use a `NonEmpty` to represent our list of
 candidates to select from.
 
-> selectTrees
+> lumberjack
 >     :: forall b a. BNonZero b ~ 'True
->     => Trees 'Zero b a
->     -> NonEmpty.NonEmpty (PopCandidate 'Zero b a)
+>     => Forest 'Zero b a
+>     -> NonEmpty.NonEmpty (CutTree 'Zero b a)
 
 
 First we select the `Popcount b` trees:
 
-> selectTrees trees =
->     let candidates :: Vec (Popcount b) (PopCandidate 'Zero b a)
->         candidates = selectTrees_go SZero trees in
+> lumberjack trees =
+>     let cutTrees :: Vec (Popcount b) (CutTree 'Zero b a)
+>         cutTrees = lumberjack_go SZero trees in
 
 Then we convert it to a `NonEmpty`.  This requires us to call `lemma3` (the
 proof that relates non-zeroness of a binary number with non-zeroness of a
@@ -830,49 +866,49 @@ natural number through popcount).  We need an appropriate `SBin` to call
 for us.
 
 >     case lemma3 (treesToSBin trees :: SBin b) of
->          QED -> vecToNonEmpty candidates
+>          QED -> vecToNonEmpty cutTrees
 
-This sneaky function constructs an `SBin b` from a `Trees o b a` value.  It is
+This sneaky function constructs an `SBin b` from a `Forest o b a` value.  It is
 maybe a bit naughty but this prevents us from carrying around the singletons in
 a bunch of places.
 
-> treesToSBin :: Trees o b a -> SBin b
-> treesToSBin TEnd     = SBEnd
-> treesToSBin (T0 t)   = SB0 (treesToSBin t)
-> treesToSBin (T1 _ t) = SB1 (treesToSBin t)
+> treesToSBin :: Forest o b a -> SBin b
+> treesToSBin FEnd     = SBEnd
+> treesToSBin (F0 t)   = SB0 (treesToSBin t)
+> treesToSBin (F1 _ t) = SB1 (treesToSBin t)
 
 Finally popping
 ===============
 
-We can now find all trees in the heap that may be popped.  They are returned in
-a `PopCandidate` datatype and we can pop a candidate, returning its root and
-a new heap consisting of its children.
+We can now find all trees in the heap that may be cut.  They are returned in a
+`CutTree` datatype and we can pop a candidate, returning its root and a new heap
+consisting of its children.
 
 The new heap has one less element -- hence we use `BDec` (binary decrement,
 define just a bit below).
 
-> popTree
+> popForest
 >     :: forall a b. Ord a
->     => PopCandidate 'Zero b a
->     -> (a, Trees 'Zero (BDec b) a)
+>     => CutTree 'Zero b a
+>     -> (a, Forest 'Zero (BDec b) a)
 
-We deconstruct the `PopCandidate` to get the root (`x`) of the selected tree,
+We deconstruct the `CutTree` to get the root (`x`) of the selected tree,
 the children of the selected trees (`children`), and the remainging trees in the
 heap (`trees`).
 
-> popTree (PopCandidate
+> popForest (CutTree
 >             xnat _nnat
 >             (Tree x (children :: Children r a))
->             (trees :: Trees 'Zero l a)) =
+>             (forest :: Forest 'Zero l a)) =
 
 We construct a new heap from the children.
 
->     let ctrees = childrenToTrees xnat children
+>     let cforest = childrenToForest xnat children
 
 We merge it with the remainder of the heap:
 
->         merged :: Trees 'Zero (BAdd l (Ones r)) a
->         merged = mergeTrees trees ctrees
+>         merged :: Forest 'Zero (BAdd l (Ones r)) a
+>         merged = mergeForests forest cforest
 
 The illustration from above applies here:
 
@@ -896,11 +932,11 @@ cannot decrement zero.  This is a bit unfortunate but necessary.  Having the
 The weirdly specific `lemma4` helps us prove that we can take a number,
 increment it and then decrement it, and then get the same number back _provided_
 incrmenting doesn't change is width.  This ends up matching perfectly with the
-width constraint generated by the `PopCandidate`, where the number that we
+width constraint generated by the `CutTree`, where the number that we
 increment is a number of "1"s smaller than the shape of the total heap
 (intuitively).
 
-Using another constraint in `PopCandidate` with another proof here should also
+Using another constraint in `CutTree` with another proof here should also
 be possible.  I found this one hard to reason about but easy to prove.
 
 > lemma4
@@ -915,24 +951,24 @@ Tying all of this together makes for a relatively easy readable `popHeap`:
 > popHeap
 >     :: (BNonZero b ~ 'True, Ord a)
 >     => Heap b a -> (a, Heap (BDec b) a)
-> popHeap (Heap trees0) =
+> popHeap (Heap forest0) =
 
 Out of the different candidates, select the one with the minimal root
 (`minimumBy` is total on `NonEmpty`):
 
->     let candidates = selectTrees trees0
->         selected   = minimumBy (comparing popCandidateRoot) candidates in
+>     let cutTrees = lumberjack forest0
+>         selected = minimumBy (comparing cutTreeRoot) cutTrees in
 
-Pop that tree using `popTree`:
+Pop that tree using `popForest`:
 
->     case popTree selected of
->         (x, trees1) -> (x, Heap trees1)
+>     case popForest selected of
+>         (x, forest1) -> (x, Heap forest1)
 
 Helper to compare candidates by root:
 
 >   where
->     popCandidateRoot :: PopCandidate o b a -> a
->     popCandidateRoot (PopCandidate _ _ (Tree x _) _) = x
+>     cutTreeRoot :: CutTree o b a -> a
+>     cutTreeRoot (CutTree _ _ (Tree x _) _) = x
 
 In GHCi:
 
@@ -957,8 +993,11 @@ popHeap heap :: (Char, Heap ('B0 ('B0 ('B1 'BEnd))) Char)
 
 Beautiful!
 
+Appendices
+==========
+
 Appendix 1: runtime cost of this approach
-=========================================
+-----------------------------------------
 
 Since we represent the proofs at runtime, we incur an overhead in two ways:
 
@@ -969,7 +1008,7 @@ It should be possible to remove these at runtime once the code has been
 typechecked, possibly using some sort of GHC core or source plugin.
 
 Another existing issue is that the tree of the spine is never "cleaned up".  We
-never remove trailing `T0` constructors.  This means that if you fill a heap
+never remove trailing `F0` constructors.  This means that if you fill a heap
 with eight elements and remove all of them again, you will end up with a heap
 with zero elements that has shape `'B0 ('B0 ('B0 ('B0 'BEnd)))` rather than `B0
 'BEnd`.  This sufficed for my use case though, and I am sure it is possible to
@@ -978,17 +1017,17 @@ add and prove a clean-up step somehow.
 <div id="appendix-2"></div>
 
 Appendix 2: "pretty"-printing of heaps
-======================================
+--------------------------------------
 
 > instance forall a b. Show a => Show (Heap b a) where
 >     show = unlines . goTrees 0 . unHeap
 >       where
->         goTrees :: forall m c. Show a => Int -> Trees m c a -> [String]
->         goTrees _ TEnd = []
->         goTrees order (T0 trees) =
+>         goTrees :: forall m c. Show a => Int -> Forest m c a -> [String]
+>         goTrees _ FEnd = []
+>         goTrees order (F0 trees) =
 >             ("(no tree of order " ++ show order ++ ")") :
 >             goTrees (order + 1) trees
->         goTrees order (T1 tree trees) =
+>         goTrees order (F1 tree trees) =
 >             ("(tree of order " ++ show order ++ ")") :
 >             goTree " " tree ++
 >             goTrees (order + 1) trees
@@ -1006,7 +1045,7 @@ Appendix 2: "pretty"-printing of heaps
 <div id="appendix-3"></div>
 
 Appendix 3: left-to-right increment
-===================================
+-----------------------------------
 
 Increment gets tricky mainly because we need some way to communicate the carry
 back in a right-to-left direction.  We can do this with a type-level Either and
