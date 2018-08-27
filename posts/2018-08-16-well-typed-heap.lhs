@@ -397,6 +397,8 @@ two trees together -- roughly corresponding to carrying in binary increment.
 > insertTrees s (T0 ts)   = T1 s ts
 > insertTrees s (T1 t ts) = T0 (insertTrees (mergeTree s t) ts)
 
+<div id="merge"></div>
+
 Similarly, merging two sets of trees together corresponds with adding two binary
 numbers together:
 
@@ -491,16 +493,29 @@ element with the lowest priority from the queue.  For reference, I implemented
 the heap we have at this point implemented in a couple of hours, where I worked
 on the rest of the code on and off for about a week.
 
-Let's look at a quick illustration of how popping works:
+Let's look at a quick illustration of how popping works.
 
-    TODO
+We select the tree with the lowest priority root and remove it from the heap:
+
+![](/images/draft-06.png)
+
+We break up this tree we selected into its root (which will be the element that
+is "popped") and its children, which we turn into a new heap:
+
+![](/images/draft-07.png)
+
+We [merge](#merge) the remainder heap from step 1 together with the new heap we
+made out of the children of the removed tree:
+
+![](/images/draft-08.png)
 
 Deconstructing a single tree
 ============================
 
 If we breaking down popping an element from the queue to more manageable parts,
 one important part is taking all children from a tree and turning that into a
-new heap.
+new heap.  This is step 2 in the illustrations above, but we will write this
+code first since it is a bit easier.
 
 We need to keep all our invariants intact, and in this case this means tracking
 them in the type system.  A tree of `o` has `2ᵒ` elements.  If we remove the
@@ -511,7 +526,7 @@ write `o` "1"s, you get the binary notation of `2ᵒ - 1`.
 
 Visually:
 
-    TODO
+![A tree of order 3 results in a heap with a "11" shape](/images/draft-07.png)
 
 We introduce a type family for computing `n` "1"s:
 
@@ -697,9 +712,11 @@ including `BDec` (binary decrement, defined further below).
 Selecting a tree from the heap
 ==============================
 
-Popping the element with the lowest priority from the heap involves taking a
-single tree from the heap.  Afterwards, we take the root of that tree and merge
-the children of the tree back together with the original heap.
+Now, popping the element with the lowest priority from the heap first involves
+taking a single tree from the heap.  Afterwards, we take the root of that tree
+and merge the children of the tree back together with the original heap.
+
+![Selecting a single treee](/images/draft-06.png)
 
 However, just selecting (and removing) a single tree turns out to be quite an
 endeavour on its own.  We define an auxiliary GADT which holds the tree, the
@@ -856,6 +873,10 @@ We merge it with the remainder of the heap:
 
 >         merged :: Trees 'Zero (BAdd l (Ones r)) a
 >         merged = mergeTrees trees ctrees
+
+The illustration from above applies here:
+
+![Merging back together](/images/draft-08.png)
 
 Now, we cast it to the result using a new `lemma4` with a singleton that we
 construct from the trees:
