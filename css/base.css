@@ -118,7 +118,7 @@ hr:after {
     content: "\002217  \002217  \002217";
 }
 
-.soft, .caption {
+span.soft, figcaption {
     font-style: italic;
     color: #555;
 }

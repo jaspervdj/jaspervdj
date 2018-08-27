@@ -225,8 +225,8 @@ straightforward the definition translates to GADTs that enforce the structure:
 
 Some illustrations to make this a bit more clear:
 
-    TODO: Basically some shitty drawings but we overlay the types to make things
-    clear.
+![Illustration of trees of different sizes, with the children array marked in
+green](/images/draft-01.png)
 
 This is definitely a very good example of the correctness by construction
 approach I talked about earlier: it is simply impossible to create a tree that
@@ -255,7 +255,8 @@ tree.
 >     | lroot <= rroot = Tree lroot (CCons r lchildren)
 >     | otherwise      = Tree rroot (CCons l rchildren)
 
-    TODO: An illustration as well, maybe reuse some
+![Merging two trees.  Since 'a' is smaller than 'b' we attach the 'b' tree as a
+new child to the 'a' tree.](/images/draft-02.png)
 
 Type level binary numbers
 =========================
@@ -416,6 +417,18 @@ It's worth scrolling back up and seeing how the different branches in
 the definition of the type families `BInc` and `BAdd`.  That is intuitive
 explanation as to why no additional proofs or type-level trickery is required
 here.
+
+Here is an informal illustration of what happens when we don't need to merge any
+trees.  The singleton `Trees` on the left is simply put in the empty `T0` spot
+on the right.
+
+![Simple merge](/images/draft-03.png)
+
+When there is already a tree there, we merge the trees using `mergeTree` and
+carry that, in a very similar way to how carrying works in the addition of
+binary numbers:
+
+![Merge with carry](/images/draft-04.png)
 
 The binomial heap
 =================
@@ -649,18 +662,18 @@ number of trees as the [popcount] of the binary number.
 
 [popcount]: https://en.wikichip.org/wiki/population_count
 
-> type family BPopcount (b :: Binary) :: Nat where
->     BPopcount 'BEnd   = 'Zero
->     BPopcount ('B1 b) = 'Succ (BPopcount b)
->     BPopcount ('B0 b) = BPopcount b
+> type family Popcount (b :: Binary) :: Nat where
+>     Popcount 'BEnd   = 'Zero
+>     Popcount ('B1 b) = 'Succ (Popcount b)
+>     Popcount ('B0 b) = Popcount b
 
-`BPopcount` can be used to relate the non-zeroness of a natural number, and the
+`Popcount` can be used to relate the non-zeroness of a natural number, and the
 non-zeroness of a binary number.
 
 > lemma3
 >     :: BNonZero b ~ 'True
 >     => SBin b
->     -> NNonZero (BPopcount b) :~: 'True
+>     -> NNonZero (Popcount b) :~: 'True
 > lemma3 (SB1 _) = QED
 > lemma3 (SB0 b) = case lemma3 b of QED -> QED
 
@@ -677,22 +690,7 @@ That is a fair amount of type families so far.  To make things a bit more clear,
 here is an informal visual overview of all the type families we have defined,
 including `BDec` (binary decrement, defined further below).
 
-    Bool
-
-    ^
-    |   NNonZero
-
-    Nat         --- NAdd
-
-    |   Ones      ^  BPopcount, Width
-    v             |
-
-    Binary      --- BInc, BAdd, BDec
-
-    |   BNonZero
-    v
-
-    Bool
+![Rectangles represent (lifted) kinds, arrows are type families](/images/draft-05.png)
 
 <div id="popcandidate"></div>
 
@@ -752,13 +750,13 @@ step.
 `selectTrees_go` is the worker function that takes all possible trees out of a
 heap.  For every _1_ in the shape of the heap, we have a tree: therefore it
 should not be a surprise that the length of the resulting vector is
-`BPopcount b`.
+`Popcount b`.
 
 > selectTrees_go
 >     :: forall o b a.
 >        SNat o
 >     -> Trees o b a
->     -> Vec (BPopcount b) (PopCandidate o b a)
+>     -> Vec (Popcount b) (PopCandidate o b a)
 
 The definition is recursive and a good example of how recursion corresponds with
 inductive proofs (we're using `lemma1` and `lemma2` here).  We don't go in too
@@ -792,7 +790,7 @@ surprisingly easy to read.
 Tying together selectTrees
 ==========================
 
-Now that we can select `BPopcount b` trees, it time to convert this to something
+Now that we can select `Popcount b` trees, it time to convert this to something
 more convenient to work it.  We will use a `NonEmpty` to represent our list of
 candidates to select from.
 
@@ -802,10 +800,10 @@ candidates to select from.
 >     -> NonEmpty.NonEmpty (PopCandidate 'Zero b a)
 
 
-First we select the `BPopcount b` trees:
+First we select the `Popcount b` trees:
 
 > selectTrees trees =
->     let candidates :: Vec (BPopcount b) (PopCandidate 'Zero b a)
+>     let candidates :: Vec (Popcount b) (PopCandidate 'Zero b a)
 >         candidates = selectTrees_go SZero trees in
 
 Then we convert it to a `NonEmpty`.  This requires us to call `lemma3` (the
