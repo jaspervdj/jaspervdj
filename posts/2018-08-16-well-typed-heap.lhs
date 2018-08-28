@@ -446,9 +446,10 @@ It's worth seeing how the different branches in `insertTree` and `mergeForests`
 match up almost 1:1 with the different clauses in the definition of the type
 families `BInc` and `BAdd`.  If we overlay them visually:
 
-![Overlaying mergeForests and BAdd](/images/draft-mind-blown.gif)
+![Overlaying mergeForests and BAdd brings out the
+similarity](/images/draft-mind-blown.gif)
 
-That is intuitive explanation as to why no additional proofs or type-level
+That is the intuitive explanation as to why no additional proofs or type-level
 trickery is required here.
 
 Here is an informal illustration of what happens when we don't need to merge any
