@@ -49,7 +49,7 @@ also helps us to show that there is no
 behind the scenes: all term-level functions in this file are total and
 compile fine with `-Wall`.
 
-> import           Data.List          (minimumBy)
+> import           Data.List          (intercalate, minimumBy)
 > import           Data.List.NonEmpty (NonEmpty (..))
 > import qualified Data.List.NonEmpty as NonEmpty
 > import           Data.Ord           (comparing)
@@ -999,7 +999,21 @@ popHeap heap :: (Char, Heap ('B0 ('B0 ('B1 'BEnd))) Char)
   'c'
 ~~~~~
 
-Beautiful!
+Beautiful!  Our final interface to deal with the heap looks like this:
+
+~~~~~{.haskell}
+emptyHeap
+    :: Heap ('B0 'BEnd) a
+pushHeap
+    :: Ord a
+    => a -> Heap b a -> Heap (BInc b) a
+mergeHeap
+    :: Ord a
+    => Heap lb a -> Heap rb a -> Heap (BAdd lb rb) a
+popHeap
+    :: (BNonZero b ~ 'True, Ord a)
+    => Heap b a -> (a, Heap (BDec b) a)
+~~~~~
 
 Appendices
 ==========
@@ -1013,14 +1027,15 @@ Since we represent the proofs at runtime, we incur an overhead in two ways:
 - Evaluating the lemmas to the `QED` constructor.
 
 It should be possible to remove these at runtime once the code has been
-typechecked, possibly using some sort of GHC core or source plugin.
+typechecked, possibly using some sort of GHC core or source plugin (or CPP in a
+darker universe).
 
 Another existing issue is that the tree of the spine is never "cleaned up".  We
 never remove trailing `F0` constructors.  This means that if you fill a heap
 with eight elements and remove all of them again, you will end up with a heap
 with zero elements that has shape `'B0 ('B0 ('B0 ('B0 'BEnd)))` rather than `B0
-'BEnd`.  This sufficed for my use case though, and I am sure it is possible to
-add and prove a clean-up step somehow.
+'BEnd`.  This sufficed for my use case though.  It should be possible to add and
+prove a clean-up step, but it's a bit outside the scope of this blogpost.
 
 <div id="appendix-2"></div>
 
@@ -1028,7 +1043,7 @@ Appendix 2: "pretty"-printing of heaps
 --------------------------------------
 
 > instance forall a b. Show a => Show (Heap b a) where
->     show = unlines . goTrees 0 . unHeap
+>     show = intercalate "\n" . goTrees 0 . unHeap
 >       where
 >         goTrees :: forall m c. Show a => Int -> Forest m c a -> [String]
 >         goTrees _ FEnd = []
@@ -1058,7 +1073,7 @@ Appendix 3: left-to-right increment
 Increment gets tricky mainly because we need some way to communicate the carry
 back in a right-to-left direction.  We can do this with a type-level Either and
 some utility functions.  It's not too far from what we would write on a term
-level, but again, a bit more clunky.  We avoid this kind of patterns since
+level, but again, a bit more clunky.  We avoid this kind of clunkiness since
 having significantly more code obviously requires significantly more proving.
 
 > type family BIncLTR (b :: Binary) :: Binary where
