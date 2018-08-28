@@ -102,25 +102,24 @@ non-trivial (and again, insanely cool) example of dependent Haskell programming.
 Table of contents
 -----------------
 
--   [Introduction](#introduction)
--   [Singletons and type equality](#singletons-and-type-equality)
--   [Binomial trees](#binomial-trees)
--   [Type level binary numbers](#type-level-binary-numbers)
--   [A bunch of trees](#a-bunch-of-trees)
--   [The binomial heap](#the-binomial-heap)
--   [Popping: introduction](#popping-introduction)
--   [Deconstructing a single tree](#deconstructing-a-single-tree)
--   [Extending Vec a little](#extending-vec-a-little)
--   [Popcount and width](#popcount-and-width)
--   [Selecting a tree from the heap](#selecting-a-tree-from-the-heap)
--   [Tying together selectTrees](#tying-together-selecttrees)
--   [Finally popping](#finally-popping)
--   [Appendix 1: runtime cost of this
-    approach](#appendix-1-runtime-cost-of-this-approach)
--   [Appendix 2: "pretty"-printing of
-    heaps](#appendix-2-pretty-printing-of-heaps)
--   [Appendix 3: left-to-right
-    increment](#appendix-3-left-to-right-increment)
+1.  [Introduction](#introduction)
+2.  [Singletons and type equality](#singletons-and-type-equality)
+3.  [Building up Binomial heaps](#building-up-binomial-heaps)
+    a.  [Binomial trees](#binomial-trees)
+    b.  [Type level binary numbers](#type-level-binary-numbers)
+    c.  [Binomial forests](#binomial-forests)
+    d.  [The binomial heap](#the-binomial-heap)
+4.  [Popping: breaking the tree down again](#popping-breaking-the-tree-down-again)
+    a.  [Taking apart a single tree](#taking-apart-a-single-tree)
+    b.  [More Vec utilities](#more-vec-utilities)
+    c.  [Popcount and width](#popcount-and-width)
+    d.  [Lumberjack](#lumberjack)
+    e.  [Lumberjack: final form](#lumberjack-final-form)
+    f.  [Popping: the finale](#popping-the-finale)
+5.  [Appendices](#appendices)
+    a.  [Appendix 1: runtime cost of this approach](#appendix-1-runtime-cost-of-this-approach)
+    b.  [Appendix 2: "pretty"-printing of heaps](#appendix-2-pretty-printing-of-heaps)
+    c.  [Appendix 3: left-to-right increment](#appendix-3-left-to-right-increment)
 
 Singletons and type equality
 ============================
@@ -513,7 +512,8 @@ even requiring any lemmas so far.  It is perhaps a good illustration of how
 append-only datastructures are conceptually much simpler.
 
 ![Yes, this is a long blogpost.  We've arrived at the halfway point, so it's a
-good time to get a coffee and take a break.](/images/draft-coffee.jpg)
+good time to get a coffee and take a break.  You deserved it for sticking with
+me so far.](/images/draft-coffee.jpg)
 
 Things get _significantly_ more complicated when we try to implement popping the
 smallest element from the queue.  For reference, I implemented the heap we have
@@ -697,7 +697,7 @@ Non-zeroness can be defined on binary numbers as well:
 >     BNonZero ('B0 b) = BNonZero b
 
 Popcount and width
-==================
+------------------
 
 The minimal element will always be the root of one of our trees.  That means we
 have as many choices for our minimal element as there are trees in our heap.  We
@@ -877,8 +877,8 @@ a bunch of places.
 > treesToSBin (F0 t)   = SB0 (treesToSBin t)
 > treesToSBin (F1 _ t) = SB1 (treesToSBin t)
 
-Finally popping
-===============
+Popping: the finale
+-------------------
 
 We can now find all trees in the heap that may be cut.  They are returned in a
 `CutTree` datatype and we can pop a candidate, returning its root and a new heap
