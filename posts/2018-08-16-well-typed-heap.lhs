@@ -1,5 +1,5 @@
 ---
-title: "A well-typed binomial heap"
+title: "A dependently-typed binomial heap"
 description: Who put binary numbers in my type system?
 tags: haskell
 ---
@@ -27,10 +27,10 @@ more familiar with.
 [well-typed suspension calculus]: https://mazzo.li/posts/suspension.html
 
 This blogpost is a literal Haskell file, which means you can just download it
-and load it into GHCi to play around with it, and in this case, verify the
-properties we will be talking about.  Since we are putting our feet into
-dependent types here, we will need to enable some extensions that are definitely
-a bit more on the advanced side.
+and load it into GHCi to play around with it.  In this case, you can also verify
+the properties we will be talking about (yes, GHC as a proof checker).  Since we
+are putting our feet into dependent types territory here, we will need to enable
+some extensions that are definitely a bit more on the advanced side.
 
 > {-# LANGUAGE DataKinds            #-}
 > {-# LANGUAGE GADTs                #-}
@@ -103,23 +103,24 @@ Table of contents
 -----------------
 
 1.  [Introduction](#introduction)
+    1.  [Table of contents](#table-of-contents)
 2.  [Singletons and type equality](#singletons-and-type-equality)
-3.  [Building up Binomial heaps](#building-up-binomial-heaps)
-    a.  [Binomial trees](#binomial-trees)
-    b.  [Type level binary numbers](#type-level-binary-numbers)
-    c.  [Binomial forests](#binomial-forests)
-    d.  [The binomial heap](#the-binomial-heap)
-4.  [Popping: breaking the tree down again](#popping-breaking-the-tree-down-again)
-    a.  [Taking apart a single tree](#taking-apart-a-single-tree)
-    b.  [More Vec utilities](#more-vec-utilities)
-    c.  [Popcount and width](#popcount-and-width)
-    d.  [Lumberjack](#lumberjack)
-    e.  [Lumberjack: final form](#lumberjack-final-form)
-    f.  [Popping: the finale](#popping-the-finale)
+3.  [Binomial heaps: let’s build it up](#binomial-heaps-lets-build-it-up)
+    1.  [Binomial trees](#binomial-trees)
+    2.  [Type level binary numbers](#type-level-binary-numbers)
+    3.  [Binomial forests](#binomial-forests)
+    4.  [The binomial heap](#the-binomial-heap)
+4.  [Binomial heaps: let’s break it down](#binomial-heaps-lets-break-it-down)
+    1.  [Taking apart a single tree](#taking-apart-a-single-tree)
+    2.  [More Vec utilities](#more-vec-utilities)
+    3.  [Popcount and width](#popcount-and-width)
+    4.  [Lumberjack](#lumberjack)
+    5.  [Lumberjack: final form](#lumberjack-final-form)
+    6.  [popHeap: gluing the pieces together](#popheap-gluing-the-pieces-together)
 5.  [Appendices](#appendices)
-    a.  [Appendix 1: runtime cost of this approach](#appendix-1-runtime-cost-of-this-approach)
-    b.  [Appendix 2: "pretty"-printing of heaps](#appendix-2-pretty-printing-of-heaps)
-    c.  [Appendix 3: left-to-right increment](#appendix-3-left-to-right-increment)
+    1.  [Appendix 1: runtime cost of this approach](#appendix-1-runtime-cost-of-this-approach)
+    2.  [Appendix 2: “pretty”-printing of heaps](#appendix-2-pretty-printing-of-heaps)
+    3.  [Appendix 3: left-to-right increment](#appendix-3-left-to-right-increment)
 
 Singletons and type equality
 ============================
@@ -186,11 +187,12 @@ Take a minute to think about the implications this GADT has -- if we can
 construct a `QED` value, we have actually provided evidence that the two types
 are equal.
 
-Constructors live on the term-level though, not on the type level, so we need a
-term-level representation of our natural numbers as well.  This is the core idea
-of _singletons_ and again, a much better explanation is in that paper among some
-[talks](https://www.youtube.com/watch?v=rLJ_YyVRKzs), but I wanted to at least
-give some intuition here.
+The `QED` constructor lives on the term-level though, not on the type level.  We
+must synthesize this constructor using a term-level computation.  This means we
+need a term-level representation of our natural numbers as well.  This is the
+idea behind of _singletons_ and again, a much better explanation is in that
+paper among some [talks](https://www.youtube.com/watch?v=rLJ_YyVRKzs), but I
+wanted to at least give some intuition here.
 
 The singleton for `Nat` is called `SNat` and it's easy to see that each `Nat`
 has a unique `SNat` and the other way around:
@@ -227,8 +229,8 @@ value, the common one being a typeclass that can give us an `SNat x` from a
 always have the right singletons on hand by passing them around in a few places.
 In other words: don't worry about this for now.
 
-Building up Binomial heaps
-==========================
+Binomial heaps: let's build it up
+=================================
 
 Binomial trees
 --------------
@@ -354,12 +356,12 @@ looking choices -- we will see this in full effect when trying to define
 Addition is not too hard to define:
 
 > type family BAdd (x :: Binary) (y :: Binary) :: Binary where
+>     BAdd 'BEnd   y       = y
+>     BAdd x       'BEnd   = x
 >     BAdd ('B0 x) ('B0 y) = 'B0 (BAdd x y)
 >     BAdd ('B1 x) ('B0 y) = 'B1 (BAdd x y)
 >     BAdd ('B0 x) ('B1 y) = 'B1 (BAdd x y)
 >     BAdd ('B1 x) ('B1 y) = 'B0 (BInc (BAdd x y))
->     BAdd x       'BEnd   = x
->     BAdd 'BEnd   y       = y
 
 Let's quickly define a number of examples
 
@@ -395,8 +397,8 @@ fairly closely, which makes the code in this section surprisingly easy and we
 end up requiring no lemmas or proofs whatsoever here.
 
 A `Forest o b` refers to a number of trees starting with (possibly) a tree of
-order `o`.  The `b` is the binary number that indicates the shape of the tree --
-i.e., whether we have a tree of a given order or not.
+order `o`.  The `b` is the binary number that indicates the shape of the forest
+-- i.e., whether we have a tree of a given order or not.
 
 Using a handwavy but convenient notation, this means that _Forest 3 101_ refers
 to binomial trees of order 3 and 5 (and no tree of order 4).
@@ -406,12 +408,12 @@ to binomial trees of order 3 and 5 (and no tree of order 4).
 >     F0   ::             Forest ('Succ o) b a -> Forest o ('B0 b) a
 >     F1   :: Tree o a -> Forest ('Succ o) b a -> Forest o ('B1 b) a
 
-The empty trees are easily defined:
+The empty forest is easily defined:
 
 > emptyForest :: Forest o ('B0 'BEnd) a
 > emptyForest = F0 FEnd
 
-`insertTree` inserts a new tree into the structure.  This might require
+`insertTree` inserts a new tree into the forest.  This might require
 merging two trees together -- roughly corresponding to carrying in binary
 increment.
 
@@ -425,15 +427,15 @@ increment.
 
 <div id="merge"></div>
 
-Similarly, merging two sets of trees together corresponds with adding two binary
+Similarly, merging two forests together corresponds with adding two binary
 numbers together:
 
 > mergeForests
 >     :: Ord a
 >     => Forest o lb a -> Forest o rb a
 >     -> Forest o (BAdd lb rb) a
-> mergeForests FEnd           rf   = rf
-> mergeForests lf             FEnd = lf
+> mergeForests FEnd      rf   = rf
+> mergeForests lf        FEnd = lf
 > mergeForests (F0 lf)   (F0 rf)   = F0 (mergeForests lf rf)
 > mergeForests (F1 l lf) (F0 rf)   = F1 l (mergeForests lf rf)
 > mergeForests (F0 lf)   (F1 r rf) = F1 r (mergeForests lf rf)
@@ -504,8 +506,8 @@ show instance provided in the [appendix 2](#appendix-2):
 
 Neat!
 
-Popping: breaking the tree down again
-=====================================
+Binomial heaps: let's break it down
+===================================
 
 I think it's interesting that we have implemented an append-only heap without
 even requiring any lemmas so far.  It is perhaps a good illustration of how
@@ -877,8 +879,8 @@ a bunch of places.
 > treesToSBin (F0 t)   = SB0 (treesToSBin t)
 > treesToSBin (F1 _ t) = SB1 (treesToSBin t)
 
-Popping: the finale
--------------------
+popHeap: gluing the pieces together
+-----------------------------------
 
 We can now find all trees in the heap that may be cut.  They are returned in a
 `CutTree` datatype and we can pop a candidate, returning its root and a new heap
