@@ -64,20 +64,19 @@ a img {
 }
 
 pre {
-    font-size: 14px;
     margin-left: 18px;
     overflow: auto;
 }
 
 pre code {
     background-color: transparent;
-    padding: 0px;
-    margin: 0px;
     color: #333;
+    font-size: 14px;
+    margin: 0px;
+    padding: 0px;
 }
 
 code {
-    font-size: 14px;
     color: #408090;
 }
 
