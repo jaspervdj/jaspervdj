@@ -82,9 +82,9 @@ and the fascinating way their structure corresponds to binary numbers.
 
 We will combine the idea of Peano number-indexed lists with the idea that
 binomial heaps correspond to binary numbers to lift **binary numbers to the type
-level** -- which is great because we get _O(log(n))_ size and time in places
-where we would see _O(n)_ for the Peano numbers defined above (in addition to
-being insanely cool).  In GHCi:
+level**.  This is great because we get _O(log(n))_ size and time in places where
+we would see _O(n)_ for the Peano numbers defined above (in addition to being
+insanely cool).  In GHCi:
 
 ~~~~~
 *Main> :t pushHeap 'a' $ pushHeap 'b' $ pushHeap 'c' $
@@ -96,7 +96,7 @@ Where _101_ [^reverse-101] is, of course, the binary representation of the
 number 5.
 
 [^reverse-101]: For reasons that will become clear later on, the binary numbers
-that pop up on the type level should be read right-to-left, so a palindrome was
+that pop up on the type level should be read right-to-left.  A palindrome was
 chosen as example here to avoid having to explain that at this point.
 
 In short, this blogpost is meant to be an introductory-level explanation of a
@@ -133,14 +133,14 @@ We can either make sure things are correct by _construction_, or we can come
 up with a _proof_ that they are in fact correct.
 
 The former is the simpler approach we saw in the `Vec` [snippet](#vec): by using
-the constructors provided by the GADT, our constraints always are satisfied.
+the constructors provided by the GADT, our constraints are always satisfied.
 The latter builds on the [singletons] approach introduced by Richard Eisenberg
 and Stephanie Weirich.
 
 [singletons]: https://cs.brynmawr.edu/~rae/papers/2012/singletons/paper.pdf
 
 We need both approaches for this blogpost.  We assume that the reader is
-somewhat familiar with the first one, and in this section we will give a brief
+somewhat familiar with the first one and in this section we will give a brief
 introduction to the second one.  It is in no way intended to be a full tutorial,
 we just want to give enough context to understand the code in the blogpost.
 
@@ -186,7 +186,7 @@ but redefined here for educational purposes.
 > type a :~: b = EqualityProof a b
 
 Take a minute to think about the implications this GADT has -- if we can
-construct a `QED` value, we have actually provided evidence that the two types
+construct a `QED` value, we are actually providing evidence that the two types
 are equal.  We assume that the two types (`a` and `b`) have the same kind `k`
 [^kind-equality].
 
@@ -194,12 +194,12 @@ are equal.  We assume that the two types (`a` and `b`) have the same kind `k`
 heterogeneous kinds as well, but we don't need that here.  This saves us from
 having to toggle on the "scary" `{-# LANGUAGE TypeInType #-}`.
 
-The `QED` constructor lives on the term-level though, not on the type level.  We
+The `QED` constructor lives on the term-level though, not on the type-level.  We
 must synthesize this constructor using a term-level computation.  This means we
 need a term-level representation of our natural numbers as well.  This is the
-idea behind of _singletons_ and again, a much better explanation is in that
-paper among some [talks](https://www.youtube.com/watch?v=rLJ_YyVRKzs), but I
-wanted to at least give some intuition here.
+idea behind _singletons_ and again, a much better explanation is available in
+said paper and some [talks](https://www.youtube.com/watch?v=rLJ_YyVRKzs), but I
+wanted to at least provide some intuition here.
 
 The singleton for `Nat` is called `SNat` and it's easy to see that each `Nat`
 has a unique `SNat` and the other way around:
@@ -230,11 +230,11 @@ This can be used to write `cast02`:
 > cast02 :: SNat x -> Proxy (NAdd x 'Zero) -> Proxy x
 > cast02 snat = case lemma1 snat of QED -> id
 
-`cast02` takes an extra parameter, and there are several ways to synthesize this
-value, the common one being a typeclass that can give us an `SNat x` from a
-`Proxy x`.  In this blogpost, however, we keep things simple and make sure we
-always have the right singletons on hand by passing them around in a few places.
-In other words: don't worry about this for now.
+`cast02` takes an extra parameter and there are several ways to synthesize this
+value.  The common one is a typeclass that can give us an `SNat x` from a `Proxy
+x`.  In this blogpost however, we keep things simple and make sure we always
+have the right singletons on hand by passing them around in a few places.  In
+other words: don't worry about this for now.
 
 Binomial heaps: let's build it up
 =================================
@@ -283,8 +283,8 @@ signature as well:
 > mergeTree :: Ord a => Tree o a -> Tree o a -> Tree ('Succ o) a
 
 Concretely, we construct the new tree by taking either the left or the right
-tree and attaching it as new child to the other tree.  Since we are building
-heap to use for as a priority queue, we want to keep the smallest element in the
+tree and attaching it as new child to the other tree.  Since we are building a
+heap to use as a priority queue, we want to keep the smallest element in the
 root of the new tree.
 
 > mergeTree l@(Tree lroot lchildren) r@(Tree rroot rchildren)
@@ -311,8 +311,8 @@ This is where the correspondence with binary numbers originates.  If we have a
 binomial heap with 5 elements, the only way to do this is to have binomial
 trees of orders 2 and 0 (2² + 2⁰ = 5).
 
-We start out by defining a simple datatype that will be lifted to the kind
-level, just as we did with `Nat`:
+We start out by defining a simple datatype that will be lifted to the
+kind-level, just as we did with `Nat`:
 
 > data Binary
 >     = B0 Binary
@@ -403,7 +403,7 @@ Binomial forests
 Our heap will be a relatively simple wrapper around a recursive type called
 `Forest`.  This datastructure follows the definition of the binary numbers
 fairly closely, which makes the code in this section surprisingly easy and we
-end up requiring no lemmas or proofs whatsoever here.
+end up requiring no lemmas or proofs whatsoever.
 
 A `Forest o b` refers to a number of trees starting with (possibly) a tree of
 order `o`.  The `b` is the binary number that indicates the shape of the forest
@@ -419,7 +419,7 @@ to binomial trees of order 3 and 5 (and no tree of order 4).
 
 Note that we list the trees in increasing order here, which contrasts to
 [`Children`](#children), where we listed them in decreasing order.  You can see
-this in the way we are removing layers of `'Succ` here as we add more
+this in the way we are removing layers of `'Succ` as we add more
 constructors.  This is the opposite of what happens in `Children`.
 
 The empty forest is easily defined:
@@ -428,8 +428,8 @@ The empty forest is easily defined:
 > emptyForest = FEnd
 
 `insertTree` inserts a new tree into the forest.  This might require
-merging two trees together -- roughly corresponding to carrying in binary
-increment.
+merging two trees together -- roughly corresponding to carrying in the binary
+increment operation.
 
 > insertTree
 >     :: Ord a
@@ -441,8 +441,8 @@ increment.
 
 <div id="merge"></div>
 
-Similarly, merging two forests together corresponds with adding two binary
-numbers together:
+Similarly, merging two forests together corresponds to adding two binary numbers
+together:
 
 > mergeForests
 >     :: Ord a
@@ -464,7 +464,7 @@ families `BInc` and `BAdd`.  If we overlay them visually:
 similarity](/images/draft-mind-blown.gif)
 
 That is the intuitive explanation as to why no additional proofs or type-level
-trickery is required here.
+trickery are required here.
 
 Here is an informal illustration of what happens when we don't need to merge any
 trees.  The singleton `Forest` on the left is simply put in the empty `F0` spot
@@ -536,18 +536,18 @@ good time to get a coffee and take a break.  You deserved it for sticking with
 me so far.](/images/draft-coffee.jpg)
 
 Things get _significantly_ more complicated when we try to implement popping the
-smallest element from the queue.  For reference, I implemented the heap we have
-at this point implemented in a couple of hours, where I worked on the rest of
-the code on and off for about a week.
+smallest element from the queue.  For reference, I implemented the current heap
+in a couple of hours, where as I worked on the rest of the code on and off for
+about a week.
 
 Let's look at a quick illustration of how popping works.
 
-We first select the tree with the smallest root and cut it from the heap:
+We first select the tree with the smallest root and remove it from the heap:
 
 ![](/images/draft-06.png)
 
-We break up this tree we selected into its root (which will be the element that
-is "popped") and its children, which we turn into a new heap:
+We break up the tree we selected into its root (which will be the element that
+is "popped") and its children, which we turn into a new heap.
 
 ![](/images/draft-07.png)
 
@@ -697,7 +697,7 @@ First, we need some sort of `map`, and we can do this by implementing the
 >     fmap _ VNull       = VNull
 >     fmap f (VCons x v) = VCons (f x) (fmap f v)
 
-Secondly we need a very simple function to convert a `Vec` to a list.  Note that
+Secondly, we need a very simple function to convert a `Vec` to a list.  Note that
 this erases the information we have about the size of the list.
 
 > vecToList :: Vec n a -> [a]
@@ -731,10 +731,11 @@ It we use this, we run into trouble when trying to prove that a `Vec` is not
 empty later on.  We would have to construct a singleton for `n`, and we only
 have something that looks a bit like `∃n. 'Succ n`.  Trying to get the `n` out
 of that requires some form of non-zeroness constraint... which would be exactly
-what we are trying to using avoid the simpler type. [^maybe-impossible]
+what we are trying to avoid by using the simpler type. [^maybe-impossible]
 
 [^maybe-impossible]: I'm not sure if it is actually _impossible_ to use this
-simpler type, but I not succeed in finding a proof that uses this simpler type.
+simpler type, but I did not succeed in finding a proof that uses this simpler
+type.
 
 Popcount and width
 ------------------
@@ -794,7 +795,7 @@ the children of the tree back together with the original heap.
 
 However, just selecting (and removing) a single tree turns out to be quite an
 endeavour on its own.  We define an auxiliary GADT which holds the tree, the
-remainder of the heap, and most importantly a lot of invariants.
+remainder of the heap, and most importantly, a lot of invariants.
 
 Feel free to scroll down to the datatype from here if you are willing to assume
 the specific constraint and types are there for a reason.
@@ -807,7 +808,7 @@ This means the tree that was selected has an order of `NAdd o x`, as we can see
 in the third field.  If the remainder of the heap is `Forest o b a`, its shape
 is denoted by `b` and we can reason about the shape of the original heap.
 
-The children of tree (`Tree (NAdd o x) a`) that was selected will convert to
+The children of tree (`Tree (NAdd o x) a`) that was selected will convert to a
 heap of shape `Ones x`.  We work backwards from that to try and write down the
 type for the _original_ heap.  The tree (`Tree (NAdd o x) a`) would form a
 singleton heap of shape `BInc (Ones x)`.  The remainder (i.e. the forest with
@@ -817,7 +818,8 @@ the forest must have been `BAdd b (BInc (Ones x))`.
 Finally, we restructure the type in that result to `BInc (BAdd b (Ones x))`.
 The restructuring is trivially allowed by GHC since it just requires applying
 the necessary type families.  The restructured type turns out to be more easily
-usable the places where we case-analyse `CutTree` further down in this blogpost.
+usable in the places where we case-analyse `CutTree` further down in this
+blogpost.
 
 We also carry a constraint here that seems very arbitrary and relates the widths
 of two binary numbers.  It is more easy to understand from an intuitive point of
@@ -858,7 +860,7 @@ should not be a surprise that the length of the resulting vector is
 
 The definition is recursive and a good example of how recursion corresponds with
 inductive proofs (we're using `lemma1` and `lemma2` here).  We don't go in too
-much detail with our explanation here -- this code is often hard to write but
+much detail with our explanation here -- this code is often hard to write, but
 surprisingly easy to read.
 
 > lumberjack_go _ FEnd = VNull
@@ -888,9 +890,9 @@ surprisingly easy to read.
 Lumberjack: final form
 ----------------------
 
-Now that we can select `Popcount b` trees, it time to convert this to something
-more convenient to work it.  We will use a `NonEmpty` to represent our list of
-candidates to select from.
+Now that we can select `Popcount b` trees, it's time to convert this to
+something more convenient to work with.  We will use a `NonEmpty` to represent
+our list of candidates to select from.
 
 > lumberjack
 >     :: forall b a. BNonZero b ~ 'True
@@ -898,7 +900,7 @@ candidates to select from.
 >     -> NonEmpty.NonEmpty (CutTree 'Zero b a)
 
 
-First we select the `Popcount b` trees:
+First, we select the `Popcount b` trees:
 
 > lumberjack trees =
 >     let cutTrees :: Vec (Popcount b) (CutTree 'Zero b a)
@@ -931,7 +933,7 @@ heap from its children using `childrenToForest`.  Then, we merge it back
 together with the original heap.
 
 The new heap has one less element -- hence we use `BDec` (binary decrement,
-define just a bit below).
+defined just a bit below).
 
 > popForest
 >     :: forall a b. Ord a
@@ -981,10 +983,9 @@ incrmenting doesn't change its width.  This ends up matching perfectly with the
 width constraint generated by the `CutTree`, where the number that we increment
 is a number of "1"s smaller than the shape of the total heap (intuitively).
 
-Using another constraint in `CutTree` with another proof here should also
-be possible.  I found this it hard to reason about _why_ this constraint is
-necessary, but once I understood that it wasn't too abnormal.  The proof is easy
-though.
+Using another constraint in `CutTree` with another proof here should also be
+possible.  I found it hard to reason about _why_ this constraint is necessary,
+but once I understood that it wasn't too abnormal.  The proof is easy though.
 
 > lemma4
 >     :: (Width x ~ Width (BInc x))
@@ -1086,9 +1087,9 @@ typechecked, possibly using some sort of GHC core or source plugin (or CPP in a
 darker universe).
 
 Another existing issue is that the tree of the spine is never "cleaned up".  We
-never remove trailing `F0` constructors.  This means that if you fill a heap
-with eight elements and remove all of them again, you will end up with a heap
-with zero elements that has shape `'B0 ('B0 ('B0 ('B0 'BEnd)))` rather than `B0
+never remove trailing `F0` constructors.  This means that if you fill a heap of
+eight elements and remove all of them again, you will end up with a heap with
+zero elements that has the shape `'B0 ('B0 ('B0 ('B0 'BEnd)))` rather than `B0
 'BEnd`.  This sufficed for my use case though.  It should be possible to add and
 prove a clean-up step, but it's a bit outside the scope of this blogpost.
 
@@ -1126,10 +1127,11 @@ Appendix 3: left-to-right increment
 -----------------------------------
 
 Increment gets tricky mainly because we need some way to communicate the carry
-back in a right-to-left direction.  We can do this with a type-level Either and
-some utility functions.  It's not too far from what we would write on a term
-level, but again, a bit more clunky.  We avoid this kind of clunkiness since
-having significantly more code obviously requires significantly more proving.
+back in a right-to-left direction.  We can do this with a type-level `Either`
+and some utility functions.  It's not too far from what we would write on a
+term-level, but again, a bit more clunky.  We avoid this kind of clunkiness
+since having significantly more code obviously requires significantly more
+proving.
 
 > type family BIncLTR (b :: Binary) :: Binary where
 >     BIncLTR b = FromRight 'B1 (Carry b)
