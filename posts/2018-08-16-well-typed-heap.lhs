@@ -252,12 +252,12 @@ straightforward the definition translates to GADTs that enforce the structure:
 
 <div id="children"></div>
 
-> data Tree (o :: Nat) a where
->     Tree :: a -> Children o a -> Tree o a
+> data Tree (k :: Nat) a where
+>     Tree :: a -> Children k a -> Tree k a
 
-> data Children (o :: Nat) a where
+> data Children (k :: Nat) a where
 >     CZero :: Children 'Zero a
->     CCons :: Tree o a -> Children o a -> Children ('Succ o) a
+>     CCons :: Tree k a -> Children k a -> Children ('Succ k) a
 
 Some illustrations to make this a bit more clear:
 
@@ -276,11 +276,11 @@ easy to create:
 
 We only need to define one operation on trees, namely merging two trees.
 
-A tree of order `o` has `2ᵒ` elements, so it makes sense that merging two trees
-of order `o` creates a tree of order `o+1`.  We can see this in the type
+A tree of order `k` has `2ᵏ` elements, so it makes sense that merging two trees
+of order `k` creates a tree of order `k+1`.  We can see this in the type
 signature as well:
 
-> mergeTree :: Ord a => Tree o a -> Tree o a -> Tree ('Succ o) a
+> mergeTree :: Ord a => Tree k a -> Tree k a -> Tree ('Succ k) a
 
 Concretely, we construct the new tree by taking either the left or the right
 tree and attaching it as new child to the other tree.  Since we are building a
@@ -405,17 +405,17 @@ Our heap will be a relatively simple wrapper around a recursive type called
 fairly closely, which makes the code in this section surprisingly easy and we
 end up requiring no lemmas or proofs whatsoever.
 
-A `Forest o b` refers to a number of trees starting with (possibly) a tree of
-order `o`.  The `b` is the binary number that indicates the shape of the forest
+A `Forest k b` refers to a number of trees starting with (possibly) a tree of
+order `k`.  The `b` is the binary number that indicates the shape of the forest
 -- i.e., whether we have a tree of a given order or not.
 
 Using a handwavy but convenient notation, this means that _Forest 3 101_ refers
 to binomial trees of order 3 and 5 (and no tree of order 4).
 
-> data Forest (o :: Nat) (b :: Binary) a where
->     FEnd :: Forest o 'BEnd a
->     F0   ::             Forest ('Succ o) b a -> Forest o ('B0 b) a
->     F1   :: Tree o a -> Forest ('Succ o) b a -> Forest o ('B1 b) a
+> data Forest (k :: Nat) (b :: Binary) a where
+>     FEnd :: Forest k 'BEnd a
+>     F0   ::             Forest ('Succ k) b a -> Forest k ('B0 b) a
+>     F1   :: Tree k a -> Forest ('Succ k) b a -> Forest k ('B1 b) a
 
 Note that we list the trees in increasing order here, which contrasts to
 [`Children`](#children), where we listed them in decreasing order.  You can see
@@ -424,7 +424,7 @@ constructors.  This is the opposite of what happens in `Children`.
 
 The empty forest is easily defined:
 
-> emptyForest :: Forest o 'BEnd a
+> emptyForest :: Forest k 'BEnd a
 > emptyForest = FEnd
 
 `insertTree` inserts a new tree into the forest.  This might require
@@ -433,8 +433,8 @@ increment operation.
 
 > insertTree
 >     :: Ord a
->     => Tree o a -> Forest o b a
->     -> Forest o (BInc b) a
+>     => Tree k a -> Forest k b a
+>     -> Forest k (BInc b) a
 > insertTree s FEnd     = F1 s FEnd
 > insertTree s (F0 f)   = F1 s f
 > insertTree s (F1 t f) = F0 (insertTree (mergeTree s t) f)
@@ -446,8 +446,8 @@ together:
 
 > mergeForests
 >     :: Ord a
->     => Forest o lb a -> Forest o rb a
->     -> Forest o (BAdd lb rb) a
+>     => Forest k lb a -> Forest k rb a
+>     -> Forest k (BAdd lb rb) a
 > mergeForests FEnd      rf   = rf
 > mergeForests lf        FEnd = lf
 > mergeForests (F0 lf)   (F0 rf)   = F0 (mergeForests lf rf)
@@ -566,11 +566,11 @@ easier.  In this step, we are taking all children from a tree and turning that
 into a new heap.
 
 We need to keep all our invariants intact, and in this case this means tracking
-them in the type system.  A tree of `o` has `2ᵒ` elements.  If we remove the
-root, we have `o` children trees with `2ᵒ - 1 ` elements in total.  Every child
-becomes a tree in the new heap.  This means that the heap contains `o` full
-trees, and its shape will be written as `o` "1"s.  This matches our math: if you
-write `o` "1"s, you get the binary notation of `2ᵒ - 1`.
+them in the type system.  A tree of `k` has `2ᵏ` elements.  If we remove the
+root, we have `k` children trees with `2ᵏ - 1 ` elements in total.  Every child
+becomes a tree in the new heap.  This means that the heap contains `k` full
+trees, and its shape will be written as `k` "1"s.  This matches our math: if you
+write `k` "1"s, you get the binary notation of `2ᵏ - 1`.
 
 Visually:
 
@@ -648,14 +648,14 @@ with what we already knew:
 The inductive case is a bit harder and requires us to prove that:
 
 ~~~~~~
-  m ~ NAdd x n, m ~ NAdd x n, n ~ 'Succ o
-⊢ Ones m ~ 'B1 (Ones (NAdd x o))
+  m ~ NAdd x n, m ~ NAdd x n, n ~ 'Succ k
+⊢ Ones m ~ 'B1 (Ones (NAdd x k))
 ~~~~~~
 
 GHC does a great job and ends up with something like:
 
 ~~~~~~
-Ones (NAdd x (Succ o)) ~ 'B1 (Ones (NAdd x o))
+Ones (NAdd x (Succ k)) ~ 'B1 (Ones (NAdd x k))
 ~~~~~~
 
 Which only requires us to prove commutativity on `NAdd`.  You can see that
@@ -800,17 +800,17 @@ remainder of the heap, and most importantly, a lot of invariants.
 Feel free to scroll down to the datatype from here if you are willing to assume
 the specific constraint and types are there for a reason.
 
-The two first fields are simply evidence singletons that we carry about.  `o`
+The two first fields are simply evidence singletons that we carry about.  `k`
 stands for the same concept as in `Forest`, it means we are starting with an
-order of `o`.  `x` stands for the index of the tree that was selected.
+order of `k`.  `x` stands for the index of the tree that was selected.
 
-This means the tree that was selected has an order of `NAdd o x`, as we can see
-in the third field.  If the remainder of the heap is `Forest o b a`, its shape
+This means the tree that was selected has an order of `NAdd k x`, as we can see
+in the third field.  If the remainder of the heap is `Forest k b a`, its shape
 is denoted by `b` and we can reason about the shape of the original heap.
 
-The children of tree (`Tree (NAdd o x) a`) that was selected will convert to a
+The children of tree (`Tree (NAdd k x) a`) that was selected will convert to a
 heap of shape `Ones x`.  We work backwards from that to try and write down the
-type for the _original_ heap.  The tree (`Tree (NAdd o x) a`) would form a
+type for the _original_ heap.  The tree (`Tree (NAdd k x) a`) would form a
 singleton heap of shape `BInc (Ones x)`.  The remainder (i.e. the forest with
 this tree removed) had shape `b`, so we can deduce that the original shape of
 the forest must have been `BAdd b (BInc (Ones x))`.
@@ -836,14 +836,14 @@ in between different functions and datatypes, where you try to mediate by making
 the requested and expected types match by bringing them closer together step by
 step.  In the end, you get a monstrosity like:
 
-> data CutTree (o :: Nat) (b :: Binary) a where
+> data CutTree (k :: Nat) (b :: Binary) a where
 >     CutTree
 >         :: Width (BAdd b (Ones x)) ~ Width (BInc (BAdd b (Ones x)))
 >         => SNat x
->         -> SNat o
->         -> Tree (NAdd o x) a
->         -> Forest o b a
->         -> CutTree o (BInc (BAdd b (Ones x))) a
+>         -> SNat k
+>         -> Tree (NAdd k x) a
+>         -> Forest k b a
+>         -> CutTree k (BInc (BAdd b (Ones x))) a
 
 Fortunately, this type is internal only and doesn't need to be exported.
 
@@ -853,10 +853,10 @@ should not be a surprise that the length of the resulting vector is
 `Popcount b`.
 
 > lumberjack_go
->     :: forall o b a.
->        SNat o
->     -> Forest o b a
->     -> Vec (Popcount b) (CutTree o b a)
+>     :: forall k b a.
+>        SNat k
+>     -> Forest k b a
+>     -> Vec (Popcount b) (CutTree k b a)
 
 The definition is recursive and a good example of how recursion corresponds with
 inductive proofs (we're using `lemma1` and `lemma2` here).  We don't go in too
@@ -918,7 +918,7 @@ that for us.
 This function is similar to `childrenSingleton` -- it constructs an appropriate
 singleton we can use in proofs.
 
-> forestSingleton :: Forest o b a -> SBin b
+> forestSingleton :: Forest k b a -> SBin b
 > forestSingleton FEnd     = SBEnd
 > forestSingleton (F0 t)   = SB0 (forestSingleton t)
 > forestSingleton (F1 _ t) = SB1 (forestSingleton t)
@@ -1018,7 +1018,7 @@ Pop that tree using `popForest`:
 Helper to compare candidates by root:
 
 >   where
->     cutTreeRoot :: CutTree o b a -> a
+>     cutTreeRoot :: CutTree k b a -> a
 >     cutTreeRoot (CutTree _ _ (Tree x _) _) = x
 
 In GHCi:
