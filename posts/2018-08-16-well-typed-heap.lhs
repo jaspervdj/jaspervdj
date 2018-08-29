@@ -192,7 +192,7 @@ are equal.  We assume that the two types (`a` and `b`) have the same kind `k`
 
 [^kind-equality]: The datatype in `Data.Type.Equality` allows equality between
 heterogeneous kinds as well, but we don't need that here.  This saves us from
-having to toggle on `{-# LANGUAGE TypeInType #-}`.
+having to toggle on the "scary" `{-# LANGUAGE TypeInType #-}`.
 
 The `QED` constructor lives on the term-level though, not on the type level.  We
 must synthesize this constructor using a term-level computation.  This means we
