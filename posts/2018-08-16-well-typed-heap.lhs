@@ -26,11 +26,13 @@ more familiar with.
 [work]: https://fugue.co/
 [well-typed suspension calculus]: https://mazzo.li/posts/suspension.html
 
-This blogpost is a literal Haskell file, which means you can just download it
+This blogpost is a [literate] Haskell file, which means you can just download it
 and load it into GHCi to play around with it.  In this case, you can also verify
 the properties we will be talking about (yes, GHC as a proof checker).  Since we
 are putting our feet into dependent types territory here, we will need to enable
 some extensions that are definitely a bit more on the advanced side.
+
+[literate]: https://wiki.haskell.org/Literate_programming
 
 > {-# LANGUAGE DataKinds            #-}
 > {-# LANGUAGE GADTs                #-}
@@ -714,6 +716,21 @@ Non-zeroness can be defined on binary numbers as well:
 >     BNonZero ('B1 b) = 'True
 >     BNonZero ('B0 b) = BNonZero b
 
+You might be asking why we cannot use a simpler type, such as:
+
+~~~~~~{.haskell}
+vecToNonEmpty :: Vec ('Succ n) a -> NonEmpty a
+~~~~~~
+
+It we use this, we run into trouble when trying to prove that a `Vec` is not
+empty later on.  We would have to construct a singleton for `n`, and we only
+have something that looks a bit like `∃n. 'Succ n`.  Trying to get the `n` out
+of that requires some form of non-zeroness constraint... which would be exactly
+what we are trying to using avoid the simpler type. [^maybe-impossible]
+
+[^maybe-impossible]: I'm not sure if it is actually _impossible_ to use this
+simpler type, but I not succeed in finding a proof that uses this simpler type.
+
 Popcount and width
 ------------------
 
@@ -1042,6 +1059,11 @@ I would like to thank [Alex Lang](https://twitter.com/Alang9g) for many
 discussions about this and for proofreading, [Akio
 Takano](https://github.com/takano-akio) and [Fumiaki
 Kinoshita](https://github.com/fumieval) for some whiteboarding, TODO.
+
+I am by no means an expert in dependent types so while GHC can guarantee that my
+logic is sound, I cannot guarantee that my code is the most elegant or that my
+explanations are waterproof.  I'm happy to discuss improvements, feel free to
+[reach out](/contact.html)!
 
 Appendices
 ==========

@@ -6,12 +6,14 @@ title: Contact
 
 The preferred way of contacting me is to mail me at
 [me@jaspervdj.be](mailto:me@jaspervdj.be) or
-[jaspervdj@gmail.com](mailto:jaspervdj@gmail.com). You can also try to catch me
-on IRC -- I lurk as `jaspervdj` in the `#haskell` channel on [freenode].
+[jaspervdj@gmail.com](mailto:jaspervdj@gmail.com).  My twitter handle is
+[`@jaspervdj`](https://twitter.com/jaspervdj).  You can also try to catch me on
+IRC -- I occasionally lurk as `jaspervdj` in the `#haskell` channel on
+[freenode].
 
 [freenode]: http://freenode.net/
 
-For urgent matters, send a postcard to:
+For less urgent matters, send a postcard to:
 
 > Jasper Van der Jeugt  
 > Hohlstrasse 30  
