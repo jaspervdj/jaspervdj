@@ -78,9 +78,11 @@ and the fascinating way their structure corresponds to binary numbers.
 
 [binomial heaps]: https://en.wikipedia.org/wiki/Binomial_heap
 
-We will use this idea to lift **binary numbers to the type level** -- which is
-great because we get _log(n)_ size and time in places where we would see _n_ for
-the Peano numbers defined above (in addition to being insanely cool).  In GHCi:
+We will combine the idea of Peano number-indexed lists with the idea that
+binomial heaps correspond to binary numbers to lift **binary numbers to the type
+level** -- which is great because we get _O(log(n))_ size and time in places
+where we would see _O(n)_ for the Peano numbers defined above (in addition to
+being insanely cool).  In GHCi:
 
 ~~~~~
 *Main> :t pushHeap 'a' $ pushHeap 'b' $ pushHeap 'c' $
@@ -91,10 +93,9 @@ Heap ('B1 ('B0 ('B1 'BEnd))) Char
 Where _101_ [^reverse-101] is, of course, the binary representation of the
 number 5.
 
-[^reverse-101]: Too be pedantic, for reasons that will become later, the binary
-numbers that pop up on the type level should be read right-to-left, so a
-palindrome was chosen as example here to avoid having to explain that at this
-point.
+[^reverse-101]: For reasons that will become clear later on, the binary numbers
+that pop up on the type level should be read right-to-left, so a palindrome was
+chosen as example here to avoid having to explain that at this point.
 
 In short, this blogpost is meant to be an introductory-level explanation of a
 non-trivial (and again, insanely cool) example of dependent Haskell programming.
@@ -347,7 +348,7 @@ However, due to the large amount of type families involved, proving things about
 it presumably requires ritually sacrificing an inappropriate amount of Agda
 programmers while cantating Richard Eisenberg's writings.
 
-To that end, it is almost always worth trying to figure out alternate
+To that end, it is almost always worth spending time finding alternate
 representations that work out more elegantly.  This can lead to some arbitrary
 looking choices -- we will see this in full effect when trying to define
 [CutTree](#cuttree) further below.
@@ -409,8 +410,8 @@ to binomial trees of order 3 and 5 (and no tree of order 4).
 
 The empty forest is easily defined:
 
-> emptyForest :: Forest o ('B0 'BEnd) a
-> emptyForest = F0 FEnd
+> emptyForest :: Forest o 'BEnd a
+> emptyForest = FEnd
 
 `insertTree` inserts a new tree into the forest.  This might require
 merging two trees together -- roughly corresponding to carrying in binary
@@ -474,7 +475,7 @@ on top of that, where we start out with a tree of order 0:
 The operations on `Heap` are also simple wrappers around the previously defined
 functions:
 
-> emptyHeap :: Heap ('B0 'BEnd) a
+> emptyHeap :: Heap 'BEnd a
 > emptyHeap = Heap emptyForest
 
 > pushHeap :: Ord a => a -> Heap b a -> Heap (BInc b) a
@@ -572,11 +573,16 @@ The wrapper `childrenToForest` is trivially defined but its type tells us a
 whole deal:
 
 > childrenToForest
->     :: SNat n
->     -> Children n a
+>     :: Children n a
 >     -> Forest 'Zero (Ones n) a
-> childrenToForest nnat children =
->     childrenToForest_go SZero nnat FEnd children
+> childrenToForest children =
+>     childrenToForest_go SZero (childrenSingleton children) FEnd children
+
+We use `childrenSingleton` to obtain a singleton for `n`.
+
+> childrenSingleton :: Children n a -> SNat n
+> childrenSingleton CZero       = SZero
+> childrenSingleton (CCons _ c) = SSucc (childrenSingleton c)
 
 The tricky bit is that the list of trees in `Children` has them in descending
 order, and we want them in ascending order in `Forest`.  This means we will
@@ -584,8 +590,8 @@ have to reverse the list.
 
 We can reverse a list easily using an accumulator in Haskell.  In order to
 maintain the type invariants at every step, we will increase the size of the
-accumulator as we descrease the size of the children.  This can be captured
-by requiring that their sum remains equal (`m ~ NAdd x n`).
+accumulator as we decrease the size of the children.  This can be captured by
+requiring that their sum remains equal (`m ~ NAdd x n`).
 
 > childrenToForest_go
 >     :: m ~ NAdd x n
@@ -605,7 +611,7 @@ accumulator has the type `Forest n (Ones x)` and we expect something of the type
 `Forest n (Ones m)`.  Furthermore, we know that:
 
 ~~~~~~
-n ~ 'Zero, m ~ NAdd x n
+  n ~ 'Zero, m ~ NAdd x n
 ⊢ m ~ NAdd x 'Zero
 ~~~~~~
 
@@ -617,7 +623,7 @@ We can do so by applying `lemma1` to `x` (the latter represented here by
 with what we already knew:
 
 ~~~~~~
-m ~ NAdd x 'Zero, NAdd x 'Zero ~ n
+  m ~ NAdd x 'Zero, NAdd x 'Zero ~ n
 ⊢ m ~ x
 ~~~~~~
 
@@ -628,7 +634,7 @@ m ~ NAdd x 'Zero, NAdd x 'Zero ~ n
 The inductive case is a bit harder and requires us to prove that:
 
 ~~~~~~
-m ~ NAdd x n, m ~ NAdd x n, n ~ 'Succ o
+  m ~ NAdd x n, m ~ NAdd x n, n ~ 'Succ o
 ⊢ Ones m ~ 'B1 (Ones (NAdd x o))
 ~~~~~~
 
@@ -752,8 +758,8 @@ Lumberjack
 ----------
 
 Now, popping the smallest element from the heap first involves cutting a single
-tree from the forest inside the heap.  Afterwards, we take the root of that tree
-and merge the children of the tree back together with the original heap.
+tree from the forest inside the heap.  We take the root of that tree and merge
+the children of the tree back together with the original heap.
 
 ![Selecting a single tree](/images/draft-06.png)
 
@@ -867,20 +873,19 @@ First we select the `Popcount b` trees:
 Then we convert it to a `NonEmpty`.  This requires us to call `lemma3` (the
 proof that relates non-zeroness of a binary number with non-zeroness of a
 natural number through popcount).  We need an appropriate `SBin` to call
-`lemma3` and the auxiliary function `treesToSBin` defined just below does that
-for us.
+`lemma3` and the auxiliary function `forestSingleton` defined just below does
+that for us.
 
->     case lemma3 (treesToSBin trees :: SBin b) of
+>     case lemma3 (forestSingleton trees :: SBin b) of
 >          QED -> vecToNonEmpty cutTrees
 
-This sneaky function constructs an `SBin b` from a `Forest o b a` value.  It is
-maybe a bit naughty but this prevents us from carrying around the singletons in
-a bunch of places.
+This function is similar to `childrenSingleton` -- it constructs an appropriate
+singleton we can use in proofs.
 
-> treesToSBin :: Forest o b a -> SBin b
-> treesToSBin FEnd     = SBEnd
-> treesToSBin (F0 t)   = SB0 (treesToSBin t)
-> treesToSBin (F1 _ t) = SB1 (treesToSBin t)
+> forestSingleton :: Forest o b a -> SBin b
+> forestSingleton FEnd     = SBEnd
+> forestSingleton (F0 t)   = SB0 (forestSingleton t)
+> forestSingleton (F1 _ t) = SB1 (forestSingleton t)
 
 popHeap: gluing the pieces together
 -----------------------------------
@@ -904,13 +909,13 @@ the children of the selected trees (`children`), and the remaining trees in the
 heap (`forest`).
 
 > popForest (CutTree
->             xnat _nnat
+>             _xnat _nnat
 >             (Tree x (children :: Children r a))
 >             (forest :: Forest 'Zero l a)) =
 
 We construct a new forest from the children.
 
->     let cforest = childrenToForest xnat children
+>     let cforest = childrenToForest children
 
 We merge it with the remainder of the heap:
 
@@ -925,7 +930,7 @@ Now, we cast it to the result using a new `lemma4` with a singleton that we
 construct from the trees:
 
 >         evidence :: SBin (BAdd l (Ones r))
->         evidence = treesToSBin merged in
+>         evidence = forestSingleton merged in
 >     (x, case lemma4 evidence of QED -> merged)
 
 This is the type family for binary decrement.  It is partial, as expected -- you
