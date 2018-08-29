@@ -178,7 +178,7 @@ by way of a GADT constructor [^data-type-equality].
 [Data.Type.Equality](http://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Type-Equality.html),
 but redefined here for educational purposes.
 
-> data EqualityProof (a :: k) (b :: l) where
+> data EqualityProof (a :: l) (b :: l) where
 >     QED :: EqualityProof a a
 >
 > type a :~: b = EqualityProof a b
@@ -242,6 +242,8 @@ straightforward the definition translates to GADTs that enforce the structure:
 - A binomial tree of order 0 is a single node
 - A binomial tree of order k has a root node whose children are roots of
   binomial trees of orders k−1, k−2, ..., 2, 1, 0 (in this order).
+
+<div id="children"></div>
 
 > data Tree (o :: Nat) a where
 >     Tree :: a -> Children o a -> Tree o a
@@ -407,6 +409,11 @@ to binomial trees of order 3 and 5 (and no tree of order 4).
 >     FEnd :: Forest o 'BEnd a
 >     F0   ::             Forest ('Succ o) b a -> Forest o ('B0 b) a
 >     F1   :: Tree o a -> Forest ('Succ o) b a -> Forest o ('B1 b) a
+
+Note that we list the trees in increasing order here, which contrasts to
+[`Children`](#children), where we listed them in decreasing order.  You can see
+this in the way we are removing layers of `'Succ` here as we add more
+constructors.  This is the opposite of what happens in `Children`.
 
 The empty forest is easily defined:
 
@@ -779,11 +786,16 @@ in the third field.  If the remainder of the heap is `Forest o b a`, its shape
 is denoted by `b` and we can reason about the shape of the original heap.
 
 The children of tree (`Tree (NAdd o x) a`) that was selected will convert to
-heap of shape `Ones x`.  If we add the root to that, we get `BInc (Ones x)`.
-Merging this together with the remainder of the heap (`Forest o b a`) yields a
-shape of `BAdd b (BInc (Ones x))`.  Finally, we restructure the type in that
-result to `BInc (BAdd b (Ones x))`.  The restructuring is trivially allowed by
-GHC since it just requires applying the necessary type families.
+heap of shape `Ones x`.  We work backwards from that to try and write down the
+type for the _original_ heap.  The tree (`Tree (NAdd o x) a`) would form a
+singleton heap of shape `BInc (Ones x)`.  The remainder (i.e. the forest with
+this tree removed) had shape `b`, so we can deduce that the original shape of
+the forest must have been `BAdd b (BInc (Ones x))`.
+
+Finally, we restructure the type in that result to `BInc (BAdd b (Ones x))`.
+The restructuring is trivially allowed by GHC since it just requires applying
+the necessary type families.  The restructured type turns out to be more easily
+usable the places where we case-analyse `CutTree` further down in this blogpost.
 
 We also carry a constraint here that seems very arbitrary and relates the widths
 of two binary numbers.  It is more easy to understand from an intuitive point of
@@ -959,6 +971,9 @@ though.
 > lemma4 (SB0 _) = QED
 > lemma4 (SB1 b) = case lemma4 b of QED -> QED
 
+We don't need to define a clause for `SBEnd` since
+`Width SBEnd ~ Width (BInc SBEnd)` does not hold.
+
 Tying all of this together makes for a relatively easy readable `popHeap`:
 
 > popHeap
@@ -1019,6 +1034,14 @@ popHeap
     :: (BNonZero b ~ 'True, Ord a)
     => Heap b a -> (a, Heap (BDec b) a)
 ~~~~~
+
+Acknowledgements
+================
+
+I would like to thank [Alex Lang](https://twitter.com/Alang9g) for many
+discussions about this and for proofreading, [Akio
+Takano](https://github.com/takano-akio) and [Fumiaki
+Kinoshita](https://github.com/fumieval) for some whiteboarding, TODO.
 
 Appendices
 ==========
