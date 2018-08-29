@@ -180,14 +180,19 @@ by way of a GADT constructor [^data-type-equality].
 [Data.Type.Equality](http://hackage.haskell.org/package/base-4.11.1.0/docs/Data-Type-Equality.html),
 but redefined here for educational purposes.
 
-> data EqualityProof (a :: l) (b :: l) where
+> data EqualityProof (a :: k) (b :: k) where
 >     QED :: EqualityProof a a
 >
 > type a :~: b = EqualityProof a b
 
 Take a minute to think about the implications this GADT has -- if we can
 construct a `QED` value, we have actually provided evidence that the two types
-are equal.
+are equal.  We assume that the two types (`a` and `b`) have the same kind `k`
+[^kind-equality].
+
+[^kind-equality]: The datatype in `Data.Type.Equality` allows equality between
+heterogeneous kinds as well, but we don't need that here.  This saves us from
+having to toggle on `{-# LANGUAGE TypeInType #-}`.
 
 The `QED` constructor lives on the term-level though, not on the type level.  We
 must synthesize this constructor using a term-level computation.  This means we
