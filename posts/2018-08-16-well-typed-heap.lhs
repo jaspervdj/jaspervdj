@@ -327,7 +327,7 @@ defining heaps.
 For example, the type:
 
 ~~~~~~
-B0 (B1 (B1 BEnd))
+'B0 ('B1 ('B1 'BEnd))
 ~~~~~~
 
 represents the number 6 (conventionally written _110_).
@@ -1068,8 +1068,10 @@ Kinoshita](https://github.com/fumieval) for some whiteboarding, TODO.
 
 I am by no means an expert in dependent types so while GHC can guarantee that my
 logic is sound, I cannot guarantee that my code is the most elegant or that my
-explanations are waterproof.  I'm happy to discuss improvements, feel free to
-[reach out](/contact.html)!
+explanations are waterproof.  In particular, I am a bit worried about the fact
+that binary numbers do not have unique representations -- even though it does
+seem to make the code a bit simpler.  If you have any ideas for improvements,
+however, feel free to [reach out](/contact.html)!
 
 Appendices
 ==========
@@ -1090,8 +1092,8 @@ Another existing issue is that the tree of the spine is never "cleaned up".  We
 never remove trailing `F0` constructors.  This means that if you fill a heap of
 eight elements and remove all of them again, you will end up with a heap with
 zero elements that has the shape `'B0 ('B0 ('B0 ('B0 'BEnd)))` rather than `B0
-'BEnd`.  This sufficed for my use case though.  It should be possible to add and
-prove a clean-up step, but it's a bit outside the scope of this blogpost.
+'BEnd`.  However, this sufficed for my use case.  It should be possible to add
+and prove a clean-up step, but it's a bit outside the scope of this blogpost.
 
 <div id="appendix-2"></div>
 
