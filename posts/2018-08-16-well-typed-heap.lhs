@@ -138,7 +138,8 @@ Table of contents
     d.  [Lumberjack](#lumberjack)
     e.  [Lumberjack: final form](#lumberjack-final-form)
     f.  [popHeap: gluing the pieces together](#popheap-gluing-the-pieces-together)
-5.  [Appendices](#appendices)
+5.  [Acknowledgements](#acknowledgements)
+6.  [Appendices](#appendices)
     a.  [Appendix 1: runtime cost of this approach](#appendix-1-runtime-cost-of-this-approach)
     b.  [Appendix 2: “pretty”-printing of heaps](#appendix-2-pretty-printing-of-heaps)
     c.  [Appendix 3: left-to-right increment](#appendix-3-left-to-right-increment)
@@ -1084,10 +1085,9 @@ I would like to thank
 [Alex Lang](https://twitter.com/Alang9g) for many discussions about this and for
 proofreading,
 [Akio Takano](https://github.com/takano-akio) and
-[Fumiaki Kinoshita](https://github.com/fumieval) for some whiteboarding,
-[Titouan Vervack](https://twitter.com/tivervac) for proofreading and
-[Becki Lee](https://twitter.com/omgbeckilee) for additional corrections and
-puns.
+[Fumiaki Kinoshita](https://github.com/fumieval) for some whiteboarding, and
+[Titouan Vervack](https://twitter.com/tivervac) and
+[Becki Lee](https://twitter.com/omgbeckilee) for many additional corrections.
 
 I am by no means an expert in dependent types so while GHC can guarantee that my
 logic is sound, I cannot guarantee that my code is the most elegant or that my
