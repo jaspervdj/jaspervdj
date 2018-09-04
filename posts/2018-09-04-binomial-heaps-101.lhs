@@ -44,6 +44,7 @@ more familiar with.
 [well-typed suspension calculus]: https://mazzo.li/posts/suspension.html
 
 This blogpost is a [literate] Haskell file, which means you can just download it
+[here](https://github.com/jaspervdj/jaspervdj/blob/master/posts/2018-09-04-binomial-heaps-101.lhs)
 and load it into GHCi to play around with it.  In this case, you can also verify
 the properties we will be talking about (yes, GHC as a proof checker).  Since we
 are dipping our toes into dependent types territory here, we will need to enable
