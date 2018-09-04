@@ -1,13 +1,30 @@
 ---
-title: "A dependently-typed binomial heap"
+title: "Dependent Types in Haskell: Binomial Heaps 101"
 description: Who put binary numbers in my type system?
 tags: haskell
 ---
 
+Haskell eXchange
+================
+
+<a href="https://skillsmatter.com/conferences/10237-haskell-exchange-2018">
+<img style="float: left; margin-right: 30px;" src="/images/draft-haskell-exchange.jpg">
+</a>
+
+If you're located near London, you might be interested in the fact that I will
+give a talk about the contents of this blogpost at the
+[Haskell eXchange 2018](https://skillsmatter.com/conferences/10237-haskell-exchange-2018)
+that is happening Thursday 11th - Friday 12th of October.
+
+After that conference, a video should be available as well which I will link
+here.
+
+<div style="clear: both;"></div>
+
 Introduction
 ============
 
-This posts makes a bit of a departure from the "practical Haskell" I usually try
+This post makes a bit of a departure from the "practical Haskell" I usually try
 to write about, although -- believe it or not -- this blogpost actually
 originated from a very practical origin [^practical-origin].
 
@@ -29,7 +46,7 @@ more familiar with.
 This blogpost is a [literate] Haskell file, which means you can just download it
 and load it into GHCi to play around with it.  In this case, you can also verify
 the properties we will be talking about (yes, GHC as a proof checker).  Since we
-are putting our feet into dependent types territory here, we will need to enable
+are dipping our toes into dependent types territory here, we will need to enable
 some extensions that are definitely a bit more on the advanced side.
 
 [literate]: https://wiki.haskell.org/Literate_programming
@@ -99,8 +116,10 @@ number 5.
 that pop up on the type level should be read right-to-left.  A palindrome was
 chosen as example here to avoid having to explain that at this point.
 
-In short, this blogpost is meant to be an introductory-level explanation of a
-non-trivial (and again, insanely cool) example of dependent Haskell programming.
+Conveniently, _101_ also represents the basics of a subject.  So the title of
+this blogpost works on two levels, and we present an introductory-level
+explanation of a non-trivial (and again, insanely cool) example of dependent
+Haskell programming.
 
 Table of contents
 -----------------
@@ -208,9 +227,9 @@ has a unique `SNat` and the other way around:
 >     SZero :: SNat 'Zero
 >     SSucc :: SNat n -> SNat ('Succ n)
 
-We can use such a `SNat` to define a proof for what we were trying to
-accomplish.  Since this proof can be passed any `n` in the form of an `SNat`, it
-must be correct for all `n`.
+We can use such a `SNat` to define a proof for what we are trying to accomplish.
+Since this proof can be passed any `n` in the form of an `SNat`, it must be
+correct for all `n`.
 
 > lemma1 :: SNat n -> NAdd n 'Zero :~: n
 
@@ -333,12 +352,12 @@ For example, the type:
 represents the number 6 (conventionally written _110_).
 
 I think it is fairly common in Haskell for a developer to play around with
-different ways of representing a certain thing until you converge towards an
+different ways of representing a certain thing until you converge on an
 elegant representation.  This is many, many times more important when we are
 dealing with dependently-typed Haskell.
 
-Unelegant and awkward data representations can make term-level programming
-clunky.  Unelegant and awkward type representations can make type-level
+Inelegant and awkward data representations can make term-level programming
+clunky.  Inelegant and awkward type representations can make type-level
 programming downright infeasible due to the sheer amount of lemmas that need to
 be proven.
 
@@ -352,10 +371,10 @@ binary number that is read from the right to the left:
 
 [Appendix 3](#appendix-3) contains an (unused) implementation of incrementing
 left-to-right binary numbers.  Getting things like this to work is not too much
-of a stretch these days (even though GHCs error messages can be very cryptic).
+of a stretch these days (even though GHC's error messages can be very cryptic).
 However, due to the large amount of type families involved, proving things about
 it presumably requires ritually sacrificing an inappropriate amount of Agda
-programmers while cantating Richard Eisenberg's writings.
+programmers while chanting Richard Eisenberg's writings.
 
 To that end, it is almost always worth spending time finding alternate
 representations that work out more elegantly.  This can lead to some arbitrary
@@ -532,12 +551,12 @@ even requiring any lemmas so far.  It is perhaps a good illustration of how
 append-only datastructures are conceptually much simpler.
 
 ![Yes, this is a long blogpost.  We've arrived at the halfway point, so it's a
-good time to get a coffee and take a break.  You deserved it for sticking with
+good time to get a coffee and take a break.  You deserve it for sticking with
 me so far.](/images/draft-coffee.jpg)
 
 Things get _significantly_ more complicated when we try to implement popping the
 smallest element from the queue.  For reference, I implemented the current heap
-in a couple of hours, where as I worked on the rest of the code on and off for
+in a couple of hours, whereas I worked on the rest of the code on and off for
 about a week.
 
 Let's look at a quick illustration of how popping works.
@@ -574,7 +593,7 @@ write `k` "1"s, you get the binary notation of `2ᵏ - 1`.
 
 Visually:
 
-![A tree of order 3 results in a heap with a "11" shape](/images/draft-07.png)
+![A tree of order 3 results in a heap with an "11" shape](/images/draft-07.png)
 
 We introduce a type family for computing `n` "1"s:
 
@@ -674,10 +693,10 @@ required.
 Proving `lemma2` is trivial... once you figure out what you need to prove and
 how all of this works.
 
-It took me a good amount time to put the different pieces together in my head.
-It is not only a matter of proving the lemma: restructuring the code in
+It took me a good amount of time to put the different pieces together in my
+head.  It is not only a matter of proving the lemma: restructuring the code in
 `childrenToForest_go` leads to different lemmas you can attempt to prove, and
-figuring which ones are feasible is a big part of writing code like this.
+figuring out which ones are feasible is a big part of writing code like this.
 
 > lemma2 :: SNat n -> SNat m -> NAdd n ('Succ m) :~: 'Succ (NAdd n m)
 > lemma2 SZero     _ = QED
@@ -801,7 +820,7 @@ Feel free to scroll down to the datatype from here if you are willing to assume
 the specific constraint and types are there for a reason.
 
 The two first fields are simply evidence singletons that we carry about.  `k`
-stands for the same concept as in `Forest`, it means we are starting with an
+stands for the same concept as in `Forest`; it means we are starting with an
 order of `k`.  `x` stands for the index of the tree that was selected.
 
 This means the tree that was selected has an order of `NAdd k x`, as we can see
@@ -811,7 +830,7 @@ is denoted by `b` and we can reason about the shape of the original heap.
 The children of tree (`Tree (NAdd k x) a`) that was selected will convert to a
 heap of shape `Ones x`.  We work backwards from that to try and write down the
 type for the _original_ heap.  The tree (`Tree (NAdd k x) a`) would form a
-singleton heap of shape `BInc (Ones x)`.  The remainder (i.e. the forest with
+singleton heap of shape `BInc (Ones x)`.  The remainder (i.e., the forest with
 this tree removed) had shape `b`, so we can deduce that the original shape of
 the forest must have been `BAdd b (BInc (Ones x))`.
 
@@ -822,13 +841,13 @@ usable in the places where we case-analyse `CutTree` further down in this
 blogpost.
 
 We also carry a constraint here that seems very arbitrary and relates the widths
-of two binary numbers.  It is more easy to understand from an intuitive point of
-view: the new (merged) heap has the same width as the original heap.
-Why is it here?
+of two binary numbers.  It is easier to understand from an intuitive point of
+view: the new (merged) heap has the same width as the original heap.  Why is it
+here?
 
-Well, it turns out we will need this fact in a further function definition.  If
-we can conclude it here by construction in the GADT, we avoid having to prove it
-further down.
+Well, it turns out we will need this fact further down in a function definition.
+If we can conclude it here by construction in the GADT, we avoid having to prove
+it further down.
 
 Of course, I know that I will need this further down because I already have the
 code compiling.  When writing this, there is often a very, very painful dialogue
@@ -859,7 +878,7 @@ should not be a surprise that the length of the resulting vector is
 >     -> Vec (Popcount b) (CutTree k b a)
 
 The definition is recursive and a good example of how recursion corresponds with
-inductive proofs (we're using `lemma1` and `lemma2` here).  We don't go in too
+inductive proofs (we're using `lemma1` and `lemma2` here).  We don't go into
 much detail with our explanation here -- this code is often hard to write, but
 surprisingly easy to read.
 
@@ -979,7 +998,7 @@ cannot decrement zero.  This is a bit unfortunate but necessary.  Having the
 
 The weirdly specific `lemma4` helps us prove that we can take a number,
 increment it and then decrement it, and then get the same number back _provided_
-incrmenting doesn't change its width.  This ends up matching perfectly with the
+incrementing doesn't change its width.  This ends up matching perfectly with the
 width constraint generated by the `CutTree`, where the number that we increment
 is a number of "1"s smaller than the shape of the total heap (intuitively).
 
@@ -1061,10 +1080,14 @@ popHeap
 Acknowledgements
 ================
 
-I would like to thank [Alex Lang](https://twitter.com/Alang9g) for many
-discussions about this and for proofreading, [Akio
-Takano](https://github.com/takano-akio) and [Fumiaki
-Kinoshita](https://github.com/fumieval) for some whiteboarding, TODO.
+I would like to thank
+[Alex Lang](https://twitter.com/Alang9g) for many discussions about this and for
+proofreading,
+[Akio Takano](https://github.com/takano-akio) and
+[Fumiaki Kinoshita](https://github.com/fumieval) for some whiteboarding,
+[Titouan Vervack](https://twitter.com/tivervac) for proofreading and
+[Becki Lee](https://twitter.com/omgbeckilee) for additional corrections and
+puns.
 
 I am by no means an expert in dependent types so while GHC can guarantee that my
 logic is sound, I cannot guarantee that my code is the most elegant or that my
