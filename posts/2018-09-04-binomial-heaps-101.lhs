@@ -8,7 +8,7 @@ Haskell eXchange
 ================
 
 <a href="https://skillsmatter.com/conferences/10237-haskell-exchange-2018">
-<img style="float: left; margin-right: 30px;" src="/images/draft-haskell-exchange.jpg">
+<img style="float: left; margin-right: 30px;" src="/images/2018-09-04-haskell-exchange.jpg">
 </a>
 
 If you're located near London, you might be interested in the fact that I will
@@ -282,7 +282,7 @@ straightforward the definition translates to GADTs that enforce the structure:
 Some illustrations to make this a bit more clear:
 
 ![Illustration of trees of different sizes, with the children array marked in
-green](/images/draft-01.png)
+green](/images/2018-09-04-illustration-01.png)
 
 This is definitely a very good example of the correctness by construction
 approach I talked about earlier: it is simply impossible to create a tree that
@@ -312,7 +312,7 @@ root of the new tree.
 >     | otherwise      = Tree rroot (CCons l rchildren)
 
 ![Merging two trees.  Since 'a' is smaller than 'b' we attach the 'b' tree as a
-new child to the 'a' tree.](/images/draft-02.png)
+new child to the 'a' tree.](/images/2018-09-04-illustration-02.png)
 
 Type level binary numbers
 -------------------------
@@ -481,7 +481,7 @@ match up almost 1:1 with the different clauses in the definition of the type
 families `BInc` and `BAdd`.  If we overlay them visually:
 
 ![Overlaying mergeForests and BAdd brings out the
-similarity](/images/draft-mind-blown.gif)
+similarity](/images/2018-09-04-overlay.gif)
 
 That is the intuitive explanation as to why no additional proofs or type-level
 trickery are required here.
@@ -490,13 +490,13 @@ Here is an informal illustration of what happens when we don't need to merge any
 trees.  The singleton `Forest` on the left is simply put in the empty `F0` spot
 on the right.
 
-![Simple merge; 1 + 100 = 101](/images/draft-03.png)
+![Simple merge; 1 + 100 = 101](/images/2018-09-04-illustration-03.png)
 
 When there is already a tree there, we merge the trees using `mergeTree` and
 carry that, in a very similar way to how carrying works in the addition of
 binary numbers:
 
-![Merge with carry, 1 + 101 = 110](/images/draft-04.png)
+![Merge with carry, 1 + 101 = 110](/images/2018-09-04-illustration-04.png)
 
 The binomial heap
 -----------------
@@ -553,7 +553,7 @@ append-only datastructures are conceptually much simpler.
 
 ![Yes, this is a long blogpost.  We've arrived at the halfway point, so it's a
 good time to get a coffee and take a break.  You deserve it for sticking with
-me so far.](/images/draft-coffee.jpg)
+me so far.](/images/2018-09-04-coffee.jpg)
 
 Things get _significantly_ more complicated when we try to implement popping the
 smallest element from the queue.  For reference, I implemented the current heap
@@ -564,17 +564,17 @@ Let's look at a quick illustration of how popping works.
 
 We first select the tree with the smallest root and remove it from the heap:
 
-![](/images/draft-06.png)
+![](/images/2018-09-04-illustration-06.png)
 
 We break up the tree we selected into its root (which will be the element that
 is "popped") and its children, which we turn into a new heap.
 
-![](/images/draft-07.png)
+![](/images/2018-09-04-illustration-07.png)
 
 We [merge](#merge) the remainder heap from step 1 together with the new heap we
 made out of the children of the removed tree:
 
-![](/images/draft-08.png)
+![](/images/2018-09-04-illustration-08.png)
 
 The above merge requires carrying twice.
 
@@ -594,7 +594,7 @@ write `k` "1"s, you get the binary notation of `2ᵏ - 1`.
 
 Visually:
 
-![A tree of order 3 results in a heap with an "11" shape](/images/draft-07.png)
+![A tree of order 3 results in a heap with an "11" shape](/images/2018-09-04-illustration-07.png)
 
 We introduce a type family for computing `n` "1"s:
 
@@ -800,7 +800,7 @@ That is a fair amount of type families so far.  To make things a bit more clear,
 here is an informal visual overview of all the type families we have defined,
 including `BDec` (binary decrement, defined further below).
 
-![Rectangles represent (lifted) kinds, arrows are type families](/images/draft-05.png)
+![Rectangles represent (lifted) kinds, arrows are type families](/images/2018-09-04-illustration-05.png)
 
 <div id="cuttree"></div>
 
@@ -811,7 +811,7 @@ Now, popping the smallest element from the heap first involves cutting a single
 tree from the forest inside the heap.  We take the root of that tree and merge
 the children of the tree back together with the original heap.
 
-![Selecting a single tree](/images/draft-06.png)
+![Selecting a single tree](/images/2018-09-04-illustration-06.png)
 
 However, just selecting (and removing) a single tree turns out to be quite an
 endeavour on its own.  We define an auxiliary GADT which holds the tree, the
@@ -980,7 +980,7 @@ We merge it with the remainder of the heap:
 
 The illustration from above applies here:
 
-![Merging back together](/images/draft-08.png)
+![Merging back together](/images/2018-09-04-illustration-08.png)
 
 Now, we cast it to the result using a new `lemma4` with a singleton that we
 construct from the trees:
