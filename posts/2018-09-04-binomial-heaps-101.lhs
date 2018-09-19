@@ -1097,6 +1097,23 @@ that binary numbers do not have unique representations -- even though it does
 seem to make the code a bit simpler.  If you have any ideas for improvements,
 however, feel free to [reach out](/contact.html)!
 
+**Update**: Lars Brünjes contacted me and showed me a similar implementation he
+did for leftist heaps.  You can see it in
+[this repository](https://github.com/brunjlar/heap).  He uses a similar but
+unique representation of binary numbers, along the lines of:
+
+~~~~~{.haskell}
+data Binary   = Zero | StrictlyPositive Positive
+data Positive = B1End | B0 Positive | B1 Positive
+~~~~~
+
+I think is actually more elegant than the representation I used.  The only
+disadvantage is that is a bit less concise (which is somewhat relevant for a
+blogpost), requiring two functions and two datatypes for most cases (e.g. a
+`Forest k Binary` and a `PForest k Positive`, with `mergeForests` and
+`mergePForests, and so on).  But if you wanted to use this idea in a real
+implementation, I encourage you to check that out.
+
 Appendices
 ==========
 
