@@ -1111,7 +1111,7 @@ I think is actually more elegant than the representation I used.  The only
 disadvantage is that is a bit less concise (which is somewhat relevant for a
 blogpost), requiring two functions and two datatypes for most cases (e.g. a
 `Forest k Binary` and a `PForest k Positive`, with `mergeForests` and
-`mergePForests, and so on).  But if you wanted to use this idea in a real
+`mergePForests`, and so on).  But if you wanted to use this idea in a real
 implementation, I encourage you to check that out.
 
 Appendices
