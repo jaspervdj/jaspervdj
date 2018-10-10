@@ -15,8 +15,8 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.2 2405546, 2018-03-11"
-   sodipodi:docname="06.svg"
-   inkscape:export-filename="/home/jasper/Documents/Projects/jaspervdj/drafts/06.png"
+   sodipodi:docname="2018-09-04-illustration-06.svg"
+   inkscape:export-filename="/home/jasper/Documents/Projects/jaspervdj/images/2018-09-04-illustration-06.png"
    inkscape:export-xdpi="37.380001"
    inkscape:export-ydpi="37.380001">
   <defs
@@ -26,11 +26,11 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35319565"
-     inkscape:cx="1876.2464"
-     inkscape:cy="996.72371"
+     inkscape:zoom="0.30663177"
+     inkscape:cx="1351.1123"
+     inkscape:cy="705.40624"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -51,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
