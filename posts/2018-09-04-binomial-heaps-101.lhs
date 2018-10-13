@@ -7,17 +7,16 @@ tags: haskell
 Haskell eXchange
 ================
 
-<a href="https://skillsmatter.com/conferences/10237-haskell-exchange-2018">
-<img style="float: left; margin-right: 30px;" src="/images/2018-09-04-haskell-exchange.jpg">
+<a href="https://skillsmatter.com/skillscasts/12386-a-well-typed-binomial-heap">
+<img style="width: 200px; float: right; margin-top: 0px; margin-left: 30px;" src="/images/2018-09-04-haskell-exchange.jpg">
 </a>
 
-If you're located near London, you might be interested in the fact that I will
-give a talk about the contents of this blogpost at the
-[Haskell eXchange 2018](https://skillsmatter.com/conferences/10237-haskell-exchange-2018)
-that is happening Thursday 11th - Friday 12th of October.
-
-After that conference, a video should be available as well which I will link
-here.
+**Update**: I gave a blogpost about this talk at the [Haskell eXchange
+2018](https://skillsmatter.com/conferences/10237-haskell-exchange-2018) on the
+11th of October 2018.  You can [watch the video
+here](https://skillsmatter.com/skillscasts/12386-a-well-typed-binomial-heap).
+Note that you will need to create an account in on the skillsmatter website in
+order to watch the recording.
 
 <div style="clear: both;"></div>
 
