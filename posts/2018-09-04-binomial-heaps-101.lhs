@@ -11,7 +11,7 @@ Haskell eXchange
 <img style="width: 200px; float: right; margin-top: 0px; margin-left: 30px;" src="/images/2018-09-04-haskell-exchange.jpg">
 </a>
 
-**Update**: I gave a blogpost about this talk at the [Haskell eXchange
+**Update**: I gave a talk about this blogpost at the [Haskell eXchange
 2018](https://skillsmatter.com/conferences/10237-haskell-exchange-2018) on the
 11th of October 2018.  You can [watch the video
 here](https://skillsmatter.com/skillscasts/12386-a-well-typed-binomial-heap).
