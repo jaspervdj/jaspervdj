@@ -5,7 +5,7 @@ title: Contact
 # Contact
 
 The preferred way of contacting me is to mail me at
-[me@jaspervdj.be](mailto:me@jaspervdj.be) or
+[m@jaspervdj.be](mailto:m@jaspervdj.be) or
 [jaspervdj@gmail.com](mailto:jaspervdj@gmail.com).  My twitter handle is
 [`@jaspervdj`](https://twitter.com/jaspervdj).  You can also try to catch me on
 IRC -- I occasionally lurk as `jaspervdj` in the `#haskell` channel on
