@@ -1,4 +1,5 @@
-resolver: lts-12.12
+resolver: lts-12.14
+compiler: ghc-8.4.2
 extra-package-dbs: []
 flags: {}
 packages:
