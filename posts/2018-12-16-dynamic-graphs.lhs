@@ -23,17 +23,17 @@ office, and a group of them decided to take part in this contest.
 I had taken part in the 2017 ICFP contest with them, but this year I was not
 able to work on this at all since the ICFP contest took place in the same
 weekend as my girlfriends' birthday.  We went to Fujikawaguchiko instead --
-which I would recommend to interested in visiting the Fuji region, I ended up
-liking it more than Hakone where I was a year or two ago.
+which I would recommend to anyone interested in visiting the Fuji region.  I
+ended up liking it more than Hakone, where I was a year or two ago.
 
 ![View of Mt. Fuji from Fujikawaguchiko](/images/2018-12-16-fujikawaguchiko.jpg)
 
 Anyway, after the contest we were discussing how it went and Alex thought a key
 missing piece for them was a specific algorithm called _dynamic connectivity_.
-Because this is not a trivial algorithm to put together, they ended up using a
-less optimal version and even that contained some bugs.
+Because this is not a trivial algorithm to put together, we ended up using a
+less optimal version which still contained some bugs.
 
-After the contest Alex decided to continue looking into this problem and we
+After the contest, Alex decided to continue looking into this problem and we
 ended up putting this library together.
 
 The dynamic connectivity problem is very simply explained to anyone who is at
@@ -44,7 +44,7 @@ question "are these two nodes (transitively) connected" at any point in time.
 This might remind you of the _union-find_ problem.  [Union-find], after all, is
 a good solution to _incremental_ dynamic connectivity.  In this context,
 _incremental_ means that edges may only be added, not removed.  A situation
-where edges may be added and removed is sometimes referred to as _full_ dynamic
+where edges may be added and removed is sometimes referred to as _fully_ dynamic
 connectivity.
 
 [Union-find]: https://en.wikipedia.org/wiki/Disjoint-set_data_structure
@@ -60,7 +60,7 @@ the reasons to pursue persistence in the first place.
 Anyway, this is why the library currently only provides a mutable interface.
 The library uses the `PrimMonad` from the
 [primitive](http://hackage.haskell.org/package/primitive) library to ensure you
-can use our code both in `IO` and `ST`, where the latter lets reclaim purity.
+can use our code both in `IO` and `ST`, where the latter lets us reclaim purity.
 
 Let's walk through a simple example of using the library in plain `IO`.
 
@@ -138,7 +138,7 @@ stick with a very informal and hand-wavey explanation here:
     edges that are considered but not taken, so we will consider them less
     frequently in subsequent calls.
 
-Back to our example.  When we continue to delete the _Onakea - Kanoa_ edge, we
+Back to our example.  When we go on to delete the _Onakea - Kanoa_ edge, we
 cannot find a replacement edge, and we are left with a spanning forest with two
 components.
 
