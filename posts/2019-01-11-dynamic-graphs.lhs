@@ -18,7 +18,7 @@ minecraft-like structure, as efficiently as possible.  I was in Japan at the
 time, and working from the [Tsuru Capital](http://www.tsurucapital.com/en/)
 office, and a group of them decided to take part in this contest.
 
-![An example structure from the ICFP Contest](/images/2018-12-16-icfp-contest.png)
+![An example structure from the ICFP Contest](/images/2019-01-11-icfp-contest.png)
 
 I had taken part in the 2017 ICFP contest with them, but this year I was not
 able to work on this at all since the ICFP contest took place in the same
@@ -26,7 +26,7 @@ weekend as my girlfriends' birthday.  We went to Fujikawaguchiko instead --
 which I would recommend to anyone interested in visiting the Fuji region.  I
 ended up liking it more than Hakone, where I was a year or two ago.
 
-![View of Mt. Fuji from Fujikawaguchiko](/images/2018-12-16-fujikawaguchiko.jpg)
+![View of Mt. Fuji from Fujikawaguchiko](/images/2019-01-11-fujikawaguchiko.jpg)
 
 Anyway, after the contest we were discussing how it went and Alex thought a key
 missing piece for them was a specific algorithm called _dynamic connectivity_.
@@ -82,7 +82,7 @@ Let's consider a fictional map of Hawaiian islands.
 >     GD.link_ graph "Onakea" "Kanoa"
 >     GD.link_ graph "Kanoa" "Kekoa"
 
-![Visualisation of the graph](/images/2018-12-16-illustration-01.png)
+![Visualisation of the graph](/images/2019-01-11-illustration-01.png)
 
 The way the algorithm works is by keeping a [spanning forest] at all times.
 That way we can quickly answer _connectivity questions_: if two nodes belong to
@@ -90,7 +90,7 @@ the same tree (i.e., they share the same root), they are connected.
 
 [spanning forest]: https://en.wikipedia.org/wiki/Spanning_tree
 
-![Spanning forest in blue](/images/2018-12-16-illustration-02.png)
+![Spanning forest in blue](/images/2019-01-11-illustration-02.png)
 
 For example, can we take ferries from Kaiwi to Kekoa?  The following statement
 prints `True`.
@@ -104,7 +104,7 @@ to delete edges.  Let's do just so:
 
 >     GD.cut_ graph "Kaiwi" "Akanu"
 
-![One edge has been cut, spanning forest is the same](/images/2018-12-16-illustration-03.png)
+![One edge has been cut, spanning forest is the same](/images/2019-01-11-illustration-03.png)
 
 In a case such as the one above, where the deleted edge is not part of the
 spanning forest, not much interesting happens, and the overall connectivity is
@@ -116,7 +116,7 @@ the graph that can restore the spanning tree.
 
 >     GD.cut_ graph "Onakea" "Akanu"
 
-![Two edges have been cut, spanning forest updated](/images/2018-12-16-illustration-04.png)
+![Two edges have been cut, spanning forest updated](/images/2019-01-11-illustration-04.png)
 
 In our example, we can replace the deleted _Akanu - Onakea_ edge with the _Kanoa
 - Onakea_ edge.  Finding a replacement edge is unsurprisingly the hardest part
@@ -144,7 +144,7 @@ components.
 
 >     GD.cut_ graph "Onakea" "Kanoa"
 
-![Illustration 5](/images/2018-12-16-illustration-05.png)
+![Illustration 5](/images/2019-01-11-illustration-05.png)
 
 We can confirm this by asking the library for the spanningforest and then using
 the very handy `drawForest` from `Data.Tree` to visualize it:
@@ -168,7 +168,7 @@ residents of our fictional island group, before closing the blogpost.
 
 >     GD.link_ graph "Akanu" "Kaiwi"
 
-![Illustration 6](/images/2018-12-16-illustration-06.png)
+![Illustration 6](/images/2019-01-11-illustration-06.png)
 
 For some finishing words, what are some future directions for this library?  One
 of the authors of the original paper, M. Thorup, wrote a [follow-up] that
