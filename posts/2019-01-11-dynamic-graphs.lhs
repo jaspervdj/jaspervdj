@@ -39,7 +39,7 @@ ended up putting this library together.
 The dynamic connectivity problem is very simply explained to anyone who is at
 least a little familiar with graphs.  It comes down to building a datastructure
 that allows adding and removing edges to a graph, and being able to answer the
-question "are these two nodes (transitively) connected" at any point in time.
+question "are these two vertices (transitively) connected" at any point in time.
 
 This might remind you of the _union-find_ problem.  [Union-find], after all, is
 a good solution to _incremental_ dynamic connectivity.  In this context,
@@ -85,8 +85,8 @@ Let's consider a fictional map of Hawaiian islands.
 ![Visualisation of the graph](/images/2019-01-11-illustration-01.png)
 
 The way the algorithm works is by keeping a [spanning forest] at all times.
-That way we can quickly answer _connectivity questions_: if two nodes belong to
-the same tree (i.e., they share the same root), they are connected.
+That way we can quickly answer _connectivity questions_: if two vertices belong
+to the same tree (i.e., they share the same root), they are connected.
 
 [spanning forest]: https://en.wikipedia.org/wiki/Spanning_tree
 
@@ -144,7 +144,7 @@ components.
 
 >     GD.cut_ graph "Onakea" "Kanoa"
 
-![Illustration 5](/images/2019-01-11-illustration-05.png)
+![Two disconnected spanning trees](/images/2019-01-11-illustration-05.png)
 
 We can confirm this by asking the library for the spanningforest and then using
 the very handy `drawForest` from `Data.Tree` to visualize it:
@@ -168,7 +168,7 @@ residents of our fictional island group, before closing the blogpost.
 
 >     GD.link_ graph "Akanu" "Kaiwi"
 
-![Illustration 6](/images/2019-01-11-illustration-06.png)
+![A single spanning tree covers all vertices again](/images/2019-01-11-illustration-06.png)
 
 For some finishing words, what are some future directions for this library?  One
 of the authors of the original paper, M. Thorup, wrote a [follow-up] that
