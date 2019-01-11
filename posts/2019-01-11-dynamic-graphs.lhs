@@ -50,10 +50,11 @@ connectivity.
 [Union-find]: https://en.wikipedia.org/wiki/Disjoint-set_data_structure
 
 Like union-find, there is unfortunately no known persistent version of this
-algorithm.  An attempt was made [to create a persistent union find] but I don't
-think we can consider this successful in the Haskell sense of purity since the
-structure proposed in that paper is inherently not thread-safe; which is one of
-the reasons to pursue persistence in the first place.
+algorithm without sacrificing some performance.  An attempt was made [to create
+a fast, persistent union find] but I don't think we can consider this successful
+in the Haskell sense of purity since the structure proposed in that paper is
+inherently not thread-safe; which is one of the reasons to pursue persistence in
+the first place.
 
 [to create a persistent union find]: https://www.lri.fr/~filliatr/ftp/publis/puf-wml07.pdf
 
