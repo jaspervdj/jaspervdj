@@ -11,12 +11,13 @@ particular, although it can do some other things as well.
 [Alex Lang]: https://twitter.com/Alang9g
 [dynamic graphs]: https://github.com/alang9/dynamic-graphs
 
-The story of this library began with this year's [ICFP
+The story of this library began with last year's [ICFP
 contest](https://icfpcontest2018.github.io/).  For this contest, the goal was to
 build a program that orchestrates a number of nanobots to build a specific
-minecraft-like structure, as efficiently as possible.  I was in Japan at the
-time, and working from the [Tsuru Capital](http://www.tsurucapital.com/en/)
-office, and a group of them decided to take part in this contest.
+[minecraft-like](https://en.wikipedia.org/wiki/Voxel) structure, as efficiently
+as possible.  I was in Japan at the time, working remotely from the [Tsuru
+Capital](http://www.tsurucapital.com/en/) office, and a group of them decided to
+take part in this contest.
 
 ![An example structure from the ICFP Contest](/images/2019-01-11-icfp-contest.png)
 
@@ -170,11 +171,11 @@ residents of our fictional island group, before closing the blogpost.
 
 ![A single spanning tree covers all vertices again](/images/2019-01-11-illustration-06.png)
 
-For some finishing words, what are some future directions for this library?  One
-of the authors of the original paper, M. Thorup, wrote a [follow-up] that
-improves the theoretical space and time complexity a little.  This seems to
-punish us with bad constant factors in terms of time performance -- but it is
-probably still worth finishing because it uses significantly less memory.
-Contributions, as always, are welcome.  :-)
+For finishing words, what are some future directions for this library?  One of
+the authors of the original paper, M. Thorup, wrote a [follow-up] that improves
+the theoretical space and time complexity a little.  This seems to punish us
+with bad constant factors in terms of time performance -- but it is probably
+still worth finishing because it uses significantly less memory.  Contributions,
+as always, are welcome.  :-)
 
 [follow-up]: http://www.cs.princeton.edu/courses/archive/spr10/cos423/handouts/NearOpt.pdf
