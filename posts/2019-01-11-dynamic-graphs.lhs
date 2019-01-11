@@ -32,10 +32,9 @@ ended up liking it more than Hakone, where I was a year or two ago.
 Anyway, after the contest we were discussing how it went and Alex thought a key
 missing piece for them was a specific algorithm called _dynamic connectivity_.
 Because this is not a trivial algorithm to put together, we ended up using a
-less optimal version which still contained some bugs.
-
-After the contest, Alex decided to continue looking into this problem and we
-ended up putting this library together.
+less optimal version which still contained some bugs.  In the weeks after the
+contest ended Alex decided to continue looking into this problem and we ended up
+putting this library together.
 
 The dynamic connectivity problem is very simply explained to anyone who is at
 least a little familiar with graphs.  It comes down to building a datastructure
