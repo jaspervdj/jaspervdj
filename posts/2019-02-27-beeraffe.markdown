@@ -1,0 +1,168 @@
+---
+title: 'Beeraffe'
+description: 'A silly game in PureScript'
+tags: 'haskell'
+---
+
+This weekend, I finished a silly little game in
+[PureScript](http://www.purescript.org/) called Beeraffe.
+You can [play it here](https://jaspervdj.be/beeraffe/) and
+[view the source code here](https://github.com/jaspervdj/beeraffe/).  In this
+blogpost, I want to give some more background information on how this game
+came to be.
+
+# Why PureScript?
+
+If I was going to build a game, I knew I wanted it to be web-based -- there was
+no doubt in mind about this:
+
+ -  It makes it much easier to show it to other people; you can just share a
+    link and they can be playing it in _seconds_.
+ -  It is inherently cross-platform, and with a little bit of extra attention it
+    easily works on smartphones as well.
+ -  It is a good sandbox; you don't need to ask people to install arbitrary
+    executables on their system.
+
+There are of course some downsides to web-based games as well. For me, the main
+disavantage is that the dominant language is still JavaScript (which I am not a
+big fan of, to put it mildly).
+
+Fortunately there are a good number of languages that compile down to JavaScript
+these days.  The two big contendors were Haskell (through
+[GHCJS](https://github.com/ghcjs/ghcjs)) and PureScript (I would go as far as
+calling PureScript a Haskell dialect, since they are so similar).
+
+The big advantage of using GHCJS is that you're able to run Haskell on the
+backend _and_ on the frontend, so you can share common code.
+
+However, I wanted to write a simple game without any sort of backend (which, of
+course, makes it significantly easier to host as well).  PureScript produces
+vastly smaller JavaScript files, and I wanted to learn the language a bit to
+see how it compares with Haskell, so I decided to give that a try.
+
+I did not consider [Elm](https://elm-lang.org/) because it's a bit further
+removed from Haskell, and my main focus was still building a game; not learning
+a new language.  I have heard a lot of good things about it though, so maybe
+that's what I should try next.
+
+# Original inspiration for the game
+
+One of the last games I played was the remake of the masterpiece
+[Katamari Damacy](https://en.wikipedia.org/wiki/Katamari_Damacy) on the
+[Nintendo Switch](https://www.nintendo.com/games/detail/katamari-damacy-reroll-switch).
+
+<div style="text-align: center;">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/AsJyVsQNJUg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+Inspired by Katamari Damacy, I wanted to make a 2D version that had a similar
+feeling to it.  I decided relatively quickly that the core mechanic of the game
+would be to put different kinds of objects together in bizarre ways, hopefully
+amusing people along the way.
+
+# Putting sprites together
+
+With that in mind, I immediately focused on this core mechanic since I wanted to
+know whether it could actually be fun or not.
+
+I started by doing a simple exhaustive search over all the ways you can overlay
+two sprites, minimizing the average
+[colour distance](https://en.wikipedia.org/wiki/Color_difference).  This worked
+remarkably well, and I didn't end up fine-tuning the results much more after
+that.
+
+It did lead to some performance issues for larger sprites, so I fixed that by
+[mipmapping](https://en.wikipedia.org/wiki/Mipmap): for larger sprites, I first
+do an exhaustive search at a much lower resolution, then I use these results to
+do a local search in that neighbourhood at higher resolutions.  This is not
+guaranteed to give the best results; but that doesn't matter too much for this
+game: we just want a _good enough_ result.
+
+I wanted to also try an approach based on
+[simulated annealing](https://en.wikipedia.org/wiki/Simulated_annealing) but
+didn't get around to it.  If someone wants to try this, you're more than welcome
+to make a contribution!
+
+At this point, I was getting amusing results, but I wasn't sure how to make this
+into a game yet.  I didn't want to make it into action game, and felt like a
+puzzle game would fit better.  Then, I realized the comedic effect would be even
+better if I combined the names of the different sprites as well.
+
+This automatically adds a sort of puzzle mechanic to the game as well, since you
+can now only merge certain objects.
+
+![A croissanteddy?](/images/2019-02-27-croissanteddy.png)
+
+# Finding resources
+
+This brought me to the next obstacle -- I knew I would need a large number of
+consistent sprites to use as art in the game.  I browsed around
+[opengameart.org](https://opengameart.org/) for a bit, but did not really find
+anything promising.  I also did not want to pay an artist, because I wanted to
+keep this a free game, without advertisements and the like.
+
+Then it dawned to me that there already is a great collection of consistent
+sprites that even come with the names attached to them -- emoji!  I found the
+free [EmojiOne](https://www.emojione.com/) set and started with that.  But when
+I looked into it a bit, I found this weird snippet in their free licensing info:
+
+> 3.4  What can’t you do with the JoyPixels/EmojiOne Properties under this
+> agreement?  
+> ...  
+> (I) Include properties in open source projects.  
+> ...
+
+What nonsense is this?  I am allowed to use it in my non-commercial project if I
+give attribution, but not if I want to have the option to open source my game?
+
+This pissed me off and I started looking for alternatives.  At that point,
+however, I already knew emoji were a good direction so it was easier.  I ended
+up switching to [Google's Noto font](https://github.com/googlei18n/noto-emoji).
+I liked the sprites a little bit less but at least the license made sense.
+
+# Making it a real game
+
+At this point I built a demo that simply allowed you to drag around a bunch of
+different objects and merge them.  It was certainly amusing, but it did not
+really feel like a "game" to me yet.  However, I shared this demo with a couple
+of people and they all really liked it.  This was very encouraging.
+
+The next weekend, I tried to turn this into a Tetris- or 2048-like puzzle game,
+but this ended up being very confusing and not that much fun.  Ironically, the
+non-game was more fun!
+
+So, I decided to go back to that and just add a very simple economy on top of it
+(buying and selling things) to make it a bit more interesting.  After I added
+that, I was quite happy with the flow of the game.
+
+The rules were still a bit unclear to people I showed it to (what things
+can you merge together?), so I added the hints at the top of the cards and an
+interactive tutorial.
+
+# Closing thoughts on PureScript
+
+In retrospect, I am happy with PureScript as a language and would recommend it
+if you're looking into putting a simple no-backend web-based game together, and
+you already know Haskell.
+
+There were a few issues I ran into with the language:
+
+ -  I still prefer lazy languages, and this bit me a few times.  In particular,
+    I wrote a few monadic recursive functions without being aware of the
+    [tailrec](https://github.com/purescript/purescript-tailrec) package.  This
+    caused stack overflows in my code, but I only saw these on my phone, which
+    made it extremely hard to debug.
+
+ -  The error messages that the compiler emits are horrible at times.  I feel
+    like this is an area where I could contribute a bunch of code myself, but
+    I'm not sure if I'll ever have time for that.
+
+There are also a lot of things I like:
+
+ -  Working with the FFI to call JavaScript is seamless and easy.
+
+ -  [Halogen](https://github.com/slamdata/purescript-halogen) is an amazing
+    framework that made building the UI trivial.
+
+ -  Once you figure out how to, the resulting JavaScript is actually very easy
+    to debug using Firefox's or Chromium's developer tools.
