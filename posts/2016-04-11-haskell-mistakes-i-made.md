@@ -14,5 +14,5 @@ thumbnail.
 [here]: https://github.com/meiersi/HaskellerZ/tree/master/meetups/20160331-Haskell_Mistakes
 
 <div style="margin-top: 36px; text-align: center;">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/S3WGPuqfBLg" frameborder="0" allowfullscreen></iframe>
+<iframe width="100%" height="315" src="https://www.youtube.com/embed/S3WGPuqfBLg" frameborder="0" allowfullscreen></iframe>
 </div>

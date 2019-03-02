@@ -52,7 +52,7 @@ One of the last games I played was the remake of the masterpiece
 [Nintendo Switch](https://www.nintendo.com/games/detail/katamari-damacy-reroll-switch).
 
 <div style="text-align: center;">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/AsJyVsQNJUg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="100%" height="315" src="https://www.youtube.com/embed/AsJyVsQNJUg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 
 Inspired by Katamari Damacy, I wanted to make a 2D version that had a similar
