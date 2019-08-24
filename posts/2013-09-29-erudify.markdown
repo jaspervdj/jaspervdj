@@ -112,5 +112,5 @@ mountains, usually with efficient public transport to take you to the top.
 To end this blogpost, here is a quick skating clip from yesterday:
 
 <div style="text-align: center">
-<iframe width="480" height="360" src="//www.youtube.com/embed/gYdEVib_0AM" frameborder="0" allowfullscreen></iframe>
+<iframe width="100%" height="315" src="//www.youtube.com/embed/gYdEVib_0AM" frameborder="0" allowfullscreen></iframe>
 </div>

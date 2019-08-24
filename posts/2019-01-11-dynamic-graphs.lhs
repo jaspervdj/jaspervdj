@@ -32,10 +32,9 @@ ended up liking it more than Hakone, where I was a year or two ago.
 Anyway, after the contest we were discussing how it went and Alex thought a key
 missing piece for them was a specific algorithm called _dynamic connectivity_.
 Because this is not a trivial algorithm to put together, we ended up using a
-less optimal version which still contained some bugs.
-
-After the contest, Alex decided to continue looking into this problem and we
-ended up putting this library together.
+less optimal version which still contained some bugs.  In the weeks after the
+contest ended Alex decided to continue looking into this problem and we ended up
+putting this library together.
 
 The dynamic connectivity problem is very simply explained to anyone who is at
 least a little familiar with graphs.  It comes down to building a datastructure
@@ -51,10 +50,11 @@ connectivity.
 [Union-find]: https://en.wikipedia.org/wiki/Disjoint-set_data_structure
 
 Like union-find, there is unfortunately no known persistent version of this
-algorithm.  An attempt was made [to create a persistent union find] but I don't
-think we can consider this successful in the Haskell sense of purity since the
-structure proposed in that paper is inherently not thread-safe; which is one of
-the reasons to pursue persistence in the first place.
+algorithm without sacrificing some performance.  An attempt was made [to create
+a fast, persistent union find] but I don't think we can consider this successful
+in the Haskell sense of purity since the structure proposed in that paper is
+inherently not thread-safe; which is one of the reasons to pursue persistence in
+the first place.
 
 [to create a persistent union find]: https://www.lri.fr/~filliatr/ftp/publis/puf-wml07.pdf
 
