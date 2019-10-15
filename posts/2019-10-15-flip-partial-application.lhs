@@ -253,7 +253,7 @@ In a way, it comes down to reading the type signature of `flip` in two ways:
     yielding an intuitive explanation of the chaining.
 
 It's also possible to define sibling operators `//$`, `///$`, etc., to "skip"
-operators other than the first one in a composable way.
+arguments other than the first one in a composable way.
 
 Should I use this everywhere?
 =============================
