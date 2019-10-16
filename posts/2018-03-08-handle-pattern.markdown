@@ -285,8 +285,8 @@ resources (file handles in particular come to mind as an example) are scarce.
 There is quite a strong correlation between scarce resources and things you
 would naturally use a `Handle` for.  That's why I recommend always providing a
 `close` as well, even if does nothing.  This is a form of forward compatibility
-in our API: if we later decide to add some sort of log files (which needs a
-`close`), we can do so without individually mailing all our module users that
+in our API: if we later decide to add some sort of log files (which will need to
+be closed), we can do so without individually mailing all our module users that
 they now need to add a `close` to their code.
 
 ~~~~~{.haskell}
@@ -338,10 +338,10 @@ overview.  My summary of it as it relates to this article would be:
 2. You can now use `throwIO` and `killThread` safely
 
 It's important to note that `withXyz` functions do not provide complete safety
-against things like use-after-close our double-close.  There are many
-interesting approaches to fix these issues but they are _way_ beyond the scope
-of this tutorial -- things like [Monadic Regions] and [The Linearity Monad] come
-to mind.  For now, we'll rely on `bracket` to catch common issues and on code
+against things like use-after-close or double-close.  There are many interesting
+approaches to fix these issues but they are _way_ beyond the scope of this
+tutorial -- things like [Monadic Regions] and [The Linearity Monad] come to
+mind.  For now, we'll rely on `bracket` to catch common issues and on code
 reviews to catch team members who are not using `bracket`.
 
 [Well Typed Exceptions]: http://www.well-typed.com/blog/97/
