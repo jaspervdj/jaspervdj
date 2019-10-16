@@ -5,8 +5,8 @@ tags: haskell
 ---
 
 I have been writing Haskell for a reasonable time now -- I believe I am coming
-up on ten years -- so sadly the frequency with which I discover something
-delightful about the language has decreased.
+up on ten years -- so sadly the frequency with which I discover delightful
+things about the language has decreased.
 
 However, I was talking with [HVR](https://twitter.com/hvrgnu) about the
 [Handle][handles] pattern, and the topic of _argument order_ came up.  This lead
