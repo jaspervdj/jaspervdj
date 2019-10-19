@@ -237,7 +237,7 @@ writing Haskell, I hadn't realized this chained in a usable and nice way.
 In a way, it comes down to reading the type signature of `flip` in two ways:
 
 1.  ~~~~~{.haskell}
-    flip :: (a -> b -> c) -> (b -> a -> c)`
+    flip :: (a -> b -> c) -> (b -> a -> c)
     ~~~~~
 
     Convert a function to another function that has the two first arguments
@@ -245,7 +245,7 @@ In a way, it comes down to reading the type signature of `flip` in two ways:
     name refers to.
 
 2.  ~~~~~{.haskell}
-    flip :: (a -> b -> c) -> b -> (a -> c)`
+    flip :: (a -> b -> c) -> b -> (a -> c)
     ~~~~~
 
     Partially apply a function to the _second_ argument.  After supplying a
@@ -254,6 +254,10 @@ In a way, it comes down to reading the type signature of `flip` in two ways:
 
 It's also possible to define sibling operators `//$`, `///$`, etc., to "skip"
 the first N arguments rather than just the first one in a composable way.
+
+**Update**: [Dan Dart](https://github.com/danwdart) pointed out to me that the
+sibling operators actually exist under the names of `-$`, `--$`, etc. in the
+[composition-extra package](https://hackage.haskell.org/package/composition-extra-2.0.0/docs/Data-Function-Apply.html).
 
 Should I use this everywhere?
 =============================
