@@ -255,6 +255,10 @@ In a way, it comes down to reading the type signature of `flip` in two ways:
 It's also possible to define sibling operators `//$`, `///$`, etc., to "skip"
 the first N arguments rather than just the first one in a composable way.
 
+**Update**: [Dan Dart](https://github.com/danwdart) pointed out to me that the
+sibling operators actually exist under the names of `-$`, `--$`, etc. in the
+[composition-extra package](https://hackage.haskell.org/package/composition-extra-2.0.0/docs/Data-Function-Apply.html).
+
 Should I use this everywhere?
 =============================
 
