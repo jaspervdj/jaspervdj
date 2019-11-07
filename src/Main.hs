@@ -194,6 +194,12 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/content.html" ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
+
+    -- Showcases
+    match "photos/showcase/*.html" $ do
+        route idRoute
+        compile $ getResourceBody
+            >>= relativizeUrls
   where
     pages =
         [ "contact.markdown"
