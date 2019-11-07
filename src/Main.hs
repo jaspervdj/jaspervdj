@@ -196,7 +196,7 @@ main = hakyllWith config $ do
                 >>= relativizeUrls
 
     -- Showcases
-    match "photos/showcase/*.html" $ do
+    match "photos/*/index.html" $ do
         route idRoute
         compile $ getResourceBody
             >>= relativizeUrls
