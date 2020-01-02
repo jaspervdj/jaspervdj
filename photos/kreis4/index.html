@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Showcase</title>
+        <style>
+            html {
+                background-color: #000;
+                color: #ddd;
+                font-family: sans-serif;
+                font-size: 18px;
+                font-weight: lighter;
+                margin: 60px auto 60px auto;
+                text-align: center;
+            }
+
+            header {
+                font-size: 30px;
+            }
+
+            a {
+                color: #ddd;
+            }
+
+            img {
+                display: block;
+                margin: 60px auto 60px auto;
+                max-width: 90%;
+                width: 800px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            Bilder aus Kreis 4
+        </header>
+        <p>2014–2019, <a href="/">Jasper Van der Jeugt</a></p>
+        <main>
+            <img src="https://66.media.tumblr.com/f1ae7d926c6e3a19cc9084dba90f2316/tumblr_pwr6tnZ5Lw1tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/4ed3d0f2564140d40366a2253c21588d/tumblr_pu6ljocXQd1tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/8c1449e743e9102575bda9c4197eafd7/tumblr_ptln8dTyA61tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/cdb7ecde78aaefe7f999295ceff8bed3/tumblr_psue5iX1xs1tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/021a1cacc5600da1a1942e3cc8497652/tumblr_paxxwmv2e91tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/5fd0f8edbab94948b8f8f3dc1e76ca56/tumblr_p934jdTguZ1tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/d70fe8786a28ace7af14fbb254286bd0/tumblr_p8q72u7jLy1tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/cf26678dedd4a06c6a4cfa70e669a232/tumblr_p670etTzV51tbdx3so1_r1_1280.jpg">
+            <img src="https://66.media.tumblr.com/6f7973ef91fb479b0a57f93297cd504a/tumblr_p5ydibQZDX1tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/d91fce79acac3bf327fb89afb32c1333/tumblr_ov91aynZZN1tbdx3so1_r1_1280.jpg">
+            <img src="https://66.media.tumblr.com/fef09427c8611de1233d31e7cb04afae/tumblr_oqknocVNjU1tbdx3so1_1280.jpg">
+            <img src="https://66.media.tumblr.com/b3f06a74ff3a1be8724a5e1e1291c769/tumblr_nnvoldifjo1tbdx3so1_1280.jpg">
+        </main>
+
+        <script type="text/JavaScript">
+            var imgs = document.getElementsByTagName("img");
+            var header = document.getElementsByTagName("header")[0];
+            header.innerHTML = '' + imgs.length + ' ' + header.innerHTML;
+            console.log(imgs);
+            console.log(header);
+        </script>
+
+        <!-- GUID -->
+        <div style="display: none">ce0f13b2-4a83-4c1c-b2b9-b6d18f4ee6d2</div>
+    </body>
+</html>
