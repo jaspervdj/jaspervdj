@@ -46,9 +46,9 @@ type safety in the process.
 
 Here is a 3D version:
 
-<video width="600" controls="true">
-  <source src="/images/2020-01-02-moving-clouds.mp4" type="video/mp4">
-</video>
+<div style="text-align: center;">
+<iframe width="100%" height="315" src="https://www.youtube.com/embed/KRZ_6Rh6prE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
 
 # The (really) bad parts
 
@@ -62,7 +62,8 @@ implement it during [Munihac 2019].
 As I was working on it, the answer quickly became apparent -- the algorithm is
 so slow that its speed cannot even be considered trade-off, its slowness really
 cancels out all advantages and then some!  BitCoin may even be a better use of
-compute resources.
+compute resources.  The 30 second video clip I embedded earlier took 8 hours to
+render on a 16-core machine.
 
 This was a bit of a bummer on two fronts: the second one being that I wanted to
 use this as a vehicle to learn some GPU programming; and it turned out to be a
