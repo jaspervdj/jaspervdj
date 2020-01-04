@@ -18,7 +18,7 @@ pretty pictures!
 
 While it looked cool at first, it turned out to be an extremely pointless and
 outdated way to generate pictures like this.  But I wanted to write it up anyway
-since it's important to document failure as well as success: if you've found
+since it is important to document failure as well as success: if you've found
 this blogpost searching for an implementation of this paper; well, you have
 found it, but it probably won't help you.
 [Here is the GitHub repository][repo].
@@ -63,10 +63,10 @@ though I had a very strong suspicion as to why that was the case, I set out to
 implement it during [Munihac 2019].
 
 As I was working on it, the answer quickly became apparent -- the algorithm is
-so slow that its speed cannot even be considered trade-off, its slowness really
-cancels out all advantages and then some!  BitCoin may even be a better use of
-compute resources.  The 30 second video clip I embedded earlier took 8 hours to
-render on a 16-core machine.
+so slow that its speed cannot even be considered a trade-off, its slowness
+really cancels out all advantages and then some!  BitCoin may even be a better
+use of compute resources.  The 30 second video clip I embedded earlier took 8
+hours to render on a 16-core machine.
 
 This was a bit of a bummer on two fronts: the second one being that I wanted to
 use this as a vehicle to learn some GPU programming; and it turned out to be a
@@ -93,7 +93,7 @@ generally bad-looking edges:
 ![Hard circular pulses](/images/2020-01-03-hard.jpg)
 
 It then switches to using circles with smoothed edges; which looks much better,
-we're getting probably puffy clouds here:
+we're getting properly puffy clouds here:
 
 ![Smooth circular pulses](/images/2020-01-03-smooth.jpg)
 
