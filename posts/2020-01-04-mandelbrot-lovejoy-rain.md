@@ -1,5 +1,5 @@
 ---
-title: "Mandelbrot & Lovejoy's Rain fractals"
+title: "Mandelbrot & Lovejoy's Rain Fractals"
 description: Elegant but relatively useless noise
 tags: 'haskell'
 ---
