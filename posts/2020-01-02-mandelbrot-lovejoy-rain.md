@@ -7,7 +7,8 @@ tags: 'haskell'
 # Summary
 
 At some point during [ICFP2019] in Berlin, I came across a completely unrelated
-[old paper][pdf] by Mandelbrot, Lovejoy about the fractal properties of rain.
+[old paper][pdf] by S. Lovejoy and B. B. Mandelbrot called _"Fractal properties
+of rain, and a fractal model"_.
 
 While the model in the paper is primarily meant to model rain**fall**; the
 authors explain that it can also be used for rain**clouds**, since these two
@@ -108,6 +109,6 @@ It's mildly interesting that the annuli become hollow spheres in 3D.
 [Munihac 2019]: https://munihac.de/2019.html
 [annulus]: https://en.wikipedia.org/wiki/Annulus_(mathematics)
 [lacunarity]: https://en.wikipedia.org/wiki/Lacunarity
-[pdf]: https://www.physics.mcgill.ca/~gang/eprints/eprintLovejoy/Tellus.1985.small.pdf
+[pdf]: https://www.tandfonline.com/doi/pdf/10.3402/tellusa.v37i3.11668
 [repo]: https://github.com/jaspervdj/mandelbrot-lovejoy-rain/.
 [massiv]: https://github.com/lehins/massiv/blob/master/README.md
