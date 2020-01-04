@@ -15,7 +15,7 @@ authors explain that it can also be used for rain**clouds**, since these two
 phenomena are naturally similarly-shaped.  This means it can be used to generate
 pretty pictures!
 
-![](/images/2020-01-03-2d.jpg)
+![](/images/2020-01-04-2d.jpg)
 
 While it looked cool at first, it turned out to be an extremely pointless and
 outdated way to generate pictures like this.  But I wanted to write it up anyway
@@ -91,24 +91,29 @@ The paper proposes 3 shapes (which it calls "pulses").  It starts out with just
 drawing plain opaque circles with a hard edge.  This causes some interesting but
 generally bad-looking edges:
 
-![Hard circular pulses](/images/2020-01-03-hard.jpg)
+![Hard circular pulses](/images/2020-01-04-hard.jpg)
 
 It then switches to using circles with smoothed edges; which looks much better,
 we're getting properly puffy clouds here:
 
-![Smooth circular pulses](/images/2020-01-03-smooth.jpg)
+![Smooth circular pulses](/images/2020-01-04-smooth.jpg)
 
 Finally, the paper discusses drawing smoothed-out [annuli][annulus], which
 dramatically changes the shapes of the clouds:
 
-![Annular pulses](/images/2020-01-03-annuli.jpg)
+![Annular pulses](/images/2020-01-04-annuli.jpg)
 
 It's mildly interesting that the annuli become hollow spheres in 3D.
 
+Thanks to [Alexey] for [massiv] and a massive list of [suggestions] on my
+implementation!
+
+[Alexey]: https://alexey.kuleshevi.ch/
 [ICFP2019]: https://icfp19.sigplan.org/
 [Munihac 2019]: https://munihac.de/2019.html
 [annulus]: https://en.wikipedia.org/wiki/Annulus_(mathematics)
 [lacunarity]: https://en.wikipedia.org/wiki/Lacunarity
+[massiv]: https://github.com/lehins/massiv/blob/master/README.md
 [pdf]: https://www.tandfonline.com/doi/pdf/10.3402/tellusa.v37i3.11668
 [repo]: https://github.com/jaspervdj/mandelbrot-lovejoy-rain/.
-[massiv]: https://github.com/lehins/massiv/blob/master/README.md
+[suggestions]: https://github.com/jaspervdj/mandelbrot-lovejoy-rain/pull/1
