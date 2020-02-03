@@ -220,6 +220,9 @@ postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
     , dateField "date" "%B %e, %Y"
     , tagsField "tags" tags
+    , Context $ \key -> case key of
+        "title" -> unContext (mapContext escapeHtml defaultContext) key
+        _       -> unContext mempty key
     , defaultContext
     ]
 
@@ -228,6 +231,9 @@ postCtx tags = mconcat
 feedCtx :: Context String
 feedCtx = mconcat
     [ bodyField "description"
+    , Context $ \key -> case key of
+        "title" -> unContext (mapContext escapeHtml defaultContext) key
+        _       -> unContext mempty key
     , defaultContext
     ]
 
