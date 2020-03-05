@@ -70,10 +70,9 @@ And that's enough boilerplate!  Let's get right to it.
 
 It's always good to pretend that your DSL is built on solid foundations,
 so we'll pick Arrows.  One reason for that is that they're easier to explain
-than Applicative (stuff goes in, other stuff comes out, see?  they're like
+than Applicative (stuff goes in, other stuff comes out, see?  They're like
 the coffee machine in the hallway).  Secondly, they are less powerful than
-Monads and classic Marxist theory tells us we should avoid giving our managers
-too much power.
+Monads and we prefer to keep that good stuff to ourselves.
 
 Unfortunately, it seems like the Arrow module was contributed by an operator
 fetishism cult, and anyone who's ever done non-trivial work with Arrows now
