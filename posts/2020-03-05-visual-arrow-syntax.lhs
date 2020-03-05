@@ -88,7 +88,7 @@ cred) and Corporate Managers (for our bonus).  These two groups have many
 things in common.  Apart from talking a lot about abstract nonsense and
 getting paid for it, both fucking love drawing boxes and arrows.
 
-![From the Haskell discord server, Microsoft Paint on Canvas, 2020](/images/2020-03-05-commutes.png)
+![The Comooter, Unknown Author.  Microsoft Paint on Canvas, 2020.](/images/2020-03-05-commutes.png)
 
 Yeah, so I guess we can call this visual DSL a diagram.  The main drawback
 of arrows is that they can only have a single input and output.  We'll "fix"
