@@ -57,14 +57,14 @@ or a default if the list is empty:
 
 > hlast :: x -> HList things -> Last (x ': things)
 
-The second auxiliary function just replaces the last element, if there is one.
+The second auxiliary function takes anything but the last element of a list.
 
-> type family SetLast (x :: *) (l :: [*]) :: [*] where
->     SetLast x '[]        =      '[]
->     SetLast x (_ ': '[]) = x ': '[]
->     SetLast x (y ': ys)  = y ': SetLast x ys
+> type family Init (l :: [*]) :: [*] where
+>     Init '[]            = '[]
+>     Init (_ ': '[])     = '[]
+>     Init (x ': y ': zs) = x ': Init (y ': zs)
 
-> hsetLast :: x -> HList things -> HList (SetLast x things)
+> hinit :: HList things -> HList (Init things)
 
 And that's enough boilerplate!  Let's get right to it.
 
@@ -121,7 +121,7 @@ the magic happens:
 
 >     Below
 >         :: Diagram ins1 outs1 f a b
->         -> Diagram (SetLast b outs1) outs2 f (Last (b ': outs1)) c
+>         -> Diagram (b ': Init outs1) outs2 f (Last (b ': outs1)) c
 >         -> Diagram ins1 outs2 f a c
 
 Is this correct?  What does it even mean?  The answer to both questions
@@ -251,9 +251,9 @@ Appendix 1: HList function implementations
 > hlast x Nil         = x
 > hlast x (Cons a as) = hlast a as
 
-> hsetLast x Nil                  = Nil
-> hsetLast x (Cons _ Nil)         = Cons x Nil
-> hsetLast x (Cons y (Cons z zs)) = Cons y (hsetLast x (Cons z zs))
+> hinit Nil                  = Nil
+> hinit (Cons _ Nil)         = Nil
+> hinit (Cons x (Cons y zs)) = Cons x (hinit (Cons y zs))
 
 Appendix 2: fromDiagram implementation
 ----------------------------------
@@ -268,7 +268,7 @@ Appendix 2: fromDiagram implementation
 >     arr (\((y, outs), a) -> ((y, a), outs))
 > fromDiagram (Below l r) =
 >     fromDiagram l >>>
->     arr (\(x, outs) -> (hlast x outs, hsetLast x outs)) >>>
+>     arr (\(x, outs) -> (hlast x outs, Cons x (hinit outs))) >>>
 >     fromDiagram r
 
 Appendix 2: some type signatures
@@ -285,7 +285,7 @@ We wouldn't want these to get in our way in the middle of the prose.
 > (╋►) :: Arrow f => Diagram ins outs f a b -> f (b, u) c
 >      -> Diagram (u ': ins) ((b, u) ': outs) f a c
 > (┧)  :: Diagram ins1 outs1 f a b
->      -> Diagram (SetLast (b, u) outs1) outs2 f (Last ((b, u) ': outs1)) c
+>      -> Diagram ((b, u) ': Init outs1) outs2 f (Last ((b, u) ': outs1)) c
 >      -> Diagram (u ': ins1) outs2 f a c
 
 [Box-drawing characters]: https://en.wikipedia.org/wiki/Box-drawing_character
