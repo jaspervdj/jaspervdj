@@ -121,7 +121,7 @@ the magic happens:
 
 >     Below
 >         :: Diagram ins1 outs1 f a b
->         -> Diagram (b ': Init outs1) outs2 f (Last (b ': outs1)) c
+>         -> Diagram (Init (b ': outs1)) outs2 f (Last (b ': outs1)) c
 >         -> Diagram ins1 outs2 f a c
 
 Is this correct?  What does it even mean?  The answer to both questions
@@ -268,7 +268,7 @@ Appendix 2: fromDiagram implementation
 >     arr (\((y, outs), a) -> ((y, a), outs))
 > fromDiagram (Below l r) =
 >     fromDiagram l >>>
->     arr (\(x, outs) -> (hlast x outs, Cons x (hinit outs))) >>>
+>     arr (\(x, outs) -> (hlast x outs, hinit (Cons x outs))) >>>
 >     fromDiagram r
 
 Appendix 2: some type signatures
@@ -285,7 +285,7 @@ We wouldn't want these to get in our way in the middle of the prose.
 > (╋►) :: Arrow f => Diagram ins outs f a b -> f (b, u) c
 >      -> Diagram (u ': ins) ((b, u) ': outs) f a c
 > (┧)  :: Diagram ins1 outs1 f a b
->      -> Diagram ((b, u) ': Init outs1) outs2 f (Last ((b, u) ': outs1)) c
+>      -> Diagram (Init ((b, u) ': outs1)) outs2 f (Last ((b, u) ': outs1)) c
 >      -> Diagram (u ': ins1) outs2 f a c
 
 [Box-drawing characters]: https://en.wikipedia.org/wiki/Box-drawing_character
