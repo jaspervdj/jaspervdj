@@ -8,8 +8,11 @@ import Visual
 
 import Data.List
 import Data.Char
+import Data.Bool (bool)
 import Control.Monad (join)
 import Data.Traversable (for)
+import Data.Foldable (for_)
+import Data.Bifunctor (bimap, second, first)
 import Data.Tuple
 import qualified Data.Vector.Storable as V
 import Control.Monad.ST (runST)
@@ -43,17 +46,28 @@ example04 =
 example05
   :: Diagram '[] '[] (->) Int [((Int, Int), JP.PixelRGB8)]
 example05 = undefined
-  where
-    red   = JP.PixelRGB8 255 0   0
-    green = JP.PixelRGB8 0   255 0
+red   = JP.PixelRGB8 255 0   0
+green = JP.PixelRGB8 0   255 0
+
+{-
+both f (a, b) = (f a, f b)
 
 example06 =
-  (📈)  id┳►                 repeat     ┳► (map (*2))            ━┓
-  (📈)  (join (*))━►pred━►(enumFromTo 0)┶►uncurry (zipWith divMod) ┶►uncurry zip
+  (📈)  id┳►                 repeat     ┳► id                     ━┓
+  (📈)  (join (*))━►pred━►(enumFromTo 0)┶►uncurry (zipWith divMod) ┧
+-}
+
+example07 =
+  (📈)  id┭►(subtract 0.5)┳►(*pi)━►sin━┓
+  (📈)  (*2)━►(pred)      ╋►(fst)      ┶►(uncurry (-))━►abs━►(<0.1)━┓
+  (📈)                (second(*2))━►uncurry (+)━►abs━►(<0.1)        ┧
+  (📈)                                          (uncurry (||)) ━► (bool red green)
 
 image :: Int -> JP.Image JP.PixelRGB8
 image s = runST $ do
     img <- JP.newMutableImage s s
-    for (run example05 s) $
-        \((x, y), c) -> JP.writePixel img x y c
+    for_ [0 .. s - 1] $ \y ->
+        for_ [0 .. s - 1] $ \x ->
+            JP.writePixel img x y $ run example07
+                (fromIntegral x / fromIntegral (s - 1), fromIntegral y / fromIntegral (s - 1))
     JP.freezeImage $ img
