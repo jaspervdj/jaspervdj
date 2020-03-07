@@ -27,6 +27,7 @@ $(industryStandardBoilerPlate (Just '━') '(┓) Nothing)
 $(industryStandardBoilerPlate (Just '─') '(┶►) (Just '━'))
 $(industryStandardBoilerPlate (Just '━') '(╋►) (Just '━')) -- Needs small up parts?
 $(industryStandardBoilerPlate (Just '━') '(┳►) (Just '━'))
+$(industryStandardBoilerPlate (Just '─') '(┧) Nothing)
 
 example02 =
  (📈) (partition isUpper)━┭─►(reverse)━┓
@@ -64,10 +65,11 @@ example07 =
   (📈)                                          (uncurry (||)) ━► (bool red green)
 
 example08 =
-  (📈)  id┭►(subtract 0.5)┳►                   (<0)━┓
-  (📈)    (subtract 0.5)  ╋►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━┓
-  (📈)                   swap┭►(*pi)━►sin ┳►    const ()             ┶►snd━┓
-  (📈)                      (*2)          ┶►(uncurry (-))━►abs━►(<0.2)     ┶►(uncurry (||))━► (bool red green)
+  (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━►(<0)━━━━━━━━━━━━━━━━┓
+  (📈)    (subtract 0.5)━━━━━━━╋━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━┓
+  (📈)                      swap━┭─►(*pi)━━►sin━┳━━━━━━━━►const ()─────────┶━►snd━┓
+  (📈)                           (*2)───────────┶━►(uncurry (-))━━►abs━━►(<0.2)───┧
+  (📈)                                                                   (uncurry (||))━►(bool red green)
 
 {-
   ┭►(subtract 0.5)┳►(*pi)━►sin━┓

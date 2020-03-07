@@ -173,8 +173,8 @@ to be grossed out about.
 > expansions mbLeft operator mbRight =
 >     [operator] >>= maybe pure goR mbRight >>= maybe pure goL mbLeft
 >   where
->     goL l op = [replicate n l ++ op | n <- [1 .. 10]]
->     goR r op = [init op ++ replicate n r ++ [last op] | n <- [1 .. 10]]
+>     goL l op = [replicate n l ++ op | n <- [1 .. 19]]
+>     goR r op = [init op ++ replicate n r ++ [last op] | n <- [1 .. 19]]
 
 > industryStandardBoilerPlate
 >     :: Maybe Char -> TH.Name -> Maybe Char -> TH.Q [TH.Dec]
