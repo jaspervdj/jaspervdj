@@ -25,7 +25,7 @@ $(industryStandardBoilerPlate (Just '━') '(━►) Nothing)
 $(industryStandardBoilerPlate (Just '━') '(┭►) (Just '─'))
 $(industryStandardBoilerPlate (Just '━') '(┓) Nothing)
 $(industryStandardBoilerPlate (Just '─') '(┶►) (Just '━'))
-$(industryStandardBoilerPlate (Just '━') '(╋►) (Just '━'))
+$(industryStandardBoilerPlate (Just '━') '(╋►) (Just '━')) -- Needs small up parts?
 $(industryStandardBoilerPlate (Just '━') '(┳►) (Just '━'))
 
 example02 =
@@ -63,11 +63,25 @@ example07 =
   (📈)                (second(*2))━►uncurry (+)━►abs━►(<0.1)        ┧
   (📈)                                          (uncurry (||)) ━► (bool red green)
 
+example08 =
+  (📈)  id┭►(subtract 0.5)┳►                   (<0)━┓
+  (📈)    (subtract 0.5)  ╋►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━┓
+  (📈)                   swap┭►(*pi)━►sin ┳►    const ()             ┶►snd━┓
+  (📈)                      (*2)          ┶►(uncurry (-))━►abs━►(<0.2)     ┶►(uncurry (||))━► (bool red green)
+
+{-
+  ┭►(subtract 0.5)┳►(*pi)━►sin━┓
+  (📈)  (*2)━►(pred)      ╋►(fst)      ┶►(uncurry (-))━►abs━►(<0.1)━┓
+  (📈)                (second(*2))━►uncurry (+)━►abs━►(<0.1)        ┧
+  (📈)                                          (uncurry (||)) ━► (bool red green)
+  -}
+
 image :: Int -> JP.Image JP.PixelRGB8
 image s = runST $ do
     img <- JP.newMutableImage s s
+    let sd = fromIntegral (s - 1) :: Double
     for_ [0 .. s - 1] $ \y ->
         for_ [0 .. s - 1] $ \x ->
-            JP.writePixel img x y $ run example07
-                (fromIntegral x / fromIntegral (s - 1), fromIntegral y / fromIntegral (s - 1))
+            JP.writePixel img x y $ run example08
+                (fromIntegral x / sd, fromIntegral y / sd)
     JP.freezeImage $ img
