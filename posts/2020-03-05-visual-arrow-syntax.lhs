@@ -271,7 +271,11 @@ This renders everyone's favorite greek letter:
 
 ![](/images/2020-03-05-lambda.png){width=30%}
 
-Amazing!  Math!
+Amazing!  Math!  Thanks for reading, and feel free to immediately start using
+this in production!
+
+Appendix 1: run implementation
+------------------------------
 
 The implementation of `run` uses a helper function that lets us convert
 a diagram back to a normal `Arrow` that uses `HList` to pass extra inputs
@@ -288,10 +292,7 @@ and outputs.  This great simplifies the type signatures and gives us a
 > run :: Arrow f => Diagram '[] '[] f a b -> f a b
 > run d = id &&& (arr (const Nil)) >>> fromDiagram d >>> arr fst
 
-Thanks for reading, and feel free to immediately start using this in production!
-
-Appendix 1: fromDiagram implementation
---------------------------------------
+The definition for `fromDiagram` is as follows:
 
 > fromDiagram (Diagram f) = arr f *** arr (const Nil)
 > fromDiagram (Then l r) = fromDiagram l >>> first r
