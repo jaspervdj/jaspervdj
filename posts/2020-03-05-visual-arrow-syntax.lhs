@@ -153,11 +153,11 @@ as extra inputs/outputs, or reified back into tuples.
 > l ┳ c = l ┳► arr (const c)
 > infixl 5 ┳
 
-> (║) :: Arrow f => Diagram ins1 outs1 f a b
+> (┃) :: Arrow f => Diagram ins1 outs1 f a b
 >     -> Diagram (Init (u ': outs1)) outs2 f (Last (u ': outs1)) c
 >     -> Diagram (u ': ins1) outs2 f a c
-> l ║ r = Input l ━► arr snd ┓ r
-> infixr 4 ║
+> l ┃ r = Input l ━► arr snd ┓ r
+> infixr 4 ┃
 
 Finally, while we're at it, we'll also include an operator to clearly indicate
 to our manager how our valuation will change if we adopt this DSL.
