@@ -1,6 +1,6 @@
 ---
 title: 'Visual Arrow Diagrams'
-description: 'Finally, better Arrow syntax, complete free of hacks'
+description: 'Finally, better Arrow syntax, completely free of hacks'
 tags: 'haskell'
 ---
 
@@ -27,19 +27,23 @@ job security for the forseeable future.
 
 Some imports, not much going on here.
 
+> import qualified Codec.Picture as JP
+> import qualified Codec.Picture.Types as JP
 > import Control.Arrow
 > import Control.Category
+> import Control.Monad.ST (runST)
 > import Data.Char (isUpper)
+> import Data.Foldable (for_)
 > import Data.List (sort, partition)
-> import Prelude hiding (id, (.))
 > import qualified Language.Haskell.TH as TH
+> import Prelude hiding (id, (.))
 
 All Haskell tutorials that use some form of dependent typing seem to start
 with the `HList` type.  So I suppose we'll do that as well.
 
 > data HList (things :: [*]) where
->     Nil  :: HList '[]
->     Cons :: x -> HList xs -> HList (x ': xs)
+>   Nil  :: HList '[]
+>   Cons :: x -> HList xs -> HList (x ': xs)
 
 `HList` is short for hype list.  A hype list allows you to put even more
 hype in your types.
@@ -53,23 +57,23 @@ types.  The first one just takes the last element from a list.
 > hlast (Cons _ (Cons y zs)) = hlast (Cons y zs)
 
 > type family Last (l :: [*]) :: * where
->     Last (x ': '[]) = x
->     Last (x ': xs)  = Last xs
+>   Last (x ': '[]) = x
+>   Last (x ': xs)  = Last xs
 
 Readers may wonder if this is safe, since `last` is usually a partial function.
 Well, it turns out that partial functions are safe if you type them using
 partial type families.  So one takeaway is that partial functions can just be
 fixed by adding more partial stuff on top.  This explains things like `Prelude`.
 
-The second auxiliary function drops the last element from a list.
+Anyway, the second auxiliary function drops the last element from a list.
 
 > hinit :: HList (thing ': things) -> HList (Init (thing ': things))
 > hinit (Cons _ Nil)         = Nil
 > hinit (Cons x (Cons y zs)) = Cons x (hinit (Cons y zs))
 
 > type family Init (l :: [*]) :: [*] where
->     Init (_ ': '[])     = '[]
->     Init (x ': y ': zs) = x ': Init (y ': zs)
+>   Init (_ ': '[])     = '[]
+>   Init (x ': y ': zs) = x ': Init (y ': zs)
 
 And that's enough boilerplate!  Let's get right to it.
 
@@ -106,38 +110,37 @@ We'll "fix" that by having extra `ins` and `outs`.  We are wrapping an arbitrary
 
 We can create a diagram from a normal function, that's easy.
 
->     Diagram :: (a -> b) -> Diagram '[] '[] f a b
+>   Diagram :: (a -> b) -> Diagram '[] '[] f a b
 
 And we can add another normal function at the back.  No biggie.
 
->     Then
->         :: Diagram ins outs f a b -> f b c
->         -> Diagram ins outs f a c
+>   Then
+>     :: Diagram ins outs f a b -> f b c
+>     -> Diagram ins outs f a c
 
-Of course, we need to be able to use our extra input and outputs.
+Of course, we need to be able to use our extra input and outputs.  `Output`
+wraps an existing `Diagram` and redirects the second element of a tuple to the
+`outs`; and `Input` does it the other way around.
 
-`Output` wraps an existing `Diagram` and either redirect the second element of a
-tuple to the `outs`; and `Input` does it the other way around.
+>   Output
+>     :: Diagram ins outs f a (b, o)
+>     -> Diagram ins (o ': outs) f a b
 
->     Output
->         :: Diagram ins outs f a (b, o)
->         -> Diagram ins (o ': outs) f a b
-
->     Input
->         :: Diagram ins outs f a b
->         -> Diagram (i ': ins) outs f a (b, i)
+>   Input
+>     :: Diagram ins outs f a b
+>     -> Diagram (i ': ins) outs f a (b, i)
 
 The hardest part is connecting two existing diagrams.  This is really where
 the magic happens:
 
->     Below
->         :: Diagram ins1 outs1 f a b
->         -> Diagram (Init (b ': outs1)) outs2 f (Last (b ': outs1)) c
->         -> Diagram ins1 outs2 f a c
+>   Below
+>     :: Diagram ins1 outs1 f a b
+>     -> Diagram (Init (b ': outs1)) outs2 f (Last (b ': outs1)) c
+>     -> Diagram ins1 outs2 f a c
 
-Is this correct?  What does it even mean?  The answer to both questions
-is: "I don't know".  It typechecks, which is what really matters here.
-And there's something about `ins` matching `outs` in there, yeah.
+Is this correct?  What does it even mean?  The answer to both questions is: "I
+don't know".  It typechecks, which is what really matters when you're doing
+Haskell.  And there's something about `ins` matching `outs` in there, yeah.
 
 Concerned readers of this blog may at this point be wondering why we used
 reasonable names for the constructors of `Diagram` rather than just operators.
@@ -192,34 +195,34 @@ code, so it would be nice if we could write things like `━━━━┳━►` 
 just `┳►`.  And any Haskeller worth their salt will tell you that this is
 where Template Haskell comes in.
 
-Template Haskell gets a bad rep, but that's only because it mostly misused.
+Template Haskell gets a bad rep, but that's only because it is mostly misused.
 Originally, it was designed to drasticallly increase the number of a operators
 in a module, which is exactly what we'll do here.  Nothing to be grossed out
 about.
 
 > expansions :: Maybe Char -> String -> Maybe Char -> [String]
 > expansions mbLeft operator mbRight =
->     [operator] >>= maybe pure goR mbRight >>= maybe pure goL mbLeft
->   where
->     goL l op = [replicate n l ++ op | n <- [1 .. 19]]
->     goR r op = [init op ++ replicate n r ++ [last op] | n <- [1 .. 19]]
+>   [operator] >>= maybe pure goR mbRight >>= maybe pure goL mbLeft
+>  where
+>   goL l op = [replicate n l ++ op | n <- [1 .. 19]]
+>   goR r op = [init op ++ replicate n r ++ [last op] | n <- [1 .. 19]]
 
 > industryStandardBoilerPlate
->     :: Maybe Char -> TH.Name -> Maybe Char -> TH.Q [TH.Dec]
+>   :: Maybe Char -> TH.Name -> Maybe Char -> TH.Q [TH.Dec]
 > industryStandardBoilerPlate l name r = do
->     sig <- TH.reify name >>= \case
->          TH.VarI _ sig _ -> pure sig
->          _               -> fail "no info"
->     fixity <- TH.reifyFixity name >>= maybe (fail "no fixity") pure
->     pure
->         [ decl
->         | name' <- fmap TH.mkName $ expansions l (TH.nameBase name) r
->         , decl  <-
->             [ TH.SigD name' sig
->             , TH.FunD name' [TH.Clause [] (TH.NormalB (TH.VarE name)) []]
->             , TH.InfixD fixity name'
->             ]
+>   sig <- TH.reify name >>= \case
+>     TH.VarI _ sig _ -> pure sig
+>     _               -> fail "no info"
+>   fixity <- TH.reifyFixity name >>= maybe (fail "no fixity") pure
+>   pure
+>     [ decl
+>     | name' <- fmap TH.mkName $ expansions l (TH.nameBase name) r
+>     , decl  <-
+>         [ TH.SigD name' sig
+>         , TH.FunD name' [TH.Clause [] (TH.NormalB (TH.VarE name)) []]
+>         , TH.InfixD fixity name'
 >         ]
+>     ]
 
 We're now equipped to silence even the harshest syntax critics:
 
@@ -237,34 +240,46 @@ example03 =
   (📈) (+1)━┳━►(+1)━┓
   (📈)      (+1)━━━━╆━►add━┓
   (📈)              add────┶━►add
-  where
-    add = uncurry (+)
-`````
-
-TODO: a better example that does something useful next.
-
-`````haskell
-example04 =
-  (📈) (+2)━┳━►intToDigit━━┳━►(>'a')━┓
-  (📈)    showInt━►(++"!")─┶━►swap───┶━►id
+ where
+  add = uncurry (+)
 `````
 
 Type inference is excellent and running is easy.  In GHCi:
 
 `````
-*Main> :t example04
-example04 :: Diagram '[] '[] (->) Int ((Bool, [Char]), Char)
-*Main> run example04 1
-((False,"3!"),'3')
+*Main> :t example03
+example04 :: Diagram '[] '[] (->) Integer Integer
+*Main> run example03 1
+12
 `````
+
+Let's look at a more complicated example.
+
+`````haskell
+lambda =
+  (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━►(<0)━━━━━━━━━━━━━━━━┓
+  (📈)    (subtract 0.5)───────╆━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━━━━━━━━┓
+  (📈)                      swap━┭─►(*pi)━━►sin ┳()                               ┃
+  (📈)                           (*2)───────────┶━►(uncurry (-))━━►abs━━►(<0.2)───┧
+  (📈)                                                                   (uncurry (||))━►(bool bg fg)
+ where
+  fg = JP.PixelRGB8 69  58  98
+  bg = JP.PixelRGB8 255 255 255
+`````
+
+This renders everyone's favorite greek letter:
+
+![](/images/2020-03-05-lambda.png){width=30%}
+
+Amazing!  Math!
 
 The implementation of `run` uses a helper function that lets us convert
 a diagram back to a normal `Arrow` that uses `HList` to pass extra inputs
 and outputs:
 
 > fromDiagram
->      :: Arrow f => Diagram ins outs f a b
->      -> f (a, HList ins) (b, HList outs)
+>   :: Arrow f => Diagram ins outs f a b
+>   -> f (a, HList ins) (b, HList outs)
 
 We can then have a specialized version for when there's zero extra inputs
 and outputs.  This great simplifies the type signatures and gives us a
@@ -281,20 +296,21 @@ Appendix 1: fromDiagram implementation
 > fromDiagram (Diagram f) = arr f *** arr (const Nil)
 > fromDiagram (Then l r) = fromDiagram l >>> first r
 > fromDiagram (Output l) =
->     fromDiagram l >>> arr (\((x, y), things) -> (x, Cons y things))
+>   fromDiagram l >>> arr (\((x, y), things) -> (x, Cons y things))
 > fromDiagram (Input l) =
->     arr (\(x, Cons a things) -> ((x, things), a)) >>>
->     first (fromDiagram l) >>>
->     arr (\((y, outs), a) -> ((y, a), outs))
+>   arr (\(x, Cons a things) -> ((x, things), a)) >>>
+>   first (fromDiagram l) >>>
+>   arr (\((y, outs), a) -> ((y, a), outs))
 > fromDiagram (Below l r) =
->     fromDiagram l >>>
->     arr (\(x, outs) -> (hlast (Cons x outs), hinit (Cons x outs))) >>>
->     fromDiagram r
+>   fromDiagram l >>>
+>   arr (\(x, outs) -> (hlast (Cons x outs), hinit (Cons x outs))) >>>
+>   fromDiagram r
 
 Appendix 2: some type signatures
 --------------------------------
 
-We wouldn't want these to get in our way in the middle of the prose.
+We wouldn't want these to get in our way in the middle of the prose, but GHC
+complains if we don't put them somewhere.
 
 > (┳►) :: Arrow f => Diagram ins outs f a b -> f b c
 >      -> Diagram ins (b ': outs) f a c
@@ -307,5 +323,21 @@ We wouldn't want these to get in our way in the middle of the prose.
 > (┧)  :: Diagram ins1 outs1 f a b
 >      -> Diagram (Init ((b, u) ': outs1)) outs2 f (Last ((b, u) ': outs1)) c
 >      -> Diagram (u ': ins1) outs2 f a c
+
+Appendix 3: image rendering boilerplate
+---------------------------------------
+
+> image
+>   :: Int -> Int
+>   -> Diagram '[] '[] (->) (Double, Double) JP.PixelRGB8
+>   -> JP.Image JP.PixelRGB8
+> image w h diagram = runST $ do
+>   img <- JP.newMutableImage w h
+>   for_ [0 .. h - 1] $ \y ->
+>     for_ [0 .. w - 1] $ \x ->
+>       let x' = fromIntegral x / fromIntegral (w - 1)
+>           y' = fromIntegral y / fromIntegral (h - 1) in
+>       JP.writePixel img x y $ run diagram (x', y')
+>   JP.freezeImage img
 
 [Box-drawing characters]: https://en.wikipedia.org/wiki/Box-drawing_character
