@@ -4,15 +4,14 @@ description: 'Finally, better Arrow syntax, complete free of hacks'
 tags: 'haskell'
 ---
 
-Haskell is great building at DSLs -- which are perhaps the ultimate
-form of slacking off at work.  Rather than actually doing the work your
-manager tells you to, you can build DSLs to delegate this back to your
-manager so you can focus on finally writing up that GHC proposal for
-`MultilineTypeOperatorSyntax`.
+Haskell is great building at DSLs -- which are perhaps the ultimate form of
+slacking off at work.  Rather than actually doing the work your manager tells
+you to, you can build DSLs to delegate this back to your manager so you can
+focus on finally writing up that GHC proposal for `MultilineTypeOperatorSyntax`.
 
-So, in this blogpost we'll build a DSL that's so simple even your manager
-can use it!  This blogpost is a literate Haskell file so you can run it
-directly in GHCi.
+So, in this blogpost we'll build a visual DSL that's so simple even your manager
+can use it!  This blogpost is a literate Haskell file so you can run it directly
+in GHCi.
 
 We'll need a few language extensions -- not too much, just enough to guarantee
 job security for the forseeable future.
@@ -48,31 +47,38 @@ hype in your types.
 
 We'll require two auxiliary functions for our hype list.  Because of all
 the hype, they each require a type family in order for us to be able to even
-express their types.  The first one just takes the last element from a list,
-or a default if the list is empty:
+express their types.  The first one just takes the last element from a list.
 
 > type family Last (l :: [*]) :: * where
 >     Last (x ': '[]) = x
 >     Last (x ': xs)  = Last xs
 
-> hlast :: x -> HList things -> Last (x ': things)
+> hlast :: HList (thing ': things) -> Last (thing ': things)
+> hlast (Cons x Nil)         = x
+> hlast (Cons _ (Cons y zs)) = hlast (Cons y zs)
+
+Readers may wonder if this is safe, since `last` is usually a partial function.
+Well, it turns out that partial functions are safe if you type them using
+partial type families.  So one takeaway is that partial functions can just be
+fixed by adding more partial stuff on top.  This explains things like `Prelude`.
 
 The second auxiliary function takes anything but the last element of a list.
 
 > type family Init (l :: [*]) :: [*] where
->     Init '[]            = '[]
 >     Init (_ ': '[])     = '[]
 >     Init (x ': y ': zs) = x ': Init (y ': zs)
 
-> hinit :: HList things -> HList (Init things)
+> hinit :: HList (thing ': things) -> HList (Init (thing ': things))
+> hinit (Cons _ Nil)         = Nil
+> hinit (Cons x (Cons y zs)) = Cons x (hinit (Cons y zs))
 
 And that's enough boilerplate!  Let's get right to it.
 
-It's always good to pretend that your DSL is built on solid foundations,
-so we'll pick Arrows.  One reason for that is that they're easier to explain
-than Applicative (stuff goes in, other stuff comes out, see?  They're like
-the coffee machine in the hallway).  Secondly, they are less powerful than
-Monads and we prefer to keep that good stuff to ourselves.
+It's always good to pretend that your DSL is built on solid foundations.  As
+I alluded to in the title, we'll pick Arrows.  One reason for that is that
+they're easier to explain than Applicative (stuff goes in, other stuff comes
+out, see?  They're like the coffee machine in the hallway).  Secondly, they are
+less powerful than Monads and we prefer to keep that good stuff to ourselves.
 
 Unfortunately, it seems like the Arrow module was contributed by an operator
 fetishism cult, and anyone who's ever done non-trivial work with Arrows now
@@ -85,16 +91,18 @@ not an abomination".
 We'll build something that appeals to both Category Theorists (for street
 cred) and Corporate Managers (for our bonus).  These two groups have many
 things in common.  Apart from talking a lot about abstract nonsense and
-getting paid for it, both looooooove drawing boxes and arrows.
+getting paid for it, both **love** drawing boxes and arrows.
 
 ![](/images/2020-03-05-industry-academia.jpg)
 
 Yeah, so I guess we can call this visual DSL a diagram.  The main drawback
-of arrows is that they can only have a single input and output.  We'll "fix"
-that by having extra `ins` and `outs`.  We are wrapping an arbitrary `Arrow`,
-referred to `f` in the signature:
+of arrows is that they can only have a single input and output.  This leads to a
+lot of tuple abuse.
 
-> data Diagram (ins :: [*]) (outs :: [*]) (f :: * -> * -> *) a b where
+We'll "fix" that by having extra `ins` and `outs`.  We are wrapping an arbitrary
+`Arrow`, referred to as `f` in the signature:
+
+> data Diagram (ins :: [*]) (outs :: [*]) f a b where
 
 We can create a diagram from a normal function, that's easy.
 
@@ -129,8 +137,7 @@ is: "I don't know".  It typechecks, which is what really matters here.
 And there's something about `ins` matching `outs` in there, yeah.
 
 Concerned readers of this blog may at this point be wondering why we used
-reasonable variable names for the constructors of `Diagram` rather than just
-operators.
+reasonable names for the constructors of `Diagram` rather than just operators.
 
 Well, it's only because it's a GADT which makes this impossible.  But fear
 not, we can claim our operators back.  Shout out to Unicode's [Box-drawing
@@ -143,21 +150,12 @@ as extra inputs/outputs, or reified back into tuples.
 > l ┳► r = (l ━► arr (\x -> (x, x))) ┭► r
 > l ┶► r = Input l ━► r
 > l ╋► r = Output (Input l ━► arr (\x -> (x, x))) ━► r
+> l ┳ c  = l ┳► arr (const c)
 > l ┓ r  = Below l r
 > l ┧ r  = Input l ┓ r
-> infixl 5 ━►, ┳►, ┭►, ┶►, ╋►
-> infixr 4 ┓, ┧
-
-> (┳) :: Arrow f => Diagram ins outs f a b -> c
->     -> Diagram ins (b ': outs) f a c
-> l ┳ c = l ┳► arr (const c)
-> infixl 5 ┳
-
-> (┃) :: Arrow f => Diagram ins1 outs1 f a b
->     -> Diagram (Init (u ': outs1)) outs2 f (Last (u ': outs1)) c
->     -> Diagram (u ': ins1) outs2 f a c
-> l ┃ r = Input l ━► arr snd ┓ r
-> infixr 4 ┃
+> l ┃ r  = Input l ━► arr snd ┓ r
+> infixl 5 ━►, ┳►, ┭►, ┶►, ╋►, ┳
+> infixr 4 ┓, ┧, ┃
 
 Finally, while we're at it, we'll also include an operator to clearly indicate
 to our manager how our valuation will change if we adopt this DSL.
@@ -267,16 +265,6 @@ and outputs.  This great simplifies the type signatures and gives us a
 > run :: Arrow f => Diagram '[] '[] f a b -> f a b
 > run d = id &&& (arr (const Nil)) >>> fromDiagram d >>> arr fst
 
-Appendix 1: HList function implementations
-------------------------------------------
-
-> hlast x Nil         = x
-> hlast x (Cons a as) = hlast a as
-
-> hinit Nil                  = Nil
-> hinit (Cons _ Nil)         = Nil
-> hinit (Cons x (Cons y zs)) = Cons x (hinit (Cons y zs))
-
 Appendix 2: fromDiagram implementation
 ----------------------------------
 
@@ -290,7 +278,7 @@ Appendix 2: fromDiagram implementation
 >     arr (\((y, outs), a) -> ((y, a), outs))
 > fromDiagram (Below l r) =
 >     fromDiagram l >>>
->     arr (\(x, outs) -> (hlast x outs, hinit (Cons x outs))) >>>
+>     arr (\(x, outs) -> (hlast (Cons x outs), hinit (Cons x outs))) >>>
 >     fromDiagram r
 
 Appendix 2: some type signatures
