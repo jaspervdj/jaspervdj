@@ -7,11 +7,11 @@ tags: 'haskell'
 Haskell is great building at DSLs -- which are perhaps the ultimate form of
 slacking off at work.  Rather than actually doing the work your manager tells
 you to, you can build DSLs to delegate this back to your manager so you can
-focus on finally writing up that GHC proposal for `MultilineTypeOperatorSyntax`.
+focus on finally writing up that GHC proposal for `MultilinePostfixTypeOperator`
+(which could have come in useful for this blogpost).
 
-So, in this blogpost we'll build a visual DSL that's so simple even your manager
-can use it!  This blogpost is a literate Haskell file so you can run it directly
-in GHCi.
+So, we'll build a visual DSL that's so simple even your manager can use it!
+This blogpost is a literate Haskell file so you can run it directly in GHCi.
 
 We'll need a few language extensions -- not too much, just enough to guarantee
 job security for the forseeable future.
@@ -27,12 +27,11 @@ job security for the forseeable future.
 
 Some imports, not much going on here.
 
-> import Data.Tuple (swap)
-> import Prelude hiding (id, (.))
-> import Data.Char (isUpper, intToDigit)
 > import Control.Arrow
-> import Data.List (sort, partition)
 > import Control.Category
+> import Data.Char (isUpper)
+> import Data.List (sort, partition)
+> import Prelude hiding (id, (.))
 > import qualified Language.Haskell.TH as TH
 
 All Haskell tutorials that use some form of dependent typing seem to start
@@ -45,40 +44,41 @@ with the `HList` type.  So I suppose we'll do that as well.
 `HList` is short for hype list.  A hype list allows you to put even more
 hype in your types.
 
-We'll require two auxiliary functions for our hype list.  Because of all
-the hype, they each require a type family in order for us to be able to even
-express their types.  The first one just takes the last element from a list.
-
-> type family Last (l :: [*]) :: * where
->     Last (x ': '[]) = x
->     Last (x ': xs)  = Last xs
+We'll require two auxiliary functions for our hype list.  Because of all the
+hype, they each require a type family in order for us to even express their
+types.  The first one just takes the last element from a list.
 
 > hlast :: HList (thing ': things) -> Last (thing ': things)
 > hlast (Cons x Nil)         = x
 > hlast (Cons _ (Cons y zs)) = hlast (Cons y zs)
+
+> type family Last (l :: [*]) :: * where
+>     Last (x ': '[]) = x
+>     Last (x ': xs)  = Last xs
 
 Readers may wonder if this is safe, since `last` is usually a partial function.
 Well, it turns out that partial functions are safe if you type them using
 partial type families.  So one takeaway is that partial functions can just be
 fixed by adding more partial stuff on top.  This explains things like `Prelude`.
 
-The second auxiliary function takes anything but the last element of a list.
-
-> type family Init (l :: [*]) :: [*] where
->     Init (_ ': '[])     = '[]
->     Init (x ': y ': zs) = x ': Init (y ': zs)
+The second auxiliary function drops the last element from a list.
 
 > hinit :: HList (thing ': things) -> HList (Init (thing ': things))
 > hinit (Cons _ Nil)         = Nil
 > hinit (Cons x (Cons y zs)) = Cons x (hinit (Cons y zs))
 
+> type family Init (l :: [*]) :: [*] where
+>     Init (_ ': '[])     = '[]
+>     Init (x ': y ': zs) = x ': Init (y ': zs)
+
 And that's enough boilerplate!  Let's get right to it.
 
-It's always good to pretend that your DSL is built on solid foundations.  As
-I alluded to in the title, we'll pick Arrows.  One reason for that is that
-they're easier to explain than Applicative (stuff goes in, other stuff comes
-out, see?  They're like the coffee machine in the hallway).  Secondly, they are
-less powerful than Monads and we prefer to keep that good stuff to ourselves.
+It's always good to pretend that your DSL is built on solid foundations.  As I
+alluded to in the title, we'll pick Arrows.  One reason for that is that they're
+easier to explain to your manager than Applicative (stuff goes in, other stuff
+comes out, see?  They're like the coffee machine in the hallway).  Secondly,
+they are less powerful than Monads and we prefer to keep that good stuff to
+ourselves.
 
 Unfortunately, it seems like the Arrow module was contributed by an operator
 fetishism cult, and anyone who's ever done non-trivial work with Arrows now
@@ -95,7 +95,7 @@ getting paid for it, both **love** drawing boxes and arrows.
 
 ![](/images/2020-03-05-industry-academia.jpg)
 
-Yeah, so I guess we can call this visual DSL a diagram.  The main drawback
+Yeah, so I guess we can call this visual DSL a `Diagram`.  The main drawback
 of arrows is that they can only have a single input and output.  This leads to a
 lot of tuple abuse.
 
@@ -114,7 +114,10 @@ And we can add another normal function at the back.  No biggie.
 >         :: Diagram ins outs f a b -> f b c
 >         -> Diagram ins outs f a c
 
-Of course, we need to be able to use our extra input and outputs:
+Of course, we need to be able to use our extra input and outputs.
+
+`Output` wraps an existing `Diagram` and either redirect the second element of a
+tuple to the `outs`; and `Input` does it the other way around.
 
 >     Output
 >         :: Diagram ins outs f a (b, o)
@@ -142,19 +145,19 @@ reasonable names for the constructors of `Diagram` rather than just operators.
 Well, it's only because it's a GADT which makes this impossible.  But fear
 not, we can claim our operators back.  Shout out to Unicode's [Box-drawing
 characters]: they provide various charaters with thick _and_ thin lines.
-This lets us do an, uhm, super intuitive syntax where tuples are taken apart
+This lets us do an, uhm, super _intuitive syntax_ where tuples are taken apart
 as extra inputs/outputs, or reified back into tuples.
 
 > (━►)   = Then
 > l ┭► r = Output l ━► r
 > l ┳► r = (l ━► arr (\x -> (x, x))) ┭► r
 > l ┶► r = Input l ━► r
-> l ╋► r = Output (Input l ━► arr (\x -> (x, x))) ━► r
+> l ╆► r = Output (Input l ━► arr (\x -> (x, x))) ━► r
 > l ┳ c  = l ┳► arr (const c)
 > l ┓ r  = Below l r
 > l ┧ r  = Input l ┓ r
 > l ┃ r  = Input l ━► arr snd ┓ r
-> infixl 5 ━►, ┳►, ┭►, ┶►, ╋►, ┳
+> infixl 5 ━►, ┳►, ┭►, ┶►, ╆►, ┳
 > infixr 4 ┓, ┧, ┃
 
 Finally, while we're at it, we'll also include an operator to clearly indicate
@@ -162,21 +165,26 @@ to our manager how our valuation will change if we adopt this DSL.
 
 > (📈) = Diagram
 
-This lets us do the basics:
+This lets us do the basics.  If we start from regular Arrow syntax:
 
-> example01 =
+> horribleExample01 =
+>   partition isUpper >>> reverse *** sort >>> uncurry mappend
+
+We turn this into:
+
+> amazingExample01 =
 >  (📈) (partition isUpper)┭►reverse┓
 >  (📈)                   sort      ┶►(uncurry mappend)
 
 The trick to decrypting these diagrams is that each line in the source code
-consists of an arrow where values flow from the left to the right; with possble
+consists of an arrow where values flow from the left to the right; with possible
 extra inputs and ouputs in between. These lines are then composed using a few
 operators that use `Below` such as `┓` and `┧`.
 
 To improve readability even further, it should also be possible to add
-right-to-left and top-to-bottom operators.  I asked my manager if he wanted
-this but they've been ignoring all my Slack messages since I showed them my
-original prototype.  Probably just busy?
+right-to-left and top-to-bottom operators.  I asked my manager if they wanted
+these extra operators but they've been ignoring all my Slack messages since I
+showed them my original prototype.  Probably just busy?
 
 Anyway, there are other simple improvements we can make to the visual DSL
 first.  Most Haskellers prefer nicely aligning things over producing working
@@ -186,8 +194,8 @@ where Template Haskell comes in.
 
 Template Haskell gets a bad rep, but that's only because it mostly misused.
 Originally, it was designed to drasticallly increase the number of a operators
-in a module, which is exactly what we'll do here.  Nothing
-to be grossed out about.
+in a module, which is exactly what we'll do here.  Nothing to be grossed out
+about.
 
 > expansions :: Maybe Char -> String -> Maybe Char -> [String]
 > expansions mbLeft operator mbRight =
@@ -221,13 +229,13 @@ example02 =
   (📈)                   (sort)─────────┶━►(uncurry mappend)
 `````
 
-Yep, if you've ever wondered what people mean when they say functional programs
-"compose elegantly", well, this is what they mean.
+Beautiful!  If you've ever wondered what people mean when they say functional
+programs "compose elegantly", well, this is what they mean.
 
 `````haskell
 example03 =
   (📈) (+1)━┳━►(+1)━┓
-  (📈)      (+1)━━━━╋━►add━┓
+  (📈)      (+1)━━━━╆━►add━┓
   (📈)              add────┶━►add
   where
     add = uncurry (+)
@@ -265,8 +273,10 @@ and outputs.  This great simplifies the type signatures and gives us a
 > run :: Arrow f => Diagram '[] '[] f a b -> f a b
 > run d = id &&& (arr (const Nil)) >>> fromDiagram d >>> arr fst
 
-Appendix 2: fromDiagram implementation
-----------------------------------
+Thanks for reading, and feel free to immediately start using this in production!
+
+Appendix 1: fromDiagram implementation
+--------------------------------------
 
 > fromDiagram (Diagram f) = arr f *** arr (const Nil)
 > fromDiagram (Then l r) = fromDiagram l >>> first r
@@ -292,7 +302,7 @@ We wouldn't want these to get in our way in the middle of the prose.
 >      -> Diagram ins (o ': outs) f a c
 > (┶►) :: Diagram ins outs f a b -> f (b, i) c
 >      -> Diagram (i ': ins) outs f a c
-> (╋►) :: Arrow f => Diagram ins outs f a b -> f (b, u) c
+> (╆►) :: Arrow f => Diagram ins outs f a b -> f (b, u) c
 >      -> Diagram (u ': ins) ((b, u) ': outs) f a c
 > (┧)  :: Diagram ins1 outs1 f a b
 >      -> Diagram (Init ((b, u) ': outs1)) outs2 f (Last ((b, u) ': outs1)) c

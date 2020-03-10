@@ -25,7 +25,7 @@ $(industryStandardBoilerPlate (Just '━') '(━►) Nothing)
 $(industryStandardBoilerPlate (Just '━') '(┭►) (Just '─'))
 $(industryStandardBoilerPlate (Just '━') '(┓) Nothing)
 $(industryStandardBoilerPlate (Just '─') '(┶►) (Just '━'))
-$(industryStandardBoilerPlate (Just '━') '(╋►) (Just '━')) -- Needs small up parts?
+$(industryStandardBoilerPlate (Just '─') '(╆►) (Just '━')) -- Needs small up parts?
 $(industryStandardBoilerPlate (Just '━') '(┳►) (Just '━'))
 $(industryStandardBoilerPlate (Just '─') '(┧) Nothing)
 
@@ -35,7 +35,7 @@ example02 =
 
 example03 =
   (📈) (+1)━┳━►(+1)━┓
-  (📈)      (+1)━━━━╋━►add━┓
+  (📈)      (+1)────╆━►add━┓
   (📈)              add────┶━►add
   where
     add = uncurry (+)
@@ -60,27 +60,27 @@ example06 =
 
 example07 =
   (📈)  id┭►(subtract 0.5)┳►(*pi)━►sin━┓
-  (📈)  (*2)━►(pred)      ╋►(fst)      ┶►(uncurry (-))━►abs━►(<0.1)━┓
+  (📈)  (*2)━►(pred)      ╆►(fst)      ┶►(uncurry (-))━►abs━►(<0.1)━┓
   (📈)                (second(*2))━►uncurry (+)━►abs━►(<0.1)        ┧
   (📈)                                          (uncurry (||)) ━► (bool red green)
 
 example08 =
   (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━►(<0)━━━━━━━━━━━━━━━━┓
-  (📈)    (subtract 0.5)━━━━━━━╋━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━┓
+  (📈)    (subtract 0.5)───────╆━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━┓
   (📈)                      swap━┭─►(*pi)━━►sin━┳━━━━━━━━►const ()─────────┶━►snd━┓
   (📈)                           (*2)───────────┶━►(uncurry (-))━━►abs━━►(<0.2)───┧
   (📈)                                                                   (uncurry (||))━►(bool red green)
 
 example09 =
   (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━►(<0)━━━━━━━━━━━━━━━━┓
-  (📈)    (subtract 0.5)━━━━━━━╋━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━━━━━━━━┓
+  (📈)    (subtract 0.5)───────╆━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━━━━━━━━┓
   (📈)                      swap━┭─►(*pi)━━►sin ┳()                               ┃
   (📈)                           (*2)───────────┶━►(uncurry (-))━━►abs━━►(<0.2)───┧
   (📈)                                                                   (uncurry (||))━►(bool red green)
 
 {-
   ┭►(subtract 0.5)┳►(*pi)━►sin━┓
-  (📈)  (*2)━►(pred)      ╋►(fst)      ┶►(uncurry (-))━►abs━►(<0.1)━┓
+  (📈)  (*2)━►(pred)      ╆►(fst)      ┶►(uncurry (-))━►abs━►(<0.1)━┓
   (📈)                (second(*2))━►uncurry (+)━►abs━►(<0.1)        ┧
   (📈)                                          (uncurry (||)) ━► (bool red green)
   -}
