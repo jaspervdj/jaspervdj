@@ -71,6 +71,13 @@ example08 =
   (📈)                           (*2)───────────┶━►(uncurry (-))━━►abs━━►(<0.2)───┧
   (📈)                                                                   (uncurry (||))━►(bool red green)
 
+example09 =
+  (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━►(<0)━━━━━━━━━━━━━━━━┓
+  (📈)    (subtract 0.5)━━━━━━━╋━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━━━━━━━━┓
+  (📈)                      swap━┭─►(*pi)━━►sin ┳()                               ║
+  (📈)                           (*2)───────────┶━►(uncurry (-))━━►abs━━►(<0.2)───┧
+  (📈)                                                                   (uncurry (||))━►(bool red green)
+
 {-
   ┭►(subtract 0.5)┳►(*pi)━►sin━┓
   (📈)  (*2)━►(pred)      ╋►(fst)      ┶►(uncurry (-))━►abs━►(<0.1)━┓

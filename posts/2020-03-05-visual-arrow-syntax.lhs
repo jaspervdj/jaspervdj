@@ -148,6 +148,17 @@ as extra inputs/outputs, or reified back into tuples.
 > infixl 5 ━►, ┳►, ┭►, ┶►, ╋►
 > infixr 4 ┓, ┧
 
+> (┳) :: Arrow f => Diagram ins outs f a b -> c
+>     -> Diagram ins (b ': outs) f a c
+> l ┳ c = l ┳► arr (const c)
+> infixl 5 ┳
+
+> (║) :: Arrow f => Diagram ins1 outs1 f a b
+>     -> Diagram (Init (u ': outs1)) outs2 f (Last (u ': outs1)) c
+>     -> Diagram (u ': ins1) outs2 f a c
+> l ║ r = Input l ━► arr snd ┓ r
+> infixr 4 ║
+
 Finally, while we're at it, we'll also include an operator to clearly indicate
 to our manager how our valuation will change if we adopt this DSL.
 
@@ -159,14 +170,25 @@ This lets us do the basics:
 >  (📈) (partition isUpper)┭►reverse┓
 >  (📈)                   sort      ┶►(uncurry mappend)
 
-Most Haskellers prefer nicely aligning things over producing working code,
-so it would be nice if we could write things like `━┳━►` rather than
-just `┳►`.  Any Haskeller worth their salt will tell you that this is
+The trick to decrypting these diagrams is that each line in the source code
+consists of an arrow where values flow from the left to the right; with possble
+extra inputs and ouputs in between. These lines are then composed using a few
+operators that use `Below` such as `┓` and `┧`.
+
+To improve readability even further, it should also be possible to add
+right-to-left and top-to-bottom operators.  I asked my manager if he wanted
+this but they've been ignoring all my Slack messages since I showed them my
+original prototype.  Probably just busy?
+
+Anyway, there are other simple improvements we can make to the visual DSL
+first.  Most Haskellers prefer nicely aligning things over producing working
+code, so it would be nice if we could write things like `━━━━┳━►` rather than
+just `┳►`.  And any Haskeller worth their salt will tell you that this is
 where Template Haskell comes in.
 
 Template Haskell gets a bad rep, but that's only because it mostly misused.
-Originally, it was designed to increase the number of a operators in a module
-by a factor of up to 100, which is exactly what we'll do here.  Nothing
+Originally, it was designed to drasticallly increase the number of a operators
+in a module, which is exactly what we'll do here.  Nothing
 to be grossed out about.
 
 > expansions :: Maybe Char -> String -> Maybe Char -> [String]
