@@ -10,13 +10,13 @@ import Data.Bool (bool)
 import Data.Tuple
 import qualified Codec.Picture.Types as JP
 
-$(industryStandardBoilerPlate (Just '━') '(━►) Nothing)
-$(industryStandardBoilerPlate (Just '━') '(┭►) (Just '─'))
-$(industryStandardBoilerPlate (Just '━') '(┓) Nothing)
-$(industryStandardBoilerPlate (Just '─') '(┶►) (Just '━'))
-$(industryStandardBoilerPlate (Just '─') '(╆►) (Just '━')) -- Needs small up parts?
-$(industryStandardBoilerPlate (Just '━') '(┳►) (Just '━'))
-$(industryStandardBoilerPlate (Just '─') '(┧) Nothing)
+$(industryStandardBoilerplate (Just '━') '(━►) Nothing)
+$(industryStandardBoilerplate (Just '━') '(┭►) (Just '─'))
+$(industryStandardBoilerplate (Just '━') '(┓) Nothing)
+$(industryStandardBoilerplate (Just '─') '(┶►) (Just '━'))
+$(industryStandardBoilerplate (Just '─') '(╆►) (Just '━')) -- Needs small up parts?
+$(industryStandardBoilerplate (Just '━') '(┳►) (Just '━'))
+$(industryStandardBoilerplate (Just '─') '(┧) Nothing)
 
 lambda =
   (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━►(<0)━━━━━━━━━━━━━━━━┓

@@ -4,6 +4,8 @@ description: 'Finally, better Arrow syntax, completely free of hacks'
 tags: 'haskell'
 ---
 
+_Not to be taken seriously._
+
 Haskell is great building at DSLs -- which are perhaps the ultimate form of
 slacking off at work.  Rather than actually doing the work your manager tells
 you to, you can build DSLs to delegate this back to your manager so you can
@@ -11,10 +13,15 @@ focus on finally writing up that GHC proposal for `MultilinePostfixTypeOperator`
 (which could have come in useful for this blogpost).
 
 So, we'll build a visual DSL that's so simple even your manager can use it!
-This blogpost is a literate Haskell file so you can run it directly in GHCi.
+[This blogpost is a literate Haskell file][lhs] so you can run it directly in GHCi.
+Note that some code is located in a [second module] because of compilation stage
+restrictions.
 
-We'll need a few language extensions -- not too much, just enough to guarantee
-job security for the forseeable future.
+[lhs]: https://github.com/jaspervdj/jaspervdj/blob/drafts/posts/2020-03-05-visual-arrow-syntax.lhs
+[second module]: https://github.com/jaspervdj/jaspervdj/blob/drafts/files/2020-03-05-demo.hs
+
+Let's get started.  We'll need a few language extensions -- not too much, just
+enough to guarantee job security for the forseeable future.
 
 > {-# LANGUAGE DataKinds #-}
 > {-# LANGUAGE GADTs #-}
@@ -45,8 +52,8 @@ with the `HList` type.  So I suppose we'll do that as well.
 >   Nil  :: HList '[]
 >   Cons :: x -> HList xs -> HList (x ': xs)
 
-`HList` is short for hype list.  A hype list allows you to put even more
-hype in your types.
+I think `HList` is short for hype list.  There's a lot of hype around this
+because it allows you to put even more types in your types.
 
 We'll require two auxiliary functions for our hype list.  Because of all the
 hype, they each require a type family in order for us to even express their
@@ -108,9 +115,9 @@ We'll "fix" that by having extra `ins` and `outs`.  We are wrapping an arbitrary
 
 > data Diagram (ins :: [*]) (outs :: [*]) f a b where
 
-We can create a diagram from a normal function, that's easy.
+We can create a diagram from a normal arrow, that's easy.
 
->   Diagram :: (a -> b) -> Diagram '[] '[] f a b
+>   Diagram :: f a b -> Diagram '[] '[] f a b
 
 And we can add another normal function at the back.  No biggie.
 
@@ -148,7 +155,7 @@ reasonable names for the constructors of `Diagram` rather than just operators.
 Well, it's only because it's a GADT which makes this impossible.  But fear
 not, we can claim our operators back.  Shout out to Unicode's [Box-drawing
 characters]: they provide various charaters with thick _and_ thin lines.
-This lets us do an, uhm, super _intuitive syntax_ where tuples are taken apart
+This lets us do an, uhm, _super intuitive syntax_ where tuples are taken apart
 as extra inputs/outputs, or reified back into tuples.
 
 > (━►)   = Then
@@ -173,7 +180,7 @@ This lets us do the basics.  If we start from regular Arrow syntax:
 > horribleExample01 =
 >   partition isUpper >>> reverse *** sort >>> uncurry mappend
 
-We turn this into:
+We can now turn this into:
 
 > amazingExample01 =
 >  (📈) (partition isUpper)┭►reverse┓
@@ -189,40 +196,46 @@ right-to-left and top-to-bottom operators.  I asked my manager if they wanted
 these extra operators but they've been ignoring all my Slack messages since I
 showed them my original prototype.  Probably just busy?
 
-Anyway, there are other simple improvements we can make to the visual DSL
-first.  Most Haskellers prefer nicely aligning things over producing working
-code, so it would be nice if we could write things like `━━━━┳━►` rather than
-just `┳►`.  And any Haskeller worth their salt will tell you that this is
-where Template Haskell comes in.
+Anyway, there are other simple improvements we can make to the visual DSL first.
+Most Haskellers prefer nicely aligning things over producing working code,
+so it would be nice if we could draw longer lines like `━━━━┳━►` rather than
+just `┳►`. And any Haskeller worth their salt will tell you that this is where
+Template Haskell comes in.
 
 Template Haskell gets a bad rep, but that's only because it is mostly misused.
-Originally, it was designed to drasticallly increase the number of a operators
-in a module, which is exactly what we'll do here.  Nothing to be grossed out
-about.
+Originally, it was designed to avoid copying and pasting a lot of code, which is
+**exactly** what we'll do here.  Nothing to be grossed out about.
 
-> expansions :: Maybe Char -> String -> Maybe Char -> [String]
-> expansions mbLeft operator mbRight =
+> extensions :: Maybe Char -> String -> Maybe Char -> [String]
+> extensions mbLeft operator mbRight =
 >   [operator] >>= maybe pure goR mbRight >>= maybe pure goL mbLeft
 >  where
 >   goL l op = [replicate n l ++ op | n <- [1 .. 19]]
 >   goR r op = [init op ++ replicate n r ++ [last op] | n <- [1 .. 19]]
 
-> industryStandardBoilerPlate
+> industryStandardBoilerplate
 >   :: Maybe Char -> TH.Name -> Maybe Char -> TH.Q [TH.Dec]
-> industryStandardBoilerPlate l name r = do
+> industryStandardBoilerplate l name r = do
 >   sig <- TH.reify name >>= \case
 >     TH.VarI _ sig _ -> pure sig
 >     _               -> fail "no info"
 >   fixity <- TH.reifyFixity name >>= maybe (fail "no fixity") pure
 >   pure
 >     [ decl
->     | name' <- fmap TH.mkName $ expansions l (TH.nameBase name) r
+>     | name' <- fmap TH.mkName $ extensions l (TH.nameBase name) r
 >     , decl  <-
 >         [ TH.SigD name' sig
 >         , TH.FunD name' [TH.Clause [] (TH.NormalB (TH.VarE name)) []]
 >         , TH.InfixD fixity name'
 >         ]
 >     ]
+
+We can then invoke this industry standard boilerplate to extend and copy/paste
+an operator like this:
+
+`````haskell
+$(industryStandardBoilerplate (Just '━') '(┭►) (Just '─'))
+`````
 
 We're now equipped to silence even the harshest syntax critics:
 
@@ -272,7 +285,7 @@ This renders everyone's favorite greek letter:
 ![](/images/2020-03-05-lambda.png){width=30%}
 
 Amazing!  Math!  Thanks for reading, and feel free to immediately start using
-this in production!
+this in production immediately!
 
 Appendix 1: run implementation
 ------------------------------
@@ -294,7 +307,7 @@ and outputs.  This great simplifies the type signatures and gives us a
 
 The definition for `fromDiagram` is as follows:
 
-> fromDiagram (Diagram f) = arr f *** arr (const Nil)
+> fromDiagram (Diagram f) = f *** arr (const Nil)
 > fromDiagram (Then l r) = fromDiagram l >>> first r
 > fromDiagram (Output l) =
 >   fromDiagram l >>> arr (\((x, y), things) -> (x, Cons y things))
@@ -327,6 +340,8 @@ complains if we don't put them somewhere.
 
 Appendix 3: image rendering boilerplate
 ---------------------------------------
+
+This uses a user-supplied `Diagram` to render an image.
 
 > image
 >   :: Int -> Int
