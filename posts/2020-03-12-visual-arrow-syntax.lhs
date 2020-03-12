@@ -298,6 +298,14 @@ reading!
 
 [Kleisli]: https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Arrow.html#t:Kleisli
 
+**Update**: [CarlHedgren](https://twitter.com/CarlHedgren) pointed out to me
+that a similar DSL is provided by [Control.Arrow.Needle][needle].  However, that
+package uses Template Haskell to just parse the diagram.  In this blogpost, the
+point of the exercise is to bend Haskell's syntax and type system to achieve
+the syntax.
+
+[needle]: https://hackage.haskell.org/package/needle-0.1.0.1
+
 Appendix 1: run implementation
 ------------------------------
 
