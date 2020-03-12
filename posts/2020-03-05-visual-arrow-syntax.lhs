@@ -32,7 +32,7 @@ enough to guarantee job security for the forseeable future.
 > {-# LANGUAGE TypeOperators #-}
 > module Visual where
 
-Some imports, not much going on here.
+And then some imports, not much going on here.
 
 > import qualified Codec.Picture as JP
 > import qualified Codec.Picture.Types as JP
@@ -270,14 +270,18 @@ Let's look at a more complicated example.
 
 `````haskell
 lambda =
-  (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━►(<0)━━━━━━━━━━━━━━━━┓
-  (📈)    (subtract 0.5)───────╆━►uncurry (+)━►abs━►(<0.1)┶►(uncurry (&&))━━━━━━━━┓
-  (📈)                      swap━┭─►(*pi)━━►sin ┳()                               ┃
-  (📈)                           (*2)───────────┶━►(uncurry (-))━━►abs━━►(<0.2)───┧
-  (📈)                                                                   (uncurry (||))━►(bool bg fg)
+  (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━━━━►(< 0)━━━━━━━━━━┓
+  (📈)    (subtract 0.5)───────╆━►(add)━►(abs)━►(< 0.1)─┶━━━━━►(and)━━━━━━┓
+  (📈)                      (swap)━┭─►(* pi)━━►(sin)┳()                   ┃
+  (📈)                           ( *2)──────────────┶━►(sub)━►abs━►(<0.2)─┧
+  (📈)                                                                  (or)━►(bool bg fg)
  where
-  fg = JP.PixelRGB8 69  58  98
-  bg = JP.PixelRGB8 255 255 255
+  add = uncurry (+)
+  sub = uncurry (-)
+  and = uncurry (&&)
+  or  = uncurry (||)
+  fg  = JP.PixelRGB8 69  58  98
+  bg  = JP.PixelRGB8 255 255 255
 `````
 
 This renders everyone's favorite greek letter:
