@@ -1,5 +1,5 @@
 ---
-title: 'Visual Arrow Diagrams'
+title: 'Visual Arrow Syntax'
 description: 'Finally, better Arrow syntax, completely free of hacks'
 tags: 'haskell'
 ---
@@ -17,8 +17,8 @@ So, we'll build a visual DSL that's so simple even your manager can use it!
 Note that some code is located in a [second module] because of compilation stage
 restrictions.
 
-[lhs]: https://github.com/jaspervdj/jaspervdj/blob/drafts/posts/2020-03-05-visual-arrow-syntax.lhs
-[second module]: https://github.com/jaspervdj/jaspervdj/blob/drafts/files/2020-03-05-demo.hs
+[lhs]: https://github.com/jaspervdj/jaspervdj/blob/master/posts/2020-03-12-visual-arrow-syntax.lhs
+[second module]: https://github.com/jaspervdj/jaspervdj/blob/master/files/2020-03-12-demo.hs
 
 Let's get started.  We'll need a few language extensions -- not too much, just
 enough to guarantee job security for the forseeable future.
@@ -104,7 +104,7 @@ cred) and Corporate Managers (for our bonus).  These two groups have many
 things in common.  Apart from talking a lot about abstract nonsense and
 getting paid for it, both **love** drawing boxes and arrows.
 
-![](/images/2020-03-05-industry-academia.jpg)
+![](/images/2020-03-12-industry-academia.jpg)
 
 Yeah, so I guess we can call this visual DSL a `Diagram`.  The main drawback
 of arrows is that they can only have a single input and output.  This leads to a
@@ -286,7 +286,7 @@ lambda =
 
 This renders everyone's favorite greek letter:
 
-![](/images/2020-03-05-lambda.png){width=30%}
+![](/images/2020-03-12-lambda.png){width=30%}
 
 Amazing!  Math!
 
