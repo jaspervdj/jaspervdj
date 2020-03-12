@@ -271,10 +271,10 @@ Let's look at a more complicated example.
 `````haskell
 lambda =
   (📈)  (id)━┭─►(subtract 0.5)━┳━━━━━━━━►(< 0)━━━━━━━━━━┓
-  (📈)    (subtract 0.5)───────╆━►(add)━►(abs)━►(< 0.1)─┶━━━━━►(and)━━━━━━┓
-  (📈)                      (swap)━┭─►(* pi)━━►(sin)┳()                   ┃
-  (📈)                           ( *2)──────────────┶━►(sub)━►abs━►(<0.2)─┧
-  (📈)                                                                  (or)━►(bool bg fg)
+  (📈)    (subtract 0.5)───────╆━►(add)━►(abs)━►(< 0.1)─┶━━━━━━━►(and)━━━━━━━┓
+  (📈)                      (swap)━┭─►(* pi)━━►(sin)┳()                      ┃
+  (📈)                           (* 2)──────────────┶━►(sub)━►(abs)━►(< 0.2)─┧
+  (📈)                                                                      (or)━►(bool bg fg)
  where
   add = uncurry (+)
   sub = uncurry (-)
@@ -288,8 +288,15 @@ This renders everyone's favorite greek letter:
 
 ![](/images/2020-03-05-lambda.png){width=30%}
 
-Amazing!  Math!  Thanks for reading, and feel free to immediately start using
-this in production immediately!
+Amazing!  Math!
+
+While the example diagrams in this post all use the pure function arrow `->`,
+it is my duty as a Haskeller to note that it is really parametric in `f` or
+something.  What this means is that thanks to this famous guy called [Kleisli],
+you can immediately start using this with `IO` in production.  Thanks for
+reading!
+
+[Kleisli]: https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Arrow.html#t:Kleisli
 
 Appendix 1: run implementation
 ------------------------------
@@ -304,7 +311,7 @@ and outputs:
 
 We can then have a specialized version for when there's zero extra inputs
 and outputs.  This great simplifies the type signatures and gives us a
-"normal `f a b`:
+"normal" `f a b`:
 
 > run :: Arrow f => Diagram '[] '[] f a b -> f a b
 > run d = id &&& (arr (const Nil)) >>> fromDiagram d >>> arr fst
