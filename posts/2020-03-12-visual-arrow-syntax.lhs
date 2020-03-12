@@ -302,7 +302,7 @@ reading!
 that a similar DSL is provided by [Control.Arrow.Needle][needle].  However, that
 package uses Template Haskell to just parse the diagram.  In this blogpost, the
 point of the exercise is to bend Haskell's syntax and type system to achieve
-the syntax.
+the notation.
 
 [needle]: https://hackage.haskell.org/package/needle-0.1.0.1
 
