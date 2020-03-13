@@ -6,16 +6,17 @@ tags: 'haskell'
 
 _Not to be taken seriously._
 
-Haskell is great building at DSLs -- which are perhaps the ultimate form of
-slacking off at work.  Rather than actually doing the work your manager tells
-you to, you can build DSLs to delegate this back to your manager so you can
-focus on finally writing up that GHC proposal for `MultilinePostfixTypeOperator`
-(which could have come in useful for this blogpost).
+Haskell is great building at DSLs -- which are perhaps the ultimate
+form of slacking off at work.  Rather than actually doing the work your
+manager tells you to, you can build DSLs to delegate this back to your
+manager so you can focus on finally writing up that GHC proposal for
+`MultilinePostfixTypeOperators` (which could have come in useful for this
+blogpost).
 
 So, we'll build a visual DSL that's so simple even your manager can use it!
-[This blogpost is a literate Haskell file][lhs] so you can run it directly in GHCi.
-Note that some code is located in a [second module] because of compilation stage
-restrictions.
+[This blogpost is a literate Haskell file][lhs] so you can run it directly
+in GHCi.  Note that some code is located in a [second module] because of
+compilation stage restrictions.
 
 [lhs]: https://github.com/jaspervdj/jaspervdj/blob/master/posts/2020-03-12-visual-arrow-syntax.lhs
 [second module]: https://github.com/jaspervdj/jaspervdj/blob/master/files/2020-03-12-demo.hs
