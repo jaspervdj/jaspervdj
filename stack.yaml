@@ -1,7 +1,5 @@
-resolver: lts-14.6
-extra-package-dbs: []
-flags: {}
+resolver: 'lts-15.6'
 packages:
-  - '.'
+- '.'
 extra-deps:
-- 'hakyll-4.13.0.1'
+- 'hakyll-4.13.3.0'
