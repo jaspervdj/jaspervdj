@@ -14,7 +14,7 @@ Zürich.
 [Ghent University]: http://ugent.be/
 [Erudify]: http://erudify.com/
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9902794345/">
 <img src="/images/2013-09-29-zurichsee.jpg" />
 </a>
@@ -55,7 +55,7 @@ the end I think my criteria were the following (in no particular order):
   able to tell the person in charge. I want to be valued and not just be some
   easily replaceable code-spitting machine.
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9902779895/">
 <img src="/images/2013-09-29-lindenhof.jpg" />
 </a>
@@ -87,7 +87,7 @@ blog about this more once I have done some actually interesting stuff.
 
 # Life in Zürich
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9902908133/">
 <img src="/images/2013-09-29-munsterbrucke.jpg" />
 </a>

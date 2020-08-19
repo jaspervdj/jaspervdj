@@ -27,7 +27,7 @@ div#navigation a {
 }
 
 div#content {
-    margin: 12px;
+    padding: 12px;
 }
 
 @media all and (min-width: 822px) {

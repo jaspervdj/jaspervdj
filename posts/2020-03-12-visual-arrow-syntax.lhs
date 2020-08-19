@@ -6,16 +6,17 @@ tags: 'haskell'
 
 _Not to be taken seriously._
 
-Haskell is great building at DSLs -- which are perhaps the ultimate form of
-slacking off at work.  Rather than actually doing the work your manager tells
-you to, you can build DSLs to delegate this back to your manager so you can
-focus on finally writing up that GHC proposal for `MultilinePostfixTypeOperator`
-(which could have come in useful for this blogpost).
+Haskell is great building at DSLs -- which are perhaps the ultimate
+form of slacking off at work.  Rather than actually doing the work your
+manager tells you to, you can build DSLs to delegate this back to your
+manager so you can focus on finally writing up that GHC proposal for
+`MultilinePostfixTypeOperators` (which could have come in useful for this
+blogpost).
 
 So, we'll build a visual DSL that's so simple even your manager can use it!
-[This blogpost is a literate Haskell file][lhs] so you can run it directly in GHCi.
-Note that some code is located in a [second module] because of compilation stage
-restrictions.
+[This blogpost is a literate Haskell file][lhs] so you can run it directly
+in GHCi.  Note that some code is located in a [second module] because of
+compilation stage restrictions.
 
 [lhs]: https://github.com/jaspervdj/jaspervdj/blob/master/posts/2020-03-12-visual-arrow-syntax.lhs
 [second module]: https://github.com/jaspervdj/jaspervdj/blob/master/files/2020-03-12-demo.hs
@@ -297,6 +298,14 @@ you can immediately start using this with `IO` in production.  Thanks for
 reading!
 
 [Kleisli]: https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Arrow.html#t:Kleisli
+
+**Update**: [CarlHedgren](https://twitter.com/CarlHedgren) pointed out to me
+that a similar DSL is provided by [Control.Arrow.Needle][needle].  However, that
+package uses Template Haskell to just parse the diagram.  In this blogpost, the
+point of the exercise is to bend Haskell's syntax and type system to achieve
+the notation.
+
+[needle]: https://hackage.haskell.org/package/needle-0.1.0.1
 
 Appendix 1: run implementation
 ------------------------------

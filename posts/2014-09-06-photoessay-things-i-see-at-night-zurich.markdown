@@ -2,6 +2,7 @@
 title: 'Photoessay: things I see at night (Zürich)'
 description: A short photoessay on Zürich by night
 tags: photography
+dark: true
 ---
 
 I have been living, and working, in Zürich for about a year now. The amount of
@@ -21,73 +22,73 @@ which tell a story, together with some words.
 The first one is a collection of night scenes I photographed in Zürich over the
 past few months.
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/13928777754/">
 <img src="/images/2014-09-06-viadukt-i.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/14382425236/">
 <img src="/images/2014-09-06-hardbrucke-ii.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/14395990272/">
 <img src="/images/2014-09-06-josefstrasse-i.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/13746203333/">
 <img src="/images/2014-09-06-escher-wyss-platz-i.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/13936523868/">
 <img src="/images/2014-09-06-langstrasse-iii.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/14282863805/">
 <img src="/images/2014-09-06-viadukt-ii.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/14420825996/">
 <img src="/images/2014-09-06-bahnhofstrasse-i.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/14791295459/">
 <img src="/images/2014-09-06-ankerstrasse-i.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/13577888764/">
 <img src="/images/2014-09-06-langstrasse-i.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/14029911171/">
 <img src="/images/2014-09-06-neumarkt-ii.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/13990625808/">
 <img src="/images/2014-09-06-sihlpromenade-i.jpg">
 </a>
 </div>
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/14327854997/">
 <img src="/images/2014-09-06-stauffacher-i.jpg">
 </a>
