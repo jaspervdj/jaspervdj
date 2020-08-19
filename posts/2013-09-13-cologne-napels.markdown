@@ -27,7 +27,7 @@ get there).
 
 [Cathedral]: http://en.wikipedia.org/wiki/Cologne_Cathedral
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9649654862/">
 <img src="/images/2013-09-13-cologne-cathedral.jpg" />
 </a>
@@ -48,7 +48,7 @@ downloaded the album once I got home.
 
 [Sic Alps]: http://www.sicalps.com/
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9646423235/">
 <img src="/images/2013-09-13-sic-alps.jpg" />
 </a>
@@ -76,7 +76,7 @@ the entire city but we never once felt unsafe in the parts we visited.
 
 [waste problems]: http://en.wikipedia.org/wiki/Naples_waste_management_issue
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9701060251/">
 <img src="/images/2013-09-13-naples-window.jpg" />
 </a>
@@ -101,7 +101,7 @@ Festival](http://www.pizzavillage.it/it/) (which we did not even know existed).
 While somewhat limited in menu choice, they had some of the best margherita's
 there (probably amongst the top of the world).
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9931302293/">
 <img src="/images/2013-09-13-pizza-festival.jpg" />
 </a>
@@ -116,7 +116,7 @@ seeing an opera.
 [opera house]: http://en.wikipedia.org/wiki/Teatro_di_San_Carlo
 [royal palace]: http://en.wikipedia.org/wiki/Royal_Palace_of_Naples
 
-<div class="figure flickr">
+<div class="photograph">
 <a href="http://www.flickr.com/photos/jaspervdj/9701073813/">
 <img src="/images/2013-09-13-opera-house.jpg" />
 </a>
