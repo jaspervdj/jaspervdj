@@ -43,19 +43,12 @@ code a {
     border-bottom: none;
 }
 
-div.figure a{
+div.photograph a {
     border: none;
 }
 
-@media all and (min-width: 620px) {
-    div.flickr img {
-        border: 1px solid #888;
-        padding: 6px;
-    }
-}
-
-div.flickr {
-    margin-top:    60px;
+div.photograph {
+    margin-top:    48px;
     margin-bottom: 60px;
 }
 
@@ -167,29 +160,26 @@ section.footnotes hr {
     display: none;
 }
 
-div.photoblog img {
-    margin-top: 48px;
-    margin-bottom: 48px;
-}
-
 div.photoblog div.pagination {
     font-size: 14px;
     padding: 12px 0px;
 }
 
 div#footer {
-    font-size: 14px;
+    font-size: 12px;
 }
 
-/*******************************************************************************
- * Disqus                                                                      *
- ******************************************************************************/
-
-/* Reset list image for disqus */
-div#disqus_thread ul {
-    list-style-image: none;
+/* Dark theme, used for photo blogs. */
+html.dark {
+  background-color: #222;
 }
 
-div#dsq-subscribe em {
-    text-decoration: none;
+html.dark #content {
+  color: #eee;
+}
+
+html.dark #content a {
+  color: #eee;
+  text-decoration: underline;
+  border-bottom: none;
 }
