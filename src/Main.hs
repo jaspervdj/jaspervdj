@@ -186,6 +186,7 @@ main = hakyllWith config $ do
             let paginateCtx = paginateContext photoBlog pageNum
             let ctx         =
                     constField "title" "Photos"                        <>
+                    constField "dark" "true"                           <>
                     listField "photos"
                         (photographCtx <> paginateCtx) (return photos) <>
                     paginateCtx                                        <>

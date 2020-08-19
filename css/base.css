@@ -48,8 +48,8 @@ div.photograph a {
 }
 
 div.photograph {
-    margin-top:    60px;
-    margin-bottom: 60px;
+    margin-top:    48px;
+    margin-bottom: 48px;
     text-align: center;
 }
 
@@ -159,11 +159,6 @@ section.footnotes {
 
 section.footnotes hr {
     display: none;
-}
-
-div.photoblog img {
-    margin-top: 48px;
-    margin-bottom: 48px;
 }
 
 div.photoblog div.pagination {
