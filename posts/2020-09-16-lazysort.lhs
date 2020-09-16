@@ -156,6 +156,8 @@ can zoom in.
 
 ![](/images/2020-09-16-lazysort2.png)
 
+What does this mean?
+
  -  If the `sampleSize` is small, the heap implementation does less comparions.
     This makes sense: even if treat `sort` as a black box, and don't look at
     it's implementation, we can assume that it is not _optimally lazy_; so it
@@ -170,8 +172,8 @@ can zoom in.
     efficient version later.
 
  -  Code where you count a number of calls is very easy to do in a test suite.
-    It doesn't pollute the application code if we can counting through a
-    typeclass (`Ord` in this case).
+    It doesn't pollute the application code if we can patch in counting through
+    a typeclass (`Ord` in this case).
 
 Appendix
 --------
