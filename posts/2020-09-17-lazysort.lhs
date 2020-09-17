@@ -22,10 +22,11 @@ Introduction
 
 </div>
 
-Haskell's laziness allows you to do [many cool things].  A commonly used example
-is finding the smallest N items in a list.
-
-[many cool things]: https://www.reddit.com/r/haskell/comments/5xge0v/today_i_used_laziness_for/
+Haskell's laziness allows you to do
+[many cool things](https://www.reddit.com/r/haskell/comments/5xge0v/today_i_used_laziness_for/).
+I've talked about
+[searching an infinite graph before](/posts/2017-01-17-lazy-io-graphs.lhs).
+Another commonly mentioned example is finding the smallest N items in a list.
 
 Because programmers are lazy as well, this is often defined as:
 
@@ -53,7 +54,7 @@ A better algorithm?
 -------------------
 
 For the sake of the comparison, we can introduce a third algorithm, which does
-a slightly smarter thing by keeping a heap of the smallest elements it has done
+a slightly smarter thing by keeping a heap of the smallest elements it has seen
 so far.  This code is far more complex than `smallestN_lazy`, so if it performs
 better, we should still ask ourselves if the additional complexity is worth it.
 
@@ -62,7 +63,7 @@ better, we should still ask ourselves if the additional complexity is worth it.
 >     (item, n) <- Map.toList heap
 >     replicate n item
 >   where
->     -- A heap is a map of the item to how many times it occurrs in
+>     -- A heap is a map of the item to how many times it occurs in
 >     -- the heap, like a frequency counter.
 >     heap = foldl' (\acc x -> insert x acc) Map.empty list
 >     insert x heap0
@@ -148,13 +149,13 @@ Let's add some benchmarking that prints an ad-hoc CSV:
 Plug that CSV into a spreadsheet and we get this graph.  What conclusions can
 we draw?
 
-![](/images/2020-09-16-lazysort1.png)
+![](/images/2020-09-17-lazysort1.png)
 
 Clearly, both the lazy version as well as the "smart" version are able to
 avoid a large number of comparisons.  Let's remove the strict version so we
 can zoom in.
 
-![](/images/2020-09-16-lazysort2.png)
+![](/images/2020-09-17-lazysort2.png)
 
 What does this mean?
 
@@ -174,6 +175,25 @@ What does this mean?
  -  Code where you count a number of calls is very easy to do in a test suite.
     It doesn't pollute the application code if we can patch in counting through
     a typeclass (`Ord` in this case).
+
+Can we say something about the complexity?
+
+ -  The complexity of `smallestN_smart` is basically inserting into a heap
+    `listSize` times.  This gives us `O(listSize * log(sampleSize))`.
+
+    That is of course the worst case complexity, which only occurs in the
+    special case where we need to insert into the heap at each step.  That's
+    only true when the list is sorted, so for a random list the average
+    complexity will be a lot better.
+
+ -  The complexity of `smallestN_lazy` is far harder to reason about.
+    Intuitively, and with the information that `Data.List.sort` is a merge sort,
+    I came to something like `O(listSize * max(sampleSize, log(listSize)))`.
+    I'm not sure if this is correct, and the case with a random list seems to be
+    faster.
+
+    I would be very interested in knowing the actual complexity of the lazy
+    version, so if you have any insights, be sure to let me know!
 
 Appendix
 --------
