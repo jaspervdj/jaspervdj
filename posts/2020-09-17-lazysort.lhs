@@ -195,6 +195,12 @@ Can we say something about the complexity?
     I would be very interested in knowing the actual complexity of the lazy
     version, so if you have any insights, be sure to let me know!
 
+    **Update**: [Edward Kmett](https://twitter.com/kmett) corrected me:
+    the complexity of `smallestN_lazy` is actually
+    `O(listSize * min(sampleSize, listSize))`, with
+    `O(listSize * min(sampleSize, log(listSize))` in
+    expectation for a random list.
+
 Appendix
 --------
 
