@@ -8,3 +8,9 @@ extra-deps:
 - 'commonmark-pandoc-0.2.0.1'
 - 'hakyll-4.14.0.0'
 - 'pandoc-2.11.4'
+nix:
+  packages:
+  - graphviz
+  - imagemagick
+  - texlive.combined.scheme-full  # Just for `standalone.cls`, urgh!
+  - zlib
