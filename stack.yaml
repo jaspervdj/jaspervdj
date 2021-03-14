@@ -14,3 +14,5 @@ nix:
   - imagemagick
   - texlive.combined.scheme-full  # Just for `standalone.cls`, urgh!
   - zlib
+  - openssh
+  - rsync
