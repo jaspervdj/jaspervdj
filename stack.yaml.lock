@@ -5,15 +5,50 @@
 
 packages:
 - completed:
-    hackage: hakyll-4.13.3.0@sha256:7d8903f03974691aec049a6188ace8d93457563bad9f078c6faf4c9156e27a33,8867
+    hackage: citeproc-0.3.0.9@sha256:e3652bf23caf01c976c87d549885b1e9e4a3a86363494cd82669230e0d4da8ba,5590
     pantry-tree:
-      size: 7841
-      sha256: bdbacc241f680dd0c8d7666c9ec4e7d230dad85172067e106cc35f7c125cd7ab
+      size: 79427
+      sha256: 8bc862a4764bb91909f2ad16b84b61ab257889159371dfc20bd8bf69a83f4ad2
   original:
-    hackage: hakyll-4.13.3.0
+    hackage: citeproc-0.3.0.9
+- completed:
+    hackage: commonmark-0.1.1.4@sha256:8717891c53c124ff64187c463619450241a41c0951cda2a43267d40f78992362,3278
+    pantry-tree:
+      size: 1346
+      sha256: f1ea43f7c14b13c7f0d5edb2b6f2a9e4c766e1860969694aaa3699952652d070
+  original:
+    hackage: commonmark-0.1.1.4
+- completed:
+    hackage: commonmark-extensions-0.2.0.4@sha256:6a437bcfa3c757af4262b71336513619990eafb5cfdc33e57a499c93ad225608,3184
+    pantry-tree:
+      size: 2928
+      sha256: ac8993e356edabc65a40d6c6909696c5f2dfe2a5298089da820c29ca75852360
+  original:
+    hackage: commonmark-extensions-0.2.0.4
+- completed:
+    hackage: commonmark-pandoc-0.2.0.1@sha256:529c6e2c6cabf61558b66a28123eafc1d90d3324be29819f59f024e430312c1f,1105
+    pantry-tree:
+      size: 326
+      sha256: d9954a15f73c8fe55a5097e1cc0957fa626d340ef36e2beefb8caae66008c3dc
+  original:
+    hackage: commonmark-pandoc-0.2.0.1
+- completed:
+    hackage: hakyll-4.14.0.0@sha256:28aab547aa94202d486328aa4bbcd02ecbefc4e5d42dfa15e8137b731a4f5d55,9059
+    pantry-tree:
+      size: 8272
+      sha256: b5dff3f9f3c9bc32b154d8f5b30f88fc12f88a32dd7a10ac7f16584af5059b3f
+  original:
+    hackage: hakyll-4.14.0.0
+- completed:
+    hackage: pandoc-2.11.4@sha256:72ff2d50048fe7c11ef67bc936f7fdb986282e72edbb5647db1ab63e415c8bc5,40050
+    pantry-tree:
+      size: 118526
+      sha256: 2856fb6c5d6948f3c58f50b3883535f62321db3cceb7b58cd9dd1e6082a0e570
+  original:
+    hackage: pandoc-2.11.4
 snapshots:
 - completed:
-    size: 532380
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/16/9.yaml
-    sha256: 14a7cec114424e4286adde73364438927a553ed248cc50f069a30a67e3ee1e69
-  original: lts-16.9
+    size: 563099
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/2.yaml
+    sha256: 92b1a17e31d0a978fca4bf270305d4d1dd8092271bf60eafbc9349c890854026
+  original: lts-17.2
