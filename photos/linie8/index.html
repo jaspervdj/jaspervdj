@@ -14,29 +14,32 @@
         <style>
             html {
                 font-family: sans-serif;
-                font-size: 16px;
-                font-weight: bold;
+                font-size: 18px;
                 background-color: #000;
-                color: rgb(138,181,31);
+                color: rgba(138,181,31,0.7);
             }
 
-            html, body, main {
+            html, body {
                 margin: 0;
                 height: 100%;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            header {
+                padding: 1em 0em;
+                text-align: center;
+                width: 100vw;
             }
 
             main {
                 display: flex;
                 scroll-snap-type: x mandatory;
                 overflow-x: scroll;
-            }
-
-            header {
-                position: absolute;
-                left: 0;
-                right: 0;
-                padding: 1em;
-                text-align: center;
             }
 
             main div.stop {
@@ -65,7 +68,7 @@
                 border-radius: 50%;
                 width: 1em;
                 height: 1em;
-                border: 2px solid rgb(138,181,31);
+                border: 1px solid rgba(138,181,31,0.7);
                 position: absolute;
                 top: 0;
                 left: 50%;
@@ -74,7 +77,7 @@
 
             div.title::before, div.title::after {
                 content: "";
-                border-bottom: 2px solid rgb(138,181,31);
+                border-bottom: 1px solid rgba(138,181,31,0.7);
                 position: absolute;
                 top: 0;
             }
@@ -95,9 +98,8 @@
             }
 
             main div.stop img {
-                height: 70vh;
+                height: 60vh;
                 padding: 1em;
-                padding-top: 3em;
                 object-fit: contain;
                 object-position: 50% 50%;
             }
@@ -105,7 +107,7 @@
     </head>
     <body>
         <header>
-            Linie 8 | Jasper Van der Jeugt
+            Linie 8 | 2021 Jasper Van der Jeugt
         </header>
         <main>
             <div class="stop"><img src="https://64.media.tumblr.com/4cd59e4e9a858678c5a0f425736bfe4a/9a01f47a9687132f-9e/s1280x1920/9502d116df78d6195f593a3214503033782b5b09.jpg"><div class="title"><span>Klusplatz             </span></div></div>
@@ -142,6 +144,24 @@
                     }
                 });
             }
+
+            const main = document.querySelector("main");
+            window.addEventListener("keydown", (evt) => {
+                const width = document.body.getBoundingClientRect().width;
+                var scroll;
+                if(event.code == "ArrowRight" || event.code == "ArrowDown") {
+                    scroll = width;
+                } else if (event.code == "ArrowLeft" || event.code == "ArrowUp") {
+                    scroll = -width;
+                }
+                if(scroll) {
+                    main.scroll({
+                        top: 0,
+                        left: main.scrollLeft + scroll,
+                        behavior: "smooth",
+                    });
+                }
+            });
         </script>
         <!-- GUID -->
         <div style="display: none">ce0f13b2-4a83-4c1c-b2b9-b6d18f4ee6d2</div>
