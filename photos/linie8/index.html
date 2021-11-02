@@ -112,7 +112,7 @@
     </head>
     <body>
         <header>
-            Linie 8 | 2021 Jasper Van der Jeugt
+            Linie 8 — 2021 Jasper Van der Jeugt
         </header>
         <main>
             <div class="stop"><img loading="lazy" src="https://64.media.tumblr.com/4cd59e4e9a858678c5a0f425736bfe4a/9a01f47a9687132f-9e/s1280x1920/9502d116df78d6195f593a3214503033782b5b09.jpg"><div class="title"><span>Klusplatz             </span></div></div>
@@ -146,6 +146,16 @@
                     if(next) {
                         evt.preventDefault();
                         next.scrollIntoView({behavior: "smooth"});
+                    }
+                });
+
+                stop.addEventListener("click", (evt) => {
+                    if(event.which == 1) {  // Left click only
+                        const next = stop.nextElementSibling;
+                        if(next) {
+                            evt.preventDefault();
+                            next.scrollIntoView({behavior: "smooth"});
+                        }
                     }
                 });
             }
