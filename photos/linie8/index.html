@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width" />
+
+        <title>Linie 8</title>
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@jaspervdj" />
+        <meta name="twitter:title" content="San Cristóbal de las Casas" />
+        <meta name="twitter:description" content="Album from San Cristóbal de las Casas, Mexico with 4 photos." />
+        <meta name="twitter:image" content="https://66.media.tumblr.com/7f74bbcccd1102fc164aaa04820aece5/d36b66d38f8bbea7-36/s1280x1920/8d3370a439f47a6974dc46ec1da03305337ab486.jpg">
+        <style>
+            html {
+                font-family: sans-serif;
+                font-size: 16px;
+                background-color: #000;
+                color: rgba(138,181,31,0.7);
+            }
+
+            html, body {
+                margin: 0;
+                height: 100%;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            header {
+                padding: 1em 0em;
+                width: 100vw;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                align-items: center;
+            }
+
+            main {
+                flex-grow: 1;
+                display: flex;
+                scroll-snap-type: x mandatory;
+                overflow-x: scroll;
+            }
+
+            main div.stop {
+                scroll-snap-align: start;
+                display: flex;
+                flex-grow: 0;
+                flex-shrink: 0;
+                flex-direction: column;
+                align-items: stretch;
+                width: 100vw;
+            }
+
+            main div.stop div.title {
+                text-align: center;
+                position: relative;
+            }
+
+            div.title span {
+                display: block;
+                padding-top: 1.5em;
+                position: relative;
+            }
+
+            div.title span::before {
+                content: "";
+                border-radius: 50%;
+                width: 1em;
+                height: 1em;
+                border: 1px solid rgba(138,181,31,0.7);
+                position: absolute;
+                top: 0;
+                left: 50%;
+                margin-left: -0.5em;
+            }
+
+            div.title::before, div.title::after {
+                content: "";
+                border-bottom: 1px solid rgba(138,181,31,0.7);
+                position: absolute;
+                top: 0;
+            }
+
+            div.title::before {
+                left: 0;
+                right: 50%;
+            }
+
+            div.title::after {
+                left: 50%;
+                right: 0;
+            }
+
+            div.stop:first-child div.title::before,
+            div.stop:last-child  div.title::after {
+                display: none;
+            }
+
+            main div.stop img {
+                height: 60vh;
+                padding: 1.5em;
+                object-fit: contain;
+                object-position: 50% 50%;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            Linie 8 — 2021 Jasper Van der Jeugt
+        </header>
+        <main>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-25-klusplatz.jpg">             <div class="title"><span>Klusplatz             </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-24-holderlinstrasse.jpg">      <div class="title"><span>Hölderlinstrasse      </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-23-romerhof.jpg">              <div class="title"><span>Römerhof              </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-22-englischviertelstrasse.jpg"><div class="title"><span>Englischviertelstrasse</span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-21-kreuzplatz.jpg">            <div class="title"><span>Kreuzplatz            </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-20-stadelhofen.jpg">           <div class="title"><span>Bahnhof Stadelhofen   </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-19-bellevue.jpg">              <div class="title"><span>Bellevue              </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-18-burkliplatz.jpg">           <div class="title"><span>Bürkliplatz           </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-17-kantonalbank.jpg">          <div class="title"><span>Kantonalbank          </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-16-paradeplatz.jpg">           <div class="title"><span>Paradeplatz           </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-15-stockerstrasse.jpg">        <div class="title"><span>Stockerstrasse        </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-13-selnau.jpg">                <div class="title"><span>Bahnhof Selnau        </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-12-stauffacher.jpg">           <div class="title"><span>Stauffacher           </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-11-helvetiaplatz.jpg">         <div class="title"><span>Helvetiaplatz         </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-10-backeranlage.jpg">          <div class="title"><span>Bäckeranlage          </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-09-guterbahnhof.jpg">          <div class="title"><span>Güterbahnhof          </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-08-hardplatz.jpg">             <div class="title"><span>Hardplatz             </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-07-hadbrucke.jpg">             <div class="title"><span>Bahnhof Hardbrücke    </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-06-schiffbau.jpg">             <div class="title"><span>Schiffbau             </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-05-escherwyssplatz.jpg">       <div class="title"><span>Escher-Wyss-Platz     </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-04-forrlibuckstrasse.jpg">     <div class="title"><span>Förrlibuckstrasse     </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-03-fischerweg.jpg">            <div class="title"><span>Fischerweg            </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-02-bernoullihauser.jpg">       <div class="title"><span>Bernoulli-Häuser      </span></div></div>
+            <div class="stop"><img loading="lazy" src="/photos/linie8/linie8-01-hardturm.jpg">              <div class="title"><span>Hardturm              </span></div></div>
+        </main>
+        <script type="text/JavaScript">
+            function scroll(forward) {
+                const main = document.querySelector("main");
+                const width = document.body.getBoundingClientRect().width;
+                const offset = forward ? width : -width;
+                main.scroll({
+                    top: 0,
+                    left: main.scrollLeft + offset,
+                    behavior: "smooth",
+                });
+            }
+
+            for(const stop of document.querySelectorAll(".stop")) {
+                stop.addEventListener("wheel", (evt) => {
+                    if(evt.deltaY > 0) {
+                        evt.preventDefault();
+                        scroll(true);
+                    } else if(evt.deltaY < 0) {
+                        evt.preventDefault();
+                        scroll(false);
+                    }
+                });
+
+                stop.addEventListener("click", (evt) => {
+                    if(event.which == 1) {  // Left click only
+                        evt.preventDefault();
+                        scroll(true);
+                    }
+                });
+            }
+
+            window.addEventListener("keydown", (evt) => {
+                if(event.code == "ArrowRight" || event.code == "ArrowDown") {
+                    evt.preventDefault();
+                    scroll(true);
+                } else if (event.code == "ArrowLeft" || event.code == "ArrowUp") {
+                    evt.preventDefault();
+                    scroll(false);
+                }
+            });
+        </script>
+        <!-- GUID -->
+        <div style="display: none">ce0f13b2-4a83-4c1c-b2b9-b6d18f4ee6d2</div>
+    </body>
+</html>
