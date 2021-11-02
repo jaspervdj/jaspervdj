@@ -1,5 +1,18 @@
-resolver: 'lts-16.9'
+resolver: 'lts-17.2'
 packages:
 - '.'
 extra-deps:
-- 'hakyll-4.13.3.0'
+- 'citeproc-0.3.0.9'
+- 'commonmark-0.1.1.4'
+- 'commonmark-extensions-0.2.0.4'
+- 'commonmark-pandoc-0.2.0.1'
+- 'hakyll-4.14.0.0'
+- 'pandoc-2.11.4'
+nix:
+  packages:
+  - graphviz
+  - imagemagick
+  - texlive.combined.scheme-full  # Just for `standalone.cls`, urgh!
+  - zlib
+  - openssh
+  - rsync

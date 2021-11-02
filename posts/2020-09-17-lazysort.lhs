@@ -25,7 +25,7 @@ Introduction
 Haskell's laziness allows you to do
 [many cool things](https://www.reddit.com/r/haskell/comments/5xge0v/today_i_used_laziness_for/).
 I've talked about
-[searching an infinite graph before](/posts/2017-01-17-lazy-io-graphs.lhs).
+[searching an infinite graph before](/posts/2017-01-17-lazy-io-graphs.html).
 Another commonly mentioned example is finding the smallest N items in a list.
 
 Because programmers are lazy as well, this is often defined as:
@@ -194,6 +194,12 @@ Can we say something about the complexity?
 
     I would be very interested in knowing the actual complexity of the lazy
     version, so if you have any insights, be sure to let me know!
+
+    **Update**: [Edward Kmett](https://twitter.com/kmett) corrected me:
+    the complexity of `smallestN_lazy` is actually
+    `O(listSize * min(sampleSize, listSize))`, with
+    `O(listSize * min(sampleSize, log(listSize))` in
+    expectation for a random list.
 
 Appendix
 --------
