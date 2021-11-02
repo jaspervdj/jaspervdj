@@ -1,8 +1,8 @@
-resolver: 'lts-17.9'
+resolver: 'lts-18.14'
 packages:
 - '.'
 extra-deps:
-- 'hakyll-4.14.1.0'
+- 'hakyll-4.15.1.0'
 nix:
   packages:
   - graphviz

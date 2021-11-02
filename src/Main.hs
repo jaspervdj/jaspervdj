@@ -202,6 +202,9 @@ main = hakyllWith config $ do
         route idRoute
         compile $ getResourceBody
             >>= relativizeUrls
+    match "photos/*/*.jpg" $ do
+        route idRoute
+        compile copyFileCompiler
   where
     pages =
         [ "contact.markdown"
