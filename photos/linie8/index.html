@@ -135,46 +135,43 @@
             <div class="stop"><img loading="lazy" src="https://64.media.tumblr.com/8cbaf4b2bb13afec61501abc8b7f4ad5/532718b50f9100ca-65/s1280x1920/6be3034646b10d80114b7c1a602c02bfcb7e03ed.jpg"><div class="title"><span>Hardturm              </span></div></div>
         </main>
         <script type="text/JavaScript">
+            function scroll(forward) {
+                const main = document.querySelector("main");
+                const width = document.body.getBoundingClientRect().width;
+                const offset = forward ? width : -width;
+                main.scroll({
+                    top: 0,
+                    left: main.scrollLeft + offset,
+                    behavior: "smooth",
+                });
+            }
+
             for(const stop of document.querySelectorAll(".stop")) {
                 stop.addEventListener("wheel", (evt) => {
-                    var next;
                     if(evt.deltaY > 0) {
-                        next = stop.nextElementSibling;
-                    } else if(evt.deltaY < 0) {
-                        next = stop.previousElementSibling;
-                    }
-                    if(next) {
                         evt.preventDefault();
-                        next.scrollIntoView({behavior: "smooth"});
+                        scroll(true);
+                    } else if(evt.deltaY < 0) {
+                        evt.preventDefault();
+                        scroll(false);
                     }
                 });
 
                 stop.addEventListener("click", (evt) => {
                     if(event.which == 1) {  // Left click only
-                        const next = stop.nextElementSibling;
-                        if(next) {
-                            evt.preventDefault();
-                            next.scrollIntoView({behavior: "smooth"});
-                        }
+                        evt.preventDefault();
+                        scroll(true);
                     }
                 });
             }
 
-            const main = document.querySelector("main");
             window.addEventListener("keydown", (evt) => {
-                const width = document.body.getBoundingClientRect().width;
-                var scroll;
                 if(event.code == "ArrowRight" || event.code == "ArrowDown") {
-                    scroll = width;
+                    evt.preventDefault();
+                    scroll(true);
                 } else if (event.code == "ArrowLeft" || event.code == "ArrowUp") {
-                    scroll = -width;
-                }
-                if(scroll) {
-                    main.scroll({
-                        top: 0,
-                        left: main.scrollLeft + scroll,
-                        behavior: "smooth",
-                    });
+                    evt.preventDefault();
+                    scroll(false);
                 }
             });
         </script>
