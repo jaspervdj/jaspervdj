@@ -10,11 +10,6 @@ body {
     height: 100%;
 }
 
-div.avatar-wrap {
-    margin: 18px;
-    text-align: center;
-}
-
 div#navigation {
     background: #f3f3f3 url("../images/header.png") repeat-x left bottom;
     padding-bottom: 18px;
@@ -33,16 +28,6 @@ div#content {
 @media all and (min-width: 822px) {
     html {
         background: #fff url("../images/sidebar.png") repeat-y left top;
-    }
-
-    div.avatar-wrap {
-        margin: 6px 18px 6px 0px;
-        float: left;
-    }
-
-    div.avatar-wrap img {
-        max-width: 128px;
-        margin: 0px;
     }
 
     div#navigation {
