@@ -1,8 +1,9 @@
-resolver: 'lts-18.14'
+resolver: 'lts-19.17'
+system-ghc: true
+skip-ghc-check: true
 packages:
 - '.'
-extra-deps:
-- 'hakyll-4.15.1.0'
+- '../hakyll/'
 nix:
   packages:
   - graphviz
