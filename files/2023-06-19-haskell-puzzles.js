@@ -18,17 +18,19 @@ class JSONPDispatcher {
         }
     }
 
-    request(bucket, url) {
+    request(bucket, url, onerror) {
         const version = this.version;
         this.version += 1;
         const functionName = "dispatch_" + bucket + "_" + version;
         const definition = document.createElement("script");
+        definition.onerror = onerror;
         definition.type = "text/JavaScript";
         definition.innerText = "function " + functionName + "(data) { " +
                 "dispatch(\"" + bucket + "\", " + version + ", data) }";
         document.body.appendChild(definition);
 
         const script = document.createElement("script");
+        script.onerror = onerror;
         script.type = "text/JavaScript";
         script.src = url + "&callback=" + functionName;
         document.body.appendChild(script);
@@ -354,7 +356,10 @@ for (const element of document.getElementsByClassName("puzzle")) {
     sandbox.addTextChangeListener(text => {
         code.innerText = "> " + text;
         const url = tryHaskell + "/eval?" + "exp=" + encodeURIComponent(text);
-        dispatcher.request(id, url);
+        dispatcher.request(id, url, (err) => {
+            result.innerText = "Could not load " + tryHaskell;
+            result.classList.add("error");
+        });
         result.innerText = "Evaluating...";
     });
 }
