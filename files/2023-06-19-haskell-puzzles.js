@@ -173,12 +173,13 @@ class Sandbox {
     }
 
     moveSelection(x, y) {
-        if (this.selected >= 0) {
-            this.tokens[this.selected].center(x, y);
-            this.update();
-            return true;
+        if (this.selected < 0 ||
+                x < 0 || x >= Sandbox.width || y < 0 || y >= Sandbox.height) {
+            return false;
         }
-        return false;
+        this.tokens[this.selected].center(x, y);
+        this.update();
+        return true;
     }
 
     unselect() {

@@ -15,13 +15,6 @@ We came up with some puzzles where you are given some Haskell tokens, and the
 goal is to **rearrange them into an expression that evaluates to a desired
 value**.
 
-We playtested this with simple pieces of paper during the event and at the final
-presentation we played a multiplayer version where each player controls only one
-token.
-
-We actually found the single player to be more fun, and since we already had
-some client code I decided to clean it up a bit and make a single player version
-available here.
 
 Here a simple warmup exercise:
 
@@ -62,7 +55,7 @@ How is _e_ defined again?
         {"text": "sum",      "x": 260, "y": 140, "hint": "[n] → n"                },
         {"text": "(/)",      "x": 150, "y": 150                                   },
         {"text": "scanl1",   "x": 100, "y": 70,  "hint": "(a → a → a) → [a] → [a]"},
-        {"text": "succ",     "x": 50,  "y": 160                                   },
+        {"text": "succ",     "x": 50,  "y": 160, "hint": "n → n"                  },
         {"text": "$",        "x": 90,  "y": 160                                   },
         {"text": "[1..100]", "x": 250, "y": 50                                    },
         {"text": "$",        "x": 200, "y": 150                                   }
@@ -115,6 +108,15 @@ Fin!
 
 Haskell evaluation powered by [tryhaskell.org](https://tryhaskell.org).
 UI powered by [some messy JavaScript](/files/2023-06-19-haskell-puzzles.js).
+
+We playtested this with simple pieces of paper during the event and at the final
+presentation we played a multiplayer version where each player controls only one
+token.
+
+We actually found the single player to be more fun, and since we already had
+some client code I decided to clean it up a bit and make a single player version
+available here.
+
 Thanks for playing!
 
 <script type="text/JavaScript" src="/files/2023-06-19-haskell-puzzles.js"></script>
