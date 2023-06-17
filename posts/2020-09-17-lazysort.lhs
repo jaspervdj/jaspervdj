@@ -64,20 +64,21 @@ better, we should still ask ourselves if the additional complexity is worth it.
 >     replicate n item
 >   where
 >     -- A heap is a map of the item to how many times it occurs in
->     -- the heap, like a frequency counter.
->     heap = foldl' (\acc x -> insert x acc) Map.empty list
->     insert x heap0
->         | Map.size heap0 < maxSize = Map.insertWith (+) x 1 heap0
+>     -- the heap, like a frequency counter.  We also keep the current
+>     -- total count of the heap.
+>     heap = fst $ foldl' (\acc x -> insert x acc) (Map.empty, 0) list
+>     insert x (heap0, count)
+>         | count < maxSize = (Map.insertWith (+) x 1 heap0, count + 1)
 >         | otherwise = case Map.maxViewWithKey heap0 of
->             Nothing -> Map.insertWith (+) x 1 heap0
+>             Nothing -> (Map.insertWith (+) x 1 heap0, count + 1)
 >             Just ((y, yn), _) -> case compare x y of
->                 EQ -> heap0
->                 GT -> heap0
+>                 EQ -> (heap0, count)
+>                 GT -> (heap0, count)
 >                 LT ->
 >                     let heap1 = Map.insertWith (+) x 1 heap0 in
 >                     if yn > 1
->                         then Map.insert y (yn - 1) heap1
->                         else Map.delete y heap1
+>                         then (Map.insert y (yn - 1) heap1, count)
+>                         else (Map.delete y heap1, count)
 
 So, we get to the main trick I wanted to talk about: how do we benchmark this,
 and can we add unit tests to confirm these benchmark results in CI?  Benchmark
@@ -200,6 +201,10 @@ Can we say something about the complexity?
     `O(listSize * min(sampleSize, listSize))`, with
     `O(listSize * min(sampleSize, log(listSize))` in
     expectation for a random list.
+
+Thanks to [Huw Campbell](https://github.com/HuwCampbell) for pointing out a bug
+in the implementation of `smallestN_smart` -- this is now fixed in the code
+above.
 
 Appendix
 --------
