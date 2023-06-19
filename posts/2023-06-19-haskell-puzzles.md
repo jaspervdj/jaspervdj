@@ -10,13 +10,10 @@ together with
 [Francesco](https://mazzo.li/),
 [Jussi](https://github.com/joamaki) and
 [Patrick](https://github.com/chpatrick).
+You are given some Haskell tokens and a goal term, and you need to **rearrange
+the tokens into an expression that produces the goal**.
 
-We came up with some puzzles where you are given some Haskell tokens, and the
-goal is to **rearrange them into an expression that evaluates to a desired
-value**.
-
-
-Here a simple warmup exercise:
+Here a simple warmup exercise just to get an idea of how it works:
 
 <div id="puzzle_iterate" class="puzzle" data-puzzle='{
     "goal": "[0,1,2,3,4]",
@@ -31,7 +28,8 @@ Here a simple warmup exercise:
     ]
 }'></div>
 
-This is a bit more of a puzzle.  What Monad are we looking for?
+Let's continue with `iterate` but do a real puzzle next.  What Monad are we
+looking for?
 
 <div id="puzzle_join" class="puzzle" data-puzzle='{
     "goal": "32",
@@ -62,8 +60,8 @@ How is _e_ defined again?
     ]
 }'></div>
 
-
-The next puzzle is a bit tricky.  Is there a 2 missing?
+`let` allows us to reuse code.  This is very useful if you don't have enough
+tokens to make a sensible program.
 
 <div id="puzzle_let" class="puzzle" data-puzzle='{
     "goal": "8",
@@ -83,7 +81,8 @@ The next puzzle is a bit tricky.  Is there a 2 missing?
     ]
 }'></div>
 
-Good job making it this far!  Here is a final puzzle.
+Here is the final puzzle -- but how can we produce a string from a bunch of
+numbers?
 
 <div id="puzzle_fin" class="puzzle" data-puzzle='{
     "goal": "\"fin\"",
@@ -109,9 +108,9 @@ Fin!
 Haskell evaluation powered by [tryhaskell.org](https://tryhaskell.org).
 UI powered by [some messy JavaScript](/files/2023-06-19-haskell-puzzles.js).
 
-We playtested this with simple pieces of paper during the event and at the final
-presentation we played a multiplayer version where each player controls only one
-token.
+We playtested these puzzles with simple pieces of paper during the event.
+At the final presentation we played a web-based multiplayer version where each
+player controls only one token.
 
 We actually found the single player to be more fun, and since we already had
 some client code I decided to clean it up a bit and make a single player version
