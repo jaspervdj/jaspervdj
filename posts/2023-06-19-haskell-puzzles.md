@@ -15,6 +15,8 @@ the tokens into an expression that produces the goal**.
 
 Here a simple warmup exercise just to get an idea of how it works:
 
+<style type="text/css">.puzzle {margin-bottom: 4em;}</style>
+
 <div id="puzzle_iterate" class="puzzle" data-puzzle='{
     "goal": "[0,1,2,3,4]",
     "tokens": [
@@ -100,8 +102,6 @@ numbers?
         {"text": "/",    "x": 250, "y": 160}
     ]
 }'></div>
-
-Fin!
 
 ---
 
