@@ -68,13 +68,13 @@ so that we get a fully filled rectangle without any borders or filler:
 TODO: show picture, possibly with "img1.jpg" etc. overlayed so the reader can
 visualize the tree
 
-It seems like some complexity is involved, and intuitively it would maybe be
-a good fit for constraint programming: we want to navigate down the tree of
-images, propagate information about their dimensions back upwards, and then
+It seems like some complexity is involved, and intuitively it would maybe be a
+good fit for constraint or linear programming: we want to navigate down the tree
+of images, propagate information about their dimensions back upwards, and then
 decide the final layout based on that.
 
 However, we can use Haskell's laziness to do this in a single pass.
-This results in a very short and program that is declarative in style ---
+This results in a very short program that is declarative in style ---
 leaving the details of what to compute when to the compiler and runtime system
 --- exactly how we like it.
 
@@ -241,11 +241,13 @@ passing in the transformation for both images by calling `layout` recursively:
 >         (r', Size rw rh) = layout (Transform rx y (s * rs)) r in
 >     (Horizontal l' r', size')
 
-You may wonder how this can work: `ls` depends on `lh` which seems to depend
+You may wonder how this can work: `ls` depends on `lh` which _seems_ to depend
 on `ls` due to the recursive call!  But there is no actual circular dependency
-since we can --- informally --- delay the evaluation of the scale in `Transform`
-(`s * ls`) until the very end: none of our code here really needs to
-evaluate the `s` that is being passed in.
+since we can --- informally --- delay the evaluation of the `Transform` until
+the very end.  We only use the `Transform` parameter passed in to `layout` to
+compute the next `Transform`: so we can just keep building all of these
+lazy `Transform` thunks.  If our tree is finite, the computation will not
+diverge since we know at some point we will hit a `Singleton`.
 
 The code for `Vertical` is the dual of the code we just went through for
 `Horizontal` -- instead of right/left, we have top/bottom, and we use the
