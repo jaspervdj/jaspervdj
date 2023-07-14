@@ -59,7 +59,7 @@ main = hakyllWith config $ do
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
     -- Render each and every post
-    match "posts/*" $ do
+    match ("posts/*.md" .||. "posts/*.html" .||. "posts/*.lhs") $ do
         route   $ setExtension ".html"
         compile $ do
             pandocCompiler
