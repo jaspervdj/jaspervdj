@@ -65,6 +65,8 @@ subdivision should be used, creating a tree.  For example:
 The program should then determine the exact size and position of each image,
 so that we get a fully filled rectangle without any borders or filler:
 
+![](../images/2023-07-14-lazycollage-example-1.jpg)
+
 TODO: show picture, possibly with "img1.jpg" etc. overlayed so the reader can
 visualize the tree
 
