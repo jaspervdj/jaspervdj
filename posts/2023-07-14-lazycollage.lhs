@@ -148,7 +148,7 @@ We introduce a typeclass to do just that:
 > class Sized a where
 >     -- | Retrieve the width and height of an image.
 >     -- Both numbers must be strictly positive.
->     size :: a -> Size
+>     sizeOf :: a -> Size
 
 We use the `Rational` type for width and height.
 We are only subdividing the 2D space, so we do not need irrational numbers,
@@ -162,7 +162,7 @@ and having infite precision is convenient.
 The instance for the JuicyPixels image type is simple:
 
 > instance Sized (JP.Image p) where
->     size img = Size
+>     sizeOf img = Size
 >         { sizeWidth  = fromIntegral $ JP.imageWidth  img
 >         , sizeHeight = fromIntegral $ JP.imageHeight img
 >         }
@@ -180,6 +180,49 @@ for _x_ and _y_:
 >     , transformScale :: Rational
 >     } deriving (Show)
 
+TODO: Monoid description
+
+> instance Semigroup Transform where
+>     -- The lazy matching here is required!!!
+>     ~(Transform ax ay as) <> ~(Transform bx by bs) =
+>         Transform (ax + as * bx) (ay + as * by) (as * bs)
+
+> instance Monoid Transform where
+>     mempty = Transform 0 0 1
+
+TODO: Move, redo
+
+> measure :: Sized img => Collage img -> Size
+> measure (Singleton img) = sizeOf img
+> measure (Horizontal l r) =
+>     let (Size lw lh) = measure l
+>         (Size rw rh) = measure r
+>         height       = min lh rh
+>         ls           = height / lh
+>         rs           = height / rh in
+>     Size (ls * lw + rs * rw) height
+> measure (Vertical t b) =
+>     let (Size tw th) = measure t
+>         (Size bw bh) = measure b
+>         width        = min tw bw
+>         ts           = width / tw
+>         bs           = width / bw in
+>     Size width (ts * th + bs * bh)
+
+> horizontal :: Size -> Size -> (Rational, Rational, Size)
+> horizontal (Size lw lh) (Size rw rh) =
+>     let height = min lh rh
+>         ls     = height / lh
+>         rs     = height / rh in
+>     (ls, rs, Size (ls * lw + rs * rw) height)
+
+> vertical :: Size -> Size -> (Transform, Transform, Size)
+> vertical (Size tw th) (Size bw bh) =
+>     let width = min tw bw
+>         ts    = width / tw
+>         bs    = width / bw in
+>     (Transform 0 0 ts, Transform 0 (ts * th) bs, Size width (ts * th + bs * bh))
+
 We now have enough to write down the type signature of our main `collage`
 function.  We will take the user-specified tree as input, and annotate
 each element with a `Transform`.  In addition to that, we also produce the
@@ -190,7 +233,7 @@ each element with a `Transform`.  In addition to that, we also produce the
 All `collage` does is call `layout` --- our _circular_ program --- with
 an initial _(x, y)_ position of _(0, 0)_ and the identity scale (1).
 
-> collage = layout (Transform 0 0 1)
+> collage = layout mempty
 
 Now we can get down to business.
 
@@ -203,7 +246,7 @@ Placing a single image is easy, since we are passing in the scale and position
 calculated in a circular way and depends on the output `Size`).
 
 > layout transform (Singleton img) =
->     (Singleton (img, transform), size img)
+>     (Singleton (img, transform), sizeOf img)
 
 The `Horizontal` and `Vertical` cases are very similar to each other.  We will
 look at the `Horizontal` one in detail and then review `Vertical` as a summary.
@@ -260,14 +303,11 @@ producing the size of both the top and bottom images, and we are using that
 to calculate the transform which we pass in as the first argument to `layout`
 again!
 
-> layout (Transform x y s) (Vertical t b) =
->     let width            = min tw bw
->         ts               = width / tw
->         bs               = width / bw
->         by               = y + s * ts * th
->         (t', Size tw th) = layout (Transform x y  (s * ts)) t
->         (b', Size bw bh) = layout (Transform x by (s * bs)) b in
->     (Horizontal t' b', Size width (ts * th + bs * bh))
+> layout transform (Vertical t b) =
+>     let (t', tsize) = layout (transform <> tt) t
+>         (b', bsize) = layout (transform <> bt) b
+>         (tt, bt, size) = vertical tsize bsize in
+>     (Vertical t' b', size)
 
 Appendix A: rendering the result
 ================================
