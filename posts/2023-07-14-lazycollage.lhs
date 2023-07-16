@@ -174,23 +174,56 @@ We can also scale images up or down, but since we want to preserve the aspect
 ratio, we can use a single _scale_ factor rather than having separate factors
 for _x_ and _y_:
 
-> data Transform = Transform
->     { transformX     :: Rational
->     , transformY     :: Rational
->     , transformScale :: Rational
+> data Transform = Tr
+>     { trX     :: Rational
+>     , trY     :: Rational
+>     , trScale :: Rational
 >     } deriving (Show)
 
 TODO: Monoid description
 
 > instance Semigroup Transform where
 >     -- The lazy matching here is required!!!
->     ~(Transform ax ay as) <> ~(Transform bx by bs) =
->         Transform (ax + as * bx) (ay + as * by) (as * bs)
+>     ~(Tr ax ay as) <> ~(Tr bx by bs) =
+>         Tr (ax + as * bx) (ay + as * by) (as * bs)
+
+>     {-
+>     Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
+>
+>     -- Definition of <>
+>     = Tr (ax + as * (bx + bs * cx))
+>          (ay + as * (by + bs * cy))
+>          (as * (bs * cs))
+>
+>     -- Distribute * over +
+>     = Tr (ax + as * bx + as * bs * cx)
+>          (ay + as * by + as * bs * cy)
+>          (as * bs * cs)
+>
+>     -- Associativity of + and *
+>     = Tr ((ax + as * bx) + (as * bs) * cx)
+>          ((ay + as * by) + (as * bs) * cy)
+>          ((as * bs) * cs)
+>
+>     -- Definition of <>
+>     = (Tr ax ay as <> T bx by bs) <> Tr cx cy cs
+>     -}
 
 > instance Monoid Transform where
->     mempty = Transform 0 0 1
+>     mempty = Tr 0 0 1
 
-TODO: Move, redo
+>     {-
+>     Tr ax ay as <> mempty
+>
+>     -- Definition of mempty
+>     = Tr ax ay as <> Tr 0 0 1
+>
+>     -- Definition of <>
+>     = Tr (ax + as * 0) (ay + as * 0) (as * 1)
+>
+>     -- Properties of 0 and 1 for *
+>     = Tr ax ay as
+>     -}
 
 > measure :: Sized img => Collage img -> Size
 > measure (Singleton img) = sizeOf img
@@ -221,7 +254,7 @@ TODO: Move, redo
 >     let width = min tw bw
 >         ts    = width / tw
 >         bs    = width / bw in
->     (Transform 0 0 ts, Transform 0 (ts * th) bs, Size width (ts * th + bs * bh))
+>     (Tr 0 0 ts, Tr 0 (ts * th) bs, Size width (ts * th + bs * bh))
 
 We now have enough to write down the type signature of our main `collage`
 function.  We will take the user-specified tree as input, and annotate
@@ -251,7 +284,7 @@ calculated in a circular way and depends on the output `Size`).
 The `Horizontal` and `Vertical` cases are very similar to each other.  We will
 look at the `Horizontal` one in detail and then review `Vertical` as a summary.
 
-> layout (Transform x y s) (Horizontal l r) =
+> layout (Tr x y s) (Horizontal l r) =
 
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Visualizing this, it is intuitive that the height of the two
@@ -282,8 +315,8 @@ assuming `ls` and `rs` as scaling factor for the left and right images, and
 passing in the transformation for both images by calling `layout` recursively:
 
 >         rx               = x + s * ls * lw  -- X of right image
->         (l', Size lw lh) = layout (Transform x  y (s * ls)) l
->         (r', Size rw rh) = layout (Transform rx y (s * rs)) r in
+>         (l', Size lw lh) = layout (Tr x  y (s * ls)) l
+>         (r', Size rw rh) = layout (Tr rx y (s * rs)) r in
 >     (Horizontal l' r', size')
 
 You may wonder how this can work: `ls` depends on `lh` which _seems_ to depend
@@ -331,7 +364,7 @@ interpolation] in a real application.
 >   where
 >     black = JP.PixelRGB8 0 0 0
 >
->     transform canvas (img, Transform dstX dstY dstS) =
+>     transform canvas (img, Tr dstX dstY dstS) =
 >         for_ [round dstX .. round (dstX + dstW) - 1] $ \outX ->
 >         for_ [round dstY .. round (dstY + dstH) - 1] $ \outY ->
 >            let inX = min (JP.imageWidth img - 1) $ round $
