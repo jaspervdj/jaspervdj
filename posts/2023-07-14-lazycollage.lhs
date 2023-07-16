@@ -58,17 +58,16 @@ collage in a declarative way by indicating if horizontal (H) or vertical (V)
 subdivision should be used, creating a tree.  For example:
 
     H img1.jpg
-      V img2.jpg
-        H img3.jpg
-          img4.jpg
+      (V img2.jpg
+         (H img3.jpg
+            img4.jpg))
 
 The program should then determine the exact size and position of each image,
 so that we get a fully filled rectangle without any borders or filler:
 
 ![](../images/2023-07-14-lazycollage-example-1.jpg)
 
-TODO: show picture, possibly with "img1.jpg" etc. overlayed so the reader can
-visualize the tree
+TODO: the next two paragraphs are kinda bad:
 
 It seems like some complexity is involved, and intuitively it would maybe be a
 good fit for constraint or linear programming: we want to navigate down the tree
@@ -180,11 +179,15 @@ for _x_ and _y_:
 >     , trScale :: Rational
 >     } deriving (Show)
 
+As we'll want to nest our layouts, composition seems important...
+
 TODO: Monoid description
 
 > instance Semigroup Transform where
 >     Tr ax ay as <> Tr bx by bs =
 >         Tr (ax + as * bx) (ay + as * by) (as * bs)
+
+<details><summary>This seems suspicious, is this a valid Semigroup?</summary>
 
 >     {-
 >     Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
@@ -208,8 +211,12 @@ TODO: Monoid description
 >     = (Tr ax ay as <> T bx by bs) <> Tr cx cy cs
 >     -}
 
+</details>
+
 > instance Monoid Transform where
 >     mempty = Tr 0 0 1
+
+<details><summary>This seems suspicious, is this a valid Monoid?</summary>
 
 >     {-
 >     Tr ax ay as <> mempty
@@ -223,6 +230,10 @@ TODO: Monoid description
 >     -- Properties of 0 and 1 for *
 >     = Tr ax ay as
 >     -}
+
+</details>
+
+TODO: kill this:
 
 > measure :: Sized img => Collage img -> Size
 > measure (Singleton img) = sizeOf img
@@ -240,6 +251,14 @@ TODO: Monoid description
 >         ts           = width / tw
 >         bs           = width / bw in
 >     Size width (ts * th + bs * bh)
+
+TODO: It's probably better to define these before the monoid instance so
+we see some concrete example of the Transform type before its used:
+
+TODO: explain why it's always possible to create a collage like this.
+explain we will do the maths first.  then write down these two functions:
+
+![](../images/2023-07-14-lazycollage-tree-1.jpg)
 
 > horizontal :: Size -> Size -> (Transform, Transform, Size)
 > horizontal (Size lw lh) (Size rw rh) =
