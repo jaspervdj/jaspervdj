@@ -183,8 +183,7 @@ for _x_ and _y_:
 TODO: Monoid description
 
 > instance Semigroup Transform where
->     -- The lazy matching here is required!!!
->     ~(Tr ax ay as) <> ~(Tr bx by bs) =
+>     Tr ax ay as <> Tr bx by bs =
 >         Tr (ax + as * bx) (ay + as * by) (as * bs)
 
 >     {-
@@ -242,12 +241,12 @@ TODO: Monoid description
 >         bs           = width / bw in
 >     Size width (ts * th + bs * bh)
 
-> horizontal :: Size -> Size -> (Rational, Rational, Size)
+> horizontal :: Size -> Size -> (Transform, Transform, Size)
 > horizontal (Size lw lh) (Size rw rh) =
 >     let height = min lh rh
 >         ls     = height / lh
 >         rs     = height / rh in
->     (ls, rs, Size (ls * lw + rs * rw) height)
+>     (Tr 0 0 ls, Tr (ls * lw) 0 rs, Size (ls * lw + rs * rw) height)
 
 > vertical :: Size -> Size -> (Transform, Transform, Size)
 > vertical (Size tw th) (Size bw bh) =
@@ -284,7 +283,9 @@ calculated in a circular way and depends on the output `Size`).
 The `Horizontal` and `Vertical` cases are very similar to each other.  We will
 look at the `Horizontal` one in detail and then review `Vertical` as a summary.
 
+> {-
 > layout (Tr x y s) (Horizontal l r) =
+> -}
 
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Visualizing this, it is intuitive that the height of the two
@@ -302,10 +303,12 @@ right images respectively, we can decide a `height` and scaling factor for both
 images (`ls` / `rs`).  Putting this together, we can compute the width of the
 putting the images beside each other, and `height` remains the same:
 
+>     {-
 >     let height = min lh rh    -- Need to match heights
 >         ls     = height / lh  -- Scale for left image
 >         rs     = height / rh  -- Scale for right image
 >         size'  = Size (ls * lw + rs * rw) height
+>     -}
 
 NOT ESSENTIAL / SKIP: Due to our choice of picking the minimum height, it
 follows that at least one of `ls` or `rs` will be 1.
@@ -314,10 +317,12 @@ We can now take the opposite view, completing the circular reasoning:
 assuming `ls` and `rs` as scaling factor for the left and right images, and
 passing in the transformation for both images by calling `layout` recursively:
 
+>     {-
 >         rx               = x + s * ls * lw  -- X of right image
 >         (l', Size lw lh) = layout (Tr x  y (s * ls)) l
 >         (r', Size rw rh) = layout (Tr rx y (s * rs)) r in
 >     (Horizontal l' r', size')
+>     -}
 
 You may wonder how this can work: `ls` depends on `lh` which _seems_ to depend
 on `ls` due to the recursive call!  But there is no actual circular dependency
@@ -335,6 +340,12 @@ The apparent cycle is maybe more noticeable in this denser code: `layout` is
 producing the size of both the top and bottom images, and we are using that
 to calculate the transform which we pass in as the first argument to `layout`
 again!
+
+> layout transform (Horizontal l r) =
+>     let (l', lsize) = layout (transform <> lt) l
+>         (r', rsize) = layout (transform <> rt) r
+>         (lt, rt, size) = horizontal lsize rsize in
+>     (Horizontal l' r', size)
 
 > layout transform (Vertical t b) =
 >     let (t', tsize) = layout (transform <> tt) t
@@ -371,6 +382,7 @@ interpolation] in a real application.
 >                         fromIntegral (outX - round dstX) / dstS
 >                inY = min (JP.imageHeight img - 1) $ round $
 >                         fromIntegral (outY - round dstY) / dstS in
+>            -- TODO: write out of bounds still seems possible!!!
 >            JP.writePixel canvas outX outY $ JP.pixelAt img inX inY
 >       where
 >         dstW = fromIntegral (JP.imageWidth img)  * dstS
