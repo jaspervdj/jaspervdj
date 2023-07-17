@@ -7,12 +7,12 @@ Prelude
 =======
 
 This blogpost is written in [reproducible] [Literate Haskell], so we need some
-imports, which can be safely skipped.
+imports first.
 
 [reproducible]: TODO-link-to-nix-file
 [Literate Haskell]: https://wiki.haskell.org/Literate_programming
 
-<details><summary>Show me the imports anyway!</summary>
+<details><summary>Show me the exact imports.</summary>
 
 > {-# LANGUAGE DeriveFoldable    #-}
 > {-# LANGUAGE DeriveFunctor     #-}
@@ -46,16 +46,16 @@ the past decade.  Recently, I was considering moving some of the stuff I have
 on various social networks to a self-hosting solution.
 
 Tumblr in particular has a fairly nice way to do photo sets, where these can
-be organized in rows and columns.  I wanted to see if I could mimic this a
-nicely recursive way, where rows and columns can be subdivided further.
+be organized in rows and columns.  I wanted to see if I could mimic this in a
+recursive way, where rows and columns can be subdivided further.
 
 One important constraint is that is that we want to present each picture as
 the photographer envisioned it: concretely, we can scale it up our down (if
 we preserve the aspect ratio!), but we can't crop out parts.
 
-Order is important in photo essays, so we want the author to specify the photo
-collage in a declarative way by indicating if horizontal (H) or vertical (V)
-subdivision should be used, creating a tree.  For example:
+Order is also important in photo essays, so we want the author to specify the
+photo collage in a declarative way by indicating if horizontal (H) or vertical
+(V) subdivision should be used, creating a tree.  For example:
 
     H img1.jpg
       (V img2.jpg
@@ -148,7 +148,7 @@ We introduce a typeclass to do just that:
 
 We use the `Rational` type for width and height.
 We are only subdividing the 2D space, so we do not need irrational numbers,
-and having infite precision is convenient.
+and having infinite precision is convenient.
 
 The instance for the JuicyPixels image type is simple:
 
@@ -158,10 +158,12 @@ The instance for the JuicyPixels image type is simple:
 >     , sizeHeight = fromIntegral $ JP.imageHeight img
 >     }
 
-Let'think about the _output_ of our layout algorithm next.
-](/images/2023-07-14-lazycollage-tree-1.jpg)
- wlook at the finished image, it may seem like a hard problem to find a
-confuration that fits all the images with a correct aspect ratio.
+Let's think about the _output_ of our layout algorithm next.
+
+![](/images/2023-07-14-lazycollage-tree-1.jpg)
+
+If we look at the finished image, it may seem like a hard problem to find a
+configuration that fits all the images with a correct aspect ratio.
 
 But we can use induction to arrive at a fairly straightforward solution.  Given
 two images, it is always possible to put them beside or above each other
@@ -187,10 +189,11 @@ for _x_ and _y_:
 >   } deriving (Show)
 
 Armed with the `Size` and `Transform` types, we have enough to tackle the
-"mathy" bits.  Let's look at the horizontal case first.
+"mathy" bits.
 
-We want to place image `l` beside image `r`, producing a nicely filled
-rectangle.  Intuitively, we should be matching the height of both images.
+Let's look at the horizontal case first.  We want to place image `l` beside
+image `r`, producing a nicely filled rectangle.  Intuitively, we should be
+matching the height of both images.
 
 There are different ways to do this -- we could enlarge the smaller
 image, shrink the bigger image, or something in between.  We make a choice
@@ -240,9 +243,10 @@ $(bx, by)$ and scale by $bs$:
 >   Tr ax ay as <> Tr bx by bs =
 >     Tr (ax + as * bx) (ay + as * by) (as * bs)
 
-In order to show this is a valid Semigroup, we'll need to prove associativity:
+In order to show this is a valid Semigroup, we will be rigorous and provide
+a proof:
 
-<details><summary>Expand proof</summary>
+<details><summary>Proof of associativity</summary>
 
 >   {-
 >   Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
