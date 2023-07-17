@@ -69,20 +69,11 @@ so that we get a fully filled rectangle without any borders or filler:
 
 TODO: the next two paragraphs are kinda bad:
 
-It seems like some complexity is involved, and intuitively it would maybe be a
-good fit for constraint or linear programming: we want to navigate down the tree
-of images, propagate information about their dimensions back upwards, and then
-decide the final layout based on that.
-
-However, we can use Haskell's laziness to do this in a single pass.
-This results in a very short program that is declarative in style ---
-leaving the details of what to compute when to the compiler and runtime system
---- exactly how we like it.
-
-This interesting technique was first described by Richard S. Bird in _"Using
-circular programs to eliminate multiple traversals of data"_ in 1984, which
-**predates Haskell!**  These days, it is commonly referred to as the `repmin`
-problem rather than _circular programming_.
+We will use a technique called _circular programming_ that builds on Haskell's
+laziness to achieve this in an elegant way.
+These days, it is maybe more commonly referred to as the `repmin` problem.
+This was first described by Richard S. Bird in _"Using circular programs to
+eliminate multiple traversals of data"_ in 1984, which **predates Haskell!**
 
 <details><summary>What is <code>repmin</code>? I've never heard of it!</summary>
 
@@ -144,6 +135,11 @@ We introduce a typeclass to do just that:
 
 [JuicyPixels]: https://hackage.haskell.org/package/JuicyPixels
 
+> data Size = Size
+>     { sizeWidth  :: Rational
+>     , sizeHeight :: Rational
+>     } deriving (Show)
+>
 > class Sized a where
 >     -- | Retrieve the width and height of an image.
 >     -- Both numbers must be strictly positive.
@@ -152,11 +148,6 @@ We introduce a typeclass to do just that:
 We use the `Rational` type for width and height.
 We are only subdividing the 2D space, so we do not need irrational numbers,
 and having infite precision is convenient.
-
-> data Size = Size
->     { sizeWidth  :: Rational
->     , sizeHeight :: Rational
->     } deriving (Show)
 
 The instance for the JuicyPixels image type is simple:
 
@@ -167,9 +158,26 @@ The instance for the JuicyPixels image type is simple:
 >         }
 
 Let's think about the _output_ of our layout algorithm next.
-We want to compute the position of each input image, which can be represented
+
+![](../images/2023-07-14-lazycollage-tree-1.jpg)
+
+If we look at the finished image, it may seem like a hard problem to find a
+configuration that fits all the images with a correct aspect ratio.
+
+But we can use induction to arrive at a fairly straightforward solution.  Given
+two images, it is always possible to put them beside or above each other
+by scaling them up or down to match them in height or width respectively.
+Repeating this process, we can render the entire collage.
+
+This is a bit of a naive approach since we end up making way too many copies.
+Instead, we want to compute the layout and then render everything in one go.
+
+There are some similarities with the algorithms present in browser engines.
+TODO: One pass description.
+
+The position of each individual input image can be represented
 using _(x, y)_ coordinates.
-We can also scale images up or down, but since we want to preserve the aspect
+We can also scale images up or down, and since we want to preserve the aspect
 ratio, we can use a single _scale_ factor rather than having separate factors
 for _x_ and _y_:
 
@@ -179,8 +187,48 @@ for _x_ and _y_:
 >     , trScale :: Rational
 >     } deriving (Show)
 
-As we'll want to nest our layouts, composition seems important...
+Armed with the `Size` and `Transform` types, we have enough to tackle the
+"mathy" bits.  Let's look at the horizontal case first.
 
+We want to place image `l` beside image `r`, producing a nicely filled
+rectangle.  Intuitively, we should be matching the height of both images.
+
+There are different ways to do this -- we could enlarge the smaller
+image, shrink the bigger image, or something in between.  We make a choice
+to always shrink the bigger image, as this doesn't compromise the sharpness
+of the result.
+
+`horizontal` computes a transform for the left and right images, and a
+total size:
+
+> horizontal :: Size -> Size -> (Transform, Transform, Size)
+> horizontal (Size lw lh) (Size rw rh) =
+>   ( Tr 0         0 lscale
+>   , Tr (ls * lw) 0 rscale
+>   , Size width height
+>   )
+> where
+>   height = min lh rh
+>   lscale  = height / lh
+>   rscale  = height / rh
+>   width   = lscale * lw + rscale* rw
+
+Composing images vertically is similar, matching the widths rather than the
+heights of the two images:
+
+> vertical :: Size -> Size -> (Transform, Transform, Size)
+> vertical (Size tw th) (Size bw bh) =
+>   ( Tr 0 0         ts
+>   , Tr 0 (ts * th) bs
+>   , Size width (ts * th + bs * bh)
+>   )
+> where
+>   width = min tw bw
+>   ts    = width / tw
+>   bs    = width / bw in
+
+Now that we've solved the problem of combining two images, we can apply this
+to our tree of images.  We'll need to compose multiple transformations --
 TODO: Monoid description
 
 > instance Semigroup Transform where
@@ -258,22 +306,6 @@ we see some concrete example of the Transform type before its used:
 TODO: explain why it's always possible to create a collage like this.
 explain we will do the maths first.  then write down these two functions:
 
-![](../images/2023-07-14-lazycollage-tree-1.jpg)
-
-> horizontal :: Size -> Size -> (Transform, Transform, Size)
-> horizontal (Size lw lh) (Size rw rh) =
->     let height = min lh rh
->         ls     = height / lh
->         rs     = height / rh in
->     (Tr 0 0 ls, Tr (ls * lw) 0 rs, Size (ls * lw + rs * rw) height)
-
-> vertical :: Size -> Size -> (Transform, Transform, Size)
-> vertical (Size tw th) (Size bw bh) =
->     let width = min tw bw
->         ts    = width / tw
->         bs    = width / bw in
->     (Tr 0 0 ts, Tr 0 (ts * th) bs, Size width (ts * th + bs * bh))
-
 We now have enough to write down the type signature of our main `collage`
 function.  We will take the user-specified tree as input, and annotate
 each element with a `Transform`.  In addition to that, we also produce the
@@ -306,16 +338,6 @@ look at the `Horizontal` one in detail and then review `Vertical` as a summary.
 > layout (Tr x y s) (Horizontal l r) =
 > -}
 
-We want to place image `l` beside image `r`, producing a nicely filled
-rectangle.  Visualizing this, it is intuitive that the height of the two
-images should match:
-
-TODO: image of just two horizontal images, maybe the ones from the intro.
-
-There are different ways to do this -- we could enlarge the smaller
-image, shrink the bigger image, or something in between.  We make a choice
-to always shrink the bigger image, as this doesn't compromise the sharpness
-of the result.
 
 Assuming `lw`, `lh` `rw`, and `rh` for the width and height of the left and
 right images respectively, we can decide a `height` and scaling factor for both
