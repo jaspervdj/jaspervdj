@@ -339,11 +339,10 @@ would diverge (i.e. recurse infinitely).
 >   (Singleton (img, trans), sizeOf img)
 
 In the recursive case for horizontal composition, we call the `horizontal`
-helper we defined earlier for the left and right image sizes.
-This is gives us both transformations, that we
-can then pass in as arguments to `layout` again -- returning the left and
-right image sizes we pass in to the `horizontal` helper, forming our
-apparent circle.
+helper we defined earlier with the left and right image sizes as arguments.
+This gives us both transformations, that we can then pass in as arguments to
+`layout` again – returning the left and right image sizes we pass in to the
+`horizontal` helper, forming our apparent circle.
 
 > layout trans (Horizontal l r) =
 >   (Horizontal l' r', size)
