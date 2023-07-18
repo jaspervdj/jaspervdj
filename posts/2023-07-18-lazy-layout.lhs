@@ -285,7 +285,8 @@ side, namely `a <> mempty == a`.
 <details><summary>Proof of Monoid right identity...</summary>
 
 ~~~~~{.haskell}
-Tr ax ay as <> mempty>
+Tr ax ay as <> mempty
+
 -- Definition of mempy
 = Tr ax ay as <> Tr 0 0 1
 
