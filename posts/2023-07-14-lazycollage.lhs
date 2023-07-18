@@ -28,7 +28,6 @@ imports first.
 > import           Data.List              (isSuffixOf)
 > import           Data.List.NonEmpty     (NonEmpty (..))
 > import           Data.Maybe             (fromMaybe)
-> import           Data.Traversable       (for)
 > import           System.Directory       (listDirectory)
 > import           System.Environment     (getArgs)
 > import           System.FilePath        ((</>))
@@ -67,22 +66,22 @@ so that we get a fully filled rectangle without any borders or filler:
 
 ![](../images/2023-07-14-lazycollage-example-1.jpg)
 
-TODO: the next two paragraphs are kinda bad:
-
 We will use a technique called _circular programming_ that builds on Haskell's
 laziness to achieve this in an elegant way.
 These days, it is maybe more commonly referred to as the `repmin` problem.
 This was first described by Richard S. Bird in _"Using circular programs to
 eliminate multiple traversals of data"_ in 1984, which **predates Haskell!**
 
-<details><summary>What is <code>repmin</code>? I've never heard of it!</summary>
+<details><summary>What is <code>repmin</code>?</summary>
 
 Interlude: repmin
 -----------------
 
 Given a simple tree type:
 
-> data Tree a = Leaf a | Branch (Tree a) (Tree a)
+> data Tree a
+>   = Leaf a
+>   | Branch (Tree a) (Tree a)
 
 We would like to write a function `repmin` which replaces each value in each
 `Leaf` with the global minimum in the tree.  This is easily done by first
@@ -487,6 +486,15 @@ where we want to write the image to.
 > parseCommand [out, dir, num] = Random out dir . Just <$> readMaybe num
 > parseCommand (out : spec)    = User out <$> parseCollage spec
 
+We will add one more auxiliary function to load all images in a collage.
+Fortunately we can just use the `Traversable` instance for this.
+
+> readCollage
+>   :: Collage FilePath
+>   -> IO (Collage (JP.Image JP.PixelRGB8))
+> readCollage = traverse $ \path ->
+>   JP.readImage path >>= either fail (pure . JP.convertRGB8)
+
 Time to put everything together in `main`.  First we'll do some parsing:
 
 > main :: IO ()
@@ -504,13 +512,11 @@ Time to put everything together in `main`.  First we'll do some parsing:
 >         Nothing          -> fail "no random collage found"
 >         Just (random, _) -> pure (output, random)
 
-We've created a `Collage FilePath` at this point.  We can use the `Traversable`
-instance of `Collage` to load all the images:
+Followed by actually loading in all the images:
 
->   imageCollage <- for pathsCollage $ \path ->
->     JP.readImage path >>= either fail (pure . JP.convertRGB8)
+>   imageCollage <- readCollage pathsCollage
 
-This gives us a `Collage (JP.Image JP.PixelRGB8)`.  We can pass that to our
+This gives us the `Collage (JP.Image JP.PixelRGB8)`.  We can pass that to our
 `layout` function and write it to the output:
 
 >   let (result, box) = collage imageCollage
