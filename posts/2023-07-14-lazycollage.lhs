@@ -195,56 +195,56 @@ Let's look at the horizontal case first.  We want to place image `l` beside
 image `r`, producing a nicely filled rectangle.  Intuitively, we should be
 matching the height of both images.
 
+> horizontal :: Size -> Size -> (Transform, Transform, Size)
+> horizontal (Size lw lh) (Size rw rh) =
+
 There are different ways to do this -- we could enlarge the smaller
 image, shrink the bigger image, or something in between.  We make a choice
 to always shrink the bigger image, as this doesn't compromise the sharpness
 of the result.
 
-`horizontal` computes a transform for the left and right images, and a
-total size:
+>   let height = min lh rh
+>       lscale = height / lh
+>       rscale = height / rh
+>       width  = lscale * lw + rscale* rw in
 
-> horizontal :: Size -> Size -> (Transform, Transform, Size)
-> horizontal (Size lw lh) (Size rw rh) =
+With the scale for both left and right images, we can compute both transforms
+and a total size:
+
 >   ( Tr 0             0 lscale
 >   , Tr (lscale * lw) 0 rscale
 >   , Size width height
 >   )
->  where
->   height = min lh rh
->   lscale = height / lh
->   rscale = height / rh
->   width  = lscale * lw + rscale* rw
 
-Composing images vertically is similar, matching the widths rather than the
+Composing images vertically is similar, just matching the widths rather than the
 heights of the two images:
 
 > vertical :: Size -> Size -> (Transform, Transform, Size)
 > vertical (Size tw th) (Size bw bh) =
->   ( Tr 0 0             tscale
->   , Tr 0 (tscale * th) bscale
->   , Size width height
->   )
->  where
->   width  = min tw bw
->   tscale = width / tw
->   bscale = width / bw
->   height = tscale * th + bscale * bh
+>  let width  = min tw bw
+>      tscale = width / tw
+>      bscale = width / bw
+>      height = tscale * th + bscale * bh in
+>  ( Tr 0 0             tscale
+>  , Tr 0 (tscale * th) bscale
+>  , Size width height
+>  )
 
-Now that we've solved the problem of combining two images, we can apply this
-to our tree of images.  To this end, we'll need to compose multiple
-transformations.
+Now that we've solved the problem of combining two images and placing them,
+we can apply this to our tree of images.  To this end, we'll need to compose
+multiple transformations.
 
 Whenever we think about composing things in Haskell, it's good to ask ourselves
-if the thing we're trying to compose is a Monoid.  We can reason about what
-happens if we first offset by $(ax, ay)$ and scale by $as$, then offset by
-$(bx, by)$ and scale by $bs$:
+if the thing we're trying to compose is a Monoid.  In this case, `a <> b` means
+applying transformation `b` after transformation `a`, so we'll need to apply
+the scale of `a` to all parts of `b`:
 
 > instance Semigroup Transform where
 >   Tr ax ay as <> Tr bx by bs =
 >     Tr (ax + as * bx) (ay + as * by) (as * bs)
 
-In order to show this is a valid Semigroup, we will be rigorous and provide
-a proof:
+It's not immediately clear that this is a valid Semigroup, so we will be
+rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
 
 <details><summary>Proof of associativity</summary>
 
@@ -265,16 +265,22 @@ a proof:
 >   = Tr ((ax + as * bx) + (as * bs) * cx)
 >        ((ay + as * by) + (as * bs) * cy)
 >        ((as * bs) * cs)>
+>
 >   -- Definition of <>
 >   = (Tr ax ay as <> T b by bs) <> Tr cx cy cs
 >   -}
 
 </details>
 
+We also need to provide an identity `Transform`, which is just offsetting by 0
+and scaling by 1:
+
 > instance Monoid Transform where
 >   mempty = Tr 0 0 1
 
-<details><summary>This sems suspicious, is this a valid Monoid?</summary>
+Proving that the identity holds on `mempty` is simple so we'll only do one side.
+
+<details><summary>Proof of Monoid right identity</summary>
 
 >   {-
 >   Tr ax ay as <> mempty>
@@ -284,7 +290,8 @@ a proof:
 >   -- Definition of <>
 >   = Tr (ax + as * 0) (ay + as * 0) (as * 1)
 >
->   -- Properties of 0 and 1 for *
+>   -- Cancellative property of 0 over *
+>   -- Identity of 1 over *
 >   = Tr ax ay as
 >   -}
 
@@ -310,22 +317,22 @@ Placing a single image is easy, since we are passing in the scale and position
 (at least in the base case: we will see soon that `transform` is actually
 calculated in a circular way and depends on the output `Size`).
 
-> layout transform (Singleton img) =
->   (Singleton (img, transform), sizeOf img)
+> layout trans (Singleton img) =
+>   (Singleton (img, trans), sizeOf img)
 
-> layout transform (Horizontal l r) =
+> layout trans (Horizontal l r) =
 >   (Horizontal l' r', size)
 >  where
->   (l', lsize)    = layout (transform <> lt) l
->   (r', rsize)    = layout (transform <> rt) r
->   (lt, rt, size) = horizontal lsize rsize
+>   (l', lsize)            = layout (trans <> ltrans) l
+>   (r', rsize)            = layout (trans <> rtrans) r
+>   (ltrans, rtrans, size) = horizontal lsize rsize
 
-> layout transform (Vertical t b) =
+> layout trans (Vertical t b) =
 >   (Vertical t' b', size)
 >  where
->   (t', tsize)    = layout (transform <> tt) t
->   (b', bsize)    = layout (transform <> bt) b
->   (tt, bt, size) = vertical tsize bsize
+>   (t', tsize)            = layout (trans <> ttrans) t
+>   (b', bsize)            = layout (trans <> btrans) b
+>   (ttrans, btrans, size) = vertical tsize bsize
 
 Conclusion
 ==========
