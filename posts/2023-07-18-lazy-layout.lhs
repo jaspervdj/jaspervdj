@@ -1,6 +1,7 @@
 ---
 title: 'Lazy Layout'
 description: A fun application of circular programming
+tags: haskell
 ...
 
 Prelude
@@ -9,10 +10,10 @@ Prelude
 This blogpost is written in [reproducible] [Literate Haskell], so we need some
 imports first.
 
-[reproducible]: TODO-link-to-nix-file
+[reproducible]: https://github.com/jaspervdj/jaspervdj/blob/master/posts/2023-07-18-lazy-layout.nix
 [Literate Haskell]: https://wiki.haskell.org/Literate_programming
 
-<details><summary>Show me the exact imports.</summary>
+<details><summary>Show me the exact imports...</summary>
 
 > {-# LANGUAGE DeriveFoldable    #-}
 > {-# LANGUAGE DeriveFunctor     #-}
@@ -42,14 +43,14 @@ Introduction
 
 Haskell is not my only interest --- I have also been quite into photography for
 the past decade.  Recently, I was considering moving some of the stuff I have
-on various social networks to a self-hosting solution.
+on various social networks to a self-hosted solution.
 
 Tumblr in particular has a fairly nice way to do photo sets, where these can
 be organized in rows and columns.  I wanted to see if I could mimic this in a
 recursive way, where rows and columns can be subdivided further.
 
 One important constraint is that is that we want to present each picture as
-the photographer envisioned it: concretely, we can scale it up our down (if
+the photographer envisioned it: concretely, we can scale it up or down (if
 we preserve the aspect ratio!), but we can't crop out parts.
 
 Order is also important in photo essays, so we want the author to specify the
@@ -72,7 +73,7 @@ These days, it is maybe more commonly referred to as the `repmin` problem.
 This was first described by Richard S. Bird in _"Using circular programs to
 eliminate multiple traversals of data"_ in 1984, which **predates Haskell!**
 
-<details><summary>What is <code>repmin</code>?</summary>
+<details><summary>Give me a refresher on <code>repmin</code> please...</summary>
 
 Interlude: repmin
 -----------------
@@ -127,7 +128,7 @@ We start out simple by giving an elegant algebraic definition for a collage:
 >   deriving (Foldable, Functor, Show, Traversable)
 
 We will use the [JuicyPixels] library to load and write images.
-The image type in this library can a bit verbose since it is parameterized
+The image type in this library can be a bit verbose since it is parameterized
 around the colour space.
 During the layout pass, we don't really care about this, we
 only need the relative sizes of the images and not their content.
@@ -169,12 +170,12 @@ two images, it is always possible to put them beside or above each other
 by scaling them up or down to match them in height or width respectively.
 Repeating this process, we can render the entire collage.
 
-This is a bit of a naive approach since we end up making way too many copies.
-Instead, we want to compute the layout and then render everything in one go.
+However, this is a bit of a naive approach since we end up making way too many
+copies.  We would like to compute the layout first, and then render everything
+in one go.  Still, we can start by formalizing what happens for two images
+and then work our way up.
 
-There are some similarities with the algorithms present in browser engines.
-TODO: One pass description.
-
+TODO: shorten:
 The position of each individual input image can be represented
 using _(x, y)_ coordinates.
 We can also scale images up or down, and since we want to preserve the aspect
@@ -190,12 +191,13 @@ for _x_ and _y_:
 Armed with the `Size` and `Transform` types, we have enough to tackle the
 "mathy" bits.
 
-Let's look at the horizontal case first.  We want to place image `l` beside
-image `r`, producing a nicely filled rectangle.  Intuitively, we should be
-matching the height of both images.
+Let's look at the horizontal case first.
 
 > horizontal :: Size -> Size -> (Transform, Transform, Size)
 > horizontal (Size lw lh) (Size rw rh) =
+
+We want to place image `l` beside image `r`, producing a nicely filled
+rectangle.  Intuitively, we should be matching the height of both images.
 
 There are different ways to do this -- we could enlarge the smaller
 image, shrink the bigger image, or something in between.  We make a choice
@@ -207,8 +209,8 @@ of the result.
 >       rscale = height / rh
 >       width  = lscale * lw + rscale* rw in
 
-With the scale for both left and right images, we can compute both transforms
-and a total size:
+With the scale for both left and right images, we can compute the left
+and right transforms.  We also return the total size of the result.
 
 >   ( Tr 0             0 lscale
 >   , Tr (lscale * lw) 0 rscale
@@ -234,9 +236,11 @@ we can apply this to our tree of images.  To this end, we'll need to compose
 multiple transformations.
 
 Whenever we think about composing things in Haskell, it's good to ask ourselves
-if the thing we're trying to compose is a Monoid.  In this case, `a <> b` means
-applying transformation `b` after transformation `a`, so we'll need to apply
-the scale of `a` to all parts of `b`:
+if the thing we're trying to compose is a [Monoid].
+In this case, `a <> b` means applying transformation `b` after transformation
+`a`, so we'll need to apply the scale of `a` to all parts of `b`:
+
+[Monoid]: https://typeclasses.com/monoid
 
 > instance Semigroup Transform where
 >   Tr ax ay as <> Tr bx by bs =
@@ -245,29 +249,29 @@ the scale of `a` to all parts of `b`:
 It's not immediately clear that this is a valid Semigroup, so we will be
 rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
 
-<details><summary>Proof of associativity</summary>
+<details><summary>Proof of associativity...</summary>
 
->   {-
->   Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
->
->   -- Definition of <>
->   = Tr (ax + as * (bx + bs * cx))
->        (ay + as * (by + bs * cy))
->        (as * (bs * cs))
->
->   -- Distribute * over +
->   = Tr (ax + as * bx + as * bs * cx)
->        (ay + as * by + as * bs * cy)
->        (as * bs * cs)
->
->   -- Associativity of + and *
->   = Tr ((ax + as * bx) + (as * bs) * cx)
->        ((ay + as * by) + (as * bs) * cy)
->        ((as * bs) * cs)>
->
->   -- Definition of <>
->   = (Tr ax ay as <> T b by bs) <> Tr cx cy cs
->   -}
+~~~~~{.haskell}
+Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
+
+-- Definition of <>
+= Tr (ax + as * (bx + bs * cx))
+     (ay + as * (by + bs * cy))
+     (as * (bs * cs))
+
+-- Distribute * over +
+= Tr (ax + as * bx + as * bs * cx)
+     (ay + as * by + as * bs * cy)
+     (as * bs * cs)
+
+-- Associativity of + and *
+= Tr ((ax + as * bx) + (as * bs) * cx)
+     ((ay + as * by) + (as * bs) * cy)
+     ((as * bs) * cs)>
+
+-- Definition of <>
+= (Tr ax ay as <> T b by bs) <> Tr cx cy cs
+~~~~~~
 
 </details>
 
@@ -277,44 +281,58 @@ and scaling by 1:
 > instance Monoid Transform where
 >   mempty = Tr 0 0 1
 
-Proving that the identity holds on `mempty` is simple so we'll only do one side.
+Proving that the identity holds on `mempty` is simple so we'll only do one side,
+namely `a <> mempty == a`.
 
-<details><summary>Proof of Monoid right identity</summary>
+<details><summary>Proof of Monoid right identity...</summary>
 
->   {-
->   Tr ax ay as <> mempty>
->   -- Definition of mempy
->   = Tr ax ay as <> Tr 0 0 1
->
->   -- Definition of <>
->   = Tr (ax + as * 0) (ay + as * 0) (as * 1)
->
->   -- Cancellative property of 0 over *
->   -- Identity of 1 over *
->   = Tr ax ay as
->   -}
+~~~~~{.haskell}
+Tr ax ay as <> mempty>
+-- Definition of mempy
+= Tr ax ay as <> Tr 0 0 1
+
+-- Definition of <>
+= Tr (ax + as * 0) (ay + as * 0) (as * 1)
+
+-- Cancellative property of 0 over *
+-- Identity of 1 over *
+= Tr ax ay as
+~~~~~
 
 </details>
 
-We now have enough to write down the type signature of our main `collage`
-function.  We will take the user-specified tree as input, and annotate
-each element with a `Transform`.  In addition to that, we also produce the
-`Size` of the final image so we can allocate space for it.
+Our main `collage` function takes the user-specified tree as input,
+and annotates each element with a `Transform`.
+In addition to that, we also produce the `Size` of the final image so we can
+allocate space for it.
 
-> collage :: Sized img => Collage img -> (Collage (img, Transform), Size)
+> collage
+>   :: Sized img
+>   => Collage img
+>   -> (Collage (img, Transform), Size)
 
 All `collage` does is call `layout` --- our _circular_ program --- with
 the identity transformation:
 
 > collage = layout mempty
 
+`layout` takes the size and position of the current element as an argument,
+and determines the sizes and positions of a tree recursively.
+
+There are some similarities with the algorithms present in browser engines,
+where a parent element will first lay out its children, and then use their
+properties to determine its own width.
+
+However, we will use Haskell's laziness to do this in a single pass.
+
 > layout
->   :: Sized img => Transform -> Collage img
+>   :: Sized img
+>   => Transform
+>   -> Collage img
 >   -> (Collage (img, Transform), Size)
 
-Placing a single image is easy, since we are passing in the scale and position
-(at least in the base case: we will see soon that `transform` is actually
-calculated in a circular way and depends on the output `Size`).
+Placing a single image is easy, since we are passing in the scale and position,
+and determining the size is easy:
 
 > layout trans (Singleton img) =
 >   (Singleton (img, trans), sizeOf img)
