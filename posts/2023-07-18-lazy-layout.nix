@@ -10,8 +10,8 @@ let
     ]);
 in
 pkgs.stdenv.mkDerivation {
-    name = "lazycollage";
+    name = "lazy-layout";
     src = ./.;
-    buildPhase = "${ghc}/bin/ghc -Wall -O2 -o lazycollage 2023-07-14-lazycollage.lhs";
-    installPhase = "cp lazycollage $out";
+    buildPhase = "${ghc}/bin/ghc -Wall -O2 -o lazy-layout 2023-07-18-lazy-layout.lhs";
+    installPhase = "cp lazy-layout $out";
 }

@@ -1,6 +1,6 @@
 ---
-title: 'Functional Pearl: Lazy Collages'
-description: circular programming something
+title: 'Lazy Layout'
+description: A fun application of circular programming
 ...
 
 Prelude
@@ -64,7 +64,7 @@ photo collage in a declarative way by indicating if horizontal (H) or vertical
 The program should then determine the exact size and position of each image,
 so that we get a fully filled rectangle without any borders or filler:
 
-![](../images/2023-07-14-lazycollage-example-1.jpg)
+![](../images/2023-07-18-lazy-layout-example-1.jpg)
 
 We will use a technique called _circular programming_ that builds on Haskell's
 laziness to achieve this in an elegant way.
@@ -159,7 +159,7 @@ The instance for the JuicyPixels image type is simple:
 
 Let's think about the _output_ of our layout algorithm next.
 
-![](/images/2023-07-14-lazycollage-tree-1.jpg)
+![](/images/2023-07-18-lazy-layout-tree-1.jpg)
 
 If we look at the finished image, it may seem like a hard problem to find a
 configuration that fits all the images with a correct aspect ratio.
