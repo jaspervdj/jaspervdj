@@ -50,8 +50,8 @@ be organized in rows and columns.  I wanted to see if I could mimic this in a
 recursive way, where rows and columns can be subdivided further.
 
 One important constraint is that is that we want to present each picture as
-the photographer envisioned it: concretely, we can scale it up or down (if
-we preserve the aspect ratio!), but we can't crop out parts.
+the photographer envisioned it: concretely, we can scale it up or down
+(preserving the aspect ratio), but we can't crop out parts.
 
 Order is also important in photo essays, so we want the author to specify the
 photo collage in a declarative way by indicating if horizontal (H) or vertical
@@ -111,8 +111,9 @@ Haskell's laziness:
 >         (r', rmin) = repmin r in
 >     (Branch l' r', min lmin rmin)
 
-For more details, please see the original paper: despite (or because of?)
-being almost 40 years old, it is surprisingly readable.
+For more details, please see the original paper
+(`https://doi.org/10.1007/BF00264249`): despite being almost 40
+years old, it is surprisingly readable.
 
 </details>
 
@@ -186,7 +187,8 @@ We use simple _(x, y)_ coordinates the position and a scaling factor
 Armed with the `Size` and `Transform` types, we have enough to tackle the
 "mathy" bits.
 
-Let's look at the horizontal case first.
+Let's look at the horizontal case first and write a function that computes a
+transform for both left and right images, as well as the size of the result.
 
 > horizontal :: Size -> Size -> (Transform, Transform, Size)
 > horizontal (Size lw lh) (Size rw rh) =
@@ -205,7 +207,8 @@ of the result.
 >       width  = lscale * lw + rscale * rw in
 
 With the scale for both left and right images, we can compute the left
-and right transforms.  We also return the total size of the result.
+and right transforms.  The left image is simply placed at _(0, 0)_ and we need
+to offset the right image depending on the (scaled) size of the left image.
 
 >   ( Tr 0             0 lscale
 >   , Tr (lscale * lw) 0 rscale
@@ -319,9 +322,10 @@ where a parent element will first lay out its children, and then use their
 properties to determine its own width.
 
 However, we will use Haskell's laziness to do this in a single top-down pass.
-We provide a declarative algorithm and we leave the information about what to
+We provide a declarative algorithm and we leave the decision about what to
 calculate when --- more concretely, propagating the size information about
-the children back up the tree --- to the compiler!
+the children back up the tree before constructing the transformations ---
+to the compiler!
 
 > layout
 >   :: Sized img
