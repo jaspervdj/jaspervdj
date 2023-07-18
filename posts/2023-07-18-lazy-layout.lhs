@@ -379,13 +379,15 @@ because, compared to `repmin`:
 
 Thanks for reading!
 
-What follows are a number of relatively small functions that take care of
+What follows below are a number of relatively small functions that take care of
 various tasks, included so this can function as a standalone program:
 
  -  [Actually rendering the layout back to an image](#rendering-the-result)
  -  [Parsing a collage description](#parsing-a-collage-description)
  -  [Generating random collages](#generating-random-collages)
  -  [Putting together the CLI](#putting-together-the-cli)
+
+![](../images/2023-07-18-lazy-layout-example-2.jpg)
 
 Appendices
 ==========
