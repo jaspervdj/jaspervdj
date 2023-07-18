@@ -158,10 +158,6 @@ The instance for the JuicyPixels image type is simple:
 >     , sizeHeight = fromIntegral $ JP.imageHeight img
 >     }
 
-Let's think about the _output_ of our layout algorithm next.
-
-![](/images/2023-07-18-lazy-layout-tree-1.jpg)
-
 If we look at the finished image, it may seem like a hard problem to find a
 configuration that fits all the images with a correct aspect ratio.
 
@@ -170,17 +166,16 @@ two images, it is always possible to put them beside or above each other
 by scaling them up or down to match them in height or width respectively.
 Repeating this process, we can render the entire collage.
 
+![](/images/2023-07-18-lazy-layout-tree-1.jpg)
+
 However, this is a bit of a naive approach since we end up making way too many
 copies.  We would like to compute the layout first, and then render everything
 in one go.  Still, we can start by formalizing what happens for two images
 and then work our way up.
 
-TODO: shorten:
-The position of each individual input image can be represented
-using _(x, y)_ coordinates.
-We can also scale images up or down, and since we want to preserve the aspect
-ratio, we can use a single _scale_ factor rather than having separate factors
-for _x_ and _y_:
+We can represent the layout of an individual image by its position and size.
+We use simple _(x, y)_ coordinates the position and a scaling factor
+(relative to the original size of the image) for its size.
 
 > data Transform = Tr
 >   { trX     :: Rational
@@ -199,7 +194,7 @@ Let's look at the horizontal case first.
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Intuitively, we should be matching the height of both images.
 
-There are different ways to do this -- we could enlarge the smaller
+There are different ways to do this --- we could enlarge the smaller
 image, shrink the bigger image, or something in between.  We make a choice
 to always shrink the bigger image, as this doesn't compromise the sharpness
 of the result.
@@ -207,7 +202,7 @@ of the result.
 >   let height = min lh rh
 >       lscale = height / lh
 >       rscale = height / rh
->       width  = lscale * lw + rscale* rw in
+>       width  = lscale * lw + rscale * rw in
 
 With the scale for both left and right images, we can compute the left
 and right transforms.  We also return the total size of the result.
@@ -222,23 +217,23 @@ heights of the two images:
 
 > vertical :: Size -> Size -> (Transform, Transform, Size)
 > vertical (Size tw th) (Size bw bh) =
->  let width  = min tw bw
->      tscale = width / tw
->      bscale = width / bw
->      height = tscale * th + bscale * bh in
->  ( Tr 0 0             tscale
->  , Tr 0 (tscale * th) bscale
->  , Size width height
->  )
+>   let width  = min tw bw
+>       tscale = width / tw
+>       bscale = width / bw
+>       height = tscale * th + bscale * bh in
+>   ( Tr 0 0             tscale
+>   , Tr 0 (tscale * th) bscale
+>   , Size width height
+>   )
 
 Now that we've solved the problem of combining two images and placing them,
-we can apply this to our tree of images.  To this end, we'll need to compose
+we can apply this to our tree of images.  To this end, we need to compose
 multiple transformations.
 
 Whenever we think about composing things in Haskell, it's good to ask ourselves
 if the thing we're trying to compose is a [Monoid].
 In this case, `a <> b` means applying transformation `b` after transformation
-`a`, so we'll need to apply the scale of `a` to all parts of `b`:
+`a`, so we will need to apply the scale of `a` to all parts of `b`:
 
 [Monoid]: https://typeclasses.com/monoid
 
@@ -267,7 +262,7 @@ Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
 -- Associativity of + and *
 = Tr ((ax + as * bx) + (as * bs) * cx)
      ((ay + as * by) + (as * bs) * cy)
-     ((as * bs) * cs)>
+     ((as * bs) * cs)
 
 -- Definition of <>
 = (Tr ax ay as <> T b by bs) <> Tr cx cy cs
@@ -281,8 +276,8 @@ and scaling by 1:
 > instance Monoid Transform where
 >   mempty = Tr 0 0 1
 
-Proving that the identity holds on `mempty` is simple so we'll only do one side,
-namely `a <> mempty == a`.
+Proving that the identity holds on `mempty` is simple so we will only do one
+side, namely `a <> mempty == a`.
 
 <details><summary>Proof of Monoid right identity...</summary>
 
@@ -323,7 +318,10 @@ There are some similarities with the algorithms present in browser engines,
 where a parent element will first lay out its children, and then use their
 properties to determine its own width.
 
-However, we will use Haskell's laziness to do this in a single pass.
+However, we will use Haskell's laziness to do this in a single top-down pass.
+We provide a declarative algorithm and we leave the information about what to
+calculate when --- more concretely, propagating the size information about
+the children back up the tree --- to the compiler!
 
 > layout
 >   :: Sized img
@@ -332,10 +330,20 @@ However, we will use Haskell's laziness to do this in a single pass.
 >   -> (Collage (img, Transform), Size)
 
 Placing a single image is easy, since we are passing in the scale and position,
-and determining the size is easy:
+and we return its requested size.  This is an important detail in making the
+laziness work here: if we tried to return the _final_ size (including
+the passed in transformation) rather than the _requested_ size, the computation
+would diverge (i.e. recurse infinitely).
 
 > layout trans (Singleton img) =
 >   (Singleton (img, trans), sizeOf img)
+
+In the recursive case for horizontal composition, we call the `horizontal`
+helper we defined earlier for the left and right image sizes.
+This is gives us both transformations, that we
+can then pass in as arguments to `layout` again -- returning the left and
+right image sizes we pass in to the `horizontal` helper, forming our
+apparent circle.
 
 > layout trans (Horizontal l r) =
 >   (Horizontal l' r', size)
@@ -344,6 +352,8 @@ and determining the size is easy:
 >   (r', rsize)            = layout (trans <> rtrans) r
 >   (ltrans, rtrans, size) = horizontal lsize rsize
 
+The same happens for the vertical case:
+
 > layout trans (Vertical t b) =
 >   (Vertical t' b', size)
 >  where
@@ -351,18 +361,37 @@ and determining the size is easy:
 >   (b', bsize)            = layout (trans <> btrans) b
 >   (ttrans, btrans, size) = vertical tsize bsize
 
+It's worth thinking about why this works: the intuitive explanation is that
+we can "delay" the execution of the transformations until the very end of the
+computation, and then fill them in everywhere.  This works since no other parts
+of the algorithm _depend_ on the transformation, only on the sizes.
+
 Conclusion
 ==========
 
-We've written a circular program.  It is interesting compared to repmin because:
+We've written a circular program!  Although I was aware of `repmin` for a long
+time, it's not a technique I've applied often.  To me, it is quite interesting
+because, compared to `repmin`:
 
- -  It is more "useful" than repmin
- -  It is perhaps easier to understand than repmin because of the visual
-    elements
- -  It is an example outside of the realm of parsers and compilers.
+ -  it is easier to explain to a novice why this is useful;
+ -  it is perhaps easier to understand due to the visual aspect; and
+ -  it is an example outside of the realm of parsers and compilers.
 
-Appendix A: rendering the result
-================================
+Thanks for reading!
+
+What follows are a number of relatively small functions that take care of
+various tasks, included so this can function as a standalone program:
+
+ -  [Actually rendering the layout back to an image](#rendering-the-result)
+ -  [Parsing a collage description](#parsing-a-collage-description)
+ -  [Generating random collages](#generating-random-collages)
+ -  [Putting together the CLI](#putting-together-the-cli)
+
+Appendices
+==========
+
+Rendering the result
+--------------------
 
 Once we've determined the layout, we still need to apply this and draw all
 the images using the computed transformations.  We use simple nearest-neighbour
@@ -395,8 +424,8 @@ interpolation] in a real application.
 >     dstW = fromIntegral (JP.imageWidth img)  * dstS
 >     dstH = fromIntegral (JP.imageHeight img) * dstS
 
-Appendix B: parsing a collage
-=============================
+Parsing a collage description
+-----------------------------
 
 We use a simple parser to allow the user to specify collages as a string, for
 example on the command line.  This is a natural fit for [polish notation] as
@@ -432,8 +461,8 @@ We don't even need a parser library, we can just treat the arguments as a stack:
 >     pure (Vertical x y, stack2)
 >   parseTree (x   : stack0) = Just (Singleton x, stack0)
 
-Appendix C: random collages
-===========================
+Generating random collages
+--------------------------
 
 In order to test this program, I also added some functionality to generate
 random collages.  This uses two helpers.
@@ -481,8 +510,8 @@ Putting these two helpers together, we can write `randomCollage`:
 >   Just (x : xs, gen1) -> Just $ randomTree (x :| xs) gen1
 >   _                   -> Nothing
 
-Appendix D: a quick CLI
-=======================
+Putting together the CLI
+------------------------
 
 We support two modes of operation for our little CLI:
 
@@ -513,7 +542,7 @@ Fortunately we can just use the `Traversable` instance for this.
 > readCollage = traverse $ \path ->
 >   JP.readImage path >>= either fail (pure . JP.convertRGB8)
 
-Time to put everything together in `main`.  First we'll do some parsing:
+Time to put everything together in `main`.  First we do some parsing:
 
 > main :: IO ()
 > main = do
