@@ -111,9 +111,8 @@ Haskell's laziness:
 >         (r', rmin) = repmin r in
 >     (Branch l' r', min lmin rmin)
 
-For more details, please see the original paper
-(`https://doi.org/10.1007/BF00264249`): despite being almost 40
-years old, it is surprisingly readable.
+For more details, please see the very accessible original paper
+(`https://doi.org/10.1007/BF00264249`).
 
 </details>
 
@@ -175,7 +174,7 @@ in one go.  Still, we can start by formalizing what happens for two images
 and then work our way up.
 
 We can represent the layout of an individual image by its position and size.
-We use simple _(x, y)_ coordinates the position and a scaling factor
+We use simple _(x, y)_ coordinates for the position and a scaling factor
 (relative to the original size of the image) for its size.
 
 > data Transform = Tr
@@ -324,9 +323,9 @@ properties to determine its own width.
 
 However, we will use Haskell's laziness to do this in a single top-down pass.
 We provide a declarative algorithm and we leave the decision about what to
-calculate when --- more concretely, propagating the size information about
-the children back up the tree before constructing the transformations ---
-to the compiler!
+calculate when --- more concretely, propagating the requested sizes of the
+children back up the tree before constructing the transformations --- to the
+compiler!
 
 > layout
 >   :: Sized img
@@ -334,11 +333,11 @@ to the compiler!
 >   -> Collage img
 >   -> (Collage (img, Transform), Size)
 
-Placing a single image is easy, since we are passing in the scale and position,
-and we return its requested size.  This is an important detail in making the
-laziness work here: if we tried to return the _final_ size (including
-the passed in transformation) rather than the _requested_ size, the computation
-would diverge (i.e. recurse infinitely).
+Placing a single image is easy, since we are passing in the transformation,
+and we return its requested size which is just the original size of the image.
+This is an important detail in making the laziness work here: if we tried to
+return the _final_ size (including the passed in transformation) rather than the
+_requested_ size, the computation would diverge (i.e. recurse infinitely).
 
 > layout trans (Singleton img) =
 >   (Singleton (img, trans), sizeOf img)
@@ -380,6 +379,9 @@ because, compared to `repmin`:
  -  it is easier to explain to a novice why this is useful;
  -  it is perhaps easier to understand due to the visual aspect; and
  -  it is an example outside of the realm of parsers and compilers.
+
+The structure is also somewhat different; rather than having a circular step at
+the top-level function invocation, we have this at every step of the recursion.
 
 Thanks for reading!
 
