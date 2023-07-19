@@ -65,7 +65,7 @@ photo collage in a declarative way by indicating if horizontal (H) or vertical
 The program should then determine the exact size and position of each image,
 so that we get a fully filled rectangle without any borders or filler:
 
-![](../images/2023-07-18-lazy-layout-example-1.jpg)
+![](/images/2023-07-18-lazy-layout-example-1.jpg)
 
 We will use a technique called _circular programming_ that builds on Haskell's
 laziness to achieve this in an elegant way.
@@ -207,12 +207,11 @@ transform for both left and right images, as well as the size of the result.
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Intuitively, we should be matching the height of both images.
 
-TODO: Image!
+![](/images/2023-07-18-lazy-layout-lwlh-rwrh.png)
 
-There are different ways to do this --- we could enlarge the smaller
-image, shrink the bigger image, or something in between.  We make a choice
-to always shrink the bigger image, as this doesn't compromise the sharpness
-of the result.
+There are different ways to do this --- we could shrink the taller image,
+enlarge the shorter image, or something in between.  We make a choice to always
+shrink the taller image, as this doesn't compromise the sharpness of the result.
 
 >   let height = min lh rh
 >       lscale = height / lh
@@ -417,7 +416,7 @@ various tasks, included so this can function as a standalone program:
  -  [Generating random collages](#generating-random-collages)
  -  [Putting together the CLI](#putting-together-the-cli)
 
-![](../images/2023-07-18-lazy-layout-example-2.jpg)
+![](/images/2023-07-18-lazy-layout-example-2.jpg)
 
 Appendices
 ==========
