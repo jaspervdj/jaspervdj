@@ -105,19 +105,26 @@ Haskell's laziness:
 > repmin_1pass t = t'
 >  where
 >   (t', globalmin) = repmin t
+>
 >   repmin (Leaf   x)   = (Leaf globalmin, x)
 >   repmin (Branch l r) =
->     let (l', lmin) = repmin l
->         (r', rmin) = repmin r in
 >     (Branch l' r', min lmin rmin)
+>    where
+>     (l', lmin) = repmin l
+>     (r', rmin) = repmin r
 
+There is an apparent circular dependency here, where `repmin` uses `globalmin`,
+but also computes it.  This is possible because we never need to evaluate
+`globalmin` -- it can be stored as a [thunk].
 For more details, please see the very accessible original paper
 (`https://doi.org/10.1007/BF00264249`).
 
+[thunk]: https://www.youtube.com/watch?v=I4lnCG18TaY
+
 </details>
 
-Lazy Collages
-=============
+Starting out with some types
+============================
 
 We start out simple by giving an elegant algebraic definition for a collage:
 
@@ -158,20 +165,25 @@ The instance for the JuicyPixels image type is simple:
 >     , sizeHeight = fromIntegral $ JP.imageHeight img
 >     }
 
+Laying out two images
+=====================
+
 If we look at the finished image, it may seem like a hard problem to find a
 configuration that fits all the images with a correct aspect ratio.
 
 But we can use induction to arrive at a fairly straightforward solution.  Given
-two images, it is always possible to put them beside or above each other
-by scaling them up or down to match them in height or width respectively.
-Repeating this process, we can render the entire collage.
+two images, it is always possible to put them beside or above each other by
+scaling them up or down to match them in height or width respectively.  This
+creates a bigger image.  We can then repeat this process until just one image is
+left.
 
 ![](/images/2023-07-18-lazy-layout-tree-1.jpg)
 
 However, this is a bit of a naive approach since we end up making way too many
-copies.  We would like to compute the layout first, and then render everything
-in one go.  Still, we can start by formalizing what happens for two images
-and then work our way up.
+copies, and the repeated resizing could also result in a loss of resolution.  We
+would like to compute the entire layout first, and then render everything in one
+go.  Still, we can start by formalizing what happens for two images and then
+work our way up.
 
 We can represent the layout of an individual image by its position and size.
 We use simple _(x, y)_ coordinates for the position and a scaling factor
@@ -195,6 +207,8 @@ transform for both left and right images, as well as the size of the result.
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Intuitively, we should be matching the height of both images.
 
+TODO: Image!
+
 There are different ways to do this --- we could enlarge the smaller
 image, shrink the bigger image, or something in between.  We make a choice
 to always shrink the bigger image, as this doesn't compromise the sharpness
@@ -215,7 +229,7 @@ to offset the right image depending on the (scaled) size of the left image.
 >   )
 
 Composing images vertically is similar, just matching the widths rather than the
-heights of the two images:
+heights of the two images and moving the bottom image below the top one:
 
 > vertical :: Size -> Size -> (Transform, Transform, Size)
 > vertical (Size tw th) (Size bw bh) =
@@ -227,6 +241,9 @@ heights of the two images:
 >   , Tr 0 (tscale * th) bscale
 >   , Size width height
 >   )
+
+Composing transformations
+=========================
 
 Now that we've solved the problem of combining two images and placing them,
 we can apply this to our tree of images.  To this end, we need to compose
@@ -243,8 +260,12 @@ In this case, `a <> b` means applying transformation `a` after transformation
 >   Tr ax ay as <> Tr bx by bs =
 >     Tr (ax * bs + bx) (ay * bs + by) (as * bs)
 
-It's not immediately clear that this is a valid Semigroup, so we will be
-rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
+Readers who are familiar with linear algebra may recognize the connection to
+a sort of restricted affine 2D [transformation matrix].
+However, it's not immediately clear that this is a valid Semigroup, so we will
+be rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
+
+[transformation matrix]: https://en.wikipedia.org/wiki/Transformation_matrix
 
 <details><summary>Proof of associativity...</summary>
 
@@ -272,8 +293,8 @@ Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
 
 </details>
 
-We also need to provide an identity `Transform`, which is just offsetting by 0
-and scaling by 1:
+Aside from the composition operator `<>`, we also need to provide an identity
+`Transform`, which is just offsetting by 0 and scaling by 1:
 
 > instance Monoid Transform where
 >   mempty = Tr 0 0 1
@@ -299,20 +320,23 @@ Tr ax ay as <> mempty
 
 </details>
 
-Our main `collage` function takes the user-specified tree as input,
+The lazy layout
+===============
+
+Our main `layoutCollage` function takes the user-specified tree as input,
 and annotates each element with a `Transform`.
 In addition to that, we also produce the `Size` of the final image so we can
 allocate space for it.
 
-> collage
+> layoutCollage
 >   :: Sized img
 >   => Collage img
 >   -> (Collage (img, Transform), Size)
 
-All `collage` does is call `layout` --- our _circular_ program --- with
+All `layoutCollage` does is call `layout` --- our _circular_ program --- with
 the identity transformation:
 
-> collage = layout mempty
+> layoutCollage = layout mempty
 
 `layout` takes the size and position of the current element as an argument,
 and determines the sizes and positions of a tree recursively.
@@ -334,7 +358,7 @@ compiler!
 >   -> (Collage (img, Transform), Size)
 
 Placing a single image is easy, since we are passing in the transformation,
-and we return its requested size which is just the original size of the image.
+and we return its _requested_ size which is just the original size of the image.
 This is an important detail in making the laziness work here: if we tried to
 return the _final_ size (including the passed in transformation) rather than the
 _requested_ size, the computation would diverge (i.e. recurse infinitely).
@@ -367,7 +391,7 @@ The same happens for the vertical case:
 It's worth thinking about why this works: the intuitive explanation is that
 we can "delay" the execution of the transformations until the very end of the
 computation, and then fill them in everywhere.  This works since no other parts
-of the algorithm _depend_ on the transformation, only on the sizes.
+of the algorithm _depend_ on the transformation, only on the requested sizes.
 
 Conclusion
 ==========
@@ -574,7 +598,7 @@ Followed by actually loading in all the images:
 This gives us the `Collage (JP.Image JP.PixelRGB8)`.  We can pass that to our
 `layout` function and write it to the output:
 
->   let (result, box) = collage imageCollage
+>   let (result, box) = layoutCollage imageCollage
 >   write output $ JP.ImageRGB8 $ render box result
 >  where
 >   write output
