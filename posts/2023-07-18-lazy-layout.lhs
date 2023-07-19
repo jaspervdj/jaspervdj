@@ -235,14 +235,14 @@ multiple transformations.
 
 Whenever we think about composing things in Haskell, it's good to ask ourselves
 if the thing we're trying to compose is a [Monoid].
-In this case, `a <> b` means applying transformation `b` after transformation
-`a`, so we will need to apply the scale of `a` to all parts of `b`:
+In this case, `a <> b` means applying transformation `a` after transformation
+`b`, so we will need to apply the scale of `b` to all parts of `a`:
 
 [Monoid]: https://typeclasses.com/monoid
 
 > instance Semigroup Transform where
 >   Tr ax ay as <> Tr bx by bs =
->     Tr (ax + as * bx) (ay + as * by) (as * bs)
+>     Tr (ax * bs + bx) (ay * bs + by) (as * bs)
 
 It's not immediately clear that this is a valid Semigroup, so we will be
 rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
@@ -253,18 +253,18 @@ rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
 Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
 
 -- Definition of <>
-= Tr (ax + as * (bx + bs * cx))
-     (ay + as * (by + bs * cy))
+= Tr (ax * (bs * cs) + (bx * cs + cx))
+     (ay * (bs * cs) + (by * cs + cy))
      (as * (bs * cs))
 
--- Distribute * over +
-= Tr (ax + as * bx + as * bs * cx)
-     (ay + as * by + as * bs * cy)
-     (as * bs * cs)
+-- Associativity of * and +
+= Tr (ax * bs * cs + bx * cs + cx)
+     (ay * bs * cs + by * cs + cy)
+     ((as * bs) * cs)
 
--- Associativity of + and *
-= Tr ((ax + as * bx) + (as * bs) * cx)
-     ((ay + as * by) + (as * bs) * cy)
+-- Distributivity of * over +
+= Tr ((ax * bs + bx) * cs + cx)
+     ((ay * bs + by) * cs + cy)
      ((as * bs) * cs)
 
 -- Definition of <>
@@ -291,9 +291,9 @@ Tr ax ay as <> mempty
 = Tr ax ay as <> Tr 0 0 1
 
 -- Definition of <>
-= Tr (ax + as * 0) (ay + as * 0) (as * 1)
+= Tr (ax * 1 + 0) (ay * 1 + 0) (as * 1)
 
--- Cancellative property of 0 over *
+-- Cancellative property of 0 over +
 -- Identity of 1 over *
 = Tr ax ay as
 ~~~~~
@@ -352,8 +352,8 @@ This gives us both transformations, that we can then pass in as arguments to
 > layout trans (Horizontal l r) =
 >   (Horizontal l' r', size)
 >  where
->   (l', lsize)            = layout (trans <> ltrans) l
->   (r', rsize)            = layout (trans <> rtrans) r
+>   (l', lsize)            = layout (ltrans <> trans) l
+>   (r', rsize)            = layout (rtrans <> trans) r
 >   (ltrans, rtrans, size) = horizontal lsize rsize
 
 The same happens for the vertical case:
@@ -361,8 +361,8 @@ The same happens for the vertical case:
 > layout trans (Vertical t b) =
 >   (Vertical t' b', size)
 >  where
->   (t', tsize)            = layout (trans <> ttrans) t
->   (b', bsize)            = layout (trans <> btrans) b
+>   (t', tsize)            = layout (ttrans <> trans) t
+>   (b', bsize)            = layout (btrans <> trans) b
 >   (ttrans, btrans, size) = vertical tsize bsize
 
 It's worth thinking about why this works: the intuitive explanation is that
