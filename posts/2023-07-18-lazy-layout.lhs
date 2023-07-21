@@ -26,7 +26,7 @@ imports first.
 > import           Data.Bifunctor         (first)
 > import           Data.Bool              (bool)
 > import           Data.Foldable          (for_)
-> import           Data.List              (isSuffixOf)
+> import           Data.List              (isSuffixOf, partition)
 > import           Data.List.NonEmpty     (NonEmpty (..))
 > import           Data.Maybe             (fromMaybe)
 > import           System.Directory       (listDirectory)
@@ -540,6 +540,20 @@ Putting these two helpers together, we can write `randomCollage`:
 > randomCollage num items gen0 = case randomSample num items gen0 of
 >   Just (x : xs, gen1) -> Just $ randomTree (x :| xs) gen1
 >   _                   -> Nothing
+
+TODO: better randomCollage?
+
+> randomPartition
+>     :: RandomGen g
+>     => NonEmpty a -> g -> (Collage a, g)
+> randomPartition (x :| ys)  gen = runStateGen gen $ \g -> do
+>   (ls, rs) <- partition snd <$> traverse (\y -> (,) y <$> randomM g) ys
+>   constr   <- bool Horizontal Vertical <$> randomM g
+>   case (map fst ls, map fst rs) of
+>       ([],       [])       -> pure $ Singleton x
+>       ((l : ls), [])       -> undefined
+>       ([],       (r : rs)) -> undefined
+>       ((l : ls), (r : rs)) -> undefined
 
 Putting together the CLI
 ------------------------
