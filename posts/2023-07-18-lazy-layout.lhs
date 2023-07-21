@@ -500,11 +500,12 @@ The utility `rc` picks a **r**andom **c**onstructor.
 
 >   rc g = bool Horizontal Vertical <$> randomM g
 
-Otherwise, we keep one item on the side (`x`), and randomly decide if other
-items will go in the left or right subtree:
+In our worker function, we keep one item on the side (`x`), and randomly decide
+if other items will go in the left or right subtree:
 
->   go g (x :| ys) = do
->     (lts, rts) <- partition snd <$> traverse (\y -> (,) y <$> randomM g) ys
+>   go g (x :| xs) = do
+>     (lts, rts) <- partition snd <$>
+>       traverse (\y -> (,) y <$> randomM g) xs
 
 Then, we look at the random partitioning we just created.  If they're both
 empty, the only thing we can do is create a singleton collage:
