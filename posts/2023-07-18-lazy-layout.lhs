@@ -21,20 +21,14 @@ imports first.
 > module Main where
 > import qualified Codec.Picture          as JP
 > import qualified Codec.Picture.Types    as JP
-> import           Control.Monad          (foldM)
 > import           Control.Monad.ST       (runST)
-> import           Data.Bifunctor         (first)
 > import           Data.Bool              (bool)
 > import           Data.Foldable          (for_)
 > import           Data.List              (isSuffixOf, partition)
 > import           Data.List.NonEmpty     (NonEmpty (..))
-> import           Data.Maybe             (fromMaybe)
-> import           System.Directory       (listDirectory)
 > import           System.Environment     (getArgs)
-> import           System.FilePath        ((</>))
-> import           System.Random          (RandomGen, newStdGen, randomR)
+> import           System.Random          (RandomGen, newStdGen)
 > import           System.Random.Stateful (randomM, runStateGen)
-> import           Text.Read              (readMaybe)
 
 </details>
 
@@ -496,64 +490,41 @@ Generating random collages
 --------------------------
 
 In order to test this program, I also added some functionality to generate
-random collages.  This uses two helpers.
+random collages.
 
-First, we have a function to pick a specified number of items from a list at
-random:
-
-> randomSample :: RandomGen g => Int -> [a] -> g -> Maybe ([a], g)
-> randomSample n items gen0
->   | n <= 0     = Just ([], gen0)
->   | null items = Nothing
->   | otherwise  = case splitAt idx items of
->     (_,   [])          -> Nothing
->     (pre, item : post) ->
->       first (item :) <$> randomSample (n - 1) (pre ++ post) gen1
+> randomCollage :: RandomGen g => NonEmpty a -> g -> (Collage a, g)
+> randomCollage ne gen = runStateGen gen $ \g -> go g ne
 >  where
->   (idx, gen1) = randomR (0, length items - 1) gen0
 
-Then, we have way to generate a collage tree from a non-empty list.  This works
-by just inserting the items from the list one-by-one, deciding to insert them to
-the left or right by picking random booleans.
+The utility `rc` picks a **r**andom **c**onstructor.
 
-> randomTree :: RandomGen g => NonEmpty a -> g -> (Collage a, g)
-> randomTree (item0 :| items) gen0 = runStateGen gen0 $ \gen ->
->   foldM (insert gen) (Singleton item0) items
->  where
->   insert gen (Singleton x) item = do
->     constr <- bool Horizontal Vertical <$> randomM gen
->     pure $ constr (Singleton x) (Singleton item)
->   insert gen (Horizontal x y) item = do
->     left <- randomM gen
->     if left
->       then Horizontal <$> insert gen x item <*> pure y
->       else Horizontal <$> pure x <*> insert gen y item
->   insert gen (Vertical x y) item = do
->     left <- randomM gen
->     if left
->       then Vertical <$> insert gen x item <*> pure y
->       else Vertical <$> pure x <*> insert gen y item
+>   rc g = bool Horizontal Vertical <$> randomM g
 
-Putting these two helpers together, we can write `randomCollage`:
+Otherwise, we keep one item on the side (`x`), and randomly decide if other
+items will go in the left or right subtree:
 
-> randomCollage :: RandomGen g => Int -> [a] -> g -> Maybe (Collage a, g)
-> randomCollage num items gen0 = case randomSample num items gen0 of
->   Just (x : xs, gen1) -> Just $ randomTree (x :| xs) gen1
->   _                   -> Nothing
+>   go g (x :| ys) = do
+>     (lts, rts) <- partition snd <$> traverse (\y -> (,) y <$> randomM g) ys
 
-TODO: better randomCollage?
+Then, we look at the random partitioning we just created.  If they're both
+empty, the only thing we can do is create a singleton collage:
 
-> randomPartition
->     :: RandomGen g
->     => NonEmpty a -> g -> (Collage a, g)
-> randomPartition (x :| ys)  gen = runStateGen gen $ \g -> do
->   (ls, rs) <- partition snd <$> traverse (\y -> (,) y <$> randomM g) ys
->   constr   <- bool Horizontal Vertical <$> randomM g
->   case (map fst ls, map fst rs) of
+>     case (map fst lts, map fst rts) of
 >       ([],       [])       -> pure $ Singleton x
->       ((l : ls), [])       -> undefined
->       ([],       (r : rs)) -> undefined
->       ((l : ls), (r : rs)) -> undefined
+
+If either of them is empty, we put `x` in the other partition to ensure we don't
+create invalid empty trees:
+
+>       ((l : ls), [])       -> rc g <*> go g (l :| ls) <*> go g (x :| [])
+>       ([],       (r : rs)) -> rc g <*> go g (x :| []) <*> go g (r :| rs)
+
+Otherwise, we decide at random which partition `x` goes into:
+
+>       ((l : ls), (r : rs)) -> do
+>         xLeft <- randomM g
+>         if xLeft
+>           then rc g <*> go g (x :| l : ls) <*> go g (r :| rs)
+>           else rc g <*> go g (l :| ls)     <*> go g (x :| r : rs)
 
 Putting together the CLI
 ------------------------
@@ -561,22 +532,23 @@ Putting together the CLI
 We support two modes of operation for our little CLI:
 
  *   Using a user-specified collage using the parser we wrote before.
- *   Generating a random collage from a directory of images, possibly limiting
-     the number of images.
+ *   Generating a random collage from a number of images.
 
 In both cases, we also take an output file as the first argument, so we know
 where we want to write the image to.
 
 > data Command
 >   = User   FilePath (Collage FilePath)
->   | Random FilePath FilePath (Maybe Int)
+>   | Random FilePath (NonEmpty FilePath)
 >   deriving (Show)
 
+We'll use `R` for a random collage, and `H`/`V` will be parsed by
+`parseCollage`.
+
 > parseCommand :: [String] -> Maybe Command
-> parseCommand []              = Nothing
-> parseCommand [out, dir]      = Just $ Random out dir Nothing
-> parseCommand [out, dir, num] = Random out dir . Just <$> readMaybe num
-> parseCommand (out : spec)    = User out <$> parseCollage spec
+> parseCommand []                   = Nothing
+> parseCommand (out : "R" : p : ps) = Just $ Random out (p :| ps)
+> parseCommand (out : spec)         = User out <$> parseCollage spec
 
 We will add one more auxiliary function to load all images in a collage.
 Fortunately we can just use the `Traversable` instance for this.
@@ -596,13 +568,10 @@ Time to put everything together in `main`.  First we do some parsing:
 >     parseCommand args
 >   (output, pathsCollage) <- case command of
 >     User output explicit -> pure (output, explicit)
->     Random output dir mbNum -> do
->       entries <- map (dir </>) <$> listDirectory dir
->       let num = fromMaybe (length entries) mbNum
+>     Random output paths -> do
 >       gen <- newStdGen
->       case randomCollage num entries gen of
->         Nothing          -> fail "no random collage found"
->         Just (random, _) -> pure (output, random)
+>       let (random, _) = randomCollage paths gen
+>       pure (output, random)
 
 Followed by actually loading in all the images:
 
