@@ -590,7 +590,7 @@ parsing:
 >       let (random, _) = randomCollage paths gen
 >       pure (output, random)
 
-Followed by actually loading in all the images:
+Followed by actually reading in all the images:
 
 >   imageCollage <- readCollage pathsCollage
 
