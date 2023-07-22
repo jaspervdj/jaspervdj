@@ -278,6 +278,8 @@ In this case, `a <> b` means applying transformation `a` after transformation
 Readers who are familiar with linear algebra may recognise the connection to
 a sort of restricted affine 2D [transformation matrix].
 
+[transformation matrix]: https://en.wikipedia.org/wiki/Transformation_matrix
+
 Proving that the identity holds on `mempty` is simple so we will only do one
 side, namely `a <> mempty == a`.
 
@@ -299,10 +301,8 @@ Tr ax ay as <> mempty
 
 </details>
 
-However, it's not immediately clear that this operation is associative, so we
-will be rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
-
-[transformation matrix]: https://en.wikipedia.org/wiki/Transformation_matrix
+Next, we want to prove that the `<>` operator is associative, meaning
+`a <> (b <> c) == (a <> b) <> c`.
 
 <details><summary>Proof of associativity...</summary>
 
