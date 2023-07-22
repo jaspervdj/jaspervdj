@@ -243,11 +243,20 @@ we can apply this to our tree of images.  To this end, we need to compose
 multiple transformations.
 
 Whenever we think about composing things in Haskell, it's good to ask ourselves
-if what we're trying to compose is a [Monoid].
-In this case, `a <> b` means applying transformation `a` after transformation
-`b`, so we will need to apply the scale of `b` to all parts of `a`:
+if what we're trying to compose is a [Monoid].  A Monoid needs an identity
+element (`mempty`) and a Semigroup instance, the latter of which contains just
+an associative binary operator (`<>`).
 
 [Monoid]: https://typeclasses.com/monoid
+
+The identity transform is just offsetting by 0 and scaling by 1:
+
+> instance Monoid Transform where
+>   mempty = Tr 0 0 1
+
+Composing two transformations using `<>` requires a bit more thinking.
+In this case, `a <> b` means applying transformation `a` after transformation
+`b`, so we will need to apply the scale of `b` to all parts of `a`:
 
 > instance Semigroup Transform where
 >   Tr ax ay as <> Tr bx by bs =
@@ -255,10 +264,30 @@ In this case, `a <> b` means applying transformation `a` after transformation
 
 Readers who are familiar with linear algebra may recognise the connection to
 a sort of restricted affine 2D [transformation matrix].
-However, it's not immediately clear that this is a valid Semigroup, so we will
-be rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
 
-TODO: where does semigroup come from suddenly?
+Proving that the identity holds on `mempty` is simple so we will only do one
+side, namely `a <> mempty == a`.
+
+<details><summary>Proof of Monoid right identity...</summary>
+
+~~~~~{.haskell}
+Tr ax ay as <> mempty
+
+-- Definition of mempy
+= Tr ax ay as <> Tr 0 0 1
+
+-- Definition of <>
+= Tr (ax * 1 + 0) (ay * 1 + 0) (as * 1)
+
+-- Cancellative property of 0 over +
+-- Identity of 1 over *
+= Tr ax ay as
+~~~~~
+
+</details>
+
+However, it's not immediately clear that this operation is associative, so we
+will be rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
 
 [transformation matrix]: https://en.wikipedia.org/wiki/Transformation_matrix
 
@@ -288,32 +317,9 @@ Tr ax ay as <> (Tr bx by bs <> Tr cx cy cs)
 
 </details>
 
-Aside from the composition operator `<>`, we also need to provide an identity
-`Transform`, which is just offsetting by 0 and scaling by 1:
-
-> instance Monoid Transform where
->   mempty = Tr 0 0 1
-
-Proving that the identity holds on `mempty` is simple so we will only do one
-side, namely `a <> mempty == a`.
-
-<details><summary>Proof of Monoid right identity...</summary>
-
-~~~~~{.haskell}
-Tr ax ay as <> mempty
-
--- Definition of mempy
-= Tr ax ay as <> Tr 0 0 1
-
--- Definition of <>
-= Tr (ax * 1 + 0) (ay * 1 + 0) (as * 1)
-
--- Cancellative property of 0 over +
--- Identity of 1 over *
-= Tr ax ay as
-~~~~~
-
-</details>
+Now that we have a valid Monoid instance, we can use the higher-level `<>`
+and `mempty` concepts in our core layout algorithm, rather than worrying over
+details like _(x, y)_ coordinates and scaling factors.
 
 The lazy layout
 ===============
@@ -403,7 +409,9 @@ because, compared to `repmin`:
 The structure is also somewhat different; rather than having a circular step at
 the top-level function invocation, we have it at every step of the recursion.
 
-Thanks for reading!
+Thanks to [Francesco Mazzoli](https://mazzo.li/) and
+[Titouan Vervack](https://github.com/tivervac) reading a draft of this blogpost
+and suggesting improvements.  And thanks to you for reading!
 
 What follows below are a number of relatively small functions that take care of
 various tasks, included so this can function as a standalone program:
