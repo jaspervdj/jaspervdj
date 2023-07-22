@@ -128,14 +128,27 @@ We start out by giving an elegant algebraic definition for a collage:
 >   | Vertical   (Collage a) (Collage a)
 >   deriving (Foldable, Functor, Show, Traversable)
 
-We will use the [JuicyPixels] library to read and write images.
+We use a higher-order type, which allows us to work with collages of filepaths
+as well as actual images (among other things). `deriving` instructs the compiler
+to generate some boilerplate code for us.  This allows us to concisely read all
+images using `traverse`:
+
+> readCollage
+>   :: Collage FilePath
+>   -> IO (Collage (JP.Image JP.PixelRGB8))
+> readCollage = traverse $ \path ->
+>   JP.readImage path >>=
+>   either fail (pure . JP.convertRGB8)
+
+We use the [JuicyPixels] library to read and write images.
 The image type in this library can be a bit verbose since it is parameterised
 around the colour space.
+
+[JuicyPixels]: https://hackage.haskell.org/package/JuicyPixels
+
 During the layout pass, we don't really care about this complexity.
 We only need the relative sizes of the images and not their content.
 We introduce a typeclass to do just that:
-
-[JuicyPixels]: https://hackage.haskell.org/package/JuicyPixels
 
 > data Size = Size
 >   { sizeWidth  :: Rational
@@ -561,15 +574,6 @@ We'll use `R` for a random collage, and `H`/`V` will be parsed by
 > parseCommand []                   = Nothing
 > parseCommand (out : "R" : p : ps) = Just $ Random out (p :| ps)
 > parseCommand (out : spec)         = User out <$> parseCollage spec
-
-We will add one more auxiliary function to load all images in a collage.
-Fortunately, we can just use the `Traversable` instance for this.
-
-> readCollage
->   :: Collage FilePath
->   -> IO (Collage (JP.Image JP.PixelRGB8))
-> readCollage = traverse $ \path ->
->   JP.readImage path >>= either fail (pure . JP.convertRGB8)
 
 Time to put everything together in the `main` function.  First, we do some
 parsing:
