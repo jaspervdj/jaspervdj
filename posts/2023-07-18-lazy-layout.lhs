@@ -40,7 +40,7 @@ the past decade.  Recently, I was considering moving some of the stuff I have
 on various social networks to a self-hosted solution.
 
 Tumblr in particular has a fairly nice way to do photo sets, where these can
-be organized in rows and columns.  I wanted to see if I could mimic this in a
+be organised in rows and columns.  I wanted to see if I could mimic this in a
 recursive way, where rows and columns can be subdivided further.
 
 One important constraint is that is that we want to present each picture as
@@ -120,7 +120,7 @@ For more details, please see the very accessible original paper
 Starting out with some types
 ============================
 
-We start out simple by giving an elegant algebraic definition for a collage:
+We start out by giving an elegant algebraic definition for a collage:
 
 > data Collage a
 >   = Singleton  a
@@ -128,11 +128,11 @@ We start out simple by giving an elegant algebraic definition for a collage:
 >   | Vertical   (Collage a) (Collage a)
 >   deriving (Foldable, Functor, Show, Traversable)
 
-We will use the [JuicyPixels] library to load and write images.
-The image type in this library can be a bit verbose since it is parameterized
+We will use the [JuicyPixels] library to read and write images.
+The image type in this library can be a bit verbose since it is parameterised
 around the colour space.
-During the layout pass, we don't really care about this, we
-only need the relative sizes of the images and not their content.
+During the layout pass, we don't really care about this complexity.
+We only need the relative sizes of the images and not their content.
 We introduce a typeclass to do just that:
 
 [JuicyPixels]: https://hackage.haskell.org/package/JuicyPixels
@@ -173,10 +173,10 @@ left.
 
 ![](/images/2023-07-18-lazy-layout-tree-1.jpg)
 
-However, this is a bit of a naive approach since we end up making way too many
+However, this is quite a naive approach since we end up making way too many
 copies, and the repeated resizing could also result in a loss of resolution.  We
 would like to compute the entire layout first, and then render everything in one
-go.  Still, we can start by formalizing what happens for two images and then
+go.  Still, we can start by formalising what happens for two images and then
 work our way up.
 
 We can represent the layout of an individual image by its position and size.
@@ -243,7 +243,7 @@ we can apply this to our tree of images.  To this end, we need to compose
 multiple transformations.
 
 Whenever we think about composing things in Haskell, it's good to ask ourselves
-if the thing we're trying to compose is a [Monoid].
+if what we're trying to compose is a [Monoid].
 In this case, `a <> b` means applying transformation `a` after transformation
 `b`, so we will need to apply the scale of `b` to all parts of `a`:
 
@@ -253,10 +253,12 @@ In this case, `a <> b` means applying transformation `a` after transformation
 >   Tr ax ay as <> Tr bx by bs =
 >     Tr (ax * bs + bx) (ay * bs + by) (as * bs)
 
-Readers who are familiar with linear algebra may recognize the connection to
+Readers who are familiar with linear algebra may recognise the connection to
 a sort of restricted affine 2D [transformation matrix].
 However, it's not immediately clear that this is a valid Semigroup, so we will
 be rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
+
+TODO: where does semigroup come from suddenly?
 
 [transformation matrix]: https://en.wikipedia.org/wiki/Transformation_matrix
 
@@ -350,8 +352,9 @@ compiler!
 >   -> Collage img
 >   -> (Collage (img, Transform), Size)
 
-Placing a single image is easy, since we are passing in the transformation,
-and we return its _requested_ size which is just the original size of the image.
+Placing a single image is easy, since we are receiving the transformation
+directly as an argument.
+We return the _requested_ size --- which is just the original size of the image.
 This is an important detail in making the laziness work here: if we tried to
 return the _final_ size (including the passed in transformation) rather than the
 _requested_ size, the computation would diverge (i.e. recurse infinitely).
@@ -398,7 +401,7 @@ because, compared to `repmin`:
  -  it is an example outside of the realm of parsers and compilers.
 
 The structure is also somewhat different; rather than having a circular step at
-the top-level function invocation, we have this at every step of the recursion.
+the top-level function invocation, we have it at every step of the recursion.
 
 Thanks for reading!
 
@@ -418,12 +421,12 @@ Appendices
 Rendering the result
 --------------------
 
-Once we've determined the layout, we still need to apply this and draw all
+Once we've determined the layout, we still need to apply it and draw all
 the images using the computed transformations.  We use simple nearest-neighbour
-scaling since that is not the focus of this program, you could consider [lanzcos
+scaling since that is not the focus of this program, you could consider [Lánczos
 interpolation] in a real application.
 
-[lanzcos interpolation]: https://mazzo.li/posts/lanczos.html
+[Lánczos interpolation]: https://mazzo.li/posts/lanczos.html
 
 > render
 >   :: Foldable f
@@ -552,7 +555,7 @@ We'll use `R` for a random collage, and `H`/`V` will be parsed by
 > parseCommand (out : spec)         = User out <$> parseCollage spec
 
 We will add one more auxiliary function to load all images in a collage.
-Fortunately we can just use the `Traversable` instance for this.
+Fortunately, we can just use the `Traversable` instance for this.
 
 > readCollage
 >   :: Collage FilePath
@@ -560,7 +563,8 @@ Fortunately we can just use the `Traversable` instance for this.
 > readCollage = traverse $ \path ->
 >   JP.readImage path >>= either fail (pure . JP.convertRGB8)
 
-Time to put everything together in `main`.  First we do some parsing:
+Time to put everything together in the `main` function.  First, we do some
+parsing:
 
 > main :: IO ()
 > main = do
