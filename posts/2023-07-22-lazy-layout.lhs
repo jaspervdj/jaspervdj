@@ -10,7 +10,7 @@ Prelude
 This blogpost is written in [reproducible] [Literate Haskell], so we need some
 imports first.
 
-[reproducible]: https://github.com/jaspervdj/jaspervdj/blob/master/posts/2023-07-18-lazy-layout.nix
+[reproducible]: https://github.com/jaspervdj/jaspervdj/blob/master/posts/2023-07-22-lazy-layout.nix
 [Literate Haskell]: https://wiki.haskell.org/Literate_programming
 
 <details><summary>Show me the exact imports...</summary>
@@ -59,7 +59,7 @@ photo collage in a declarative way by indicating if horizontal (H) or vertical
 The program should then determine the exact size and position of each image,
 so that we get a fully filled rectangle without any borders or filler:
 
-![](/images/2023-07-18-lazy-layout-example-1.jpg)
+![](/images/2023-07-22-lazy-layout-example-1.jpg)
 
 We will use a technique called _circular programming_ that builds on Haskell's
 laziness to achieve this in an elegant way.
@@ -171,7 +171,7 @@ scaling them up or down to match them in height or width respectively.  This
 creates a bigger image.  We can then repeat this process until just one image is
 left.
 
-![](/images/2023-07-18-lazy-layout-tree-1.jpg)
+![](/images/2023-07-22-lazy-layout-tree.jpg)
 
 However, this is quite a naive approach since we end up making way too many
 copies, and the repeated resizing could also result in a loss of resolution.  We
@@ -201,7 +201,7 @@ transform for both left and right images, as well as the size of the result.
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Intuitively, we should be matching the height of both images.
 
-![](/images/2023-07-18-lazy-layout-lwlh-rwrh.png)
+![](/images/2023-07-22-lazy-layout-lwlh-rwrh.png)
 
 There are different ways to do this --- we could shrink the taller image,
 enlarge the shorter image, or something in between.  We make a choice to always
@@ -413,7 +413,7 @@ various tasks, included so this can function as a standalone program:
  -  [Generating random collages](#generating-random-collages)
  -  [Putting together the CLI](#putting-together-the-cli)
 
-![](/images/2023-07-18-lazy-layout-example-2.jpg)
+![](/images/2023-07-22-lazy-layout-example-2.jpg)
 
 Appendices
 ==========

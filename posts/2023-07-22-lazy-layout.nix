@@ -12,6 +12,6 @@ in
 pkgs.stdenv.mkDerivation {
     name = "lazy-layout";
     src = ./.;
-    buildPhase = "${ghc}/bin/ghc -Wall -O2 -o lazy-layout 2023-07-18-lazy-layout.lhs";
+    buildPhase = "${ghc}/bin/ghc -Wall -O2 -o lazy-layout 2023-07-22-lazy-layout.lhs";
     installPhase = "cp lazy-layout $out";
 }
