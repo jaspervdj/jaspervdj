@@ -150,9 +150,9 @@ During the layout pass, we don't really care about this complexity.
 We only need the relative sizes of the images and not their content.
 We introduce a typeclass to do just that:
 
-> data Size = Size
->   { sizeWidth  :: Rational
->   , sizeHeight :: Rational
+> data Size = Sz
+>   { szWidth  :: Rational
+>   , szHeight :: Rational
 >   } deriving (Show)
 >
 > class Sized a where
@@ -167,9 +167,9 @@ and having infinite precision is convenient.
 The instance for the JuicyPixels image type is simple:
 
 > instance Sized (JP.Image p) where
->   sizeOf img = Size
->     { sizeWidth  = fromIntegral $ JP.imageWidth  img
->     , sizeHeight = fromIntegral $ JP.imageHeight img
+>   sizeOf img = Sz
+>     { szWidth  = fromIntegral $ JP.imageWidth  img
+>     , szHeight = fromIntegral $ JP.imageHeight img
 >     }
 
 Laying out two images
@@ -209,7 +209,7 @@ Let's look at the horizontal case first and write a function that computes a
 transform for both left and right images, as well as the size of the result.
 
 > horizontal :: Size -> Size -> (Transform, Transform, Size)
-> horizontal (Size lw lh) (Size rw rh) =
+> horizontal (Sz lw lh) (Sz rw rh) =
 
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Intuitively, we should be matching the height of both images.
@@ -231,21 +231,21 @@ to offset the right image depending on the (scaled) size of the left image.
 
 >   ( Tr 0             0 lscale
 >   , Tr (lscale * lw) 0 rscale
->   , Size width height
+>   , Sz width height
 >   )
 
 Composing images vertically is similar, just matching the widths rather than the
 heights of the two images and moving the bottom image below the top one:
 
 > vertical :: Size -> Size -> (Transform, Transform, Size)
-> vertical (Size tw th) (Size bw bh) =
+> vertical (Sz tw th) (Sz bw bh) =
 >   let width  = min tw bw
 >       tscale = width / tw
 >       bscale = width / bw
 >       height = tscale * th + bscale * bh in
 >   ( Tr 0 0             tscale
 >   , Tr 0 (tscale * th) bscale
->   , Size width height
+>   , Sz width height
 >   )
 
 Composing transformations
@@ -454,7 +454,7 @@ interpolation] in a real application.
 >   => Size
 >   -> f (JP.Image JP.PixelRGB8, Transform)
 >   -> JP.Image JP.PixelRGB8
-> render (Size width height) images = runST $ do
+> render (Sz width height) images = runST $ do
 >   canvas <- JP.createMutableImage (round width) (round height) black
 >   for_ images $ transform canvas
 >   JP.unsafeFreezeImage canvas
