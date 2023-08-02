@@ -29,6 +29,7 @@ imports first.
 > import           System.Environment     (getArgs)
 > import           System.Random          (RandomGen, newStdGen)
 > import           System.Random.Stateful (randomM, runStateGen)
+> import           Text.Read              (readMaybe)
 
 </details>
 
@@ -433,6 +434,7 @@ various tasks, included so this can function as a standalone program:
  -  [Parsing a collage description](#parsing-a-collage-description)
  -  [Generating random collages](#generating-random-collages)
  -  [Putting together the CLI](#putting-together-the-cli)
+ -  [Resizing the result](#resizing-the-result)
 
 ![](/images/2023-07-22-lazy-layout-example-2.jpg)
 
@@ -560,20 +562,38 @@ We support two modes of operation for our little CLI:
  *   Generating a random collage from a number of images.
 
 In both cases, we also take an output file as the first argument, so we know
-where we want to write the image to.
+where we want to write the image to.  We also take an optional `-fit` flag so
+we can resize the final image down to a requested size.
 
-> data Command
->   = User   FilePath (Collage FilePath)
->   | Random FilePath (NonEmpty FilePath)
+> data Command = Command
+>   { cmdOut     :: FilePath
+>   , cmdFit     :: Maybe Int
+>   , cmdCollage :: CommandCollage
+>   }
+>
+> data CommandCollage
+>   = User   (Collage FilePath)
+>   | Random (NonEmpty FilePath)
 >   deriving (Show)
+
+There is some setup to parse the output and a `-fit` flag.  The important
+bit happens in `parseCommandCollage` further down.
+
+
+> parseCommand :: [String] -> Maybe Command
+> parseCommand cmd = case cmd of
+>   [] -> Nothing
+>   ("-fit" : num : args) | Just n <- readMaybe num -> do
+>     cmd' <- parseCommand args
+>     pure cmd' {cmdFit = Just n}
+>   (o : args) -> Command o Nothing <$> parseCommandCollage args
 
 We'll use `R` for a random collage, and `H`/`V` will be parsed by
 `parseCollage`.
 
-> parseCommand :: [String] -> Maybe Command
-> parseCommand []                   = Nothing
-> parseCommand (out : "R" : p : ps) = Just $ Random out (p :| ps)
-> parseCommand (out : spec)         = User out <$> parseCollage spec
+>  where
+>   parseCommandCollage ("R" : x : xs) = Just $ Random (x :| xs)
+>   parseCommandCollage spec           = User <$> parseCollage spec
 
 Time to put everything together in the `main` function.  First, we do some
 parsing:
@@ -583,23 +603,51 @@ parsing:
 >   args <- getArgs
 >   command <- maybe (fail "invalid command") pure $
 >     parseCommand args
->   (output, pathsCollage) <- case command of
->     User output explicit -> pure (output, explicit)
->     Random output paths -> do
+>   pathsCollage <- case cmdCollage command of
+>     User explicit -> pure explicit
+>     Random paths -> do
 >       gen <- newStdGen
 >       let (random, _) = randomCollage paths gen
->       pure (output, random)
+>       pure random
 
 Followed by actually reading in all the images:
 
 >   imageCollage <- readCollage pathsCollage
 
 This gives us the `Collage (JP.Image JP.PixelRGB8)`.  We can pass that to our
-`layout` function and write it to the output:
+`layout` function and write it to the output, after optionally applying our
+`fit`:
 
->   let (result, box) = layoutCollage imageCollage
->   write output $ JP.ImageRGB8 $ render box result
+>   let (result, box) = case cmdFit command of
+>         Nothing -> layoutCollage imageCollage
+>         Just f  -> fit f $ layoutCollage imageCollage
+>   write (cmdOut command) $ JP.ImageRGB8 $ render box result
 >  where
 >   write output
 >     | ".jpg" `isSuffixOf` output = JP.saveJpgImage 80 output
 >     | otherwise                  = JP.savePngImage output
+
+Resizing the result
+-------------------
+
+Most of the time I don't want to host full-resolution pictures for web viewing.
+This is an addition I added later on to resize an image down to a requested
+"long edge" (i.e. a requested maximum width or height, whichever is bigger).
+
+Interestingly I think this can also be done by having an additional parameter
+to `layout`, and using circular programming once again to link the initial
+transformation to the requested size.  However, the core algorithm is harder
+to understand that way, so I left it as a separate utility:
+
+> fit
+>   :: Int
+>   -> (Collage (img, Transform), Size)
+>   -> (Collage (img, Transform), Size)
+> fit longEdge (collage, Sz w h)
+>   | long <= fromIntegral longEdge = (collage, Sz w h)
+>   | otherwise                     =
+>       (fmap (<> tr) <$> collage, Sz (w * scale) (h * scale))
+>  where
+>   long  = max w h
+>   scale = fromIntegral longEdge / long
+>   tr    = Tr 0 0 scale
