@@ -112,7 +112,7 @@ main = hakyllWith config $ do
     match "index.html" $ do
         route idRoute
         compile $ do
-            posts <- featured =<< loadAll "posts/*"
+            posts <- recentFirst =<< featured =<< loadAll "posts/*"
             let indexContext =
                     listField "posts" (postCtx tags) (return posts) <>
                     field "tags" (\_ -> renderTagList tags) <>
