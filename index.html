@@ -82,22 +82,12 @@ title: Home
     interesting ones:
 </p>
 <ul>
+    $for(posts)$
     <li>
-        <a href="/posts/2023-07-22-lazy-layout.html">Lazy Layout</a>
-        <span class="soft">July 22, 2023</span>
+        “<a href="$url$">$title$</a>”
+        ‒ <span class="soft">$date$</span><br />
     </li>
-    <li>
-        <a href="/posts/2020-03-12-visual-arrow-syntax.html">Visual Arrow Syntax</a>
-        <span class="soft">March 12, 2020</span>
-    </li>
-    <li>
-        <a href="/posts/2018-03-08-handle-pattern.html">Haskell Design Patterns: The Handle Pattern</a>
-        <span class="soft">March 8, 2018</span>
-    </li>
-    <li>
-        <a href="/posts/2014-11-27-comonads-image-processing.html">Image Processing with Comonads</a>
-        <span class="soft">November 27, 2014</span>
-    </li>
+    $endfor$
 </ul>
 
 <h2>Hobbies</h2>

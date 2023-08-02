@@ -2,6 +2,7 @@
 title: 'Lazy Layout'
 description: A fun application of circular programming
 tags: haskell
+featured: true
 ...
 
 Prelude

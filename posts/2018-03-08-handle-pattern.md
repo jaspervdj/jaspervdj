@@ -2,6 +2,7 @@
 title: 'Haskell Design Patterns: The Handle Pattern'
 description: 'A neat and simple way to build services in Haskell'
 tags: 'haskell'
+featured: true
 ---
 
 # Introduction

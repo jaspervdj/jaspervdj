@@ -2,6 +2,7 @@
 title: 'Visual Arrow Syntax'
 description: 'Finally, better Arrow syntax, completely free of hacks'
 tags: 'haskell'
+featured: true
 ---
 
 _Not to be taken seriously._

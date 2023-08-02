@@ -2,6 +2,7 @@
 title: Image Processing with Comonads
 description: A simple real-world example showing an image-processing Comonad
 tags: haskell
+featured: true
 ---
 
 Introduction
