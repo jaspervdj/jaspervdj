@@ -6,9 +6,10 @@ extra-deps:
 nix:
   packages:
   - graphviz
+  - ghostscript_headless  # latex dependency for illustrations in posts/2013-11-21-random-element-frequency-list.html
   - imagemagick
   - texlive.combined.scheme-full  # Just for `standalone.cls`, urgh!
   - zlib
   - openssh
   - rsync
-  - pkgconfig
+  - pkg-config
