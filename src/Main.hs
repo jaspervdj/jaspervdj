@@ -25,7 +25,7 @@ main :: IO ()
 main = hakyllWith config $ do
     -- Static files
     match ("images/*.jpg" .||. "images/*.png" .||. "images/*.gif" .||.
-            "images/*.mp4" .||.
+            "images/*.mp4" .||. "images/*.svg" .||.
             "favicon.ico" .||. "files/**") $ do
         route   idRoute
         compile copyFileCompiler
