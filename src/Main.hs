@@ -6,7 +6,7 @@ module Main (main) where
 
 
 --------------------------------------------------------------------------------
-import           Data.Monoid     ((<>))
+import           Control.Monad   ((>=>))
 import           Prelude         hiding (id)
 import           System.Exit     (ExitCode)
 import           System.FilePath (replaceExtension, takeDirectory)
@@ -25,7 +25,7 @@ main :: IO ()
 main = hakyllWith config $ do
     -- Static files
     match ("images/*.jpg" .||. "images/*.png" .||. "images/*.gif" .||.
-            "images/*.mp4" .||.
+            "images/*.mp4" .||. "images/*.svg" .||.
             "favicon.ico" .||. "files/**") $ do
         route   idRoute
         compile copyFileCompiler
@@ -112,7 +112,7 @@ main = hakyllWith config $ do
     match "index.html" $ do
         route idRoute
         compile $ do
-            posts <- fmap (take 3) . recentFirst =<< loadAll "posts/*"
+            posts <- recentFirst =<< featured =<< loadAll "posts/*"
             let indexContext =
                     listField "posts" (postCtx tags) (return posts) <>
                     field "tags" (\_ -> renderTagList tags) <>
@@ -310,3 +310,15 @@ photographCtx = mconcat
     [ dateField "date" "%B %e, %Y"
     , metadataField
     ]
+
+
+--------------------------------------------------------------------------------
+featured :: MonadMetadata m => [Item a] -> m [Item a]
+featured = filterM $ \item -> do
+    val <- getMetadataField (itemIdentifier item) "featured"
+    pure $ val == Just "true"
+
+
+--------------------------------------------------------------------------------
+filterM :: Monad m => (a -> m Bool) -> [a] -> m [a]
+filterM p = mapM (\x -> (,) x <$> p x) >=> pure . map fst . filter snd

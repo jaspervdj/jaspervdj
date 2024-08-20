@@ -2,6 +2,7 @@
 title: 'Lazy Layout'
 description: A fun application of circular programming
 tags: haskell
+featured: true
 ...
 
 Prelude
@@ -29,6 +30,7 @@ imports first.
 > import           System.Environment     (getArgs)
 > import           System.Random          (RandomGen, newStdGen)
 > import           System.Random.Stateful (randomM, runStateGen)
+> import           Text.Read              (readMaybe)
 
 </details>
 
@@ -150,9 +152,9 @@ During the layout pass, we don't really care about this complexity.
 We only need the relative sizes of the images and not their content.
 We introduce a typeclass to do just that:
 
-> data Size = Size
->   { sizeWidth  :: Rational
->   , sizeHeight :: Rational
+> data Size = Sz
+>   { szWidth  :: Rational
+>   , szHeight :: Rational
 >   } deriving (Show)
 >
 > class Sized a where
@@ -167,9 +169,9 @@ and having infinite precision is convenient.
 The instance for the JuicyPixels image type is simple:
 
 > instance Sized (JP.Image p) where
->   sizeOf img = Size
->     { sizeWidth  = fromIntegral $ JP.imageWidth  img
->     , sizeHeight = fromIntegral $ JP.imageHeight img
+>   sizeOf img = Sz
+>     { szWidth  = fromIntegral $ JP.imageWidth  img
+>     , szHeight = fromIntegral $ JP.imageHeight img
 >     }
 
 Laying out two images
@@ -209,7 +211,7 @@ Let's look at the horizontal case first and write a function that computes a
 transform for both left and right images, as well as the size of the result.
 
 > horizontal :: Size -> Size -> (Transform, Transform, Size)
-> horizontal (Size lw lh) (Size rw rh) =
+> horizontal (Sz lw lh) (Sz rw rh) =
 
 We want to place image `l` beside image `r`, producing a nicely filled
 rectangle.  Intuitively, we should be matching the height of both images.
@@ -231,21 +233,21 @@ to offset the right image depending on the (scaled) size of the left image.
 
 >   ( Tr 0             0 lscale
 >   , Tr (lscale * lw) 0 rscale
->   , Size width height
+>   , Sz width height
 >   )
 
 Composing images vertically is similar, just matching the widths rather than the
 heights of the two images and moving the bottom image below the top one:
 
 > vertical :: Size -> Size -> (Transform, Transform, Size)
-> vertical (Size tw th) (Size bw bh) =
+> vertical (Sz tw th) (Sz bw bh) =
 >   let width  = min tw bw
 >       tscale = width / tw
 >       bscale = width / bw
 >       height = tscale * th + bscale * bh in
 >   ( Tr 0 0             tscale
 >   , Tr 0 (tscale * th) bscale
->   , Size width height
+>   , Sz width height
 >   )
 
 Composing transformations
@@ -278,6 +280,8 @@ In this case, `a <> b` means applying transformation `a` after transformation
 Readers who are familiar with linear algebra may recognise the connection to
 a sort of restricted affine 2D [transformation matrix].
 
+[transformation matrix]: https://en.wikipedia.org/wiki/Transformation_matrix
+
 Proving that the identity holds on `mempty` is simple so we will only do one
 side, namely `a <> mempty == a`.
 
@@ -299,10 +303,8 @@ Tr ax ay as <> mempty
 
 </details>
 
-However, it's not immediately clear that this operation is associative, so we
-will be rigorous and provide a proof that `a <> (b <> c) == (a <> b) <> c`.
-
-[transformation matrix]: https://en.wikipedia.org/wiki/Transformation_matrix
+Next, we want to prove that the `<>` operator is associative, meaning
+`a <> (b <> c) == (a <> b) <> c`.
 
 <details><summary>Proof of associativity...</summary>
 
@@ -433,6 +435,7 @@ various tasks, included so this can function as a standalone program:
  -  [Parsing a collage description](#parsing-a-collage-description)
  -  [Generating random collages](#generating-random-collages)
  -  [Putting together the CLI](#putting-together-the-cli)
+ -  [Resizing the result](#resizing-the-result)
 
 ![](/images/2023-07-22-lazy-layout-example-2.jpg)
 
@@ -454,7 +457,7 @@ interpolation] in a real application.
 >   => Size
 >   -> f (JP.Image JP.PixelRGB8, Transform)
 >   -> JP.Image JP.PixelRGB8
-> render (Size width height) images = runST $ do
+> render (Sz width height) images = runST $ do
 >   canvas <- JP.createMutableImage (round width) (round height) black
 >   for_ images $ transform canvas
 >   JP.unsafeFreezeImage canvas
@@ -560,20 +563,38 @@ We support two modes of operation for our little CLI:
  *   Generating a random collage from a number of images.
 
 In both cases, we also take an output file as the first argument, so we know
-where we want to write the image to.
+where we want to write the image to.  We also take an optional `-fit` flag so
+we can resize the final image down to a requested size.
 
-> data Command
->   = User   FilePath (Collage FilePath)
->   | Random FilePath (NonEmpty FilePath)
+> data Command = Command
+>   { cmdOut     :: FilePath
+>   , cmdFit     :: Maybe Int
+>   , cmdCollage :: CommandCollage
+>   }
+>
+> data CommandCollage
+>   = User   (Collage FilePath)
+>   | Random (NonEmpty FilePath)
 >   deriving (Show)
+
+There is some setup to parse the output and a `-fit` flag.  The important
+bit happens in `parseCommandCollage` further down.
+
+
+> parseCommand :: [String] -> Maybe Command
+> parseCommand cmd = case cmd of
+>   [] -> Nothing
+>   ("-fit" : num : args) | Just n <- readMaybe num -> do
+>     cmd' <- parseCommand args
+>     pure cmd' {cmdFit = Just n}
+>   (o : args) -> Command o Nothing <$> parseCommandCollage args
 
 We'll use `R` for a random collage, and `H`/`V` will be parsed by
 `parseCollage`.
 
-> parseCommand :: [String] -> Maybe Command
-> parseCommand []                   = Nothing
-> parseCommand (out : "R" : p : ps) = Just $ Random out (p :| ps)
-> parseCommand (out : spec)         = User out <$> parseCollage spec
+>  where
+>   parseCommandCollage ("R" : x : xs) = Just $ Random (x :| xs)
+>   parseCommandCollage spec           = User <$> parseCollage spec
 
 Time to put everything together in the `main` function.  First, we do some
 parsing:
@@ -583,23 +604,51 @@ parsing:
 >   args <- getArgs
 >   command <- maybe (fail "invalid command") pure $
 >     parseCommand args
->   (output, pathsCollage) <- case command of
->     User output explicit -> pure (output, explicit)
->     Random output paths -> do
+>   pathsCollage <- case cmdCollage command of
+>     User explicit -> pure explicit
+>     Random paths -> do
 >       gen <- newStdGen
 >       let (random, _) = randomCollage paths gen
->       pure (output, random)
+>       pure random
 
 Followed by actually reading in all the images:
 
 >   imageCollage <- readCollage pathsCollage
 
 This gives us the `Collage (JP.Image JP.PixelRGB8)`.  We can pass that to our
-`layout` function and write it to the output:
+`layout` function and write it to the output, after optionally applying our
+`fit`:
 
->   let (result, box) = layoutCollage imageCollage
->   write output $ JP.ImageRGB8 $ render box result
+>   let (result, box) = case cmdFit command of
+>         Nothing -> layoutCollage imageCollage
+>         Just f  -> fit f $ layoutCollage imageCollage
+>   write (cmdOut command) $ JP.ImageRGB8 $ render box result
 >  where
 >   write output
 >     | ".jpg" `isSuffixOf` output = JP.saveJpgImage 80 output
 >     | otherwise                  = JP.savePngImage output
+
+Resizing the result
+-------------------
+
+Most of the time I don't want to host full-resolution pictures for web viewing.
+This is an addition I added later on to resize an image down to a requested
+"long edge" (i.e. a requested maximum width or height, whichever is bigger).
+
+Interestingly I think this can also be done by having an additional parameter
+to `layout`, and using circular programming once again to link the initial
+transformation to the requested size.  However, the core algorithm is harder
+to understand that way, so I left it as a separate utility:
+
+> fit
+>   :: Int
+>   -> (Collage (img, Transform), Size)
+>   -> (Collage (img, Transform), Size)
+> fit longEdge (collage, Sz w h)
+>   | long <= fromIntegral longEdge = (collage, Sz w h)
+>   | otherwise                     =
+>       (fmap (<> tr) <$> collage, Sz (w * scale) (h * scale))
+>  where
+>   long  = max w h
+>   scale = fromIntegral longEdge / long
+>   tr    = Tr 0 0 scale
