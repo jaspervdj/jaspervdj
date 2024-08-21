@@ -11,7 +11,7 @@ body {
 }
 
 div#navigation {
-    background: #f3f3f3 url("../images/header.png") repeat-x left bottom;
+    background: #fff linear-gradient(#eee, #eee 95%, #ccc);
     padding-bottom: 18px;
     text-align: center;
 }
@@ -27,7 +27,7 @@ div#content {
 
 @media all and (min-width: 822px) {
     html {
-        background: #fff url("../images/sidebar.png") repeat-y left top;
+        background: #fff linear-gradient(90deg, #eee, #eee 140px, #ccc 156px, #fff 157px);
     }
 
     div#navigation {
