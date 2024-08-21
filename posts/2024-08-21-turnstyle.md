@@ -92,6 +92,9 @@ above, which recurses without the need for a fixed-point combinator.
 For the full specification and more examples take a look at the [Turnstyle
 website][Turnstyle] and feel free to play around with the sources on [GitHub].
 
+Thanks to [Francesco Mazzoli](https://mazzo.li/) for useful feedback on the
+specification and website.
+
 [GitHub]: https://github.com/jaspervdj/turnstyle/
 [Turnstyle]: https://jaspervdj.be/turnstyle/
 [ZuriHac 2024]: https://zfoh.ch/zurihac2024
