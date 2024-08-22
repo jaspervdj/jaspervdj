@@ -27,12 +27,12 @@ div#content {
 
 @media all and (min-width: 822px) {
     html {
-        background: #fff linear-gradient(90deg, #eee, #eee 140px, #ccc 156px, #fff 157px);
+        background: #fff linear-gradient(90deg, #eee, #eee 140px, #ccc 156px, #fff0 157px);
     }
 
     div#navigation {
-        background: none;
         float: left;
+        background: none;
         left: 0px;
         margin: 0px 0px 0px 18px;
         position: fixed;

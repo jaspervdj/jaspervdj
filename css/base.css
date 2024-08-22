@@ -171,15 +171,15 @@ div#footer {
 
 /* Dark theme, used for photo blogs. */
 html.dark {
-  background-color: #222;
+    background-color: #222;
 }
 
 html.dark #content {
-  color: #eee;
+    color: #eee;
 }
 
 html.dark #content a {
-  color: #eee;
-  text-decoration: underline;
-  border-bottom: none;
+    color: #eee;
+    text-decoration: underline;
+    border-bottom: none;
 }
