@@ -72,7 +72,7 @@ Given the amount of attention going to programming languages in the functional
 programming community, I was quite surprised nobody had ever tried to do a
 functional variant of it (as far as I could find).
 
-I wanted to create something based on Lambda Calculus.  It forms a nice basis
+I wanted to create something based on [Lambda Calculus].  It forms a nice basis
 for a minimal specification, and I knew that while code would still be somewhat
 frustrating to write, there is the comforting thought of being able to reuse
 almost everything once it's written.
@@ -102,6 +102,7 @@ specification and website.
 [ZuriHac 2024]: https://zfoh.ch/zurihac2024
 [Piet]: https://www.dangermouse.net/esoteric/piet.html
 [full specification here]: https://jaspervdj.be/turnstyle/spec/
+[Lambda calculus]: https://en.wikipedia.org/wiki/Lambda_calculus
 
 <script type="text/JavaScript" src="/files/2024-08-21-turnstyle.js"></script>
 <script type="text/JavaScript">
