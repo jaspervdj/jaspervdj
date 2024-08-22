@@ -79,6 +79,8 @@ almost everything once it's written.
 
 ![Cheatsheet for the specification](/images/2024-08-21-turnstyle-cheatsheet.svg)
 
+You can see the [full specification here].
+
 After playing around with different designs this is what I landed on.  The
 guiding principle was to search for a specification that was as simple as
 possible, while still covering lambda calculus extended with primitives that,
@@ -99,6 +101,7 @@ specification and website.
 [Turnstyle]: https://jaspervdj.be/turnstyle/
 [ZuriHac 2024]: https://zfoh.ch/zurihac2024
 [Piet]: https://www.dangermouse.net/esoteric/piet.html
+[full specification here]: https://jaspervdj.be/turnstyle/spec/
 
 <script type="text/JavaScript" src="/files/2024-08-21-turnstyle.js"></script>
 <script type="text/JavaScript">

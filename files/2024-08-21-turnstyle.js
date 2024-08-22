@@ -524,8 +524,8 @@ class AppExpr extends Expr {
         return this._whnf;
     }
 
-    freeVars() { return this.lhs.freeVars().union(this.rhs.freeVars()); }
-    allVars()  { return this.lhs.allVars().union(this.rhs.allVars());   }
+    freeVars() { return new Set([...this.lhs.freeVars(), ...this.rhs.freeVars()]); }
+    allVars()  { return new Set([...this.lhs.allVars(), ...this.rhs.allVars()]);   }
 
     subst(x, s) {
         return new AppExpr(
@@ -577,7 +577,7 @@ class LamExpr extends Expr {
         if (fvs.has(this._variable)) {
             // Avoid capturing `this._variable`
             const body = this.body;
-            const avs = fvs.union(body.allVars());
+            const avs = new Set([...fvs, ...body.allVars()]);
             let fresh = 0;
             while (avs.has(`fresh_${fresh}`)) fresh++
             const variable = `fresh_${fresh}`;
