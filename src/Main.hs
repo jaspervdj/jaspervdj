@@ -205,6 +205,11 @@ main = hakyllWith config $ do
     match "photos/*/*.jpg" $ do
         route idRoute
         compile copyFileCompiler
+
+    -- Misc.
+    match "well-known/*" $ do
+        route $ gsubRoute "well-known" (\_ -> ".well-known")
+        compile copyFileCompiler
   where
     pages =
         [ "contact.markdown"
