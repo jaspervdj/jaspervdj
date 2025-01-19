@@ -7,7 +7,7 @@ mkShell rec {
     haskell.compiler.ghc925
     imagemagick
     openssh
-    pkgconfig
+    pkg-config
     rsync
     texlive.combined.scheme-full  # Just for `standalone.cls`, urgh!
     zlib
