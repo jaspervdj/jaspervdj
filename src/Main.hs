@@ -10,9 +10,7 @@ import           Control.Monad   ((>=>))
 import           Prelude         hiding (id)
 import           System.Exit     (ExitCode)
 import           System.FilePath (replaceExtension, takeDirectory)
-import qualified Data.Text as T
 import qualified System.Process  as Process
-import qualified Text.Pandoc     as Pandoc
 
 
 --------------------------------------------------------------------------------
@@ -150,24 +148,6 @@ main = hakyllWith config $ do
                 >>= fmap (take 10) . recentFirst
                 >>= renderRss (feedConfiguration "All posts") feedCtx
 
-    -- CV as HTML
-    match "cv.markdown" $ do
-        route   $ setExtension ".html"
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/cv.html"      defaultContext
-            >>= loadAndApplyTemplate "templates/content.html" defaultContext
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= relativizeUrls
-
-    -- CV as PDF
-    match "cv.markdown" $ version "pdf" $ do
-        route   $ setExtension ".pdf"
-        compile $ do getResourceBody
-            >>= readPandoc
-            >>= writeXeTex
-            >>= loadAndApplyTemplate "templates/cv.tex" defaultContext
-            >>= xelatex
-
     -- Photographs
     match "photos/*.md" $ compile getResourceBody
 
@@ -216,12 +196,6 @@ main = hakyllWith config $ do
         , "links.markdown"
         ]
 
-    writeXeTex :: Item Pandoc.Pandoc -> Compiler (Item String)
-    writeXeTex = traverse $ \pandoc ->
-        case Pandoc.runPure (Pandoc.writeLaTeX Pandoc.def pandoc) of
-            Left err -> fail $ show err
-            Right x  -> return (T.unpack x)
-
 
 --------------------------------------------------------------------------------
 postCtx :: Tags -> Context String
@@ -260,11 +234,11 @@ config = defaultConfiguration
         case words branch of
             ["master"] -> Process.rawSystem "rsync"
                 [ "--checksum", "-ave", "ssh -p 2222"
-                , "_site/", "jaspervdj@jaspervdj.be:jaspervdj.be"
+                , "_site/", "jasper@jaspervdj.be:jaspervdj.be"
                 ]
             ["drafts"] -> Process.rawSystem "rsync"
                 [ "--checksum", "-ave", "ssh -p 2222"
-                , "_site/", "jaspervdj@jaspervdj.be:jaspervdj.be/staging"
+                , "_site/", "jasper@jaspervdj.be:jaspervdj.be/staging"
                 ]
             _ -> fail $
                 "I don't know how to deploy the branch " ++ show branch
