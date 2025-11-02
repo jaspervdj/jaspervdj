@@ -234,19 +234,19 @@ The expected path length *L* of an item in a balanced tree can be very easily
 approached, since it is just a binary tree and we all know those (suppose *N* is
 the number of unique words):
 
-![](/images/2013-11-21-expected-length-bal.png)
+![](/images/2013-11-21-expected-length-bal.svg)
 
 However, if we have a tree we built using the `huffmanTree`, it is not that easy
 to calculate the expected path length. We know that for a Huffman tree, the path
 length should approximate the entropy, which, in our case, gives us an
 approximation for the path length for item with a specified frequency *f*:
 
-![](/images/2013-11-21-length-huf.png)
+![](/images/2013-11-21-length-huf.svg)
 
 Where *F* is the total sum of all frequencies. If we assume that we know the
 frequency for every item, the expected path length is simply a weighted mean:
 
-![](/images/2013-11-21-expected-length-huf.png)
+![](/images/2013-11-21-expected-length-huf.svg)
 
 This is where it gets interesting. It turns out that the frequency of words in a
 natural language is a [well-researched](http://planetmath.org/ZipfsLaw)
@@ -254,19 +254,19 @@ natural language is a [well-researched](http://planetmath.org/ZipfsLaw)
 called *Zipf's law*. This law tells us that the frequency of an item *f* can be
 estimated by:
 
-![](/images/2013-11-21-zipfs-law.png)
+![](/images/2013-11-21-zipfs-law.svg)
 
 Where *s* characterises the distribution and is typically very close to 1 for
 natural languages. *H* is the generalised [harmonic number]:
 
 [harmonic number]: http://en.wikipedia.org/wiki/Harmonic_number
 
-![](/images/2013-11-21-harmonic-number.png)
+![](/images/2013-11-21-harmonic-number.svg)
 
 If we substitute in the definition for the frequencies into the formula for the
 expected path length, we get:
 
-![](/images/2013-11-21-expected-length-huf-expanded.png)
+![](/images/2013-11-21-expected-length-huf-expanded.svg)
 
 This is something we can work with! If we plot this for *s = 1*, we get:
 

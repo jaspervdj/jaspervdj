@@ -255,7 +255,7 @@ pixels. At the edges, we just keep the pixels as-is.
 
 This function implements the simple blurring kernel:
 
-![](/images/2014-11-27-gaussian-blur-kernel.png)
+![](/images/2014-11-27-gaussian-blur-kernel.svg)
 
 > blur :: FocusedImage Pixel -> Pixel
 > blur pixel = fromMaybe (extract pixel) $ do

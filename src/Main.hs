@@ -6,11 +6,10 @@ module Main (main) where
 
 
 --------------------------------------------------------------------------------
-import           Control.Monad   ((>=>))
-import           Prelude         hiding (id)
-import           System.Exit     (ExitCode)
-import           System.FilePath (replaceExtension, takeDirectory)
-import qualified System.Process  as Process
+import           Control.Monad  ((>=>))
+import           Prelude        hiding (id)
+import           System.Exit    (ExitCode)
+import qualified System.Process as Process
 
 
 --------------------------------------------------------------------------------
@@ -27,13 +26,6 @@ main = hakyllWith config $ do
             "favicon.ico" .||. "files/**") $ do
         route   idRoute
         compile copyFileCompiler
-
-    -- Formula images
-    match "images/*.tex" $ do
-        route   $ setExtension "png"
-        compile $ getResourceBody
-            >>= loadAndApplyTemplate "templates/formula.tex" defaultContext
-            >>= xelatex >>= pdfToPng
 
     -- Dot images
     match "images/*.dot" $ do
@@ -252,35 +244,6 @@ feedConfiguration title = FeedConfiguration
     , feedAuthorEmail = "jaspervdj@gmail.com"
     , feedRoot        = "http://jaspervdj.be"
     }
-
-
---------------------------------------------------------------------------------
--- | Hacky.
-xelatex :: Item String -> Compiler (Item TmpFile)
-xelatex item = do
-    TmpFile texPath <- newTmpFile "xelatex.tex"
-    let tmpDir  = takeDirectory texPath
-        pdfPath = replaceExtension texPath "pdf"
-
-    unsafeCompiler $ do
-        writeFile texPath $ itemBody item
-        _ <- Process.system $ unwords ["xelatex", "-halt-on-error",
-            "-output-directory", tmpDir, texPath, ">/dev/null", "2>&1"]
-        return ()
-
-    makeItem $ TmpFile pdfPath
-
-
---------------------------------------------------------------------------------
-pdfToPng :: Item TmpFile -> Compiler (Item TmpFile)
-pdfToPng item = do
-    let TmpFile pdfPath = itemBody item
-        pngPath         = replaceExtension pdfPath "png"
-    unsafeCompiler $ do
-        _ <- Process.system $ unwords
-            ["convert", "-density", "150", "-quality", "90", pdfPath, pngPath]
-        return ()
-    makeItem $ TmpFile pngPath
 
 
 --------------------------------------------------------------------------------

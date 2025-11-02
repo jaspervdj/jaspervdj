@@ -9,7 +9,6 @@ mkShell rec {
     openssh
     pkg-config
     rsync
-    texlive.combined.scheme-full  # Just for `standalone.cls`, urgh!
     ghostscript  # For tex as well.
     zlib.dev
   ] ++ lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
