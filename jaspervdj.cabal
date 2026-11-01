@@ -15,7 +15,7 @@ Cabal-version:      >= 1.8
 
 Executable jaspervdj
   Main-is:        Main.hs
-  Ghc-options:    -Wall
+  Ghc-options:    -Wall -threaded -rtsopts "-with-rtsopts=-N"
   Hs-source-dirs: src
 
   Build-depends:
