@@ -143,13 +143,28 @@ main = hakyllWith config $ do
     -- Photographs
     match "photos/*.md" $ compile getResourceBody
 
+    -- Photographs main page
+    match "photos/index.html" $ do
+        route idRoute
+        compile $ do
+            photos <- recentFirst =<< featured =<< loadAll "photos/*.md"
+            let indexContext =
+                    constField "title" "Photos"                      <>
+                    constField "dark" "true"                         <>
+                    listField "photos" photographCtx (return photos) <>
+                    defaultContext
+
+            getResourceBody
+                >>= applyAsTemplate indexContext
+                >>= loadAndApplyTemplate "templates/content.html" indexContext
+                >>= loadAndApplyTemplate "templates/default.html" indexContext
+                >>= relativizeUrls
+
     -- Photography portfolio
     photoBlog <- buildPaginateWith
         (\ids -> sortRecentFirst ids >>= return . paginateEvery 5)
         "photos/*.md"
-        (\n -> if n == 1
-            then "photos.html"
-            else fromCapture "photos/*.html" (show n))
+        (fromCapture "photos/*.html" . show)
     paginateRules photoBlog $ \pageNum pattern -> do
         -- Copied from posts, need to refactor
         route idRoute
@@ -182,6 +197,11 @@ main = hakyllWith config $ do
     match "well-known/*" $ do
         route $ gsubRoute "well-known" (\_ -> ".well-known")
         compile copyFileCompiler
+
+    -- Older pages
+    createRedirects
+        [ ("photos.html", "/photos")
+        ]
   where
     pages =
         [ "contact.markdown"
